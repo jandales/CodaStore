@@ -11,7 +11,7 @@
                 <div class="alert alert-warning mt-1">{{ session('message')}}</div>
         @endif  
 
-        <div class="flex gap50 mb-5">
+        <div class="flex gap50  mt-4 mb-5">
             <div class="w-6">
                 <div class="flex space-between">
                     <h2>Contact Information</h2>
@@ -141,3 +141,10 @@
        
 
         
+
+@endsection
+
+
+   
+    
+     
