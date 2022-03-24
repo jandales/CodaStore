@@ -1,0 +1,22 @@
+#modal-update-product .content{
+width: 800px !important;
+}
+.thumbnails{
+    display: flex;
+    flex-direction: column;
+}
+
+.thumbnail{
+    width: 70px;  
+}
+.thumbnail img{
+    width: 100%;
+}
+
+.main-image-wrapper{
+    padding-left: 10px;
+    width: 500px;
+}
+.main-image img{
+    width: 100%;
+}
