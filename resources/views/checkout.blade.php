@@ -79,7 +79,7 @@
 
 
                 <div class="form-block">
-                    <button class="btn btn-dark">Contenue Shipping</button>
+                    <button class="btn btn-dark w-3 p-10">Contenue Shipping</button>
                 </div>
                
 
