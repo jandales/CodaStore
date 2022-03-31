@@ -3,28 +3,29 @@
 
 use Illuminate\Http\Request;
 
+use App\Models\ShippingAddress;
 use App\Mail\forgorPasswordMail;
+
+
 use Illuminate\Support\Facades\Route;
 
 
 use App\Http\Controllers\CartController;
-
-
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RateController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReviewController;
+
+
+
 use App\Http\Controllers\SettingController;
-
-
-
 use App\Http\Controllers\CheckOutController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\WishListController;
-use App\Http\Controllers\DashboardController;
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PlaceOrderController;
 use App\Http\Controllers\AddressBookController;
 use App\Http\Controllers\Admin\AdminController;
@@ -40,6 +41,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\DirectCheckoutController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Auth\AdminLoginController;
+use App\Http\Controllers\ShippingAddressController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Auth\AdminRegisterController;
 use App\Http\Controllers\Auth\User\RegisterController;
@@ -203,6 +205,22 @@ Route::group(['middleware' => 'auth'], function(){
     Route::delete('/account/addressbook/delete/{addressbook}', [ AddressBookController::class, 'destroy' ])->name('addressbook.destroy');
 
     Route::put('/addressbook/set/{addressbook:id}', [ AddressBookController::class, 'ajaxSetAddress' ])->name('addressbook.set');
+    // route Shipping address    
+    Route::get('/account/shipping-address', [ShippingAddressController::class, 'index'])->name('account.shippingaddress');
+
+    Route::get('/account/shipping-address/create', [ShippingAddressController::class, 'create'])->name('account.shippingaddress.create');
+    
+    Route::post('/account/shipping-address/store', [ShippingAddressController::class, 'store'])->name('account.shippingaddress.store');
+
+    Route::get('/account/shipping-address/{address}/edit', [ShippingAddressController::class, 'edit'])->name('account.shippingaddress.edit');
+
+    Route::put('/account/shipping-address/{address}/update', [ShippingAddressController::class, 'update'])->name('account.shippingaddress.update');
+
+    Route::delete('/account/shipping-address/{address}/destroy', [ShippingAddressController::class, 'destroy'])->name('account.shippingaddress.destroy');
+
+    Route::put('/account/shipping-address/{address}/update-status', [ShippingAddressController::class, 'set_default_address'])->name('account.shippingaddress.update-status');
+    // payment Method
+
 
  
 

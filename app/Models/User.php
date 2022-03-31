@@ -6,6 +6,7 @@ use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\WishList;
 use App\Models\AddressBook;
+use App\Models\ShippingAddress;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -77,7 +78,19 @@ class User extends Authenticatable
     public function carts()
     {
         return $this->hasMany(Cart::class);
-    } 
+    }
+    
+    public function shippingAddress()
+    {
+        return $this->hasMany(ShippingAddress::class);
+    }
+
+    public function shippingDefaultAddress()
+    {
+        return $this->shippingAddress->where('status', 1)->first();
+    }
+
+
     
     public function orders()
     {

@@ -23,22 +23,22 @@
 
 <script>
 
-    // document.addEventListener('DOMContentLoaded', function(){
-    //         deliver();
-    //         })   
-    // function deliver(){
-    //     const token =  document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    //     $.ajax({
-    //         url : '/admin/orders/deliver',
-    //         method : 'POST',
-    //         data : {
-    //             _token : token,
-    //             _method : 'PUT'
-    //         },
-    //         success : function(response) {              
-    //         }
-    //     })
-    // }
+    document.addEventListener('DOMContentLoaded', function(){
+            deliver();
+    })   
+    function deliver(){
+        const token =  document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        $.ajax({
+            url : '/admin/orders/deliver',
+            method : 'POST',
+            data : {
+                _token : token,
+                _method : 'PUT'
+            },
+            success : function(response) {              
+            }
+        })
+    }
 </script>
 </body>
 </html>

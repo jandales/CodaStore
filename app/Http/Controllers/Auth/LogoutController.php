@@ -19,9 +19,9 @@ class LogoutController extends Controller
     public function logout(){
         
     
-        Auth::guard('admin')->logout();  
+        Auth::logout();  
 
-        return redirect()->route('admin.login');
+        return redirect()->route('user.login');
 
         // if(session()->has('adminLogined')){
         //     session()->pull('adminLogined');

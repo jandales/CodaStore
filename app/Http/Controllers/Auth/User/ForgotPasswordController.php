@@ -12,21 +12,21 @@ use Illuminate\Support\Facades\Mail;
 class ForgotPasswordController extends Controller
 {
 
-    public function __construct(){
-
+    public function __construct()
+    {
         $this->middleware(['guest']);
-
     }
 
-    public function index(){
-        
+    public function index()
+    {        
         return view('forgotpassword');
     }
 
-    public function request(Request $request){
-        
+    public function request(Request $request)
+    {
+                
         $request->validate([
-                'email' => 'required|email|string'
+            'email' => 'required|email|string'
         ]);
 
         $email = $request->email;

@@ -13,77 +13,143 @@
 
         <div class="flex gap50  mt-4 mb-5">
             <div class="w-6">
-                <div class="flex space-between">
-                    <h2>Contact Information</h2>
-                    <span>Already have an account?<a href="" class="link link-primary">Log in</a></span>                   
-                </div>                
-                <div class="form-block mt-1">
-                    <label for="contact">Email</label>
-                    <input type="text" name="email" value=""/>
-                </div>
+                <div class="flex space-between  border-b-solid py-1">
+                    <h2 class="uppercase">Contact Information</h2>
+                    @guest
+                        <span>Already have an account? <a href="" class="link link-primary"> Log in</a></span> 
+                    @endguest    
+                    @auth
+                        <span class="link-primary"><i class="fas fa-pen"></i></span>
+                    @endauth                                  
+                </div> 
+                @auth
+                    <span class="block mt-1">{{ auth()->user()->email }}</span>
+                @endauth     
+                @guest          
+                    <div class="form-block mt-1">
+                        <label for="contact" class="text-sm">Email</label>
+                        <input type="text" name="email" value=""/>
+                    </div>
+                @endguest
 
-                <div class="mt-2">
-                    <h2>Shipping Address</h2>
+                <div class="flex space-between mt-2 border-b-solid py-1">                
+                    <h2 class="uppercase">Shipping Details</h2>
+                    @auth
+                      <span class="link-primary"><i class="fas fa-pen"></i></span>
+                    @endauth
                 </div>
-                <div class="flex gap10 mt-1">
-                    <div class="form-block w-6">
-                        <label for="contact">First name</label>
+                @auth
+                    <div class="flex flex-column gap5 mt-1 mb-1">
+                        <div class="flex space-between">
+                            <span>{{ auth()->user()->shippingDefaultAddress()->name() }}</span>
+                            <span>{{ auth()->user()->email }}</span>                                  
+                        </div> 
+                        <span>{{ auth()->user()->shippingDefaultAddress()->street }}</span>
+                        <span>{{ auth()->user()->shippingDefaultAddress()->city . " " . auth()->user()->shippingDefaultAddress()->region }}</span>
+                        <span>{{ auth()->user()->shippingDefaultAddress()->country }}</span>                                  
+                    </div>    
+                @endauth
+                @guest                
+                <div class="form-shipping">
+                    <div class="flex gap10 mt-1">
+                        <div class="form-block w-6">
+                            <label for="contact">First name</label>
+                            <input type="text" name="email" value=""/>
+                        </div>
+                        <div class="form-block w-6">
+                            <label for="contact">Last name</label>
+                            <input type="text" name="email" value=""/>
+                        </div>
+                    </div>   
+                    <div class="flex gap10 m-t-1">
+                        <div class="form-block w-3">
+                            <label for="contact">Country</label>
+                            <input type="text" name="email" value=""/>
+                        </div>
+                        <div class="form-block w-3">
+                            <label for="contact">Region</label>
+                            <input type="text" name="email" value=""/>
+                        </div>
+    
+                        <div class="form-block w-3">
+                            <label for="contact">Zip Code</label>
+                            <input type="text" name="email" value=""/>
+                        </div>
+                    </div>
+                    <div class="form-block">
+                        <label for="contact">Street</label>
                         <input type="text" name="email" value=""/>
                     </div>
-                    <div class="form-block w-6">
-                        <label for="contact">Last name</label>
+                    <div class="form-block">
+                        <label for="contact">City</label>
                         <input type="text" name="email" value=""/>
                     </div>
+                    <div class="form-block">
+                        <label for="contact">Phone Number</label>
+                        <input type="text" name="email" value=""/>
+                    </div>
+                </div>
+                @endguest
+
+
+
+
+                <div class="flex space-between mt-2 border-b-solid py-1">                
+                    <h2 class="uppercase">Payment Details</h2>
+                    @auth
+                        <span class="link-primary"><i class="fas fa-pen"></i></span>
+                    @endauth
                 </div>
                 
+                @auth
+                    <div class="flex flex-column gap5 mt-1 mb-1">                       
+                        <span>Jesus Andales</span>
+                        <span>8293849283993284932</span>
+                        <span>02/19 - 2546</span>                                                     
+                    </div>    
+                @endauth
+
+
+                @guest
+                    <div class="form-payment">
+                        <div class="form-block mt-1">
+                            <label for="contact" class="text-sm">NAME</label>
+                            <input type="text" name="email" value=""/>
+                        </div>
+
+                        <div class="form-block mt-1">
+                            <label for="contact" class="text-sm">CARD NUMBER</label>
+                            <input type="text" name="email" value=""/>
+                        </div>
+
+                        <div class="flex gap20 m-t-1">
+                            <div class="form-block w-6">
+                                <label for="contact" class="text-sm">EXPIRY DATA</label>
+                                <input type="text" name="email" value=""/>
+                            </div>
+                            <div class="form-block w-6" class="text-sm">
+                                <label for="contact" class="text-sm">CVC CODE</label>
+                                <input type="text" name="email" value=""/>
+                            </div>                   
+                        </div>  
+                    </div>
+                @endguest              
                
 
-                <div class="flex gap10 m-t-1">
-                    <div class="form-block w-3">
-                        <label for="contact">Country</label>
-                        <input type="text" name="email" value=""/>
-                    </div>
-                    <div class="form-block w-3">
-                        <label for="contact">Region</label>
-                        <input type="text" name="email" value=""/>
-                    </div>
 
-                    <div class="form-block w-3">
-                        <label for="contact">Zip Code</label>
-                        <input type="text" name="email" value=""/>
-                    </div>
-                </div>
-
-                <div class="form-block">
-                    <label for="contact">Address</label>
-                    <input type="text" name="email" value=""/>
-                </div>
-
-                <div class="form-block">
-                    <label for="contact">Apartment</label>
-                    <input type="text" name="email" value=""/>
-                </div>
-
-          
-
-
-                <div class="form-block">
-                    <label for="contact">City</label>
-                    <input type="text" name="email" value=""/>
-                </div>
-
-                <div class="form-block">
-                    <label for="contact">Phone Number</label>
-                    <input type="text" name="email" value=""/>
-                </div>
-
-
-                <div class="form-block">
+                <div class="form-block mt-2">
                     <button class="btn btn-dark w-3 p-10">Contenue Shipping</button>
-                </div>
-               
-
+                </div> 
             </div>
+
+
+
+
+
+
+
+
+            
             <div class="w-6">
                 <div class="w-400 bg-grey p-20">
                     <div class="flex flex-column gap20">
