@@ -3,37 +3,58 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\PaymentOption;
+use App\Services\PaymentOptionServices;
 use App\Http\Requests\StorePaymentOptionRequest;
+use App\Http\Requests\UpdatePaymentOptionRequest;
 
 class PaymentOptionController extends Controller
 {
-    public function store(StorePaymentOptionRequest $request)
-    {
-            PaymentOption::create([
-                'card_name' => $request->card_name,
-                'card_number' => $request->card_number,
-                'cart_expired_date' => $request->expired_date,
-                'card_cvc' => $request->cvc,
-                'user_id' => auth()->user()->id
-            ]);
+    private $services;
 
-            return;
+    public function __construct(PaymentOptionServices $services)
+    {
+        $this->services = $services;
     }
-
-    public function update(StorePaymentOptionRequest $request,PaymentOption $payment)
-    {
     
-            $payment->card_name = $request->card_name;
-            $payment->card_number = $request->card_number;
-            $payment->cart_expired_date = $request->expired_date;
-            $payment->card_cvc = $request->cvc;
-            $payment->save();
-
-        
+    public function index()
+    {        
+        return view('account.payment.index')->with('payment_options', auth()->user()->payment_options);
     }
 
-    public function destroy(PaymentOption $payment)
+    public function create()
     {
-         return $payment->delete();   
+        return view('account.payment.create');
     }
+
+    public function edit(PaymentOption $option)
+    {
+        return view('account.payment.edit')->with('option', $option);
+    }    
+    
+    public function store(StorePaymentOptionRequest $request)
+    {      
+        $this->services->store($request);
+        return redirect()->route('account.payment-option')->with('success', 'Card Successfully Addedd');
+    }
+
+    public function update(UpdatePaymentOptionRequest $request,PaymentOption $option)
+    {          
+        $this->services->update($request, $option);
+        return redirect()->route('account.payment-option')->with('success', 'Card Successfully updated');        
+    }
+
+    public function destroy(PaymentOption $option)
+    {         
+         $option->delete();  
+         return redirect()->route('account.payment-option')->with('success', 'Card Successfully updated');
+    }
+
+    public function updateStatus(PaymentOption $option)
+    {         
+        if (!$this->services->updateStatus($option)) return redirect()->route('account.payment-option')->with('success', 'Card Already set default payment method');    
+
+        return redirect()->route('account.payment-option')->with('success', 'Card Successfully updated');
+    }
+   
 }

@@ -12,8 +12,11 @@ class PaymentOption extends Model
     protected $fillable = [
         'card_name',
         'card_number',
-        'cart_expired_date',
+        'card_expire_date',
         'card_cvc',
-        'user_id'
+        'user_id',
+        'status'
     ];
+
+ 
 }

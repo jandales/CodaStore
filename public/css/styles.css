@@ -1392,7 +1392,8 @@ label{
     display: block;
     border: solid 1px #eee;
     background: #fff;
-    width: 100%;    
+    width: 100%;   
+    padding: 20px; 
 }
 .panel-padding{
    padding:20px;
@@ -3389,6 +3390,29 @@ color:#555;
 
 .text-50{
     font-size: 50px !important;
+}
+
+.text-xs{
+    font-size: 0.75rem; /* 12px */
+    line-height: 1rem; /* 16px */
+}
+.text-sm{
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.25rem; /* 20px */
+}
+.text-base {
+    font-size: 1rem; /* 16px */
+    line-height: 1.5rem; /* 24px */
+}
+
+.text-lg{
+    font-size: 1.125rem; /* 18px */
+    line-height: 1.75rem; /* 28px */
+}
+
+.text-xl{
+    font-size: 1.25rem; /* 20px */
+    line-height: 1.75rem; /* 28px */
 }
 .image70{
     width: 70px;

@@ -68,7 +68,7 @@
                                                 </div>
                                             </td> 
                                             <td class="vertical-top text-centered"><p class="m-t-10">QTY: {{$wishlist->qty}}</p></td>
-                                            <td class="vertical-top text-centered"><p class="m-t-10">@money($wishlist->product->prices->selling)</p></td>
+                                            <td class="vertical-top text-centered"><p class="m-t-10">@money($wishlist->product->regular_price)</p></td>
                                                                     
                                             <td  class="w-100 vertical-top">
                                                 <ul class="flex flex-end gap5 wishlist-action-wrapper">

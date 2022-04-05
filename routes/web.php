@@ -37,6 +37,7 @@ use App\Http\Controllers\CouponFrontController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\VariantController;
+use App\Http\Controllers\PaymentOptionController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\DirectCheckoutController;
 use App\Http\Controllers\Admin\AttributeController;
@@ -220,6 +221,22 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::put('/account/shipping-address/{address}/update-status', [ShippingAddressController::class, 'set_default_address'])->name('account.shippingaddress.update-status');
     // payment Method
+    Route::get('/account/payment-option', [PaymentOptionController::class, 'index'])->name('account.payment-option');
+
+    Route::get('/account/payment-option/create', [PaymentOptionController::class, 'create'])->name('account.payment-option.create');
+
+    Route::post('/account/payment-option/store', [PaymentOptionController::class, 'store'])->name('account.payment-option.store');
+
+    Route::get('/account/payment-option/edit/{option}', [PaymentOptionController::class, 'edit'])->name('account.payment-option.edit');
+
+    Route::put('/account/payment-option/update/{option}', [PaymentOptionController::class, 'update'])->name('account.payment-option.update');
+
+    Route::delete('/account/payment-option/destroy/{option}', [PaymentOptionController::class, 'destroy'])->name('account.payment-option.destroy');
+
+    Route::put('/account/payment-option/status/{option}', [PaymentOptionController::class, 'updateStatus'])->name('account.payment-option.update.status');
+    // payment Method
+
+
 
 
  

@@ -69,6 +69,15 @@ class User extends Authenticatable
         return $this->hasMany(Review::class);
     }
 
+    public function payment_options(){
+        return $this->hasMany(PaymentOption::class);
+    }
+
+    public function defaultPayment()
+    {
+        return $this->payment_options->where('status', 1)->first();
+    }
+
 
     public function addressBooks()
     {
