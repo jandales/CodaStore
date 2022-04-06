@@ -16,14 +16,16 @@ class UserLoginController extends Controller
         $this->middleware(['guest']);
     }
     
-    public function index(){
+    public function index()
+    {
         return view('login');
     }
 
     public function login(UserLoginRequest $request){ 
 
-       if(auth()->attempt($request->only('email', 'password'))){
-            return redirect()->route('home');
+       if(auth()->attempt($request->only('email', 'password')))
+       {
+           return redirect()->route('home');
        }
        
        return back()->with('error','email not found');

@@ -22,13 +22,9 @@ class ForgotPasswordController extends Controller
         return view('forgotpassword');
     }
 
-    public function request(Request $request)
-    {
-                
-        $request->validate([
-            'email' => 'required|email|string'
-        ]);
-
+    public function request(UserForgotPasswordRequest $request)
+    {              
+     
         $email = $request->email;
         $token = $request->_token;
 
@@ -40,18 +36,15 @@ class ForgotPasswordController extends Controller
         if($register == null) return back()->with('error',"Email not yet Register");
 
         //// create request
-        $request_created =  ForgotPassword::create([
-                'email' => $email,
-                'token' => $token,
-                'created_at' =>  $expiry,
-        ]);
-
-        if(!$request_created) return back()->with('error','Unknown error');
+        ForgotPassword::create([
+            'email' => $email,
+            'token' => $token,
+            'created_at' =>  $expiry,
+        ]);       
         
 
         /// create url to reset password
-        $url = url("/reset_password/{$token}");
-  
+        $url = url("/reset_password/{$token}");  
         //// mail the url into a user
         Mail::to("to@example.com")->send(new forgorPasswordMail($url));
 

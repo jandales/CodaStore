@@ -234,7 +234,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::delete('/account/payment-option/destroy/{option}', [PaymentOptionController::class, 'destroy'])->name('account.payment-option.destroy');
 
     Route::put('/account/payment-option/status/{option}', [PaymentOptionController::class, 'updateStatus'])->name('account.payment-option.update.status');
-    // payment Method
+  
 
 
 
@@ -263,11 +263,13 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::get('/cart/count', [CartController::class, 'count'])->name('cart.count');
 
-    Route::post('/cart/checkout/', [CheckOutController::class, 'index' ])->name('checkout');
 
-    Route::post('/cart/checkout/remove/{cart}', [CheckOutController::class, 'remove'])->name('checkout.remove');
 
-    Route::post('/cart/checkout/placeOrder', [CheckoutController::class, 'placeOrder'])->name('checkout.placeOrder');
+    Route::get('/checkout', [CheckOutController::class, 'index' ])->name('checkout');
+
+    Route::post('/checkout/remove/{cart}', [CheckOutController::class, 'remove'])->name('checkout.remove');
+
+    Route::post('/checkout/placeOrder', [CheckoutController::class, 'placeOrder'])->name('checkout.placeOrder');
 
     Route::post('/checkout/placeOrder/{product}/{qty}',[PlaceOrderController::class, 'direct'])->name('checkout.placeOrder.direct');
 

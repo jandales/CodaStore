@@ -3,7 +3,8 @@
     <div class="container">    
         <div class="pagetitle">
             <h3>Checkout</h3>
-        </div>            
+        </div>  
+        
         @if (session('success'))
                 <div class="alert alert-success mt-1">{{ session('success')}}</div>
         @endif
@@ -11,7 +12,7 @@
                 <div class="alert alert-warning mt-1">{{ session('message')}}</div>
         @endif  
 
-        <div class="flex gap50  mt-4 mb-5">
+        <div class="flex space-between  mt-2 mb-5">
             <div class="w-6">
                 <div class="flex space-between  border-b-solid py-1">
                     <h2 class="uppercase">Contact Information</h2>
@@ -35,60 +36,28 @@
                 <div class="flex space-between mt-2 border-b-solid py-1">                
                     <h2 class="uppercase">Shipping Details</h2>
                     @auth
-                      <span class="link-primary"><i class="fas fa-pen"></i></span>
+                        @if(auth()->user()->shippingDefaultAddress())
+                          <span class="link-primary"><i class="fas fa-pen"></i></span>
+                        @endif
                     @endauth
                 </div>
                 @auth
                     <div class="flex flex-column gap5 mt-1 mb-1">
-                        <div class="flex space-between">
-                            <span>{{ auth()->user()->shippingDefaultAddress()->name() }}</span>
-                            <span>{{ auth()->user()->email }}</span>                                  
-                        </div> 
-                        <span>{{ auth()->user()->shippingDefaultAddress()->street }}</span>
-                        <span>{{ auth()->user()->shippingDefaultAddress()->city . " " . auth()->user()->shippingDefaultAddress()->region }}</span>
-                        <span>{{ auth()->user()->shippingDefaultAddress()->country }}</span>                                  
+                        @if(auth()->user()->shippingDefaultAddress())
+                            <div class="flex space-between">
+                                <span>{{ auth()->user()->shippingDefaultAddress()->name() }}</span>
+                                <span>{{ auth()->user()->email }}</span>                                  
+                            </div> 
+                            <span>{{ auth()->user()->shippingDefaultAddress()->street }}</span>
+                            <span>{{ auth()->user()->shippingDefaultAddress()->city . " " . auth()->user()->shippingDefaultAddress()->region }}</span>
+                            <span>{{ auth()->user()->shippingDefaultAddress()->country }}</span> 
+                        @else
+                            <x-form-shipping></x-form-shipping>
+                        @endif                              
                     </div>    
                 @endauth
                 @guest                
-                <div class="form-shipping">
-                    <div class="flex gap10 mt-1">
-                        <div class="form-block w-6">
-                            <label for="contact">First name</label>
-                            <input type="text" name="email" value=""/>
-                        </div>
-                        <div class="form-block w-6">
-                            <label for="contact">Last name</label>
-                            <input type="text" name="email" value=""/>
-                        </div>
-                    </div>   
-                    <div class="flex gap10 m-t-1">
-                        <div class="form-block w-3">
-                            <label for="contact">Country</label>
-                            <input type="text" name="email" value=""/>
-                        </div>
-                        <div class="form-block w-3">
-                            <label for="contact">Region</label>
-                            <input type="text" name="email" value=""/>
-                        </div>
-    
-                        <div class="form-block w-3">
-                            <label for="contact">Zip Code</label>
-                            <input type="text" name="email" value=""/>
-                        </div>
-                    </div>
-                    <div class="form-block">
-                        <label for="contact">Street</label>
-                        <input type="text" name="email" value=""/>
-                    </div>
-                    <div class="form-block">
-                        <label for="contact">City</label>
-                        <input type="text" name="email" value=""/>
-                    </div>
-                    <div class="form-block">
-                        <label for="contact">Phone Number</label>
-                        <input type="text" name="email" value=""/>
-                    </div>
-                </div>
+                    <x-form-shipping></x-form-shipping>
                 @endguest
 
 
@@ -97,43 +66,27 @@
                 <div class="flex space-between mt-2 border-b-solid py-1">                
                     <h2 class="uppercase">Payment Details</h2>
                     @auth
-                        <span class="link-primary"><i class="fas fa-pen"></i></span>
+                        @if (auth()->user()->defaultPayment())  
+                            <span class="link-primary"><i class="fas fa-pen"></i></span>
+                        @endif 
                     @endauth
                 </div>
                 
                 @auth
-                    <div class="flex flex-column gap5 mt-1 mb-1">                       
-                        <span>Jesus Andales</span>
-                        <span>8293849283993284932</span>
-                        <span>02/19 - 2546</span>                                                     
+                    <div class="flex flex-column gap5 mt-1 mb-1">  
+                        @if (auth()->user()->defaultPayment())                     
+                            <span>{{ auth()->user()->defaultPayment()->card_name }}</span>
+                            <span>{{ auth()->user()->defaultPayment()->card_number  }}</span>
+                        @else
+                            <x-form-payment-option></x-form-payment-option>
+                        @endif            
                     </div>    
                 @endauth
 
 
                 @guest
-                    <div class="form-payment">
-                        <div class="form-block mt-1">
-                            <label for="contact" class="text-sm">NAME</label>
-                            <input type="text" name="email" value=""/>
-                        </div>
-
-                        <div class="form-block mt-1">
-                            <label for="contact" class="text-sm">CARD NUMBER</label>
-                            <input type="text" name="email" value=""/>
-                        </div>
-
-                        <div class="flex gap20 m-t-1">
-                            <div class="form-block w-6">
-                                <label for="contact" class="text-sm">EXPIRY DATA</label>
-                                <input type="text" name="email" value=""/>
-                            </div>
-                            <div class="form-block w-6" class="text-sm">
-                                <label for="contact" class="text-sm">CVC CODE</label>
-                                <input type="text" name="email" value=""/>
-                            </div>                   
-                        </div>  
-                    </div>
-                @endguest              
+                    <x-form-payment-option></x-form-payment-option>
+                @endguest            
                
 
 
@@ -141,17 +94,9 @@
                     <button class="btn btn-dark w-3 p-10">Contenue Shipping</button>
                 </div> 
             </div>
-
-
-
-
-
-
-
-
             
-            <div class="w-6">
-                <div class="w-400 bg-grey p-20">
+            <div class="w-3">
+                <div class="bg-grey p-20">
                     <div class="flex flex-column gap20">
                         @foreach ($carts as $cart)
                         <div class="cart-sm gap10">                    
@@ -181,17 +126,17 @@
                     <div class=" mt-2">
                         <div class="flex space-between">
                             <span>Subtotal</span>
-                            <span>$0.00</span>
+                            <span>@money(cartSubtotal($carts))</span>
                         </div>
         
                         <div class="flex space-between mt-1">
                             <span>Shipping</span>
-                            <span>cost</span>
+                            <span>@money(shippingFee())</span>
                         </div>
     
                         <div class="flex space-between mt-1">
                             <span>Total</span>
-                            <span>$0.00</span>
+                            <span>@money(cartSubtotal($carts) + shippingFee() )</span>
                         </div>
                     </div>
                 </div>

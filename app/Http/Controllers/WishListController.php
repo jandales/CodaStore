@@ -19,13 +19,13 @@ class WishListController extends Controller
            return response()->json(['status' => 'warning']);  
        } 
 
-        $create = WishList::create([
+        WishList::create([
             'user_id' => auth()->user()->id,
             'product_id' => $product->id,
             'qty' => '12',   
         ]);
 
-        if( $create ) return response()->json([ 'status' => 'success', 'message' => 'Successfully added to your wishlist' ]);
+        return response()->json([ 'status' => 'success', 'message' => 'Successfully added to your wishlist' ]);
         
 
     }

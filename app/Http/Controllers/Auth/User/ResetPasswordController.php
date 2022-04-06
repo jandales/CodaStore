@@ -8,6 +8,7 @@ use App\Models\ForgotPassword;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\UserResetPasswordRequest;
 
 class ResetPasswordController extends Controller
 {
@@ -19,15 +20,8 @@ class ResetPasswordController extends Controller
         return view('resetpassword')->with('token',$token);
     }
 
-    public function reset(Request $request){
-
-        $this->validate($request, [         
-            'email' => 'email',
-            'password' => 'required_with:password_confirmation|string|confirmed|min:6',
-            'password_confirmation' => 'required'
-        ]);       
-   
-
+    public function reset(UserResetPasswordRequest $request)
+    {         
         $token = $request->token;  
         $password = $request->password; 
 
@@ -43,9 +37,9 @@ class ResetPasswordController extends Controller
          // check if a token already expire
         $expiry_date = $reset->created_at; 
 
-        if($current_date >= $expiry_date){
-            return redirect('/forgot-password')->with('error', 'Request already expires');
-        }       
+        if($current_date >= $expiry_date)  return redirect('/forgot-password')->with('error', 'Request already expires');
+           
+              
    
         // change password
         $user = User::where('email', $email)->first();

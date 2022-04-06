@@ -23,7 +23,7 @@ class CheckOutController extends Controller
     
         return view('checkout')->with([
             'carts' => $user->carts, 
-            'addressBooks' => $user->addressBooks
+            'addressBooks' => $user->addressBooks,        
         ]);
     }
 

@@ -7,7 +7,7 @@
                   
                     $userReview =  auth()->user()->review($product); 
               
-                    if($userReview== null){
+                    if($userReview == null){
                         $reviews = $product->reviews; 
                     }else {
                         $reviews = $product->reviews->except($userReview->id); 
