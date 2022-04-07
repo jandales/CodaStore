@@ -4,17 +4,17 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class FormShipping extends Component
+class SmallCartComponent extends Component
 {
-    public $address;
+    public $carts;
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($address = null)
+    public function __construct($carts)
     {
-        $this->address = $address;
+        $this->carts = $carts;
     }
 
     /**
@@ -24,6 +24,6 @@ class FormShipping extends Component
      */
     public function render()
     {
-        return view('components.form-shipping');
+        return view('components.small-cart-component');
     }
 }

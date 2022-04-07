@@ -32,8 +32,8 @@
                  
                  @else    
 
-                <form action="{{ route('checkout') }}" method="POST">   
-                    @csrf   
+           
+          
                                  
                     <div class="cart">   
                         <div class="cart-container">    
@@ -144,8 +144,10 @@
                                     </div>
 
                                     <br>                        
-                                
-                                    <button class="button w-12 p-15 dark">Proceed to Checkout</button>
+                                    <a href="{{ route('checkout.information')}}">
+                                        <button class="button w-12 p-15 dark">Proceed to Checkout</button>
+                                    </a>
+                                    
                                     
                                 
                                 </div>
@@ -154,7 +156,7 @@
                
                     </div>
                     @endif
-                </form>
+            
                
         </div>
 

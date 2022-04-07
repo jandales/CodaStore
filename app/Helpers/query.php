@@ -60,3 +60,24 @@ function shippingFee(){
 }
 
 
+function checkoutProgress()
+{
+    if ( request()->is('checkout/information') ) return 25;
+
+    if ( request()->is('checkout/shipping') ) return 50;
+
+    if ( request()->is('checkout/payment') ) return 70;
+
+}
+
+function checkoutProgressPassed()
+{
+    if ( request()->is('checkout/information') ) return 'active';
+
+    if ( request()->is('checkout/shipping') ) return 'active';
+
+    if ( request()->is('checkout/payment') ) return 'active';
+
+}
+
+

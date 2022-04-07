@@ -14,16 +14,54 @@ use App\Models\AddressBook;
 use App\Models\OrderProduct;
 use Illuminate\Http\Request;
 use App\Models\BillingDetails;
+use Illuminate\Support\Facades\Auth;
 
 class CheckOutController extends Controller
 {
+    private $carts;
+
+    public  function __construct()
+    {        
+        $this->middleware(function ($request, $next) {
+            $this->carts = Auth::user()->carts;
+            return $next($request);
+        });
+    }
+
     public function index()
-    {       
-        $user =  auth()->user();
-    
-        return view('checkout')->with([
-            'carts' => $user->carts, 
-            'addressBooks' => $user->addressBooks,        
+    {    
+       
+        if($this->carts->count() == 0) back();  
+        
+        return view('checkout.information')->with([
+            'carts' => $this->carts,            
+        ]);
+      
+        // if (request()->is('checkout'))  $blade = 'checkout.information';
+
+        // if (request()->is('checkout/shipping')) $blade = 'checkout.shipping';
+
+        // if (request()->is('checkout/payment'))  $blade = 'checkout.payment';
+        
+        // return view($blade)->with(['carts' => $carts ]);
+    }
+
+
+
+    public function shipping(Request $request)
+    {  
+        if($this->carts->count() == 0) back();    
+        return view('checkout.shipping')->with([
+            'carts' => $this->carts,                        
+        ]);
+    }
+
+    public function payment(Request $request)
+    {
+      
+        if($this->carts->count() == 0) back();    
+        return view('checkout.payment')->with([
+            'carts' => $this->carts,            
         ]);
     }
 

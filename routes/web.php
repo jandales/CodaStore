@@ -265,7 +265,11 @@ Route::group(['middleware' => 'auth'], function(){
 
 
 
-    Route::get('/checkout', [CheckOutController::class, 'index' ])->name('checkout');
+    Route::get('/checkout/information', [CheckOutController::class, 'index' ])->name('checkout.information');
+  
+    Route::get('/checkout/shipping', [CheckOutController::class, 'shipping' ])->name('checkout.shipping');
+
+    Route::get('/checkout/payment', [CheckOutController::class, 'payment' ])->name('checkout.payment');
 
     Route::post('/checkout/remove/{cart}', [CheckOutController::class, 'remove'])->name('checkout.remove');
 
@@ -274,6 +278,10 @@ Route::group(['middleware' => 'auth'], function(){
     Route::post('/checkout/placeOrder/{product}/{qty}',[PlaceOrderController::class, 'direct'])->name('checkout.placeOrder.direct');
 
     Route::get('/api/carts', [CartController::class, 'carts']);
+
+
+
+    
    
   
 
