@@ -13,45 +13,51 @@
         <div class="container">
            
     
-          <div class="row">
+          <div class="row space-between  mt-2 mb-2">
             <div class="contact-form">
                 <h3>Send us Message</h3>
-                <form>
+                <form action="{{ route('sendMessage') }}" method="POST">
+                  @csrf
                     <div class="form-block">
                         <label>Email</label>
-                        <input type="text">
+                        <input type="email" name="email">
+                        @error('email')
+                          <small class="error-message">{{ $message }}</small>    
+                        @enderror
                     </div>             
     
-                    <div class="form-block">
-                       
-                        <textarea  cols="30" rows="8">How can we Help you!</textarea>
+                    <div class="form-block">                       
+                        <textarea name="content"  cols="30" rows="8" placeholder="How can we Help you!"></textarea>
+                        @error('content')
+                          <small class="error-message">{{ $message }}</small>    
+                        @enderror
                     </div>
     
                     <div class="form-block">
-                      <button class="button">Submit</button>
+                      <button class="btn btn-dark">Submit</button>
                     </div>
                     
     
                 </form>
-            </div>
-            <div class="separator"></div>
-            
+            </div> 
             <div class="contactinfo">
-                
-               <div class="info">
-                <label>Visit us</label>
-                <p>St. Lourence Street New York</p>
-               </div>
-    
-               <div class="info">
-                <label>Call us</label>
-                <p># 098-2323-323</p>
-               </div>
-    
-               <div class="info">
-                <label>Email</label>
-                <p>Codastore.saleStore.com</p>
-               </div>
+               
+              <div class="mt-2">
+                <div class="info">
+                  <h3>Visit us</h3>
+                  <p>St. Lourence Street New York</p>
+                 </div>
+      
+                 <div class="info">
+                  <h3>Call us</h3>
+                  <p># 098-2323-323</p>
+                 </div>
+      
+                 <div class="info">
+                  <h3>Email us</h3>
+                  <p>Codastore.saleStore.com</p>
+                 </div>
+              </div>
     
             </div>
           </div>

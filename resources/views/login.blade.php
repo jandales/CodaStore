@@ -37,7 +37,7 @@
                                 <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <div class="flex-row space-between">
+                            <div class="flex space-between">
                                 <div class="checkbox">
                                     <input name="rememberToken" type="checkbox">
                                     <label for="Remember me">Remember me </label>
@@ -52,15 +52,6 @@
                         </form>  
                         <br>  
                         <span>Dont have an account yet? <a href="/register" class="login-register-link"> Sign up now</a></span>
-                        
-
-                        <div class="flex-row justify-content-center mt-2">
-                            <div class="line"></div>
-                            <span class="ml-1 mr-1">or</span>
-                            <div class="line"></div>
-                        </div>
-
-                        <button class="login-register-social-button"><span><i class="fab fa-google"></i></span>Continue with Google</button>
                     </div>
             
             </div>

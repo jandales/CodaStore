@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
+use App\Services\CustomerServices;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 
@@ -87,14 +88,6 @@ class UserController extends Controller
       $service->updateAvatar($request);
       return  back()->with(['success' => 'Image Successfully upload']);
    }
-
-  public function addressbook()
-  {
-      return auth()->user()->addressBooks; 
-  }
-
-
-
    
 }
 

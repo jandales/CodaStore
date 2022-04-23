@@ -1,4 +1,5 @@
 const updateQuantity = document.querySelectorAll('.add-minus-quantity')
+
 // get all quanity Element
 const cartQtys = document.querySelectorAll('.cart-qty');
 
@@ -9,13 +10,14 @@ cartQtys.forEach(element => {
     element.addEventListener('change', function() {
         // get data for each element
         const cart = element.getAttribute('item');
-        console.log(cart);
         // get quantity for each element
         let qty = element.value
         updateQty(cart,qty);
 
     })
 })
+
+
 
 
 
@@ -63,13 +65,13 @@ function updateQty(cart, qty){
                 quantity : qty
                 },
             success:function(response){
-
+                console.log(response);
                 if(response.status == "error") {
                    showMessage("danger", response.message); 
                    return;
                 }                       
-
-                location.reload()
+                return;
+                // location.reload()
                   
             }
         })

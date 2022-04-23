@@ -70,10 +70,10 @@
 
 
 .col1{
-    width:180px;
+    width:250px;
 }
 .col2{
-    width:calc(100% - 180px);
+   flex: auto;
 }
 
 

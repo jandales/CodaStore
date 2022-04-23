@@ -100,6 +100,7 @@ body{
 }
 
 .flex-column {
+    display: flex;
     flex-direction: column !important;
 }
 
@@ -111,6 +112,9 @@ body{
 }
 .flex-end{
   justify-content: flex-end;  
+}
+.items-start{
+    align-items: flex-start !important;
 }
 .align-items-end{
     align-items: flex-end;
@@ -185,6 +189,7 @@ nav ul li a{
     padding: 20px 25px;
     color: #fff;
     text-decoration: none;
+    cursor: pointer;
 }
 nav ul li a span{
     color:#fff;
@@ -195,9 +200,9 @@ nav ul li a span.hide-menu {
 
 }
 
-nav ul li a:hover{
+/* nav ul li a:hover{
     background:#252526 ;
-}
+} */
 
 nav ul li a.active{
     background:#252526 ;
@@ -211,6 +216,10 @@ nav ul li ul li a:hover {
     background:#2a2a2a ;
 }
 
+nav ul li:hover{
+    background:#252526;
+}
+
 .navbar {
      display: flex;
 }
@@ -221,9 +230,9 @@ nav ul li .nav-dropdown-btn{
     justify-content: space-between;
 }
 
-nav ul li .nav-dropdown-btn:hover{
+/* nav ul li .nav-dropdown-btn:hover{
     background:#2a2a2a;
-}
+} */
 
 
 
@@ -238,8 +247,8 @@ nav ul li .sub-menu > li > a{
     padding: 10px 0px 10px 50px;
 }
 
-nav ul li .sub-menu li.active{
-    background:#2a2a2a !important;
+nav ul li .sub-menu li.active a{
+    color: #ff523b !important;
 }
 
 
@@ -974,14 +983,13 @@ table ul.ul{
     flex-direction: row;
     justify-content: flex-start;
     align-items:center;
+    margin-bottom: 2rem;
 }
 
 .form-inline label{
     font: 12px;
-    flex-basis: 20%;
-    color: #555;
-    margin-right: 20px;
-  
+    min-width: 200px;
+    color: #555;   
 }
 .form-checkbox{
     display: flex;
@@ -1220,6 +1228,7 @@ button:disabled{
     margin-left: 10px;
 }
 
+
 .mt5{
     margin-top: 5px;
 }
@@ -1233,6 +1242,9 @@ button:disabled{
 }
 .ml20{
     margin-left: 20px;
+}
+.ml-5{
+    margin-left: 5rem;
 }
 
 .mr10{
@@ -3216,6 +3228,88 @@ ul li {
     padding:  10px 20px;
     background: #f9f9f9;
 }
+
+
+.sidebar-panel{
+    width: 200px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px;
+}
+
+.sidebar-panel a{
+    padding:8px 16px;
+}
+
+.sidebar-panel a.active{
+    background-color: #f7f7f7;
+}
+.sidebar-panel a:hover{
+    background-color: #f7f7f7;
+}
+
+.setting-content{
+     flex: auto;
+     min-height: 500px;
+  
+
+}
+
+
+td span.active{
+    background-color: #28a745;
+    color: #fff;
+    padding: 5px 8px;
+    border-radius: 3px;
+    text-transform: capitalize;
+}
+
+td span.inactive{
+    background-color: #dc3545;
+    color: #fff;
+    padding: 5px 8px;
+    border-radius: 3px;
+    text-transform: capitalize;
+}
+
+.table-orders{
+    border: 0;
+}
+.table-orders thead tr, .table-orders tbody tr{
+    border: 0 !important; 
+    border-bottom: 1px solid #eee !important; 
+}
+
+.table-orders tbody tr:last-child{
+    border: 0 !important; 
+    border-bottom: 0 !important; 
+}
+.table-orders tbody tr:hover{
+    background: none !important;
+    background-color: none  !important;
+}
+
+.date-time-format label{
+    display: block;
+    margin-top: 10px;
+}
+.date-time-format label:first-child{
+    margin-top: 0px !important;
+}
+
+.date-time-format label span{
+    margin-left: 5px;
+    display: inline-block;
+    min-width: 10em;
+}
+
+.date-time-format label code{  
+    background-color: #ddd;
+    padding: 5px;
+}
+
+
+
 
 
 

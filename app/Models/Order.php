@@ -6,18 +6,27 @@ use App\Models\Coupon;
 use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Shipping;
+use App\Models\PaymentDetail;
 use App\Models\BillingDetails;
+use App\Http\Traits\DateAndTimeFormat ;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Order extends Model
 {
-    use HasFactory;
+    use HasFactory,  DateAndTimeFormat ;
 
     protected $fillable = [
         'user_id', 
+        'shipping_method_id',
         'status',
-        'shipping_fee' 
+        'shipping_charge',
+        'gross_total',
+        'num_items_sold',
+        'tax_total',
+        'net_total',
+        'coupon_id',
+        'coupon_amount',
     ];
 
     public function user()
@@ -25,19 +34,28 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function orderProducts()
+    public function payment_detail()
+    {
+      return $this->hasOne(PaymentDetail::class);
+    }
+
+    public function items()
     {
        return $this->hasMany(OrderProduct::class);
     }
 
+    public function coupon()
+    {
+      return $this->hasOne(Coupon::class);
+    }
     public function payment()
     {
-        return $this->hasOne(Payment::class);
+        return $this->hasOne(OrderPayment::class);
     }
 
     public function billing()
     {
-      return $this->hasOne(BillingDetails::class);
+      return $this->hasOne(OrderBilling::class);
     }   
 
     public function couponUsed()
@@ -47,17 +65,22 @@ class Order extends Model
 
     public function shipping()
     { 
-      return $this->hasOne(Shipping::class);
+      return $this->hasOne(OrderShipping::class);
+    }
+
+    public function shippingMethod()
+    {
+      return $this->hasOne(ShippingMethod::class,'id', 'shipping_method_id');   
     }
 
     public function totalItems()
     {
-      return $this->orderProducts->sum('qty');
+      return $this->items->sum('qty');
     }
 
     public function subtotal()
     {
-      return $this->orderProducts->sum('price');
+      return $this->items->sum('price');
     }
     
     public function amount()
@@ -120,5 +143,21 @@ class Order extends Model
         return $query->where('id', $input);
                    
     }
+
+    public function scopeByAuthUser($query)
+    {
+       return $query->where('user_id', auth()->user()->id)
+                            ->with('payment_detail', 'items', 'items.product', 'shipping', 'billing', 'payment', 'couponUsed')
+                            ->orderBy('id', 'desc');
+    }
+
+    public function scopeByAuthUserStatus($query, $status)
+    {
+       return $query->where([['user_id', auth()->user()->id],['status', $status]])
+                            ->with('payment_detail', 'items', 'items.product', 'shipping', 'billing', 'payment', 'couponUsed')
+                            ->orderBy('id', 'desc');
+    }
+
+ 
 
 }

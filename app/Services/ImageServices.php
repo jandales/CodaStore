@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\Photo;
 use Illuminate\Http\Request;
 
-class ImageServies
+class ImageServices
 {
     public function uploads(Request $request)
     {
@@ -24,7 +24,8 @@ class ImageServies
             ]);
             if ($photo) $image->move(public_path($location),$name);
             array_push($images, ["id" => $photo->id, "path" => $photo->path, 'deleted' => 0]);
-        }  
+        } 
+        return $images; 
     }
 
     public function delete(Photo $photo)

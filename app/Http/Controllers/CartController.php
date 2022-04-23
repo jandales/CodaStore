@@ -2,40 +2,39 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Cart;
+use App\Models\Coupon;
 use App\Models\Product;
+use App\Models\CartItem;
 use App\Models\WishList;
 use App\Models\AddressBook;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Models\ShippingMethod;
+use Illuminate\Support\Facades\Cookie;
 
 class CartController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {    
-        
-        Cart::UnselectAll();     
-        $carts = Cart::CartByAuthUser(); 
-        return view('cart')->with(['carts' =>  $carts]);
-    }
 
-
-    public function carts()
+    public function __construct()
     {
-        $carts = Cart::CartByAuthUser();  
+        // $this->middleware(function ($request, $next) {  
+        //    Self::deleteExpireCart();
+        //     return $next($request);
+        // });
+    }     
 
-        $total = 0;
-        foreach($carts as $item)
-        {
-            $total += $item->qty * $item->price;
-        }
+    public function index()
+    { 
+        $shipping_methods = ShippingMethod::where('status', 1)->get(); 
+        session(['shipping_charge' => $shipping_methods[0]->amount]);
         
-        return response()->json(['carts' => $carts, 'total' => $total ]);
+        $cart = Cart::ByUser()->first();           
+        return view('cart')->with(['cart' =>  $cart, 'shipping_methods' => $shipping_methods]);
     }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -45,58 +44,88 @@ class CartController extends Controller
      */
     public function store(Request $request, Product $product)
     {
+        $request->validate([
+            'qty' => 'required|numeric',
+        ]); 
 
-        $productQuantity = $product->stock->qty;
-        $cartQuantity = $request->qty;
-    
-        if($product->hasInCart())
-        {
-            $cart = Cart::where('product_id',$product->id)->first();
-            $cart->qty += $cartQuantity;
-            $cart->save();
-            return response()->json(['status' => 501, 'message' => 'Product is already in your cart'  ]); 
-        }            
 
-        if($productQuantity < $cartQuantity)
-        {
-            $cartQuantity = $productQuantity; 
-        }
+        $productQuantity = $product->stock->qty;  
+        $attributes = $request->properties;
+        $newQuantity = (int)$request->qty;  
+        $total = 0; 
+
+        if($productQuantity == 0)  return response()->json(['status' => 500, 'message' => 'Product is not available' ]);   
+
+        $cart = Cart::ByUser()->first();
+
+        if($productQuantity <  $newQuantity) $newQuantity = $productQuantity; 
         
-        Cart::create([
-            'user_id' => auth()->user()->id,
-            'product_id' => $product->id,
-            'product_name' => $product->name,
-            'qty' => $cartQuantity,
-            'price' => $product->regular_price,
-            'properties' => $request->properties
-        ]);
+        $total = $newQuantity * $product->regular_price;
 
-        return response()->json(['status' => 500, 'message' => 'Product successfully added in your cart']);
+        if($cart)
+        {   
+            //check if an item  already in the cart;
+            $item = $cart->hasThisProduct($product->id);
+
+            if($item)
+            {  
+                $item->qty += $newQuantity;
+                $item->attributes =  $attributes;
+                $item->save();        
+                Cart::UpdateTotal();  
+                return; 
+            }
+            self::createItem($cart->id, $product->id, $newQuantity, $attributes);
+            Cart::UpdateTotal();
+            return;            
+                 
+            
+        };  
+ 
+        // stored new cart and item
+        $cart = Cart::create([             
+             'total' => $total,
+             'cart_id' =>  Cookie::get('cart-id'),
+             'expired_at' => Carbon::now()->addDays(5),
+        ]);      
+        
+        self::createItem($cart->id, $product->id, $newQuantity, $attributes);   
+           
+        return;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    private function createItem($cart, $product, $quantity, $attributes)
+    {
+        return CartItem::create([
+            'cart_id' => $cart,
+            'product_id' => $product,
+            'qty' => $quantity,
+            'attributes' => $attributes,
+        ]);
+    }
+
+    public function createCart()
+    {     
+        $cart_id =  Cookie::get('cart-id');
+        $cart = Cart::where('cart_id', $cart_id)->first();
+        if(!empty($cart)) return;      
+
+        Cart::create([             
+            'total' => 0,
+            'cart_id' => $cart_id,
+            'expired_at' => Carbon::now()->addDays(5),
+        ]); 
+    }
+
+  
     public function count()
     {       
-        $wishlist =  WishList::ByAuthUser()->count();
-        return response()->json(['cart' => Cart::CartByAuthUser()->count()]);
+        $cart =  Cart::ByUser()->first();
+        $cartItemsCount = $cart->items->sum('qty'); 
+        return response()->json(['cartItemsCount' => $cartItemsCount]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
+ 
     /**
      * Update the specified resource in storage.
      *
@@ -104,80 +133,116 @@ class CartController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cart $cart)
-    {   
-       $cart->qty = newQuantity($cart->qty, $request->quantity);
-       $cart->save();
-       return response()->json(['status' => 200, 'message' => 'Cart Quantity Updated']);
+    public function update(Request $request, CartItem $cartitem)
+    {        
+       $cartitem->qty = (integer)$request->quantity;
+       $cartitem->save();
+      
+       $cart = Cart::UpdateTotal();
+       return response()->json(['status' => 200,
+        'item_subtotal' => $cartitem->subtotal(),
+        'items_count' => $cart->totalItems(),
+        'subtotal' => $cart->total,
+        'grand_total' => $cart->grandTotal()
+       ]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int  $item
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cart $cart)
+    public function destroy(CartItem $item)
+    {        
+        $item->delete(); 
+        Cart::UpdateTotal();
+        return response()->json(['status' => 200]);
+    } 
+
+    public function couponActivate(Request $request)
     {
-        $cart->delete();        
-        return response()->json(['status' => 200, 'message' => 'Product successfully remove' ]);
-    }
-    
-    public function destroies(Request $request)
-    {
-       
-        foreach($request->products as $product)
+        $request->validate([
+            'coupon_code' => 'required',
+        ]);
+
+        $coupon = Coupon::where('name', $request->coupon_code)->first();
+        
+        if($coupon == null) return  response()->json(["status" => 500, "message" => "Coupon not Found"]);        
+
+        if(Self::validateCoupon($coupon))
         {
-           $item = Cart::find($product)->first();
-           $item->delete();
-        }
-        return response()->json(['status' => 200, 'message' => 'Product successfully remove' ]);
-       
+            $cart = Cart::ByUser()->first();
+            $total = $cart->total;  
+            $cart->coupon_id = $coupon->id;          
+            $cart->discount = $coupon->discount($total);
+            $cart->save();
+
+            return response()->json([
+                'status' => 200, 
+                'coupon' => $coupon,
+                'discount' => $cart->discount,
+                'subtotal' => $cart->total,
+                'grand_total' => $cart->grandTotal()
+            ]);
+        }  
+    }
+   
+    public function couponRemove()
+    {
+        $cart = Cart::ByUser()->first();
+        $cart->coupon_id = null;        
+        $cart->discount = 0;
+        $cart->save();
+        return response()->json(['status' => 200, 'grand_total' => $cart->grandTotal()]);
     }
 
-    public function checkout(Request $request)
-    {
-        // if(!$request->selected) return back()->with('error', 'Please select item to checkout');
+    public function selectShippingMethod($id)
+    { 
+        $shipping_method = ShippingMethod::find($id);  
+        // create session shipping charge 
+        session(['shipping_charge' => $shipping_method->amount]);
         
-        // $cartItems = $request->selected;
-
-        // foreach($cartItems as $cartItem){
-        //      $item = Cart::find($cartItem);
-        //      $item->selected = 1;
-        //      $item->save();
-        // } 
-        
-        // return redirect()->route('checkout');
-
+        $cart = Cart::ByUser()->first(); 
+        $grand_total = $cart->grandTotal() + session()->get('shipping_charge');
+        return response()->json(['shipping_method' => $shipping_method, 'grand_total' => $grand_total ]);
     }
 
-
-    public function updateProductsDiscount(Request $request)
-    {
-
+    public function validateCoupon(Coupon $coupon)
+    {      
       
-     $products = $request->products;
-     $amount = $request->amount;
-
-     $carts = Cart::CartByAuthUser(); 
-
-        foreach($carts as $cart)
-        {
-           for($i = 0; $i < count($products); $i++)
-           {
-                if($cart->product_id == $products[$i]['product_id'])
-                {
-                    $cartitem =  Cart::where('product_id', $cart->product_id)->first();
-                    $cartitem->discount = $amount;
-                    $cartitem->save();
-                }
-            }
+        $state = true;
+        $message = '';
+        $currentDate = date('Y-m-d H:i:s');   
+       
+        if ($currentDate > $coupon->expire_at){
+            $state = false;
+            $message = "coupon already Expired";
         }
-
-        return response()->json(["status"=> "success"]);
+        
+        if ($coupon->limit_per_coupon < $coupon->usage){
+            $state = false;
+            $message = 'This coupon already reach the limit';
+        }
+        if (!$coupon->limitPerUser()){
+            $state = false;
+            $message = 'You Already Used this Coupon';
+        } 
+        
+        return ['status' => $state, 'message' => $message];
+        
     }
 
-    
+    public function getTotal()
+    {
+        $cart = Cart::ByUser()->first();     
+        return response()->json(['grand_total' => $cart->grandTotal()]);
+    }
 
+    public function get_user_cart()
+    {
+        $cart = Cart::ByUser()->first();     
+        return response()->json(['cart' => $cart]);
+    }
     
 }

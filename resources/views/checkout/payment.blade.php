@@ -11,112 +11,59 @@
         <div class="flex space-between gap50 mt-5 mb-5">
             <div class="w-6">
 
-                <div class="checkout-information">
-                    <div class="panel border-b-0">
-                        <div class="flex space-between">
-                            <div class="flex">
-                                <span for="" style="width: 100px">Contact</span>
-                                <span class="span-email">Jesusandales@gmail.com</span>
-                            </div>
-                            <a href="{{route('checkout.information')}}" class="change">Change</a>
-                        </div>
-                    </div> 
-                    <div class="panel border-b-0">
-                        <div class="flex space-between">
-                            <div class="flex">
-                                <span for="" style="width: 100px">Ship to</span>
-                                <span class="span-ship-to">Jesusandales@gmail.com</span>
-                            </div>
-                            <a href="{{route('checkout.information')}}" class="change">Change</a>
-                        </div>
-                    </div> 
-                    <div class="panel">
-                        <div class="flex space-between">
-                            <div class="flex">
-                                <span for="" style="width: 100px">Method</span>
-                                <span class="span-method">Free Shipping</span>
-                            </div>
-                            <a href="{{route('checkout.shipping')}}" class="change">Change</a>
-                        </div>
-                    </div> 
-                </div>
+               <x-checkout-information-component/>
 
-                
+                <form id="form" action="{{ route('checkout.paynow') }}" method="post">
+                                    
+                    @csrf
                 <div class="checkout-shipping-method mt-2">
-                    <h2 class="uppercase">Payment</h2>
-                    <span class="block mt10">All Transactiion are secure and encrypted</span>
-                    <div class="panel mt-1">
-                        <div class="form-block">
-                            <label for="contact" class="text-sm">Card Number</label>
-                            <input type="text" name="card_number" value=""/>
-                        </div>
-                        <div class="form-block">
-                            <label for="contact" class="text-sm">Card Name</label>
-                            <input type="text" name="card_name" value=""/>
-                        </div>
-                        <div class="flex gap20">
-                            <div class="form-block w-6">
-                                <label for="contact" class="text-sm">Expiration Date (MM/YY)</label>
-                                <input type="text" name="card_expire_data" value=""/>
-                            </div>
-                            <div class="form-block w-6">
-                                <label for="contact" class="text-sm">Security Code</label>
-                                <input type="text" name="card_cvc" value=""/>
-                            </div>
-                        </div>
-             
-                    </div>
-                    
-                    
-                </div>
-
-                <div class="checkout-shipping-method mt-2">
-                    <h2 class="uppercase">Billing Address</h2>
-                    <span class="block mt10">Select the address that mactch your card or payment method</span>
-                    <div class="panel border-b-0 mt-1">
-                        <div class="flex gap10">
-                            <input type="radio" id="use-same" checked  style="margin-top: 5px" name="" id="">   
-                            <label for="">Same as Shipping Address</label>  
-                        </div>
-                    </div>                    
-                    <div class="panel">
-                        <div class="flex gap10">
-                            <input type="radio" id="use-differ" style="margin-top: 5px" name="" id="">   
-                            <label for="">Use a different Address</label>  
-                        </div>
-                        <x-form-shipping/>
-                    </div> 
-                </div>
-
-                <div class="flex align-items-center gap10 mt-2">
-                    <input type="checkbox" name="" id="">
-                    <label for="">Save my Information for fastest checkout</label>
-                </div>             
-
-                <div class="form-block mt-2">
-                    <button class="btn btn-dark w-3 p-10 mr-1">Pay Now</button> 
-                    <a href="{{route('checkout.shipping')}}" class="change">Return to Shipping</a>
-                </div> 
-            </div>
-            
-            <div class="w-6">
-                <x-small-cart-component :carts="$carts"/>
                
+                <x-card-component :card="$user_payment_option"/>
+                    
+                </div>
+             
+                    <div class="checkout-shipping-method mt-2">
+                        <h2 class="uppercase">Billing Address</h2>
+                        <span class="block mt10">Select the address that mactch your card or payment method</span>
+                        <div class="panel border-b-0 mt-1">
+                            <div class="flex gap10">
+                                <input type="radio" id="use-same" name="same_as_shipping" checked  style="margin-top: 5px" value="0">   
+                                <label for="">Same as Shipping Address</label>  
+                            </div>
+                        </div>                    
+                        <div class="panel">
+                            <div class="flex gap10">
+                            <input type="radio" id="use-differ" name="is_new_billing" style="margin-top: 5px" value="1">   
+                                <label for="">Use a different Address</label>  
+                            </div>
+                            <x-form-billing-component/>
+                        </div> 
+                    </div>
+
+                    <div class="flex align-items-center gap10 mt-2">
+                        <input type="checkbox" name="" id="">
+                        <label for="">Save my Information for fastest checkout</label>
+                    </div>             
+
+
+                        <div class="form-block mt-2">
+                            <button id="paynow" class="btn btn-dark w-3 p-10 mr-1">Pay Now</button> 
+                            <a href="{{route('checkout.shipping')}}" class="change">Return to Shipping</a>
+                        </div> 
+                </form>
+              
+               
+            </div>            
+            <div class="w-6">
+                <x-small-cart-component :cart="$cart" :shippingcharge="session('shipping_method')['amount']"/>               
             </div>
         </div>
 
 
    
-        <script>
-            let data;
-            document.addEventListener('DOMContentLoaded', function() {
-                data = JSON.parse(localStorage.getItem("checkoutInfo")); 
-                document.querySelector('.span-email').innerHTML = data.contact;       
-                const address = `${data.shippingaddress.street} ${data.shippingaddress.city} ${data.shippingaddress.region} ${data.shippingaddress.country}`;
-                document.querySelector('.span-ship-to').innerHTML = address;  
-                document.querySelector('.span-method').innerHTML = data.shippingMethod
-            })  
-            
+        <script type="module">
+
+            import { errorReponse, errorRemove } from '/js/validator.js';           
             
 
             document.getElementById('use-differ').onclick = function() {
@@ -132,6 +79,34 @@
                 usediffer.checked = false;
                 usediffer.parentElement.classList.remove('hidden')    
                 document.getElementById('form-shipping').classList.add('hidden');           
+            }
+
+            document.getElementById('paynow').onclick = function(e) {
+                e.preventDefault();
+      
+                const form = document.getElementById('form');
+                const url = form.getAttribute('action');
+                let formData =  new FormData(form);         
+               
+    
+
+                $.ajax({
+                    url : url,
+                    type : 'POST',
+                    data : formData,
+                    datatype:"json", 
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    error : errorReponse,
+                    success : function(res){                      
+                        errorRemove();
+                        if (res.status === 200)
+                        {                          
+                           window.location.href = res.route;
+                        }
+                    }
+                })
             }
         </script>
 

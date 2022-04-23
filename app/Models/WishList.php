@@ -33,6 +33,6 @@ class WishList extends Model
 
     public function scopeByAuthUser()
     {
-        return $this->where('user_id',auth()->user()->id)->with('product','product.stock')->get(); 
+        return $this->where('user_id',auth()->user()->id)->with('product','product.stock'); 
     }
 }

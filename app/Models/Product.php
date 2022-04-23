@@ -131,12 +131,24 @@ class Product extends Model
     {
         if ($this->status == 0) return 'Draft';
         return 'Published';
+    }
+    public function scopePublished($query)
+    {
+       return $query->where('status',1);
     } 
     
 
     public function scopeSearch($query,$input)
     {
         return $query->where('name','like','%' . $input . '%')                  
+                     ->orWhere('slug_name','like','%' . $input . '%');
+                
+    }
+
+    public function scopePublishedSearch($query,$input)
+    {
+        return $query->where('status',1)
+                     ->where('name','like','%' . $input . '%')                  
                      ->orWhere('slug_name','like','%' . $input . '%');
                 
     }

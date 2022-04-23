@@ -23,32 +23,21 @@
                     @foreach ($products as $product)
                     <div class="items mb-2">                                  
                         <div class="item">
-                            <img src="/{{ $product->imagePath }}">                            
+                            <a href="{{ route('shop.product',[ $product ] )}}">
+                                <img src="/{{ $product->imagePath }}">      
+                            </a>                              
                         </div>
                         <div class="item-description">
                             <div class="product-detail-wrapper">
                                 <a href="{{ route('shop.product',[ $product ] )}}">{{ $product->name }}</a>
                                 <label class="mt-1">@money($product->regular_price)</label>
                             </div>
-                            <div class="add-wishlist-wrapper">
-                                @auth                                            
-                                    <span class="add-wish-list {{ $product->isWishlisted() ? 'ctheme' : '' }} "   data="{{ $product->id}}"><i class="{{ $product->isWishlisted() ? 'fas fa-heart' : 'far fa-heart' }} "></i></span>                                                      
-                                @endauth
-                                @guest
-                                    <span class="add-wish-list" data="{{ $product->id}} "><i class="far fa-heart"></i></span>
-                                @endguest  
-                                
-                            </div>
-                           
                         </div>
                     </div>     
                     @endforeach                  
                     
                 </div>
-
-                @if (count($products) != 0)
-                <a href="#" class="shopnow">Load More</a>
-                @endif
+             
             </div>
 
         </div>  

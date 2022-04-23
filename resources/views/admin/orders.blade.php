@@ -91,7 +91,7 @@
                             </td>
                             <td>{{ $order->totalItems() . " items" }}</td>
                             <td>@money($order->total())</td>
-                            <td>{{ $order->created_at}}</td>
+                            <td>{{  $order->createdAtDate() }}</td>
                             <td><span class="status capitalized {{ $order->statusColor() }}">{{ $order->status }}</span></td>
                             <td width="100px"> 
                                 <div class="table-action">

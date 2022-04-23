@@ -16,20 +16,10 @@ class OrderController extends Controller
 
     public function index($status)
     {
-        $orders = null;
-
-        if( $status == "all" )
-        {
-            $orders =  Order::where('user_id', auth()->user()->id)
-                            ->with('shipping', 'orderProducts', 'orderProducts.product')
-                            ->orderBy('id', 'DESC')->get();
-        }    
-        else 
-        {           
-            $orders =  Order::where([['user_id', auth()->user()->id], ['status', $status]])
-                            ->with('shipping', 'orderProducts', 'orderProducts.product')
-                            ->orderBy('id', 'DESC')->get();
-        }      
+        if( $status == "all" )  $orders =  Order::ByAuthUser()->get();
+      
+        else                   
+          $orders =  Order::ByAuthUserStatus($status)->get();        
       
         return view('account.orders')->with('orders', $orders);
     }

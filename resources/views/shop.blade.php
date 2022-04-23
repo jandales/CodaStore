@@ -5,9 +5,10 @@
 
     <!--Featured Product-->
         <div class="container">    
-    
-            <div class="productPage mt-5">
-              
+            <div class="pagetitle">
+                <h3>Shop</h3>
+            </div>
+            <div class="productPage mt-2">              
                 <div class="product-nav">              
                     <nav>
                         <ul class="ul-product-categories">
@@ -16,76 +17,25 @@
                                 <li><a href="{{ route('shop.category',[$category])}}">{{ $category->name }}</a></li>
                             @endforeach          
                         </ul>    
-                        <div class="filter-search-container">
-                            <form action="{{ route('shop.search')}}" method="post">    
-                                @csrf              
-                                <div class="search-in-page">                                             
-                                    <input type="text" name="input" placeholder="Search product here" value="{{old('input')}}">  
-                                    <button><i class="fas fa-search"></i></button>                                              
-                                </div>
-                            </form>
-                            <button class="btn-filter" ><span><i class="fas fa-filter"></i></span> Filter</button>
+                        <div class="filter-search-container align-items-center" style="width: 280px">
+                            <span style="flex:auto; flex-basis:100px;">Sort By:</span>
+                            <select name="sortBy" id="sorting">
+                                <option value="{{ route('shop.sort',['all']) }}" {{ (request()->is('shop')) ? 'selected' : ''}}>All</option>
+                                <option value="{{ route('shop.sort',['a-z']) }}" {{ (request()->is('shop/sort-by/a-z')) ? 'selected' : ''}}>Alphabetical: A to Z</option>
+                                <option value="{{ route('shop.sort',['z-a']) }}" {{ (request()->is('shop/sort-by/z-a')) ? 'selected' : ''}}>Alphabetical: Z to A</option>
+                                <option value="{{ route('shop.sort',['new-to-old']) }}" {{ (request()->is('shop/sort-by/new-to-old')) ? 'selected' : ''}}>New to Old</option>
+                                <option value="{{ route('shop.sort',['old-to-new']) }}" {{ (request()->is('shop/sort-by/old-to-new')) ? 'selected' : ''}}>Old to New</option>
+                                <option value="{{ route('shop.sort',['low-to-high']) }}" {{ (request()->is('shop/sort-by/low-to-high')) ? 'selected' : ''}}>Price: Low to High</option>
+                                <option value="{{ route('shop.sort',['high-to-low']) }}"{{ (request()->is('shop/sort-by/high-to-low')) ? 'selected' : ''}}>Price: High to Low</option>
+                            </select>
+                         
                         
                         </div>
                       
                     </nav>
                 </div>
 
-                <div id="filter-wrapper">                                
-                    <div class="filter">
-                                <div class="sort">
-                                    <p>Sort by</p>
-                                <ul>
-                                    <li><a href="#">Default</a></li>
-                                    <li><a href="#">Popularity</a></li>
-                                    <li><a href="#">Average rating</a></li>
-                                    <li><a href="{{ route('shop.filter.latest',['high'])}}">Newness</a></li>
-                                    <li><a href="{{ route('shop.filter.price.order',['low'])}}">Price: Low to High</a></li>
-                                    <li><a href="{{ route('shop.filter.price.order',['high'])}}">Price: High to Low</a></li>  
-                                </ul>
-            
-                            </div>
-            
-                            <div class="price">
-                                <p>Price</p>
-                        
-                                <ul>
-                                    <li><a href="{{ route('shop')}} ">All</a></li>
-                                    <li><a href="{{ route('shop.filter.price',['0-50'])}}">$0 - $50</a></li>
-                                    <li><a href="{{ route('shop.filter.price',['50-100'])}}">$50 - $100</a></li>
-                                    <li><a href="{{ route('shop.filter.price',['100-200'])}}">$100 - $200</a></li>
-                                    <li><a href="{{ route('shop.filter.price',['200-5000'])}}">$150+</a></li> 
-                                </ul>
-            
-                            </div>
-            
-                            <div class="color">
-                                <p>Color</p>
-                                <ul>
-                                    <li><a href="{{ route('shop.filter.attribute',['red']) }}">Red</a></li>
-                                    <li><a href="{{ route('shop.filter.attribute',['blue']) }}">Blue</a></li>
-                                    <li><a href="{{ route('shop.filter.attribute',['black']) }}">Black</a></li>
-                                    <li><a href="{{ route('shop.filter.attribute',['red']) }}">Grey</a></li>
-                                    <li><a href="{{ route('shop.filter.attribute',['white']) }}">White</a></li>                      
-                                </ul>
-                            </div>
-            
-            
-                            <div class="ul-tags">
-                                <p>Tags</p>
-                                <div class="tags">
-                                    <a class="tag" href="{{ route('shop.filter.tags',['classic']) }}">Fashion</a>
-                                    <a class="tag" href="{{ route('shop.filter.tags',['classic']) }}">Lifestyle</a>
-                                    <a class="tag" href="{{ route('shop.filter.tags',['classic']) }}">Crafts</a>
-                                    <a class="tag" href="{{ route('shop.filter.tags',['classic']) }}">Streetstyle</a>
-                                    <a class="tag" href="{{ route('shop.filter.tags',['classic']) }}">Domin</a> 
-                                                    
-                                </div>
-                            </div>
-                    
-                    </div>
-                </div>    
-              
+               
                 <div class="product-row">
                     @if (count($products) == 0)
                         <label> No item found</label>
@@ -93,20 +43,14 @@
                         @foreach ($products as $product)
                                 <div class="items mb-2">                                  
                                     <div class="item">
-                                        <img src="/{{ $product->imagePath }}">                                        
+                                        <a href="{{ route('shop.product',[ $product ] )}}">
+                                            <img src="/{{ $product->imagePath }}">      
+                                        </a>                                                                         
                                     </div>
                                     <div class="item-description">
                                         <div class="product-detail-wrapper">
                                             <a href="{{ route('shop.product',[ $product ] )}}">{{ $product->name }}</a>                                       
-                                            <label class="mt-1">@money($product->regular_price)</label>
-                                        </div>
-                                        <div class="add-wishlist-wrapper">                                            
-                                            @auth                                            
-                                                 <span class="add-wish-list {{ $product->isWishlisted() ? 'ctheme' : '' }} "   data="{{ $product->id}}"><i class="{{ $product->isWishlisted() ? 'fas fa-heart' : 'far fa-heart' }} "></i></span>                                                      
-                                            @endauth
-                                            @guest
-                                                <span class="add-wish-list" data="{{ $product->id}} "><i class="far fa-heart"></i></span>
-                                            @endguest                                            
+                                            <label class="mt10 text-dark">@money($product->regular_price)</label>
                                         </div>                                       
                                     </div>
                                 </div>
@@ -115,7 +59,9 @@
                    
                 </div>
                     @if (count($products) != 0)
-                        <a href="#" class="shopnow">Load More</a>
+                        <div class="pagination-wrapper">
+                            {{ $products->links() }}
+                        </div>
                     @endif
              
             </div>
@@ -125,7 +71,15 @@
         
         <script src="/js/product/rating.js"></script>
         <script src="/js/product/addwishlist.js"></script>
+        <script>
+            document.getElementById('sorting').onchange = function(){
+                const id = this.selectedIndex;
 
+                url = this.options[id].value;
+                window.location.href = url;
+            }
+
+        </script>
     
     
      @endsection

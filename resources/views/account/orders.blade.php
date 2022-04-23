@@ -38,25 +38,25 @@
                                         <label class="capitalize order-status" for="status">{{$order->status }}</label>
                                     </div>
                                     <div class="order-body">
-                                        @foreach ($order->orderProducts as $orderitem)
+                                        @foreach ($order->items as $item)
                                             <div class="order-wrapper">
                                                 <div class="order-item">
                                                     <div class="order-item-image">
-                                                        <img src="/{{ $orderitem->product->imagePath }}" alt="">
+                                                        <img src="/{{ $item->product->imagePath }}" alt="">
                                                     </div>                                                      
                                                     <div class="order-item-name ml-1">
-                                                        <label for="name">{{ $orderitem->product->name }}</label>
+                                                        <label for="name">{{ $item->product->name }}</label>
                                                     </div>
                                                     <div class="order-item-price ">
                                                         <div class="flex">
                                                             <span>₱</span>
-                                                            <label  for="price">{{ $orderitem->price }}</label>
+                                                            <label  for="price">{{ $item->price }}</label>
                                                         </div>                                                            
                                                     </div>
                                                     <div class="order-item-quantity">
                                                         <div class="flex">
                                                             <span>Qty:</span>
-                                                            <label  class="ml5"for="qty">{{ $orderitem->qty }}</label>
+                                                            <label  class="ml5"for="qty">{{ $item->qty }}</label>
                                                         </div>
                                                     </div>                                                       
                                                 </div>

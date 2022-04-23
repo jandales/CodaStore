@@ -1,201 +1,66 @@
+import { errorReponse, errorRemove } from '/js/validator.js';
+import { moneyFormatter } from '/js/moneyFormatter.js';
+const _token =  document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-let Carts = [];
-let couponProduct = [];
-let coupon = {
-    properties : [],
-    products : [],  
-}
-
-const btnCoupon = document.getElementById('btnCoupon');
-const couponInput = document.getElementById('input_coupon');
-
-document.addEventListener('DOMContentLoaded', function(){
-    // load when page load
-    // get shipping fee
-    let shippingfee = document.getElementById('shippingfee').getAttribute('data-fee');
-    // get subtotal amout
-    let subtotal = document.getElementById('subtotal').getAttribute('data-subtotal');
-    // get total element
-    let total = document.getElementById('total');
-    // create a holder varialble for total
-    let tempTotal = 0;
-    // set total to tempTotal
-    tempTotal = parseInt(shippingfee) + parseInt(subtotal);
-    // show total in DOM
-    total.innerText = tempTotal; 
-
-    hasCouponActive();   
-
-})
-
-// check if coupon activate()
-function hasCouponActive()
-{
+function activateCoupon(e){
+    e.preventDefault();
+    const couponCode = document.querySelector('input[name="coupon_code"]').value;
     $.ajax({
-        url : '/user/active/coupon',
-        method : 'GET',
-        success : function(response){
-
-            if(response.status == 400) return;
-
-            if(response.status == "error")
-            {
-                 showMessage('danger',response.message);
-                 return
-            }           
-
-             coupon.properties = response.coupon;
-             coupon.products = response.products;  
-          
-             UseCoupon()
-
-             setCouponRemove()
-
-            
-        }
+        url: `/cart/coupon/activate`,
+        method: 'get',       
+        data : {coupon_code : couponCode},
+        error: errorReponse,
+        success: successCouponResponse,
     })
-   
-   
 }
 
-btnCoupon.addEventListener('click', function(e){
+function successCouponResponse(response){
+  
+    if (response.status != 200) return;
+    console.log(response);
+    couponElementsState('show');
+    document.getElementById('coupon-code').innerHTML = response.coupon.name;
+    document.getElementById('coupon-amount').innerHTML = moneyFormatter(response.discount);
+    document.getElementById('coupon-description').innerHTML =  response.coupon.description;  
+    document.querySelector('input[name="coupon_code"]').value = null;    
+    document.getElementById('grand-total').innerHTML =  moneyFormatter(response.grand_total);
+  
+}
 
-    e.preventDefault();    
-    let remove = btnCoupon.getAttribute('remove');
-     
-    if(remove === 'true') {  
-        removeCoupon();
+function removeCoupon(e){ 
+    e.preventDefault();
+    $.ajax({
+        url: `/cart/coupon/remove`,
+        method: 'POST',       
+        data : {
+            _token : _token,
+            _method : 'PUT',
+        },
+        error: errorReponse,
+        success: successCouponRemoveResponse,
+    })
+}
+
+function successCouponRemoveResponse(response){
+    if(response.status != 200) return;
+    
+    couponElementsState('hidden');   
+    document.getElementById('grand-total').innerHTML =   moneyFormatter(response.grand_total);
+}
+
+function couponElementsState(state){ 
+    if(state == 'hidden') {
+        document.getElementById('has-coupon').classList.add('hidden');
+        document.getElementById('coupon-form').classList.remove('hidden');
         return;
     }
-  
-    applyCoupon();
-
-})
-
-
-
-function applyCoupon(){
-
-    const value = couponInput.value;
-
-    if(value == "") return;   
-
-    if(coupon == "" | null) return showMessage('danger', 'Please input coupon');
-
-    $.ajax({
-        url: `/coupon/${value}`,
-        method: 'get',       
-        success:function(response){           
-       
-            if(response.status == "error")
-            {
-                showMessage("danger", response.message);   
-                return;
-            }
-
-            coupon.properties = response.coupon;
-            coupon.products = response.products;             
-         
-            UseCoupon()
-            setCouponRemove();
-            location.reload();
-            
-        }
-    })
+    document.getElementById('has-coupon').classList.remove('hidden');
+    document.getElementById('coupon-form').classList.add('hidden');    
 }
 
-function removeCoupon(){   
-    let token =  document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    $.ajax({
-        url: `/coupon/user/${coupon.properties.id}/remove/`,
-        method: 'put',
-        data : {
-            _token : token,
-            _method : 'put',
-         
-        },      
-        success:function(response){
-            if(response.status == 500){
-                location.reload()  
-            }    
-            
-          
-         }
-    });
-}
+const btncoupon = document.getElementById('btn-coupon-apply');
+const btncouponRemove = document.getElementById('btn-coupon-remove');
+btncoupon.onclick = activateCoupon;
+btncouponRemove.onclick = removeCoupon;
 
-function setCouponRemove()
-{
-    btnCoupon.setAttribute('remove', true)
-    btnCoupon.classList.replace('btn-default','btn-danger')
-    btnCoupon.textContent = "REMOVE COUPON";
-}
-
-function setCouponApply(){
-    btnCoupon.setAttribute('remove', false);
-    btnCoupon.classList.replace('btn-danger', 'btn-default');
-    btnCoupon.textContent = "APPLY COUPON";
-}
-
-function UseCoupon(){
-
-    let discountType  = parseInt(coupon.properties.discount_type);
-    let amount = parseInt(coupon.properties.amount);
-  
-    let shippingfee = parseInt(document.getElementById('shippingfee').getAttribute('data-fee'));
-    // get subtotal amout
-    let subtotal = parseInt(document.getElementById('subtotal').getAttribute('data-subtotal'));
-    // get total element
-    let total = document.getElementById('total');
-    // create a holder varialble for total
-    let tempTotal = 0;
-
-    couponInput.value = coupon.properties.name;
-
-
-    switch(discountType)
-    {
-        case 0 :
-            updateCartProductsDiscount();           
-            break;
-        case 1 :
-           
-            tempTotal = (shippingfee + subtotal) - amount;
-        // show total in DOM 
-            total.innerText = tempTotal;  
-                 
-        break;
-
-        case 2 :
-            amount = amount / 100;            
-            tempSubtotal = shippingfee + subtotal;
-            tempTotal = tempSubtotal * amount;
-            tempTotal -=  tempTotal;
-              // show total in DOM    
-            total.innerText = tempTotal; 
-        break;                    
-    }
-
-   
-
-   
-
-}
-
-function updateCartProductsDiscount(){
-
-    const token =  document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    $.ajax({                
-        url : '/cart/product/discount/update',
-        method : "POST",
-        data : {  
-            products : coupon.products,  
-            amount : coupon.properties.amount,       
-            _token : token,
-            _method : 'put',
-        },
-        success:function(response){}
-    });
-
-}

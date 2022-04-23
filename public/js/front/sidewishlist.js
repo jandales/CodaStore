@@ -35,7 +35,7 @@ let wishlistsTotal = 0
              <div class="cart-image">
                  <img class="img" src="/${item.product.imagePath}" alt="" srcset="">
                  <div class="cart-image-overlay flex-vert-center">
-                     <span onclick="cartRemove(this)" data-id="${item.id}"><i class="fas fa-times"></i></span>
+                     <span onclick="wishlistRemove(this)" data-id="${item.id}"><i class="fas fa-times"></i></span>
                  </div>
              </div>
              <div class="cart-decription">
@@ -61,7 +61,7 @@ let wishlistsTotal = 0
    
 // }
 
-function cartRemove(elem){
+function wishlistRemove(elem){
      let id = elem.getAttribute('data-id')
      let parent = elem.closest('.cart-items');
      parent.remove();

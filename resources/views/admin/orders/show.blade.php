@@ -20,7 +20,7 @@
                     <h4>Order Details</h4>
                 </div>
                 <div class="panel-body">
-                     <table class="table">
+                     <table class="table table-orders">
                         <thead>
                             <tr>                              
                                 <th>Items</th>   
@@ -30,7 +30,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($order->orderProducts as $item)
+                            @foreach ($order->items as $item)
                                     <tr class="vertical-top">                           
                                         <td>
                                             <div class="prod-desc-wrapper flex flex-start">
@@ -91,15 +91,12 @@
             </div>
             <div class="panel-body">
                 <div class="row mt10">
-                    <div>Payment Method</div>
-                    @if($order->payment != "")
-                        <span>{{ $order->payment->method() }}</span>  
-                    @endif
-                    
+                    <div>Payment Method</div>                  
+                    <span>Card</span>  
                 </div>
                 <div class="row mt10">
                     <div>Name</div>                    
-                    <span>{{ $order->billing->name}}</span>
+                    <span>{{ $order->billing->personName() }}</span>
                 </div>
                 <div class="row mt10">
                     <div>Email</div>                    
@@ -125,7 +122,11 @@
                 </div>
                 <div class="row mt10">
                     <div>Shipping Fee</div>
-                    <span>@money($order->shipping_fee)</span>
+                    <span>@money($order->shipping_charge)</span>
+                </div>
+                <div class="row mt10">
+                    <div>Tax</div>
+                    <span>@money($order->tax_total)</span>
                 </div>
                 <div class="row mt10">
                     <div>Coupon <span> @if($order->coiponUsed)({{ $order->couponUsed->coupon->name }}) @endif</span></div>
@@ -135,7 +136,7 @@
                 <div class="separator"></div>    
                 <div class="row mt10">
                     <div>Total</div>
-                    <span>@money($order->total())</span>
+                    <span>@money($order->gross_total)</span>
                 </div>             
             </div>
                 <div class="panel-body">

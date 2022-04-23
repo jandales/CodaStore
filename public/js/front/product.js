@@ -42,7 +42,8 @@ function varaintSelected(option){
 cartBtn.addEventListener('click',function(){
     let result =  validateProperties()
     if(result[0].status === true) return showMessage('info', result['0'].message) 
-    store();
+    store(); 
+   
 })
 
 
@@ -58,19 +59,9 @@ function store(){
             qty : qty,
             properties : properties
         },       
-        success : function(response){
-            if(response.status == 501) return  showMessage('info', response.message)              
-            
-            if(response.status == 500){
-                showMessage('success', response.message);
-                cartWishlistCountToElement('.wishlist-count', getWislistCount())
-            }
-        },
-        error: function(res)
-        {
-            return;
-            console.log(res.status == 401);
-            location.href = '/login';
+        success : getCartCount,
+        error: function(res){        
+            console.log(res);    
         }
     })
 }
@@ -92,44 +83,28 @@ if(BuyNowBtn){
 
 
 
+const btnAddMinusQty = document.querySelectorAll('.btn-add-minus');
 
-function quantity(action)
-{ 
-    switch(action)
-    {
-        case 'minus' :                        
-            minus();
-        break;
-
-        case 'add' :
-            add();
-        break;
-    }
-}
-
-function minus()
-{
-    const input = document.querySelector('.quantity-input');
-    const input1 = document.querySelector('.quantity');
+if (btnAddMinusQty) {
+    btnAddMinusQty.forEach(button => {
+        button.onclick = function(){
+            const type = button.getAttribute('type');
+            const input = document.getElementById('quantity-input');
+            let qty = parseInt(input.value);
     
-    let qty = parseInt(input.value);
-    if(qty == 0) return; 
-    qty -= 1;
-    input.value =  qty;
-    input1.value = qty;
-            
+            if (type == 'add')  return input.value =  qty += 1;
+    
+            if (qty == 1) return  input.value =  1;
+            input.value = qty -= 1;
+        }
+    })    
 }
 
-function add()
-{
-    const input = document.querySelector('.quantity-input');
-    const input1 = document.querySelector('.quantity');
-    
-    let qty = parseInt(input.value); 
-    qty += 1;
-    input.value =  qty;
-    input1.value = qty;
-}
+
+
+
+
+
 
 
 

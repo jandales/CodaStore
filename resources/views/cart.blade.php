@@ -18,144 +18,90 @@
 
                 @if (session('error'))
                     <div class="alert alert-danger mt-1">{{ session('error')}}</div>
-                 @endif
+                @endif
 
-
-                 @if( $carts->count()  == 0)
-                 <div class="align-items-content-center flex-column m-t-100">
-                     <h1 class="txt-bg">No items in your cart</h1>    
-                     <div class="continue-shooping mt-2">
-                         <a href="{{ route('shop')}}" class="btn btn-success">Shop Now</a>                            
-                     </div>              
-                 </div>
-              
-                 
-                 @else    
-
-           
-          
-                                 
-                    <div class="cart">   
-                        <div class="cart-container">    
-                            <table class="cart-table">
+                @if(empty($cart) || $cart->items->count() == 0)
+                    <div class="align-items-content-center flex-column m-t-100">
+                        <h1 class="txt-bg">Your cart is empty</h1>    
+                        <div class="continue-shooping mt-2">
+                            <a href="{{ route('shop')}}" class="btn btn-dark">Continue shopping</a>                            
+                        </div>              
+                    </div>   
+                @else 
+                           
+                    <div class="cart-1 mb-5">   
+                      
+                            <table class="cart-table-1">
                                 <thead>  
                                     <tr>                                       
                                         <th class="column-1">PRODUCT</th>                                       
-                                        <th class="text-centered">QUANTITY</th>
-                                        <th class="column-3 text-centered">TOTAL</th>                                       
+                                        <th>QUANTITY</th>
+                                        <th class="text-align-right">TOTAL</th>                                       
                                     </tr>
                                 </thead> 
-                                <tbody>
-                                    @if ($carts->count() == 0)
-                                    <tr><td colspan="6" class="text-align-center">No Item</td></tr>
-                                    @else
-                                    @foreach ($carts as $cart)
-                                    <tr class="cart-row">                                       
-                                    <td class="column-1">                                           
-                                                <div class="cartitem">
+                                <tbody>                                                                  
+                                    @foreach ($cart->items as $item)
+                                    <tr>                                       
+                                        <td>                                           
+                                                <div class="cart-item">
                                                     <div class="pr-image-wrapper">                                                   
-                                                         <img src="{{ $cart->product->imagePath }}" alt="">
+                                                         <img src="{{ $item->product->imagePath }}" alt="">
                                                          <div class="pr-image-overlay flex-vert-center">
-                                                             <span onclick="remove({{$cart->id}})"><i class="fas fa-times"></i></span>
+                                                             <span class="cart-item-remove text-danger" data-id="{{ $item->id }}"><i class="fas fa-times"></i></span>
                                                          </div>
                                                     </div>
-                                                    <div class="flex flex-column m-l-10">
-                                                        <a  href="{{ route('shop.product',[ $cart->product ] )}}">
-                                                         <p class="p-name">{{ $cart->product->name }}</p> 
-                                                        </a>
-                                                            @if ($cart->properties != null)
-                                                                <ul class="cart-variant-ul">
-                                                                    @foreach ($cart->properties as $index =>  $variant)                                                           
-                                                                            <li>
-                                                                                <p>{{ $variant['name'] }}:
-                                                                                    <p>{{ $variant['value'] }}</p>
-                                                                                    <p> @if ( $index != count($cart->properties) -1 ) , @endif</p>
-                                                                                </p>
-                                                                            </li>
-                                                                    @endforeach
-                                                                </ul> 
-                                                            @endif  
-                                                            <p class="cart-price m-t-10">@money($cart->price)</p>                                                      
-                                                        <span class="m-t-10">{{ $cart->product->minQty() }}</span>                                                       
+                                                    <div class="flex flex-column m-l-10 gap10">
+                                                        <a class="link"  href="{{ route('shop.product',[ $item->product ] )}}">{{ $item->product->name }} </a>
+                                                        <div class="product-info">@money($item->product->regular_price)</div>   
+                                                        @if ($item->properties != null)
+                                                            @foreach ($item->properties as $variant)  
+                                                                <div class="product-info">{{ $variant['name'] }} :{{ $variant['value'] }} </div> 
+                                                            @endforeach
+                                                         @endif                      
                                                     </div>
                                                 </div>
                                             
                                         </td>                                      
-                                        <td class="text-centered">  
-                                                <div class="cart-form-group center">
-                                                    <div class="btn-num-product-down flex-vert-center add-minus-quantity" type="minus"> <i class="fas fa-minus"></i></div>
-                                                    <input class="cart-qty num-product bg-grey"  item="{{ $cart->id }}"  type="number" value="{{ $cart->qty }}"  {!! $cart->product->stock->qty == 0 ? "disabled" : "" !!} >
-                                                    <div class="btn-num-product-up flex-vert-center add-minus-quantity" type="add"> <i class="fas fa-plus"></i></div>
-                                                </div>
-                                                 @if ($cart->discount != 0)
-                                                     <p class="cart-discount">Discounted</p>
-                                                 @endif
+                                        <td>  
+                                                <div class="cart-form-group">
+                                                    <div class="btn-num-product-down flex-vert-center add-less-quantity" type="less"><i class="fas fa-minus"></i></div>
+                                                    <input class="cart-qty num-product bg-grey"  item="{{ $item->id }}"  type="number" value="{{ $item->qty }}"  {!! $item->product->stock->qty == 0 ? "disabled" : "" !!} >
+                                                    <div   class="btn-num-product-up flex-vert-center add-less-quantity" type="add"><i class="fas fa-plus"></i></div>
+                                                </div>                                                
                                         </td>
-                                        <td class="column-3 text-centered">
-                                            <p class="cart-total">@money($cart->total())</p>
-                                        
+                                        <td class="text-align-right">
+                                            <span class="cart-total block m-t-15">@money($item->subtotal())</span>
                                         </td>
                                       
                                        
                                         
-                                    </tr>
-                                    
+                                    </tr>                                    
                                     @endforeach
-                                    @endif
+                             
                                 </tbody>                                 
                             </table>
-                            <div class="cart-table-footer">
-                                                           
-                                    <a href="{{ route('shop')}}">
-                                        <button class="btn btn-dark">  Continue shooping</button>
-                                    </a>
-                                                                
-                      
-                                <div class="coupon">
-                                    <input type="text" id="input_coupon" placeholder="Coupon Code">
-                                    <button id="btnCoupon" remove="false" class="btn btn-dark w-0">Apply</button>                                                     
-                                </div>
+                    
+                            <div class="cart-summary">
+                                <a href="{{ route('shop')}}" class="link"> Continue shopping </a>
+                               <div class="flex flex-column gap30">
+                                    <div class="flex justify-content-flex-end gap20">
+                                        <span class="bold">Subtotal</span>
+                                        <span>@money($cart->total)</span>
+                                    </div>
+                                    <span>Taxes and shipping calculated at checkout</span>
+                                    <a href="{{ route('checkout.information') }}"><button class="btn btn-dark button-py10">CHECK OUT</button></a>
+                               </div>
+
+                              
                             </div>
 
                            
-                        </div>
-              
+                   
     
-                        <div class="w-450">
-                                <div class="panel panel-padding">
-                                
-                                    <h3>Order Summary</h3>               
-                                    <div class="bor12 mt-1  p-b-13">   </div>
-
-                                    <div class="flex space-between p-b-13 mt-2">
-                                            <span>Items  :  {{ $carts->sum('qty') }}</span>
-                                            <span id="subtotal" class="text-align-right" data-subtotal="{{ cartSubtotal($carts) }}">@money(cartSubtotal($carts))</span>                                                  
-                                    </div>
-                                    <div class="flex space-between bor12 p-b-13">                                   
-                                        <span>Shipping Fee :</span>
-                                        <span id="shippingfee"  data-fee="{{ shippingFee() }}" class="right"><span>@money(shippingFee())</span></span>
-                                    </div>                                
-                                   
-                                    <div class="flex space-between p-b-13 mt-2">
-                                        <span>Total Cost :</span> 
-                                        {{-- <span class="right">₱ <span id="total"></span></span> --}}
-                                        <span class="right"> @money(cartSubtotal($carts) + shippingFee()) </span>
-                                       
-                                    </div>
-
-                                    <br>                        
-                                    <a href="{{ route('checkout.information')}}">
-                                        <button class="button w-12 p-15 dark">Proceed to Checkout</button>
-                                    </a>
-                                    
-                                    
-                                
-                                </div>
-                
-                        </div>
+              
                
                     </div>
-                    @endif
+                @endif
             
                
         </div>
@@ -166,20 +112,12 @@
     
       
  
-        <script>
-            
-          
-            document.addEventListener('DOMContentLoaded', function(){                
-                Carts = @json($carts)
-              
-            })
-
-         
-        </script>
+       
+ 
 
         <script src="/js/front/cart/cart.js"></script>
         <script src="/js/front/cart/updateQuantity.js"></script>
-        <script src="/js/front/cart/coupon.js"></script>
+        <script type="module" src="/js/front/cart/coupon.js"></script>
         @endsection
 
 

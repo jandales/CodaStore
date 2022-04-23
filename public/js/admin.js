@@ -1,4 +1,4 @@
-
+ 
 
 const userDropDown = document.querySelector('.user-image');
 const ul = document.querySelector('.navbar-dropdownlist');
@@ -123,11 +123,12 @@ if(ImageContainer){
     });
 }
 
-const navDropdownbtn = document.querySelector('.nav-dropdown')
-navDropdownbtn.addEventListener('click', function(){
-    this.querySelector('.arrow').classList.toggle('rotate180')
-    this.querySelector('.sub-menu').classList.toggle('show')
-    
+const navDropdownbtn = document.querySelectorAll('.nav-dropdown')
+navDropdownbtn.forEach(element => {
+    element.addEventListener('click', function(){
+        this.querySelector('.arrow').classList.toggle('rotate180')
+        this.querySelector('.sub-menu').classList.toggle('show')        
+    })
 })
 
 const notifyMessageElement  = getElementById('notify-message')

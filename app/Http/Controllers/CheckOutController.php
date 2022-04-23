@@ -3,164 +3,120 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
-use App\Models\Order;
-use App\Models\Stock;
-use App\Models\Coupon;
-use App\Models\Payment;
-use App\Models\Product;
-use App\Models\Shipping;
-use App\Models\CouponUsed;
-use App\Models\AddressBook;
-use App\Models\OrderProduct;
 use Illuminate\Http\Request;
-use App\Models\BillingDetails;
+use App\Models\ShippingMethod;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\CheckoutStoreRequest;
 
 class CheckOutController extends Controller
 {
-    private $carts;
-
-    public  function __construct()
-    {        
-        $this->middleware(function ($request, $next) {
-            $this->carts = Auth::user()->carts;
-            return $next($request);
-        });
-    }
-
+   
     public function index()
-    {    
+    {        
+        $cart = Self::validateCart();
+
+        if(!$cart) return redirect()->route('cart'); 
+
+        session(['shipping_charge' => 0]);
        
-        if($this->carts->count() == 0) back();  
-        
+        if(session()->get('shipping_address') )
+        {
+            $email = session()->get('email');
+            $address = (object)[
+                'firstname' => session()->get('shipping_address')['firstname'],
+                'lastname' => session()->get('shipping_address')['lastname'],
+                'street' =>  session()->get('shipping_address')['street'],
+                'city' =>  session()->get('shipping_address')['city'],
+                'phone' => session()->get('shipping_address')['phone'], 
+                'country' => session()->get('shipping_address')['country'],
+                'region' =>  session()->get('shipping_address')['region'],
+                'zipcode' =>  session()->get('shipping_address')['zipcode'], 
+           ];  
+        }
+
         return view('checkout.information')->with([
-            'carts' => $this->carts,            
+            'cart' => $cart,  
+            'email' => $email ?? auth()->user()->email,
+            'address' => $address ?? auth()->user()->shippingDefaultAddress(),                
         ]);
-      
-        // if (request()->is('checkout'))  $blade = 'checkout.information';
 
-        // if (request()->is('checkout/shipping')) $blade = 'checkout.shipping';
-
-        // if (request()->is('checkout/payment'))  $blade = 'checkout.payment';
-        
-        // return view($blade)->with(['carts' => $carts ]);
+     
     }
-
-
 
     public function shipping(Request $request)
     {  
-        if($this->carts->count() == 0) back();    
+        $cart = Self::validateCart();
+
+        if(!$cart) return redirect()->route('cart');    
+
+        $shipping_methods = ShippingMethod::get();  
+        session()->get('shipping_method') ?? session(['shipping_method' => $shipping_methods[0]]);
+        session()->get('shipping_charge') ?? session(['shipping_charge' => $shipping_methods[0]->amount]);    
+    
         return view('checkout.shipping')->with([
-            'carts' => $this->carts,                        
+            'cart' => $cart,           
+            'shipping_methods' => $shipping_methods,
         ]);
+
     }
 
     public function payment(Request $request)
     {
-      
-        if($this->carts->count() == 0) back();    
+        $cart = Self::validateCart();
+
+        if(!$cart) return redirect()->route('cart');    
+
+        $user_payment_option = auth()->user()->defaultPayment()->first();     
+
         return view('checkout.payment')->with([
-            'carts' => $this->carts,            
+            'cart' => $cart,
+            'user_payment_option' => $user_payment_option,                      
         ]);
     }
 
-    public function placeOrder(Request $request)
-    {    
-        $user = auth()->user();
-        $address = $user->defaultAddress(); 
-      
-        $order = Order::create([
-            'user_id' => auth()->user()->id,            
-            'status' => 'confirm',
-            'shipping_fee' => $request->shipping_fee,
+
+    public function store(CheckoutStoreRequest $request)
+    {   
+        session([
+            'email' => $request->email,
+            'shipping_method' => session('shipping_method') ?? null,
+            'shipping_address' => [
+                'firstname' =>  $request->firstname,
+                'lastname' => $request->lastname,
+                'street' => $request->street,
+                'city' => $request->city,
+                'phone' => $request->phone,
+                'country' => $request->country,
+                'region' => $request->region,
+                'zipcode' => $request->zipcode,
+            ] 
         ]);
 
-        Payment::create([
-            'order_id' => $order->id,
-            'method' => $request->payment_method,
-            'reference_number' => $request->reference_number,
-            'amount' => $request->amount,
-        ]);
-
-        BillingDetails::create([
-            'order_id' => $order->id,
-            'name' => auth()->user()->name,
-            'email' => auth()->user()->email,
-            'phone' => auth()->user()->contact,
-            'address' => $address->fullAddress(),
-        ]);         
-
-        Shipping::create([
-            'order_id' => $order->id,
-            'reciept_name' => $address->reciept_name,
-            'reciept_number' => $address->reciept_number,            
-            'street'=> $address->street,          
-            'barangay'=> $address->barangay,
-            'city_municipality'=> $address->city_municipality,
-            'province'=> $address->province          
-        ]);
-
-        $carts = $user->carts;
-
-        foreach($carts as $cart)
-        {
-           $product =  OrderProduct::create([  
-                'order_id' => $order->id,          
-                'product_id' => $cart->product_id,
-                'qty' => $cart->qty,
-                'price' => $cart->product->prices->selling,
-                'properties' => $cart->properties
-           ]);   
-
-           Stock::where('product_id', $product->product_id)->decrement('qty', $cart->qty);
-           $cart->delete();           
-           
-        } 
-
-         // check if user use coupon
-         $coupon = Coupon::where('name', $request->coupon)->first();
-
-         if(!empty($coupon))
-         {
-             $couponId = $coupon->id;
-             $couponDiscount = $coupon->amount;
- 
-             $couponUsed = CouponUsed::create([
-                 'order_id' => $order->id,
-                 'coupon_id' => $couponId,
-                 'discount_type' => "none",          
-                 'amount' => $couponDiscount,  
-             ]);
-
-             $coupon->usage += 1;
-             $coupon->save();
-
-             $userCoupon = auth()->user()->couponUse($couponId);
-             // change status of use coupon
-             $userCoupon->used = 1;
-             $userCoupon->usage  += 1;
-             $userCoupon->save();
-
-
-         }
-
-        return redirect()->route('checkout.details',[$order]);   
-
+        return response()->json(['url' => route('checkout.shipping'), 'status' =>  200]);
         
     }
+  
 
-    public function details(Order $order)
-    { 
-        return view('message')->with('order', $order);
+    public function updateShippingMethod(Request $request)
+    {   
+        $id = $request->shipping_method;
+        $shipping_method = ShippingMethod::find($id);        
+        session(['shipping_method' => $shipping_method]);
+        session(['shipping_charge' => $shipping_method->amount]); 
+        return redirect()->route('checkout.payment');
     }
 
-    public function remove($id)
-    {      
-        $cart = Cart::find($id);    
-        $cart->selected = 0;
-        $cart->save();
-        return response()->json(['status' => 200]);
+    public function completed()
+    {       
+        return view('checkout.completed');
+    }
+
+    public function validateCart()
+    {
+        $cart = Cart::ByUser()->first();        
+        if(empty($cart)) return false; 
+        if($cart->items->count() == 0) return false;
+        return $cart;       
     }
    
 }

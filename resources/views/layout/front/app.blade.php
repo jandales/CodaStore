@@ -19,20 +19,20 @@
 <body>
 
     <div id="flex"> 
-        @if(!request()->routeIs(['login','register']))
+        {{-- @if(!request()->routeIs(['login','register'])) --}}
             <div class="header-container">                 
-                @include('layout.front.topnav')                 
+                {{-- @include('layout.front.topnav')                  --}}
                 <div class="header">              
                     @include('layout.front.mainnav') 
                 </div>
             </div>
-        @endif  
+        {{-- @endif   --}}
 
         @yield('content')
 
-        @if(!request()->routeIs(['register', 'login']))  
+        {{-- @if(!request()->routeIs(['register', 'login']))   --}}
             @include('layout.front.footer')
-        @endif  
+        {{-- @endif   --}}
 
 
     </div>
@@ -62,7 +62,7 @@
     <div class="modal" id="sidecartModal">
         <div class="modal-sidebar">
             <div class="sidebar-close">                    
-                <span class="modal-close"><i class="fas fa-times"></i></span>
+                <span class="close-drawer"><i class="fas fa-times"></i></span>
             </div>         
             <div class="sidebar-heading">
                 <p>Shopping Cart</p>
@@ -72,43 +72,27 @@
             </div>
            
             <div class="sidebar-footer">
-                <div class="cart-item-total mb-1">TOTAL : 0.00 </div>
-                <a href="{{ route('cart')}}" class="btn btn-theme w-12 p-15">VIEW CART</a>
-            </div>
-        </div> 
-    </div>
-
-    <div class="modal" id="side-Wishlist-Modal">
-        <div class="modal-sidebar">
-            <div class="sidebar-close">                    
-                <span class="modal-close"><i class="fas fa-times"></i></span>
-            </div>         
-            <div class="sidebar-heading">
-                <p>My Wishlist</p>
-            </div>
-            <div class="sidebar-body wishlist-body">
+                <div class="flex space-between">
+                    <span class=" mb-1">Subtotal</span>
+                    <span class="cart-item-total"></span>
+                </div>
                
-            </div>
-           
-            <div class="sidebar-footer">
-                <div class="cart-item-total wishlist-total mb-1">TOTAL : 0.00 </div>
-                <a href="{{ route('cart')}}" class="btn btn-theme w-12 p-15 uppercase">VIEW Wishlist</a>
+                <div class="flex gap10">
+                    <a href="{{ route('cart')}}" class="btn btn-dark w-6">VIEW CART</a>
+                    <a href="{{ route('checkout.information')}}" class="btn btn-dark w-6">CHECKOUT</a>
+                </div>
             </div>
         </div> 
     </div>
 
-
-
-
-  
+   
 
     <script src="/js/front/jquery.min.js"></script>
     <script src="/js/front/main.js"></script>
     <script src="/js/front/sticky-header.js"></script>
     <script src="/js/front/tabs.js"></script>
     <script src="/js/front/modal.js"></script>
-    <script src="/js/front/sidecart.js"></script>
-    <script src="/js/front/sidewishlist.js"></script>
+    <script src="/js/front/sidecart.js"></script>  
     <script src="/js/front/tableaction.js"></script>
     <script src="/js/front/users/users.js"></script> 
     <script src="/js/message.js"></script>
@@ -118,6 +102,7 @@
     <script src="/js/product/ratingevent.js"></script>
     <script src="/js/product/addwishlist.js"></script>
     <script src="/js/front/variants.js"></script>
+    <script src="/js/validator.js"></script>
 
     
   

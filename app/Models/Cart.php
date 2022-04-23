@@ -2,100 +2,102 @@
 
 namespace App\Models;
 
+use App\Models\Coupon;
 use App\Models\Product;
+use App\Models\CartItem;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Cart extends Model
 {
     use HasFactory;
-
-    protected $casts = [
-        'properties' => 'array'
-    ];
     
-    protected $fillable = [
-        'user_id',
-        'product_id',
-        'product_name',
-        'qty',
-        'price',
-        'properties'
+    protected $fillable = [       
+        'cart_id',
+        'total',  
+        'expire_at',
     ];
+
+    public function items()
+    {
+        return $this->hasMany(CartItem::class);
+    }
     
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
-
-    public  function total()
-    {
-
-        // $discount = $this->discount / 100;
-        
-        $total = $this->price * $this->qty;
-
-        return $total - $this->discount;
-    }  
-
-    public function scopeSelected($query)
-    {
-        return $query->where('user_id', auth()->user()->id)->where('selected', 1);
+    
+    public function coupon(){
+        return $this->belongsTo(Coupon::class);
     }
 
-    public function scopeUnselectAll($query)
+    public function totalItems()
     {
-        $carts = $this->Selected()->get();
+        return $this->items->sum('qty');
+    }
 
-        if($carts->count() != 0)
+    // public function scopeExist($query,$id)
+    // {
+    //     $item = $query->where('product_id', $id)->first();
+    //     if($item == null) return false;
+    //     return true;
+    // }
+
+    public function scopeByUser()
+    {
+        $id = Cookie::get('cart-id');
+        return $this->where('cart_id',$id)->with('items','items.product','items.product.stock', 'coupon');
+    }
+
+    public function scopeGrandTotal()
+    {       
+        $cart = self::scopeCartByUser();
+        $total = 0;
+        foreach($cart->items as $item)
         {
-            foreach($carts as $cart){
-                $cart->selected = 0;
-                $cart->save();
-            }
+            $total += $item->qty * $item->product->regular_price;
         }
-       
-
-        return $carts;
-        
+        return $total;
     }
 
-
-    public function scopeSubtotal()
+    public function hasThisProduct($id)
     {
-        return Self::subtotal();     
+        return $this->items->where('product_id', $id)->first();
     }
 
-    public function totalCost()
+    public function scopeUpdateTotal()
     {
-        return Self::subtotal() + shippingFee();
+        $cart = self::scopeByUser()->first();
+        $total = 0;
+        foreach($cart->items as $item)
+        {
+            $total += $item->qty * $item->product->regular_price;
+        }       
+        $cart->total = $total;
+        $cart->save();
+        return $cart;
     }
 
-    public function subtotal()
+    public function netTotal()
     {
-        $user = auth()->user();
-        $carts = Cart::where('user_id', $user->id)->get();
-        $subtotal = 0;
-
-        foreach($carts as $cart){
-            $subtotal += $cart->total();
-        }
-        return $subtotal; 
+        return $this->total + $this->discount;
     }
 
-  
-
-    public function scopeExist($query,$id)
+    public function grandTotal()
     {
-        $item = $query->where('product_id', $id)->first();
-        if($item == null) return false;
-        return true;
+        $shipping_charge = (double)session()->get('shipping_charge') ?? 0;
+        return ($this->total + $shipping_charge) - $this->discount;
     }
+    
 
-    public function scopeCartByAuthUser()
+    public function couponName($name)
     {
-        return $this->where('user_id',auth()->user()->id)->with('product','product.stock')->get(); 
+        return $this->coupon_id != null ? $this->coupon->$name : '';
     }
+ 
+
 
 
    

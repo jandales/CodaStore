@@ -84,7 +84,7 @@
                                 </td>                        
                                 <td>{{$user->email}}</td> 
                                 <td><p>{{ $user->contact }}</p></td>                             
-                                <td><p>{{ $user->created_at->format('M-d-Y')}}</p></td>
+                                <td><p>{{ $user->createdAtDate()}}</p></td>
                                 <td width="100px"> 
                                     <div class="table-action">
                                         <ul>  

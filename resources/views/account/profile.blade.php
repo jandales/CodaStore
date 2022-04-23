@@ -5,6 +5,7 @@
             <div class="col1">
                     @include('layout.front.sidebar')
             </div>
+            
             <div class="col2">
                 <div class="card parent-card no-border  bg-grey">
                     <div class="card-heading">
@@ -40,12 +41,12 @@
     
                                 <div class="profile-info">
                                     <label class="title">Birth Date</label>
-                                    <label for="name">Feb 19, 1993</label>
+                                    <label for="name">{{  auth()->user()->dateofbirth }}</label>
                                 </div> 
     
                                 <div class="profile-info">
                                     <label class="title">Age</label>
-                                    <label for="name">19</label>
+                                    <label for="name">{{ auth()->user()->age }}</label>
                                 </div> 
                             </div>    
                         </div>    

@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use App\Models\Coupon;
 use App\Models\Product;
+use App\Models\Checkout;
 use App\Models\WishList;
 use App\Models\AddressBook;
 use App\Models\ShippingAddress;
+use App\Http\Traits\DateAndTimeFormat;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +17,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, DateAndTimeFormat;
 
     /**
      * The attributes that are mass assignable.
@@ -70,19 +73,14 @@ class User extends Authenticatable
     }
 
     public function payment_options(){
-        return $this->hasMany(PaymentOption::class);
+        return $this->hasMany(UserPaymentOption::class);
     }
 
     public function defaultPayment()
     {
-        return $this->payment_options->where('status', 1)->first();
+        return $this->payment_options->where('status', 1);
     }
-
-
-    public function addressBooks()
-    {
-        return $this->hasMany(AddressBook::class);
-    }
+ 
 
     public function carts()
     {
@@ -91,12 +89,16 @@ class User extends Authenticatable
     
     public function shippingAddress()
     {
-        return $this->hasMany(ShippingAddress::class);
+        return $this->hasMany(UserShippingAddress::class);
     }
 
     public function shippingDefaultAddress()
     {
         return $this->shippingAddress->where('status', 1)->first();
+    }
+
+    public function checkout(){
+        return $this->hasOne(Checkout::class);
     }
 
 
@@ -166,6 +168,11 @@ class User extends Authenticatable
     public function cancelled()
     {
         return $this->orders->where('status', 'cancelled')->count();
+    }
+
+    public function age()
+    {
+        return Carbon::parse($this->dateofbirth)->diffInYears(Carbon::now());
     }
 
 

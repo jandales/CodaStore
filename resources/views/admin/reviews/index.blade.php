@@ -84,7 +84,7 @@
                                 <p>{{ substr($review->comments, 0, 50) . '....' }}</p>                               
                             </div>
                         </td>                      
-                        <td class="text-align-left"><p>{{ $review->created_at}}</p></td>
+                        <td class="text-align-left"><p>{{ $review->createdAtDate()}}</p></td>
                       
                         <td width="100px"> 
                             <div class="table-action">

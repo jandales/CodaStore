@@ -1,4 +1,4 @@
-const searchTrigger =  document.querySelector(".search");
+const searchTrigger =  document.getElementById("btnsearch");
 const navBar =  document.querySelector(".navbar");
 const navSearch = document.querySelector(".navigation-search");
 const closeSearch =  document.querySelector(".close-search");
@@ -7,20 +7,20 @@ const _token =  document.querySelector('meta[name="csrf-token"]').getAttribute('
 const _put = "PUT"
 const _delete = "DELETE"
 
-searchTrigger.addEventListener('click', event => {
-    if(navBar.style.display === "flex"){
+searchTrigger.addEventListener('click', ()  => {
+
+    if(navBar.style.display == "flex"){
         navBar.style.display = 'none';
         navSearch.style.display = "flex";
         document.getElementById("inputSearch").focus();
-    }else{
-        navBar.style.display = "flex";
-        navSearch.style.display = "none";
+        return;
     }
 
-
+    navBar.style.display = "flex";
+    navSearch.style.display = "none";
 });
 
-closeSearch.addEventListener('click', event => {
+closeSearch.addEventListener('click', () => {
     navBar.style.display = "flex";
     navSearch.style.display = "none";
 });
@@ -43,11 +43,13 @@ function menutoggle(){
 
 const btnfilter = document.querySelector('.btn-filter');
 const filterWrapper = document.getElementById('filter-wrapper')
+if(btnfilter){
+    btnfilter.addEventListener('click', function() {
+        console.log(filterWrapper)
+        filterWrapper.classList.toggle("visible")
+    })
+}
 
-btnfilter.addEventListener('click', function() {
-    console.log(filterWrapper)
-    filterWrapper.classList.toggle("visible")
-})
 
 
 function removeAlert(){
@@ -147,44 +149,56 @@ function closeAlertMessage(elem)
 }
 
 document.addEventListener("DOMContentLoaded", () => {   
-    cartWishlistCountToElement('.cart-count', getCartCount())
-    cartWishlistCountToElement('.wishlist-count', getWislistCount())   
-    getCarts()
+    getCartCount();
+    getCarts();
+    setCartCookie();
 
  })
 
 function getCartCount(){
-    let count = 0
     $.ajax({
         url : '/cart/count',
         type: 'GET',
         async: false,  
-        success : function(response){             
-            count = response["cart"]
+        success : function(response){   
+            cartCountToElement('.cart-count', response.cartItemsCount)         
         }
     });
-    return count
+
 }
 
-function getWislistCount(){
-    let count = 0
+
+
+function setCartCookie()
+{
     $.ajax({
-        url : '/wishlists/count',
-        type: 'GET',
-        async: false,  
-        success : function(response){          
-            count = response["wishlists"]
-        }
-    });  
-    return count
+        url : '/create-cart-cookie',
+        type : 'GET',
+        async : false,
+        success : function(response){
+
+        } 
+    });
 }
 
-function cartWishlistCountToElement(elemClass, count)
+function cartCountToElement(elemClass, count)
 {
     let elem = document.querySelector(elemClass, count)
     if(count == 0) return elem.parentElement.classList.add('hidden')  
     elem.parentElement.classList.remove('hidden')
     elem.innerText = count;
+}
+
+
+function moneyFormatter(number){
+    
+    var formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'PHP',
+    });
+
+    return formatter.format(number);
+
 }
 
 

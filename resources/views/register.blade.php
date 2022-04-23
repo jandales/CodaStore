@@ -51,13 +51,7 @@
                     
                 
                 
-                        <div class="flex-row justify-content-center mt-2">
-                            <div class="line"></div>
-                            <span class="ml-1 mr-1">or</span>
-                            <div class="line"></div>
-                        </div>
-
-                        <button class="login-register-social-button"><span><i class="fab fa-google"></i></span>Sign up with Google</button>
+                       
                     </div>    
 
             

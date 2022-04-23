@@ -3,50 +3,44 @@
 
 use Illuminate\Http\Request;
 
-use App\Models\ShippingAddress;
+
 use App\Mail\forgorPasswordMail;
 
 
 use Illuminate\Support\Facades\Route;
 
 
+use App\Http\Controllers\AppController;
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RateController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReviewController;
-
-
-
-use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CheckOutController;
 use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\WishListController;
-
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PlaceOrderController;
-use App\Http\Controllers\AddressBookController;
+use App\Http\Controllers\SocialSiteController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ImageController;
-use App\Http\Controllers\Admin\PriceController;
 use App\Http\Controllers\Admin\StockController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\CouponFrontController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\VariantController;
-use App\Http\Controllers\PaymentOptionController;
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\DirectCheckoutController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Auth\AdminLoginController;
-use App\Http\Controllers\ShippingAddressController;
 use App\Http\Controllers\Admin\AdminOrderController;
+use App\Http\Controllers\UserPaymentOptionController;
 use App\Http\Controllers\Auth\AdminRegisterController;
 use App\Http\Controllers\Auth\User\RegisterController;
 use App\Http\Controllers\Auth\User\UserLoginController;
+use App\Http\Controllers\UserShippingAddressController;
+use App\Http\Controllers\Admin\ShippingMethodController;
 use App\Http\Controllers\Auth\AdminResetPasswordController;
 use App\Http\Controllers\Auth\User\ResetPasswordController;
 use App\Http\Controllers\Auth\User\ForgotPasswordController;
@@ -62,21 +56,48 @@ use App\Http\Controllers\Auth\User\ForgotPasswordController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/',[HomeController::class, 'index'])->name('home'); 
 
+Route::get('/',[AppController::class, 'index'])->name('home'); 
+Route::get('/search',[AppController::class, 'search'])->name('search');
+Route::get('/create-cart-cookie', [AppController::class, 'setCartCookie']);
+Route::get('/about', [AppController::class, 'about'])->name('about');
+Route::get('/contact', [AppController::class, 'contact'])->name('contact');
 
+Route::post('/send-message', [AppController::class, 'sendMessage'])->name('sendMessage');
 
-Route::get('/about', function (){
-    return view('about');
-});
+/*
+|--------------------------------------------------------------------------
+| Cart Controller  Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/cart', [CartController::class , 'index'])->name('cart');
 
-Route::get('/contact', function (){
-    return view('contact');
-});
+Route::post('/cart/store/{product:id}', [CartController::class, 'store'])->name('cart.store');
 
-Route::get('/test', function (){
-    return view('admin.products.create1');
-});
+Route::delete('/cart/destroy/{item}', [CartController::class, 'destroy'])->name('cart.destroy');
+
+Route::delete('/cart/destroy', [CartController::class, 'destroies'])->name('cart.destroy.selected');
+
+Route::put('/cart/update/{cartitem:id}', [CartController::class, 'update'])->name('cart.update');
+
+Route::put('/cart/product/discount/update', [CartController::class , 'updateProductsDiscount' ]);
+
+Route::get('/cart/count', [CartController::class, 'count'])->name('cart.count');    
+
+Route::get('/cart/coupon/activate', [CartController::class , 'couponActivate'])->name('coupon');
+
+Route::put('/cart/coupon/remove', [CartController::class, 'couponRemove'])->name('coupon.remove');
+
+Route::get('/cart/select/{id}/shipping-method/',[CartController::class, 'selectShippingMethod'])->name('cart.select.shippingMethod');
+//cart ajax request 
+Route::get('/get-user-cart', [CartController::class, 'get_user_cart']);
+
+/*
+|--------------------------------------------------------------------------
+| End of Cart Controller  Routes
+|--------------------------------------------------------------------------
+*/
+
 
 /*
 |--------------------------------------------------------------------------
@@ -120,7 +141,7 @@ Route::get('/admin/users/show/{admin:id}', [AdminController::class, 'show'])->na
 
 Route::post('/admin/users/{admin}/send-reset-password/', [AdminController::class, 'sentResetPassword'])->name('admin.users.sentPasswordResetPassword');
 
-Route::put('/users/changepassword/{admin:id}',[AdminController::class, 'updatePassword'])->name('users.updatePassword');
+Route::put('/admin/changepassword/{admin:id}',[AdminController::class, 'updatePassword'])->name('users.updatePassword');
 
 
 // Shop route
@@ -130,6 +151,8 @@ Route::get( '/shop', [ ShopController::class, 'index' ])->name( 'shop' );
 Route::get( '/shop/{category}', [ ShopController::class, 'category' ])->name( 'shop.category' );
 
 Route::get( '/shop/item/{product}', [ ShopController::class, 'view' ])->name( 'shop.product' ); 
+
+Route::get('/shop/sort-by/{value}', [ShopController::class, 'sortBy'])->name('shop.sort');
 
 Route::post( '/shop/search', [ ShopController::class, 'search' ])->name( 'shop.search' ); 
 
@@ -158,12 +181,7 @@ Route::group(['middleware' => 'auth'], function(){
 });
 
 
-Route::group(['middleware' => 'auth'], function(){
 
-    Route::post('/checkout/{product}',[DirectCheckoutController::class, 'index'])->name('checkout.direct');  
-
-
-});
 
 
 
@@ -185,110 +203,55 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::get('/account/upload/avatar',[UserController::class, 'upload'])->name('account.upload');
 
-    Route::get('/user/addressbook', [UserController::class, 'addressbook']);
-
     Route::get('/account/edit/profile', [UserController::class, 'edit'])->name('account.edit');
-
-    // address book
-
-    Route::get('/account/addressbook', [AddressBookController::class, 'index'])->name('account.addressbook');
-
-    Route::get('/account/addressbook/create',[AddressBookController::class, 'create'])->name('addressbook.create');
-
-    Route::post('/account/addressbook/store', [ AddressBookController::class, 'store'])->name('addressbook.store');
-
-    Route::get('/account/addressbook/edit/{addressbook}', [ AddressBookController::class, 'edit' ])->name('addressbook.edit');
-
-    Route::put('/account/addressbook/update/{addressbook}', [ AddressBookController::class, 'update' ])->name('addressbook.update');
-
-    Route::put('/account/addressbook/default/{addressbook}', [ AddressBookController::class, 'default' ])->name('addressbook.default');
-    
-    Route::delete('/account/addressbook/delete/{addressbook}', [ AddressBookController::class, 'destroy' ])->name('addressbook.destroy');
-
-    Route::put('/addressbook/set/{addressbook:id}', [ AddressBookController::class, 'ajaxSetAddress' ])->name('addressbook.set');
+    Route::put('/account/change-password', [UserController::class, 'changePassword'])->name('account.changePassword');
+   
     // route Shipping address    
-    Route::get('/account/shipping-address', [ShippingAddressController::class, 'index'])->name('account.shippingaddress');
+    Route::get('/account/shipping-address', [UserShippingAddressController::class, 'index'])->name('account.shippingaddress');
 
-    Route::get('/account/shipping-address/create', [ShippingAddressController::class, 'create'])->name('account.shippingaddress.create');
+    Route::get('/account/shipping-address/create', [UserShippingAddressController::class, 'create'])->name('account.shippingaddress.create');
     
-    Route::post('/account/shipping-address/store', [ShippingAddressController::class, 'store'])->name('account.shippingaddress.store');
+    Route::post('/account/shipping-address/store', [UserShippingAddressController::class, 'store'])->name('account.shippingaddress.store');
 
-    Route::get('/account/shipping-address/{address}/edit', [ShippingAddressController::class, 'edit'])->name('account.shippingaddress.edit');
+    Route::get('/account/shipping-address/{address}/edit', [UserShippingAddressController::class, 'edit'])->name('account.shippingaddress.edit');
 
-    Route::put('/account/shipping-address/{address}/update', [ShippingAddressController::class, 'update'])->name('account.shippingaddress.update');
+    Route::put('/account/shipping-address/{address}/update', [UserShippingAddressController::class, 'update'])->name('account.shippingaddress.update');
 
-    Route::delete('/account/shipping-address/{address}/destroy', [ShippingAddressController::class, 'destroy'])->name('account.shippingaddress.destroy');
+    Route::delete('/account/shipping-address/{address}/destroy', [UserShippingAddressController::class, 'destroy'])->name('account.shippingaddress.destroy');
 
-    Route::put('/account/shipping-address/{address}/update-status', [ShippingAddressController::class, 'set_default_address'])->name('account.shippingaddress.update-status');
+    Route::put('/account/shipping-address/{address}/update-status', [UserShippingAddressController::class, 'set_default_address'])->name('account.shippingaddress.update-status');
     // payment Method
-    Route::get('/account/payment-option', [PaymentOptionController::class, 'index'])->name('account.payment-option');
+    Route::get('/account/payment-option', [UserPaymentOptionController::class, 'index'])->name('account.payment-option');
 
-    Route::get('/account/payment-option/create', [PaymentOptionController::class, 'create'])->name('account.payment-option.create');
+    Route::get('/account/payment-option/create', [UserPaymentOptionController::class, 'create'])->name('account.payment-option.create');
 
-    Route::post('/account/payment-option/store', [PaymentOptionController::class, 'store'])->name('account.payment-option.store');
+    Route::post('/account/payment-option/store', [UserPaymentOptionController::class, 'store'])->name('account.payment-option.store');
 
-    Route::get('/account/payment-option/edit/{option}', [PaymentOptionController::class, 'edit'])->name('account.payment-option.edit');
+    Route::get('/account/payment-option/edit/{option}', [UserPaymentOptionController::class, 'edit'])->name('account.payment-option.edit');
 
-    Route::put('/account/payment-option/update/{option}', [PaymentOptionController::class, 'update'])->name('account.payment-option.update');
+    Route::put('/account/payment-option/update/{option}', [UserPaymentOptionController::class, 'update'])->name('account.payment-option.update');
 
-    Route::delete('/account/payment-option/destroy/{option}', [PaymentOptionController::class, 'destroy'])->name('account.payment-option.destroy');
+    Route::delete('/account/payment-option/destroy/{option}', [UserPaymentOptionController::class, 'destroy'])->name('account.payment-option.destroy');
 
-    Route::put('/account/payment-option/status/{option}', [PaymentOptionController::class, 'updateStatus'])->name('account.payment-option.update.status');
-  
-
-
-
-
- 
-
-    /*
-    |--------------------------------------------------------------------------
-    | Cart Controller  Routes
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get('/cart', [CartController::class , 'index'])->name('cart');
-
-    Route::post('/cart/store/{product:id}', [CartController::class, 'store'])->name('cart.store');
-
-    Route::delete('/cart/destroy/{cart}', [CartController::class, 'destroy'])->name('cart.destroy');
-
-    Route::delete('/cart/destroy', [CartController::class, 'destroies'])->name('cart.destroy.selected');
-
-    Route::post('/cart/update/{cart:id}', [CartController::class, 'update'])->name('cart.update');
-
-    // Route::post('/cart/checkout/store', [CartController::class, 'checkout' ])->name('cart.selected');
-
-    Route::put('/cart/product/discount/update', [CartController::class , 'updateProductsDiscount' ]);
-
-    Route::get('/cart/count', [CartController::class, 'count'])->name('cart.count');
-
-
+    Route::put('/account/payment-option/status/{option}', [UserPaymentOptionController::class, 'updateStatus'])->name('account.payment-option.update.status');   
 
     Route::get('/checkout/information', [CheckOutController::class, 'index' ])->name('checkout.information');
+
+    Route::post('/checkout/information/store', [CheckOutController::class, 'store' ])->name('checkout.information.store');
   
     Route::get('/checkout/shipping', [CheckOutController::class, 'shipping' ])->name('checkout.shipping');
 
+    Route::put('/checkout/shipping/update',[CheckOutController::class, 'updateShippingMethod'])->name('checkout.shipping.update');
+
     Route::get('/checkout/payment', [CheckOutController::class, 'payment' ])->name('checkout.payment');
-
-    Route::post('/checkout/remove/{cart}', [CheckOutController::class, 'remove'])->name('checkout.remove');
-
-    Route::post('/checkout/placeOrder', [CheckoutController::class, 'placeOrder'])->name('checkout.placeOrder');
-
-    Route::post('/checkout/placeOrder/{product}/{qty}',[PlaceOrderController::class, 'direct'])->name('checkout.placeOrder.direct');
-
-    Route::get('/api/carts', [CartController::class, 'carts']);
-
-
-
     
-   
-  
+    Route::get('/checkout/get-shipping-charge/{id}', [CheckOutController::class, 'shippingCharge']);
 
-  
+    Route::post('/checkout/pay-now/store', [PlaceOrderController::class, 'store'])->name('checkout.paynow');    
 
+    Route::get('/checkout/completed', [CheckOutController::class, 'completed' ])->name('checkout.completed');    
 
-
+    Route::get('/get-shipping-method/{id}', [ShippingMethodController::class, 'getShippingMethod']);
  
 /*
 |--------------------------------------------------------------------------
@@ -345,6 +308,7 @@ Route::get('/logout',[LogoutController::class, 'store'])->name('logout');
 
 
 
+Route::get('/variant/{id}', [VariantController::class, 'variant'])->name('variant');
 
 
 
@@ -483,7 +447,19 @@ Route::group(['middleware' => 'auth:admin'], function(){
     // Route inventory
     Route::get('/admin/products/inventory', [StockController::class, 'inventory'])->name('admin.inventory');
     // Route
-    Route::get('/admin/settings',[SettingController::class, 'index'])->name('admin.settings');
+    Route::get('/admin/setting/general',[SettingController::class, 'general'])->name('admin.setting.general');
+
+    Route::get('/admin/setting/campany',[SettingController::class, 'campany'])->name('admin.setting.campany');
+    Route::get('/admin/setting/email',[SettingController::class, 'emailer'])->name('admin.setting.emailer');
+
+    Route::put('/admin/setting/general/update/{general_setting}', [SettingController::class, 'updateGeneral'])->name('admin.setting.general.update');
+    Route::put('/admin/setting/general/campany/update/{general_setting}', [SettingController::class, 'updateCampanyAddress'])->name('admin.setting.campany.update');
+ 
+    Route::get('/admin/setting/social',[SocialSiteController::class, 'index'])->name('admin.setting.social');
+    Route::post('/admin/setting/social/store', [SocialSiteController::class, 'store'])->name('admin.setting.social.store');
+    Route::put('/admin/setting/social/update/{site}', [SocialSiteController::class, 'update'])->name('admin.setting.social.update');
+    Route::delete('/admin/setting/social/destroy/{site}', [SocialSiteController::class, 'destroy'])->name('admin.setting.social.destroy');
+
      
 
         
@@ -566,57 +542,28 @@ Route::group(['middleware' => 'auth:admin'], function(){
     Route::put('/admin/reviews/block/{review}', [ReviewController::class , 'block'])->name('admin.reviews.block');
     Route::delete('/admin/reviews/delete/{review}', [ReviewController::class , 'delete'])->name('admin.reviews.destroy');
     Route::post('/admin/search/', [ReviewController::class , 'search'])->name('admin.reviews.search');
-});
-
-Route::group(['middleware' => 'auth:web'], function(){ 
-     /*
-    |--------------------------------------------------------------------------
-    | Wishlist Routes
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get('/wishlists', [WishListController::class , 'index'])->name('wishlists');
-
-    Route::post('/wishlist/{product}', [WishListController::class , 'store'])->name('wishlist.store');
-
-    Route::delete('/wishlist/destroy/{wishlist}', [WishListController::class , 'destroy'])->name('wishlist.destroy');
-
-    Route::delete('/wishlist/destroy', [WishListController::class , 'destroyAll'])->name('wishlist.destroy.all');
-
-    Route::get('/variant/{id}', [VariantController::class, 'variant'])->name('variant');
-
-    Route::put('wishlist/update/{wishlist:id}', [WishListController::class, 'update'])->name('wishlist.product.update');
-
-    Route::get('wishlist/addtoCart/{wishlist:id}', [WishListController::class, 'addtoCart'])->name('wishlist.toCart');
-
-    Route::get('/wishlists/count', [WishListController::class , 'count'])->name('wishlists.count');
-    Route::get('/api/wishlists', [WishListController::class , 'list']);
-    Route::delete('/api/wishlists/delete/{wishlist:id}', [WishListController::class , 'delete']);
 
 
+    // Shipping method
 
-});
+    Route::get('/admin/setting/shipping-method/index',[ShippingMethodController::class, 'index'])->name('admin.shipping.method');
 
-Route::group(['middleware' => 'auth:web'], function(){ 
-    /*
-   |--------------------------------------------------------------------------
-   | Wishlist Routes
-   |--------------------------------------------------------------------------
-   */
+    Route::get('/admin/setting/shipping-method/create',[ShippingMethodController::class, 'create'])->name('admin.shipping.method.create');
 
-   Route::get('/coupon/{coupon}', [CouponFrontController::class , 'index'])->name('coupon');
+    Route::post('/admin/setting/shipping-method/store',[ShippingMethodController::class, 'store'])->name('admin.shipping.method.store');
 
-   Route::put('/coupon/user/{id}/remove', [CouponFrontController::class, 'remove'])->name('coupon.remove');
+    Route::get('/admin/setting/shipping-method/{method}/edit',[ShippingMethodController::class, 'edit'])->name('admin.shipping.method.edit');
 
+    Route::put('/admin/setting/shipping-method/{method}/update',[ShippingMethodController::class, 'update'])->name('admin.shipping.method.update');
 
+    Route::delete('/admin/setting/shipping-method/{method}/destroy',[ShippingMethodController::class, 'destroy'])->name('admin.shipping.method.destroy');
 
-   Route::get('/user/active/coupon', [CouponFrontController::class , 'active' ])->name('coupon.active');
+    Route::delete('/admin/setting/shipping-method/selected-destroy',[ShippingMethodController::class, 'selected_destroy'])->name('admin.shipping.method.selected.destroy');
 
+    Route::put('/admin/setting/shipping-method/update-status/{method}/{status}',[ShippingMethodController::class, 'update_status'])->name('admin.shipping.method.update.status');
 
-   
+    Route::put('/admin/setting/shipping-method/selected-update-status',[ShippingMethodController::class, 'selected_update_status'])->name('admin.shipping.method.selected.update.status');
 
-
-  
 
 
 });

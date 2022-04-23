@@ -7,18 +7,19 @@ use App\Models\Order;
 use App\Models\Coupon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Services\AdminOrderServices;
 
 class AdminOrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::with('user', 'orderProducts')->paginate(10);
+        $orders = Order::with('user', 'items')->paginate(10);
         return view('admin.orders')->with('orders', $orders);
     }
 
     public function listbyStatus($status)
     {
-        $orders = Order::where('status', $status)->with('user', 'orderProducts')->paginate(10);
+        $orders = Order::where('status', $status)->with('user', 'items')->paginate(10);
         return view('admin.orders')->with('orders', $orders);
     }
 
@@ -29,7 +30,7 @@ class AdminOrderController extends Controller
 
     public function toShip(Order $order, AdminOrderServices $service)
     {       
-        $service->updateStatus();
+        $service->updateStatus($order);
         return redirect()->route("admin.orders.show",[$order]);
     }
 

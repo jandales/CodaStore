@@ -6,15 +6,18 @@ use Illuminate\View\Component;
 
 class SmallCartComponent extends Component
 {
-    public $carts;
+    public $cart;   
+    public $shipping_charge; 
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($carts)
+    public function __construct($cart,$shippingcharge)
     {
-        $this->carts = $carts;
+        $this->cart = $cart;
+        $this->shipping_charge = $shippingcharge;
+
     }
 
     /**

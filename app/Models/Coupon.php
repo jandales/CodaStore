@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use App\Http\Traits\DateAndTimeFormat ;
 use App\Models\CouponUsageUser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Coupon extends Model
 {
-    use HasFactory;
+    use HasFactory,  DateAndTimeFormat;
 
     protected $fillable = [
         'name',
@@ -39,6 +40,45 @@ class Coupon extends Model
     }
 
 
+    public function discount($cartTotal)
+    {
+        $total = $cartTotal;
+
+        if ($this->discount_type == 0) return   ($total * ($this->amount / 100));
+
+        if ($this->discount_type == 1) return  $this->amount;
+       
+        if ($this->discount_type == 2)
+        {
+           $productCount = self::compareCartProductsToCouponProducts();
+           return  $this->amount * $productCount;           
+        } 
+
+       
+
+    }
+
+    public function compareCartProductsToCouponProducts()
+    {
+        $products = $this->products;
+        if(empty($products)) return 0;
+
+        $cart = Cart::ByAuthUser()->first();      
+        $count = 0;
+        foreach($cart->items as $item)
+        {
+            foreach($products as $product){
+                if ($product->product_id == $item->product_id )
+                {
+                    $count++;
+                }
+            }
+        }
+
+        return $count;
+    }
+
+
 
     public function limit()
     {
@@ -50,12 +90,12 @@ class Coupon extends Model
     {
        $coupon = auth()->user()->activeCoupon();
 
-       if(!empty($coupon)){
+       if(empty($coupon)) return true;
          
-            if($this->limit_per_user < $coupon->usage)
-            return true;
-       }
-       return false;
+       if($this->limit_per_user <= $coupon->usage)
+            return false;
+       
+       return true;
        
     }
 
@@ -70,6 +110,9 @@ class Coupon extends Model
         return false;
 
     }
+
+
+
 
     
 
@@ -101,13 +144,11 @@ class Coupon extends Model
        }
     }
 
+
     public function date($format)
     {
-        if($this->expire_at == null){
-            return  null;
-        }
-
-        return Carbon::parse($this->expire_at)->format($format);
+        if($this->expire_at == null)  return  null;
+        return  $this->dateFormat($this->expire_at);        
     }
 
     public function expired()

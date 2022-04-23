@@ -45,17 +45,11 @@
 
                     <div class="mt-2"> 
                         <div class="product cart-form-group">
-                            <div class="btn-num-product-down flex-vert-center add-minus-quantity" onclick="quantity('minus')"> <i class="fas fa-minus"></i></div>
-                            <input class="quantity-input num-product bg-grey"  name="qty" value="1" type="number">
-                            <div class="btn-num-product-up flex-vert-center add-minus-quantity" onclick="quantity('add')"> <i class="fas fa-plus"></i></div>
+                            <div class="btn-num-product-down flex-vert-center btn-add-minus" type="minus" > <i class="fas fa-minus"></i></div>
+                            <input  id="quantity-input" class=" num-product bg-grey"  name="qty" value="1" type="number">
+                            <div class="btn-num-product-up flex-vert-center btn-add-minus" type="add"> <i class="fas fa-plus"></i></div>
                         </div>
-                        <div class="inline mt-2">
-                            {{-- <form id="formCheckout"  action="{{route('checkout.direct',[ $product ])}}" method="post">
-                                @csrf
-                                <input type="hidden" value="1" name="qty" class="quantity">
-                                <input type="hidden"  name="properties" class="properties">
-                                <button id="buy-now"  class="button buy-cart-button"> <span class="mr"><i class="fas fa-cart-plus"></i></span>Buy now</button>  
-                            </form>                             --}}
+                        <div class="inline mt-2">                                         
                             <button id="cart-button" data-id="{{ $product->id }}" url="{{route('cart.store',[$product->id])}}" class="button buy-cart-button btn-dark">
                                 <span class="mr"><i class="fas fa-cart-plus"></i></span>
                                  Add to Cart
@@ -63,14 +57,7 @@
                         </div>
                     </div> 
             
-                    <ul class="social-icons-inline mt-2">   
-                        @auth
-                            <li><a class="add-wish-list  {{ $product->isWishlisted() ? 'ctheme' : '' }}"  data="{{ $product->id}}"><i class="{{ $product->isWishlisted() ? 'fas fa-heart' : 'far fa-heart' }}"></i></a></li>                          
-                        @endauth 
-                        @guest
-                            <li><a class="add-wish-list"  data="{{ $product->id}}"><i class="far fa-heart"></i></a></li>
-                        @endguest 
-                        <li>|</li>
+                    <ul class="social-icons-inline mt-2"> 
                         <li><a href="https://web.facebook.com/"><i class="fab fa-facebook"></i></a></li>
                         <li><a href="https://web.facebook.com/"><i class="fab fa-instagram"></i></a></li>
                         <li><a href="https://web.facebook.com/"><i class="fab fa-twitter"></i></a></li>

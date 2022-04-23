@@ -23,30 +23,26 @@
                                        <label class="order-status capitalize" for="status">{{$order->status }}</label>
                                     </div>
                                     <div class="order-body">
-                                        @foreach ($order->orderProducts as $orderitem)
+                                        @foreach ($order->items as $item)
                                           <div class="order-wrapper">
                                                <div class="order-item">
                                                    <div class="order-item-image">
-                                                       <img src="/{{ $orderitem->product->imagePath }}" alt="">
+                                                       <img src="/{{ $item->product->imagePath }}" alt="">
                                                    </div>                                                      
                                                    <div class="order-item-name ml-1">
-                                                       <label for="name">{{ $orderitem->product->name }}</label>
+                                                       <label for="name">{{ $item->product->name }}</label>
                                                    </div>
                                                    <div class="order-item-price ">
-                                                       <div class="flex">
-                                                           <span>₱</span>
-                                                           <label  for="price">{{ $orderitem->price }}</label>
-                                                       </div>
-                                                   
+                                                         <label  for="price">@money($item->price)</label>
                                                    </div>
                                                    <div class="order-item-quantity">
                                                        <div class="flex">
                                                            <span>Qty:</span>
-                                                           <label  class="ml5"for="qty">{{ $orderitem->qty }}</label>
+                                                           <label  class="ml5"for="qty">{{ $item->qty }}</label>
                                                        </div>
                                                     </div> 
                                                     <div class="order-item-write-review">
-                                                        <a href="{{ route('orders.review', [ $orderitem->product ])}}" class="link-primary">Write a review</a>
+                                                        <a href="{{ route('orders.review', [ $item->product ])}}" class="link-primary">Write a review</a>
                                                      </div>                                                      
                                            </div>
                                           </div>                                           
@@ -62,9 +58,9 @@
                                     </div>  
                                     <div class="separator mt-1 mb-1"></div>                          
                                    <div class="shipping-detail mt-1">
-                                      <span><i class="fas fa-user"></i><span class="m-l-10">{{ $order->shipping->reciept_name }}</span></span>
+                                      <span><i class="fas fa-user"></i><span class="m-l-10">{{ $order->shipping->personName() }}</span></span>
                                       <span><i class="fas fa-address-book"></i><span class="m-l-10">{{ $order->shipping->address() }}</span></span>
-                                      <span><i class="fas fa-phone"></i><span class="m-l-10">{{ $order->shipping->reciept_number }}</span><span>
+                                      <span><i class="fas fa-phone"></i><span class="m-l-10">{{ $order->shipping->phone }}</span><span>
                                    </div>
                                 </div>
     
@@ -84,20 +80,16 @@
                                         </div>
                                         <div class="flex space-between">
                                             <span>Shipping Fee</span>
-                                            <span>@money($order->shipping_fee)</span>
+                                            <span>@money($order->shipping_charge)</span>
                                         </div>
                                         <div class="flex space-between">
                                             <span>Coupon</span>
-                                            <span>@if ($order->couponUsed) 
-                                                    @money($order->couponUsed->amount)
-                                                @else
-                                                    @money(0)
-                                            @endif</span>
+                                            <span>@money($order->coupon_amount)</span>
                                         </div>
                                         <div class="separator mt-1 mb-1"></div>
                                         <div class="flex space-between">
                                             <span>Total ( VAT Incl. )</span>
-                                            <span>@money($order->total())</span>
+                                            <span>@money($order->gross_total)</span>
                                         </div>
                                       
                                    </div>

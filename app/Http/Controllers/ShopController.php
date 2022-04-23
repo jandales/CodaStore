@@ -14,18 +14,67 @@ class ShopController extends Controller
 
     public function index()
     {  
-        $products = Product::with('wishlist')->get();
+        $products = Product::with('reviews')->paginate(16);
         return view('shop')->with('products' ,$products );
     }
 
     public function category(Category $category)
-    { 
-        $products = Product::where('category_id', $category->id)->with('reviews', 'wishlist')->get();
+    {    
+        $products = Product::where('category_id', $category->id)->with('reviews')->paginate(16);       
         return view('shop')->with( 'products' , $products );
     }
+
     public function view(Product $product)
     { 
         return view('product')->with('product',$product);
+    }
+
+    public function sortBy($value)
+    {
+
+        if($value == 'all') return redirect()->route('shop');     
+            
+        $column = '';
+        $columnValue = '';
+        switch($value)
+        {
+            case 'a-z':
+                $column = 'name';
+                $columnValue = 'desc';
+            break;
+
+            case  'z-a' : 
+                $column = 'name';
+                $columnValue = 'asc';
+            break;
+
+            case  'new-to-old' : 
+                $column = 'created_at';
+                $columnValue = 'asc';
+            break;
+
+            case  'old-to-new' : 
+                $column = 'created_at';
+                $columnValue = 'desc';
+            break;
+
+            case  'low-to-high' : 
+                $column = 'regular_price';
+                $columnValue = 'asc';
+            break;
+
+            case  'high-to-low' : 
+                $column = 'regular_price';
+                $columnValue = 'desc';
+            break;
+          
+        };
+
+     
+
+        $products = Product::with('wishlist')->orderBy($column,$columnValue)->paginate(16);
+
+        return view('shop')->with('products' ,$products);
     }
 
    

@@ -45,7 +45,7 @@
                                           
                                             <div class="form-block">
                                                 <label>Age</label>
-                                                <input type="text" id="age"  name="age" value="{{ auth()->user()->age }}">
+                                                <input type="text" id="age"  name="age" value="{{ auth()->user()->age() }}" readonly>
                                             </div> 
                                        </div>
                                       
@@ -84,17 +84,7 @@
        <script>
         
         const dateInput =  document.getElementById('dateofbirth');
-
-        document.addEventListener('DOMContentLoaded', function(){
-
-            const date = new Date();
-            let year =   date.getFullYear() +"-"+   date.getMonth() + 1 + "-"+ date.getDate()            
-            dateInput.value = year;
-
-            getAge();
-            
-
-        });
+ 
 
         dateInput.addEventListener('change', function(){
             getAge();
