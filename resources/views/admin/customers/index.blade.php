@@ -52,7 +52,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th class="tr-checkbox">                   
+                <th class="column-1">                   
                     <div class="checkbox">
                         <input type="checkbox" id="parentCheckbox" name="checkbox" >
                     </div>
@@ -61,6 +61,7 @@
                 <th>Email</th>                                          
                 <th>Phone</th>              
                 <th>Date Created</th>
+                <th class="column-action"></th>
             </tr>
         </thead>
         <tbody>
@@ -69,7 +70,7 @@
                     @if ( count($users) != 0 )
                         @foreach ($users as $user)
                             <tr>
-                                <td class="tr-checkbox">
+                                <td class="column-1">
                                     <div class="checkbox">
                                         <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{ $user->id }}">
                                     </div>
@@ -85,7 +86,7 @@
                                 <td>{{$user->email}}</td> 
                                 <td><p>{{ $user->contact }}</p></td>                             
                                 <td><p>{{ $user->createdAtDate()}}</p></td>
-                                <td width="100px"> 
+                                <td class="column-action"> 
                                     <div class="table-action">
                                         <ul>  
                                             <li>                          

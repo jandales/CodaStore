@@ -38,7 +38,7 @@ function categoriesToView(){
                         </div>
                     </td>  
                     <td>${category.name}</td><td>${description}</td><td>${category.slug}</td>
-                    <td>                            
+                    <td class="column-action">                            
                         <div class="table-action">
                                     <ul>   
                                         <li>                                   

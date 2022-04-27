@@ -78,7 +78,7 @@ function attributesToView(){
             <td><div class="checkbox"><input type="checkbox" onclick="selected()" class="childCheckbox" name="selected[]"  value="${item.id}"> </div></td>
             <td><a class="item-name">${item.name}</a></td>
             <td>${description}</td>                   
-            <td>
+            <td class="column-action">
                 <div class="table-action">
                     <ul>   
                         <li><a href="#"onclick="edit(${item.id})"><span class="span"><i class="fas fa-pen"></i> </span></a></li>

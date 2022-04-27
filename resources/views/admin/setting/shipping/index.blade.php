@@ -55,7 +55,7 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>                   
+                            <th class="column-1">                   
                                  <div class="checkbox">
                                     <input type="checkbox" id="parentCheckbox" name="checkbox">                             
                                  </div>
@@ -64,14 +64,14 @@
                             <th>Description</th>
                             <th>Charge</th>                                        
                             <th>Status</th>
-                            <th>Action</th>
+                            <th class="column-action"></th>
                         </tr>
                     </thead>
                     <tbody id="tbody">
                       
                             @foreach ($shipping_methods as $method)
                                 <tr>
-                                    <td class="tr-checkbox">
+                                    <td class="column-1">
                                     
                                             <div class="checkbox">
                                                     <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{$method->id}}">
@@ -82,7 +82,7 @@
                                     <td>{{ $method->description }}</td>
                                     <td>@money($method->amount)</td>
                                     <td><span class="{{$method->status == 1 ? 'active' : 'inactive' }}">{{ $method->status() }}</span></td>
-                                    <td width="100px"> 
+                                    <td class="column-action"> 
                                         <div class="table-action">
                                             <ul>  
                                                 <li>                          

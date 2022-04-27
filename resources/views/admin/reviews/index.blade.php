@@ -36,17 +36,17 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>                   
+                        <th class="column-1">                   
                              <div class="checkbox">
                                 <input type="checkbox" id="parentCheckbox" name="checkbox" >                             
                              </div>
                          </th>
-                        <th>User</th>
+                        <th class="column-3">User</th>
                         <th>Product</th> 
-                        <th>Rating</th>                                         
+                        <th class="column-xs">Rating</th>                                         
                         <th>Comment</th>                      
-                        <th>Date Created</th>
-                        <th></th>
+                        <th class="column-base">Date Created</th>
+                        <th class="column-action"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -57,12 +57,12 @@
 
                 @foreach ($reviews as $review) 
                     <tr>
-                        <td>                         
+                        <td class="column-1">                         
                             <div class="checkbox">
                                     <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{ $review->id }}">                            
                             </div>
                         </td>
-                        <td>
+                        <td class="column-3">
                             <div class="flex items-center gap10">
                                 <div class="avatar-sm">
                                     <img src="{{ $review->user->avatar() }}" alt="" srcset="">
@@ -72,21 +72,21 @@
                         </td>                        
                         <td>
                             <div class="flex justify-content-start align-items-flex-start">
-                                <div class="image">
+                                <div class="image-50">
                                     <img src="/{{ $review->product->imagePath}}" alt="" srcset="">
                                     </div>
                                     <p class="ml-1">{{ $review->product->name }}</p>
                                 </div>
                         </td> 
-                        <td><span class="star">{{ $review->rating }} <i class="fas fa-star"></i></span></td> 
+                        <td class="column-xs"><span class="star">{{ $review->rating }} <i class="fas fa-star"></i></span></td> 
                         <td class="text-align-left">
                             <div class="inline justify-content-between ">
                                 <p>{{ substr($review->comments, 0, 50) . '....' }}</p>                               
                             </div>
                         </td>                      
-                        <td class="text-align-left"><p>{{ $review->createdAtDate()}}</p></td>
+                        <td class="column-base text-align-left"><p>{{ $review->createdAtDate()}}</p></td>
                       
-                        <td width="100px"> 
+                        <td class="column-action"> 
                             <div class="table-action">
                                 <ul>                                     
                                     <li>                          

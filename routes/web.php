@@ -7,9 +7,10 @@ use Illuminate\Http\Request;
 use App\Mail\forgorPasswordMail;
 
 
+use Illuminate\Support\Facades\Crypt;
+
+
 use Illuminate\Support\Facades\Route;
-
-
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\RateController;
@@ -429,24 +430,30 @@ Route::group(['middleware' => 'auth:admin'], function(){
     Route::get('/admin/products/{product}/edit',[ProductController::class, 'edit'])->name('admin.products.edit');
     Route::delete('/admin/products/destroy/{product}',[ProductController::class, 'destroy'])->name('admin.products.destroy');
     Route::post('/admin/products/delete', [ProductController::class, 'delete'])->name('admin.products.destroys');      
-    Route::post('/admin/products/search', [ProductController::class, 'search'])->name('admin.products.search');
+    Route::get('/admin/products/search', [ProductController::class, 'search'])->name('admin.products.search');
     Route::put('/admin/products/{product}/status',[ProductController::class, 'changeStatus'])->name('admin.products.status.update');
     Route::post('/admin/products/status/{status}',[ProductController::class, 'changeSelectedItemStatus'])->name('admin.products.status.updates');    
+    Route::get('/admin/products/find',[ProductController::class, 'find'])->name('admin.products.find'); 
+    Route::get('/admin/products/filter={filter}',[ProductController::class, 'filter'])->name('admin.products.filter');    
+   
    
     //image route
     Route::post('/admin/image/uploads', [ImageController::class, 'uploads']);
     Route::delete('/admin/image/{photo:id}/delete', [ImageController::class, 'unlink']);
     // orders Route
     Route::get('/admin/orders',[AdminOrderController::Class, 'index'])->name('admin.orders');
-    Route::get('/admin/orders/{order}/show',[AdminOrderController::Class, 'show'])->name('admin.orders.show');
-    Route::put('/admin/orders/{order}/ship',[AdminOrderController::Class, 'toShip'])->name('admin.orders.shipped');
+    Route::get('/admin/orders/{order:id}/show',[AdminOrderController::Class, 'show'])->name('admin.orders.show');
+    Route::put('/admin/orders/{order:id}/ship',[AdminOrderController::Class, 'toShip'])->name('admin.orders.shipped');
     Route::put('/admin/orders/deliver',[AdminOrderController::Class, 'deliver'])->name('admin.orders.deliver');
     Route::get('/admin/orders/search',[AdminOrderController::Class, 'search'])->name('admin.orders.search');
     Route::get('/admin/orders/{status}',[AdminOrderController::Class, 'listbyStatus'])->name('admin.orders.list');
     
     // Route inventory
     Route::get('/admin/products/inventory', [StockController::class, 'inventory'])->name('admin.inventory');
-    // Route
+    Route::get('/admin/products/inventory/filter/{filter}', [StockController::class, 'filter'])->name('admin.inventory.filter');
+    Route::get('/admin/products/inventory/search', [StockController::class, 'search'])->name('admin.inventory.search');
+    Route::put('/admin/products/inventory/update/stock/{stock:id}', [StockController::class, 'updateQuantity'])->name('admin.inventory.update.quantity');
+    // RouteP
     Route::get('/admin/setting/general',[SettingController::class, 'general'])->name('admin.setting.general');
 
     Route::get('/admin/setting/campany',[SettingController::class, 'campany'])->name('admin.setting.campany');

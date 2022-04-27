@@ -76,7 +76,7 @@
                               <ul class="sub-menu {{ (request()->is('admin/products*')) ? 'show' : '' }} ">
                                 <li class="{{ (request()->is('admin/products')) ? 'active' : ''}}"><a href="{{route('admin.products')}}">Items</a></li>
                                 <li class="{{ (request()->is('admin/products/categories')) ? 'active' : ''}}"><a href="{{route('admin.categories')}}">Category</a></li>
-                                <li class="{{ (request()->is('admin/products/inventory')) ? 'active' : ''}}"><a href="{{route('admin.inventory')}}">Inventory</a></li>
+                                <li class="{{ (request()->is('admin/products/inventory*')) ? 'active' : ''}}"><a href="{{route('admin.inventory')}}">Inventory</a></li>
                                 <li class="{{ (request()->is('admin/products/attributes')) ? 'active' : ''}}"><a href="{{route('admin.attributes')}}">Attributes</a></li>
                               </ul>
                         </li>

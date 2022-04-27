@@ -75,12 +75,11 @@
                         <tr>
                             <td class="tr-checkbox"> 
                                 <div class="checkbox">   
-                                    <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{ $order->id }}">
+                                    <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{ $order->encryptedId() }}">
                                 </div>
-                            </td>
-
+                            </td>                        
                             <td>
-                                <a href="{{ route('admin.orders.show',[$order])}}">
+                                <a href="{{ route('admin.orders.show',[$order->encryptedId()])}}">
                                     <div class="flex items-center gap10">
                                         <div class="avatar-sm">
                                             <img src="{{ $order->user->avatar() }}" alt="" srcset="">
@@ -97,7 +96,7 @@
                                 <div class="table-action">
                                     <ul>  
                                         <li>                          
-                                            <a href="{{ route('admin.orders.show',[$order])}}">
+                                            <a href="{{ route('admin.orders.show',[$order->encryptedId()])}}">
                                                 <span class="span">
                                                     <i class="fas fa-eye"></i>  
                                                 </span>                                                                           

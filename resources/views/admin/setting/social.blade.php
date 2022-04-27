@@ -12,16 +12,16 @@
             <form id="form" method="POST"  action="{{route('admin.setting.social.update',[$site])}}">
                 @csrf 
                 @method('put')
-                <div class="flex items-center gap20 mb-2">
-                    <div class="flex items-center gap20 w-3">
+                <div class="flex items-center gap20">
+                    <div class="form-block w-3">
                         <label for="name" class="capitalized">Name</label>
                          <input type="text" name="name" value="{{ $site->name }}"> 
                     </div>
-                    <div class="flex items-center gap20 w-3">
+                    <div class="form-block w-3">
                         <label for="name"  class="capitalized">Url</label>
                         <input type="text" name="url" value="{{ $site->url }}"> 
                     </div>
-                    <div class="flex items-center gap20 w-3">
+                    <div class="form-block w-3">
                         <label for="name" class="capitalized block">Code</label>
                         <input type="text" name="code" value="{{ $site->code }}"> 
                     </div>
@@ -36,23 +36,23 @@
             <button id="btn-add-site" class="btn btn-primary">Add new Site</button>
             <form id="form-add" method="POST" class="hidden"  action="{{route('admin.setting.social.store')}}">
                 @csrf                 
-                <div class="flex items-center gap20 mb-2">
-                    <div class="flex items-center gap20 w-3">
+                <div class="flex items-center gap20">
+                    <div class="form-block w-3">
                         <label for="name" class="capitalized">Name</label>
                          <input type="text" name="name" value="{{ old('name') }}"> 
                     </div>
-                    <div class="flex items-center gap20 w-3">
+                    <div class="form-block w-3">
                         <label for="name"  class="capitalized">Url</label>
                         <input type="text" name="url" value="{{ old('url') }}"> 
                     </div>
-                    <div class="flex items-center gap20 w-3">
+                    <div class="form-block w-3">
                         <label for="name" class="capitalized block">Code</label>
                         <input type="text" name="code" value="{{ old('code') }}"> 
                     </div>
                     <div class="flex items-center gap20">
                         <button class="btn btn-primary">Create</button>
                     </div>         
-                    <span id="btn-hide-form" class="btn btn-danger">Remove</span>                                            
+                    <button id="btn-hide-form" class="btn btn-danger">Remove</button>                                         
                 </div>
              
             </form>
@@ -78,7 +78,8 @@
         form.classList.remove('hidden');
     }
 
-    btnhideform.onclick = function() {
+    btnhideform.onclick = function(e) {
+        e.preventDefault();
         form.classList.add('hidden');
         btnaddsite.classList.remove('hidden');    
     }

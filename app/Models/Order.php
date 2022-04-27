@@ -6,6 +6,7 @@ use App\Models\Coupon;
 use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Shipping;
+use App\Http\Traits\Crypted;
 use App\Models\PaymentDetail;
 use App\Models\BillingDetails;
 use App\Http\Traits\DateAndTimeFormat ;
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Order extends Model
 {
-    use HasFactory,  DateAndTimeFormat ;
+    use HasFactory,  DateAndTimeFormat, Crypted ;
 
     protected $fillable = [
         'user_id', 
@@ -101,6 +102,11 @@ class Order extends Model
        return str_replace("-","",$date) . $this->id;
      
     }
+
+
+
+
+  
 
 
     public function statusColor()

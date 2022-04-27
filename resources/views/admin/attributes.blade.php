@@ -50,7 +50,7 @@
                             <th width="50px"><div class="checkbox"><input type="checkbox" id="parentCheckbox" name="checkbox" ></div></th>                        
                             <th>Name</th>
                             <th>Description</th>                           
-                            <th width="120px">Action</th> 
+                            <th class="column-action"></th> 
                         </tr>
                     </thead>
                     <tbody class="table-body">

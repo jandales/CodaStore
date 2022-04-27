@@ -1348,10 +1348,6 @@ button:disabled{
     width: 100% !important;
 }
 
-.label-width{
-   min-width: 60px
-}
-
 .wid180{
     width: 180px !important;
 }
@@ -3053,50 +3049,6 @@ details  ul li:last-child {
 .py-30{
     padding-left: 30px !important;
 }
-/* .panel-table .table{
-    background-color: #fff;
-    border-left: 0;
-    border-left: 0;
-}
-.panel-table .table tr th, .panel-table .table tr td{
-    text-align: center;
-    padding: 10px;
-    
- }
-
-.panel-table .table .image{
-  width: 40px !important;
-  height: 50px !important;
-}
-
-
-
-.panel-table .table .column-1{
-    width: 50px !important;
-}
-
-.panel-table .table .column-2{
-    width: 300px !important;
-}
-.panel-table .table .column-5{
-    width: 200px !important;
-} */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .form-group-qty{  
     display: flex;

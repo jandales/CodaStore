@@ -63,7 +63,7 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>                   
+                        <th class="column-1">                   
                              <div class="checkbox">
                                 <input type="checkbox" id="parentCheckbox" name="checkbox">                             
                              </div>
@@ -80,7 +80,7 @@
                         <input name="_method" type="hidden" value="post">              
                         @foreach ($users as $user) 
                             <tr>
-                                <td class="tr-checkbox">
+                                <td class="column-1">
                                     <div class="checkbox">
                                             <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{ $user->id }}">
                                     </div>                                

@@ -145,6 +145,16 @@ class Product extends Model
                 
     }
 
+    public function scopeFilterByCategory($query, $filter)
+    {
+        return $query->with(['category', 'stock'])
+                ->whereHas('category', function ($q) use ($filter) {
+                    $q->where('slug', $filter)
+                    ->orWhere('name', $filter);
+                });
+    }
+
+
     public function scopePublishedSearch($query,$input)
     {
         return $query->where('status',1)

@@ -20,21 +20,35 @@
                         <span  onclick="clearSelection()" class="btn btn-light"><i class="fas fa-times"></i></span> 
                     </div>
                 </div> 
-                <div class="toolbar default-toolbar"> 
-                        <form id="formSearch" action="{{ route('admin.products.search') }}" method="post">
-                            @csrf
-                            <div class="search-input"> 
-                                <span class="icon-left"></span>                           
-                                <input type="text" placeholder="Search" name="search">
-                                <span class="icon-right" onclick="document.getElementById('formSearch').submit()"><i class="fas fa-search"></i></span>
-                            </div>                     
-                        </form>
-                       
-
-                        <a href="/admin/products/add" class="btn btn-primary mr-2">
-                            <span><i class="fas fa-plus-circle"></i></span>
-                             Add item
-                        </a>
+                <div class="toolbar default-toolbar space-between"> 
+    
+                           <div class="flex items-center">
+                                <label for="" class="label-width">Filter :</label>
+                                <select name="filter" id="filter">
+                                    <option  data-url="{{ route('admin.products.filter',['all'])}}"  value="all" {{ $filter == 'all' ? 'selected' : ''}}>All</option>
+                                    <option  data-url="{{ route('admin.products.filter',['published'])}}"  value="published" {{ $filter == 'published' ? 'selected' : ''}}>Published</option>
+                                    <option  data-url="{{ route('admin.products.filter',['featured-products'])}}"  value="featured-products" {{ $filter == 'featured-products' ? 'selected' : ''}}>Feautured Product</option>
+                                    <option   data-url="{{ route('admin.products.filter',['unpublished'])}}" value="unpublished" {{ $filter == 'unpublished' ? 'selected' : ''}}>Unpublished</option>
+                                </select>
+                           </div>
+                           
+                           <div class="flex gap20">
+                                <form id="formSearch" action="{{ route('admin.products.search') }}" method="get">
+                                    
+                                    <div class="search-input"> 
+                                        <span class="icon-left"></span>                           
+                                        <input type="text" placeholder="Search" name="keyword">
+                                        <span class="icon-right" onclick="document.getElementById('formSearch').submit()"><i class="fas fa-search"></i></span>
+                                    </div>                     
+                                </form>
+                            
+        
+                                <a href="/admin/products/add" class="btn btn-primary mr-2">
+                                    <span><i class="fas fa-plus-circle"></i></span>
+                                    Add item
+                                </a>
+                           </div>
+                     
                 </div> 
 
                 <form id="form" method="post" action="">  
@@ -42,43 +56,44 @@
                     <table class="table">                          
                         <thead>
                             <tr>
-                                <th>                   
+                                <th class="column-1">                   
                                     <div class="checkbox">
                                                 <input type="checkbox" id="parentCheckbox" name="checkbox" >
                                     </div>
                                 </th>
-                                <th>Product Name</th>                              
-                                <th>Categories</th>                                          
-                                <th>Inventory</th>
-                                <th>Price</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th class="column-image"></th>
+                                <th class="column-product">Product Name</th>                              
+                                <th class="column-base">Categories</th>                                          
+                                <th class="column-base">Inventory</th>
+                                <th class="column-base">Price</th>
+                                <th class="column-base">Status</th>
+                                <th class="column-action"></th>
                             </tr>
                         </thead>
                         <tbody>
                             @if ( count($products) != 0 )
                                 @foreach ($products as $product) 
                                     <tr>
-                                        <td width="50px">
+                                        <td class="column-1">
                                             <div class="checkbox">
                                                 <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{ $product->id }}">
                                             </div>
-                                        </td>  
-                                        <td>
-                                            <div class="product-image-container">
-                                                <div  class="image">                     
-                                                    <img src="{{ $product->image() }}">                                
-                                                </div>
-                                                <div class="image-description">
+                                        </td>                                
+                                        <td class="column-image">
+                                            <div class="image-50"> <img src="\{{$product->imagePath}}"></div>
+                                        </td>   
+                                        <td class="column-product">
+                                            <div class="product-image-container">                                               
+                                                <div class="image-description ml-0">
                                                     <a href="{{ route('shop.product', [$product ]) }}" class="item-name">{{ $product->name}}</a>
                                                 </div>                           
                                             </div>
                                         </td>   
-                                        <td><p>{{ $product->category->name }}</p></td>
-                                        <td><p>{{ $product->stock->qty . " stocks" }}</p></td>
-                                        <td><p>@money($product->regular_price)</p></td> 
-                                        <td><p class="{{ $product->status }} capitalized">{{ $product->status() }}</p></td>
-                                        <td width="100px"> 
+                                        <td class="column-base"><p>{{ $product->category->name }}</p></td>
+                                        <td class="column-base"><p>{{ $product->stock->qty . " stocks" }}</p></td>
+                                        <td class="column-base"><p>@money($product->regular_price)</p></td> 
+                                        <td class="column-base"><p class="{{ $product->status }} capitalized">{{ $product->status() }}</p></td>
+                                        <td class="column-action"> 
                                             <div class="table-action">
                                                 <ul>   
                                                     <li>                                   
@@ -146,6 +161,15 @@
       
     </div>
 
+    <script>
+const btnfilter = document.getElementById('filter');
+btnfilter.addEventListener('change', function() {
+    const url = btnfilter.options[btnfilter.selectedIndex].getAttribute('data-url');
+    if(!url) return;   
+    window.location.href = url;
+})
+
+    </script>
    
 </div>
 

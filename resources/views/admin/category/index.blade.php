@@ -66,7 +66,7 @@
                             <th>Name</th> 
                             <th>Description</th>                                         
                             <th>Slug</th> 
-                            <th width="120px">Action</th> 
+                            <th class="column-action"></th> 
                         </tr>
                         </thead>
                         <tbody class="categories-body">                        
