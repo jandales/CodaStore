@@ -1,19 +1,21 @@
-/* @font-face {
+
+@font-face {
     font-family: 'Lato';
     font-style: normal;
     font-weight: 400;
     src: 
-         url('../fonts/Lato-Regular.ttf'),
-         url('../fonts/Lato-Bold.ttf'),
-         url('../fonts/Lato-Italic.ttf') 
-  } */
-
+         url('/fonts/Lato-Regular.ttf'),
+         url('/fonts/Lato-Bold.ttf'),
+         url('/fonts/Lato-Italic.ttf') 
+  }
 
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;   
 }
+
+
 
 a,span,p,
 label{

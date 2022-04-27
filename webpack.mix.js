@@ -11,12 +11,15 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    // .postCss('resources/css/app.css', 'public/css', [
-    //     //
-    // ])
-    .css('resources/css/app.css', 'public/css/app.css')
-    .css('resources/css/main.css', 'public/css/main.css')
-    // .scripts([        
-    //     'resources/js/admin/blogs.js',
-    // ], 'public/js/main.js')
+mix.js('resources/js/app.js', 'public/js') 
+    .sass('resources/sass/app.scss', 'public/css')
+    .sass('resources/sass/main.scss', 'public/css') 
+
+mix.copyDirectory('resources/assets/fonts', 'public/fonts');
+
+
+mix.webpackConfig({       
+        stats: {
+             children: true
+        }
+});

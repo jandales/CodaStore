@@ -14,12 +14,12 @@
 <script src="/js/admin/arrayFunc.js"></script>
 <script src="/js/admin/checkbox.js"></script>
 <script src="/js/admin/request.js"></script>
-<script type="text/javascript" src="froala-editor/js/froala_editor.pkgd.min.js"></script>
+{{-- <script type="text/javascript" src="froala-editor/js/froala_editor.pkgd.min.js"></script> --}}
 
-<script> 
+{{-- <script> 
     var editor = new FroalaEditor('#short-description');
     var editor1 = new FroalaEditor('#long-description');
-</script>
+</script> --}}
 
 <script>
 
