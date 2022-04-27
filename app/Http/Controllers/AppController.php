@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cookie;
@@ -13,8 +14,9 @@ class AppController extends Controller
     public function index()
     {
         
-        $products = Product::paginate(8); 
-        return view('index')->with('products', $products);
+        $products = Product::where('featured', 1)->get(); 
+        $collection = Category::get();
+        return view('index')->with(['products' => $products, 'collection' => $collection]);
     }
 
     public function setCartCookie()

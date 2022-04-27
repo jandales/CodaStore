@@ -15,12 +15,20 @@
         </div>      
     <!--Featured Product-->
         <div class="container">
-            <div class="product">            
-                <div class="product-nav">
-                    <h1>Featured Product</h1>                    
-                </div>
-                <div class="product-row">
-                    @foreach ($products as $product)
+            <h1 class="home-title">Collections</h1>
+            <div class="collection">
+                @foreach ($collection as $key => $item)
+                    <div class="item">
+                        <h3 class="title">{{$item->name}}</h3>                      
+                        <img src="{{$item->image}}" alt="" srcset=""> 
+                        <a href="/shop" class="link-shop-now">Shop now</a> 
+                    </div>
+                @endforeach
+            </div>
+            <h1 class="home-title">Feature Products</h1>
+
+            <div class="featured-product">
+                @foreach ($products as $product)
                     <div class="items mb-2">                                  
                         <div class="item">
                             <a href="{{ route('shop.product',[ $product ] )}}">
@@ -34,10 +42,8 @@
                             </div>
                         </div>
                     </div>     
-                    @endforeach                  
-                    
-                </div>
-             
+                @endforeach                  
+                
             </div>
 
         </div>  

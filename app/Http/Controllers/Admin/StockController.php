@@ -37,7 +37,6 @@ class StockController extends Controller
             $stock->qty = $stock->qty < $qty ? 0 : $stock->qty - $qty;    
 
         $stock->save();
-
         return response()->json(['status' => 200, 'stock' => $stock]);        
     }
 
