@@ -13,28 +13,26 @@ class UserController extends Controller
 {
    public function index()
    {
-      $users = User::paginate(10);
+      $users = User::where('delete_at', 0)->paginate(10);
       return view('admin.customers.index')->with('users', $users);
    }
 
    public function search(Request $request)
-   {
-     
-      $users = User::Search($request->search)->get();
-      return view('admin.customers.index')->with('users', $users);
+   {     
+      $users = User::Search($request->keyword)->paginate(10);
+      return view('admin.customers.index')->with(['users' =>  $users, 'keyword' => $request->keyword]);
    }
 
    public function destroy(User $user)
-   {
-     
+   {         
       $user->delete_at = 1;
       $user->save();
 
       return back()->with('success', 'User successfully deleted');
    }
 
-   public function delete(Request $request, CustomerServices $service)
-   { 
+   public function selectedDestroy(Request $request, CustomerServices $service)
+   {   
       $service->deleteSelectedItem($request->selected);
       return back()->with('success', 'User successfully deleted');
    }

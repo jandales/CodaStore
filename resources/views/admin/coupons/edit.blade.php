@@ -8,7 +8,7 @@
 </div>
 
 
-    <form id="form" action="{{ route('admin.coupon.update', [$coupon])}}" method="post">
+    <form id="form" action="{{ route('admin.coupon.update', [$coupon])}}" data-products="{{ $coupon->products }}" method="post">
         @csrf
         @method('put')
         <input type="hidden" id="productlist" name="products" value="">      
@@ -98,7 +98,7 @@
                                     <ul class="product-list"  data-type="include">
                                         @foreach ($coupon->products as $item)
                                             @if ($item->type === 'include')
-                                               <li> <span> {{ $item->product->name  }} <span onclick="remove(this,{{ $item->product_id }})" class="close"><i class="fa fa-times"></i></span></span></li>
+                                               <li> <span> {{ $item->product->name  }} <span data-id="{{$item->product_id }}" class="close"><i class="fa fa-times remove-product"></i></span></span></li>
                                             @endif
                                         @endforeach            
                                     </ul>
@@ -119,7 +119,7 @@
                                     <ul class="product-list"  data-type="exclude">                                        
                                         @foreach ($coupon->products as $item)
                                                 @if ($item->type === 'exclude')
-                                                <li>   <span> {{ $item->product->name}} <span onclick="remove(this,{{ $item->product_id }})" class="close"><i class="fa fa-times"></i></span></span></li>
+                                                <li>   <span> {{ $item->product->name}} <span  data-id="{{$item->product_id }}" class="close"><i class="fa fa-times remove-product"></i></span></span></li>
                                                 @endif
                                         @endforeach                                                                   
                                     </ul>
@@ -167,32 +167,12 @@
    
 
     <div class="m-t-2">
-        <button id="save" class="btn-primary right">Save</button>
+        <button id="btn-coupon-save" class="btn-primary right">Save</button>
     </div>
    
 </form>
   
-<script src="/js/admin/coupon.js"></script>
-<script> 
 
-    document.addEventListener('DOMContentLoaded', function(){
-        const products = @json($coupon->products);  
-        products.forEach(product => {
-            productList.push({
-                "id" : product.product_id,
-                "name" : product.product.name,
-                "type" : product.type
-            })
-        });       
-        Showlist()
-    })
-
-  
-
-
-</script>
-   
-   
 
 
 

@@ -19,17 +19,17 @@
         <div class="toolbar justify-content-space-between action-toolbar hidden"> 
             <label class="title selected-items">2 item Selected</label>
             <div class="btn-action">                                          
-                <span onclick="destroy('{{ route('admin.coupon.destroy.selected') }}')" class="btn btn-light"><i class="fas fa-trash"></i></span> 
-                <span onclick="clearSelection()" class="btn btn-light"><i class="fas fa-times"></i></span> 
+                <span id="coupon-selected-destroy" data-id="{{ route('admin.coupon.destroy.selected') }}" class="btn btn-light"><i class="fas fa-trash"></i></span> 
+                <span id="clear-selection" class="btn btn-light"><i class="fas fa-times"></i></span> 
             </div>        
         </div> 
         <div class="toolbar justify-content-space-between default-toolbar"> 
             <form id="formSearch" action="{{ route('admin.coupons.search') }}" method="post">
                 @csrf
                 <div class="search-input"> 
-                    <span class="icon-left"></span>                           
-                    <input type="text" placeholder="Search" name="search" value="{{ old('search') }}">
-                    <span class="icon-right" onclick="document.getElementById('formSearch').submit()"><i class="fas fa-search"></i></span>
+                    <span class="icon-left" onclick="document.getElementById('formSearch').submit()"><i class="fas fa-search"></i></span>                         
+                    <input type="text" placeholder="Search" name="keyword" value="{{ $keyword ?? '' }}">                   
+                    <a href="{{route('admin.coupons')}}" class="{{ $keyword ?? 'hidden'}}"><span class="icon-right"><i class="fas fa-times"></i></span></a>
                 </div>                     
             </form>  
             <a href="{{ route('admin.coupon.create') }}"  class="btn btn-primary mr-2"> Create Coupon</a>
@@ -55,16 +55,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <form id="form"  method="post">
+                    <form id="coupon-form"  method="post">
                         @csrf
-                        <input type="hidden" name="_method" value="post">
+                        @method('delete')
 
 
                         @foreach ($coupons as $coupon)
                         <tr>
                             <td class="tr-checkbox">
                                 <div class="checkbox">
-                                    <input  type="checkbox" class="childCheckbox" name="selected[]" action="{{ route( 'admin.coupon.destroy', [$coupon] ) }}"  value="{{ $coupon->id }}">
+                                    <input  type="checkbox" class="childCheckbox" name="selected[]"   value="{{ $coupon->id }}">
                                 </div>                             
                             </td>
                             <td><a href="{{ route('admin.coupon.show',[$coupon]) }}"  >{{ $coupon->name }}</a></td>
@@ -100,11 +100,9 @@
                                             </a>
                                         </li>    
                                             <li>
-                                                <a href="#" id="delete">
-                                                    <span onclick="destroy('{{ route('admin.coupon.destroy',[$coupon]) }}')" link ="#" class="span">
+                                                <span  data-url={{ route('admin.coupon.destroy',[$coupon])}} class="span coupon-destroy">
                                                         <i class="fas fa-trash"></i>  
-                                                    </span>                                                                           
-                                                </a>
+                                                </span>  
                                             </li>
                                            
                                     </ul>
@@ -126,20 +124,6 @@
    
 </div>
 
-
-
-
-<script>
-
-function destroy(route)
-{
-    const form = document.getElementById('form')
-    document.querySelector('input[name="_method"]').value= 'delete'
-    form.setAttribute('action', route)
-    form.submit();
-}
-
-</script>
 
 
 @endsection

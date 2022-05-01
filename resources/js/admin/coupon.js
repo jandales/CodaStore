@@ -1,8 +1,69 @@
-const inputs = document.querySelectorAll('.product_search');
+function couponDestroy(route){
+    const form = document.getElementById('coupon-form')
+    form.setAttribute('action', route)
+    form.submit();
+}
 
-inputs.forEach(input => {
-    input.addEventListener('input', search)
-});
+const couponSelectedDestroy = document.getElementById('coupon-selected-destroy');
+const couponDestroys = document.querySelectorAll('.coupon-destroy');
+
+if (couponSelectedDestroy) {
+    couponSelectedDestroy.onclick = function() {
+        const route = this.getAttribute('data-url');
+        couponDestroy(route);
+    }
+}
+
+couponDestroys.forEach(coupon => {
+    coupon.onclick =  function(){
+        const route = this.getAttribute('data-url');
+        couponDestroy(route);
+    }
+})
+
+/// create coupon 
+
+
+import { arrContains, arrRemove } from "../module/array";
+
+
+document.addEventListener('DOMContentLoaded', function(){
+    const form = document.getElementById('form')
+    let data;
+    if(form){
+         data = form.getAttribute('data-products');
+    }
+   
+ 
+    if(!data) return;
+
+    const products = JSON.parse(data);
+    if(products){        
+       populateList(products)
+       populateElementDOM();
+       Showlist()
+   }
+  
+  
+})
+
+
+const prodcutSearchInputs = document.querySelectorAll('.product_search');
+prodcutSearchInputs.forEach(input => {
+  input.addEventListener('input', function(e) {
+    e.preventDefault();    
+    search(e);    
+  })
+})
+
+prodcutSearchInputs.forEach(input => {
+    input.onkeypress =  function(event)  {      
+            if (event.keyCode === 13) {
+               event.preventDefault();
+               return false;
+            }
+        }        
+})
 
 
 function search(e) {
@@ -15,25 +76,25 @@ function search(e) {
     const parent  = element.querySelector('.dropdown-ul-list')
 
     $.ajax({
-        url : '/admin/product/searchByajax/' + value,
-        method : 'GET',             
+        url : '/admin/products/get',
+        method : 'GET', 
+        data : { keyword : value },           
         success: function(response){                          
-             emptylist(); 
-             response.forEach(product => {
-                            createList(parent,product,type); 
+             emptylist();             
+             response.products.forEach(product => {
+                createList(parent,product,type); 
              }) 
         }
     })
+
+    openlist(e)
 }
 
-inputs.forEach(input => {
-    // set  addEventListener 
-    input.addEventListener('input', openlist)      
 
-});
 
 function openlist(e)
 { 
+    e.preventDefault();
     // get parent element
     const parent = e.target.parentNode.parentNode
     // get the list parent element
@@ -77,14 +138,15 @@ function createList(parent, data, type)
     li.setAttribute('value-id', data.id )
     li.innerText = data.name
     parent.appendChild(li);
+
 }
 
 /// create product item element in DOM
 function addproductListElement(parent, data = []){
     // create li element
-    let li = document.createElement('li');               
-    // append elem in li
-    li.innerHTML = '<span>'+ data['name'] +'<span onclick="remove(this,' + `${data['id']}` + ')" class="close"><i class="fa fa-times"></i></span></span></li>';
+    let li = document.createElement('li');
+    // append elem in li 
+    li.innerHTML = `<span>${data['name']} <span data-id="${data['id']}" class="close"><i class="fa fa-times remove-product"></i></span></span>`;
    // get parent element
    const ul = parent.parentNode.parentNode.querySelector('ul');  
    // display the list in DOM
@@ -95,7 +157,6 @@ function addproductListElement(parent, data = []){
 
 function select(e)
 {
-   
     // get parent element of select item
     const parent = e.target.parentNode.parentNode;
     /// set data in variables 
@@ -120,41 +181,34 @@ function addproductList(array, data)
 { 
     // check if product already exist in array
     // contains method return boolen  
-    if(arrContains(array, 'id' , data['id'])) return true;               
+    if(arrContains(array, 'id' , parseInt(data['id']))) return true;               
     /// push the product into  array and return false
-    array.push({
+    productList.push({
         "id" : parseInt(data['id']),
         "name" : data['name'],
         "type" : data['type']
     })   
-            
+      
     return false; 
 }
 
-function remove(elem, value){
-    /// remove item in array
-    arrRemove(productList, 'id', value);            
-    // get the parent element
-    const parent = elem.parentNode.parentNode
-    // get the  grandparent element 
-    const grandParent = elem.parentNode.parentNode.parentNode
-    // remove element in DOM                      
-    grandParent.removeChild(parent);                 
-    //if productlist is null
+function remove(elem){
+    let value = parseInt(elem.getAttribute('data-id'))
+    arrRemove(productList, 'id', value);  
+    const li =  elem.closest('li');
+    const ul = elem.closest('ul');                     
+    ul.removeChild(li);   
     Showlist()
+}
 
+document.addEventListener('click', event => {
+      if (event.target.classList.contains('remove-product')){    
+          remove(event.target.parentElement);
+      }
+})
 
-} 
-
-
-
-
-
-function clearinput()
-{
-    inputs.forEach(input => {
-        input.value = ""               
-    })
+function clearinput(){
+   prodcutSearchInputs.forEach(input => input.value = null)
     emptylist();             
 }
 
@@ -202,38 +256,30 @@ function emptylist(){
 
 
  function populateElementDOM(){
-
     const parents = document.querySelectorAll('.product-list')
-
-
     productList.forEach(list => {                
-                parents.forEach(parent => {
-                    let type = parent.getAttribute('data-type'); 
-                    if(list.type == type)
-                    {
-                        const li =  document.createElement('li');
-                        li.innerHTML = `<span>${list.name}<span onclick="remove(this,${list.id})" class="close"><i class="fa fa-times"></i></span></span>`
-                        parent.appendChild(li)
-                    }                  
-
+        parents.forEach(parent => {
+            let type = parent.getAttribute('data-type'); 
+            if(list.type == type) {
+                const li =  document.createElement('li');
+                    li.innerHTML = `<span>${list.name}<span data-id="${list.id}"  class="close"><i class="fa fa-times remove-product"></i></span></span>`
+                    parent.appendChild(li)
+                } 
         })
-
     })
-
-
 }
 
 
- const button = document.getElementById('save');
+ const button = document.getElementById('btn-coupon-save');
 
- if(button) { button.addEventListener('click', submit) }
-
- function submit()
- {  
-    event.preventDefault();
-
-    let form = document.getElementById('form');
-    document.getElementById('productlist').value =  JSON.stringify(productList);
-    form.submit();
-   
+ if(button) {
+      button.onclick = function(e) {
+        e.preventDefault();
+        let form = document.getElementById('form');
+        document.getElementById('productlist').value =  JSON.stringify(productList);
+        form.submit();
+      }
  }
+
+
+

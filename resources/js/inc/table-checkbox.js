@@ -1,3 +1,20 @@
+// class TableCheckBox {    
+
+//     constructor( properties= {}) {  // Constructor
+//         this.parentCheckBox = document.getElementById('parentCheckbox')
+//         this.childCheckbox =  document.querySelectorAll('.childCheckbox')
+//         this.checkBoxProperties = { 
+//             background : "#EDF9FF",
+//             fucos : "rowfucos",     
+//             color : "#000" , 
+//             toolbar : true, 
+//             defaultToolbar : ".default-toolbar",
+//             actionToolbar : ".action-toolbar", 
+//             selecteCount : 1,   
+//         }
+//     }
+// }
+
 // get parent checkbox element
 const  parentCheckBox = document.getElementById('parentCheckbox')
 // get parent checkbox element
@@ -13,14 +30,18 @@ let checkBoxProperties = {
     actionToolbar : ".action-toolbar", 
     selecteCount : 1,   
 }
+
 //event
-parentCheckBox.addEventListener('change', function(){
-    childCheckbox =  document.querySelectorAll('.childCheckbox')
-    childCheckboxState(this.checked) 
-    if(!this.checked) return showToolbar()
-    showToolbar(true)
-    countChecked()    
-})
+if(parentCheckBox){
+    parentCheckBox.addEventListener('change', function(){
+        childCheckbox =  document.querySelectorAll('.childCheckbox')
+        childCheckboxState(this.checked) 
+        if(!this.checked) return showToolbar()
+        showToolbar(true)
+        countChecked()    
+    })
+}
+
 
 childCheckbox.forEach(checkbox => {  
     checkbox.addEventListener('change', function(){     
@@ -65,10 +86,13 @@ function showToolbar(state = false){
 
 // reset all function
 // clear checkbox selection
-function clearSelection(){
-    showToolbar()   
-    parentCheckBox.checked = false  
-    childCheckboxState(false)
+const clearSelection = document.getElementById('clear-selection');
+if (clearSelection){
+    clearSelection.onclick = function(){
+        showToolbar()   
+        parentCheckBox.checked = false  
+        childCheckboxState(false)
+    }
 }
 
 function checkboxEvent(elem){
@@ -87,5 +111,3 @@ function selected(){
         })
     })
 }
-
-

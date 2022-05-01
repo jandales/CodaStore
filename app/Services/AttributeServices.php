@@ -2,21 +2,16 @@
 
 namespace App\Services;
 
-
 use App\Models\Attribute;
-
-
 
 class AttributeServices 
 {
     public function store($request)
-    {
-        $result = Attribute::Exist($request->name)->first();
-        if($result) return response()->json(['status' => 'error', 'message' => 'Attribute already exist']);      
+    {         
         return Attribute::Create([
             'name' => $request->name,
             'description' => $request->description,
-            'slug' => makeSlug($request->name, $request->slug)
+            'slug' => slug($request->name)
         ]);
         
     }
@@ -25,9 +20,17 @@ class AttributeServices
     {
         $attribute->name = $request->name;
         $attribute->description =  $request->description;
-        $attribute->slug =  $request->slug;
+        $attribute->slug = slug($request->name);
         $attribute->save();
         return $attribute;
+    }
+
+    public function destroySelected($list)
+    {
+        foreach($list as $slug) {
+            $attribute = Attribute::where('slug',$slug)->first();
+            $attribute->delete();
+        }
     }
 
     

@@ -8,7 +8,7 @@
 </div>
      
 
-    <form id= "form" action="{{ route('admin.coupon.store')}}" method="post">
+    <form id= "form" action="{{ route('admin.coupon.store')}}" data-old="{{old('products')}}" method="post">
         @csrf  
         <input type="hidden" id="productlist" name="products" value="">
     <div class="panel m-t-2 w-12">
@@ -178,28 +178,11 @@
     
 
     <div class="m-t-2">
-        <button id="save"  class="btn btn-primary right">Save</button>
+        <button id="btn-coupon-save"  class="btn btn-primary right">Save</button>
     </div>
 
 </form>
 
-<script src="/js/admin/coupon.js"></script>
-<script> 
-document.addEventListener('DOMContentLoaded', function(){
-    const products = JSON.parse(@json(old('products')));
-    if(products){        
-       populateList(products)
-       populateElementDOM();
-       Showlist()
-   }
-  
-  
-})
-
-
-   
-
-</script>
 
 
 @endsection

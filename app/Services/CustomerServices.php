@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\User;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 
 class CustomerServices {
@@ -47,13 +49,11 @@ class CustomerServices {
 
     public function deleteSelectedItem($users)
     {      
-      foreach($users as $id)
-      { 
-         $user = User::find($id);
-         $user->delete_at = 1;
-         $user->save();
-   
-      }   
+        foreach($users as $id){ 
+            $user = User::find($id);
+            $user->delete_at = 1;
+            $user->save();   
+        }   
     }
 
 

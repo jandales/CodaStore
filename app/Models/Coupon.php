@@ -12,7 +12,7 @@ class Coupon extends Model
 {
     use HasFactory,  DateAndTimeFormat;
 
-    protected $fillable = [
+    protected $fillable  = [
         'name',
         'description',
         'discount_type',

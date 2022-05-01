@@ -13,6 +13,12 @@ use App\Http\Requests\UpdateCouponRequest;
 
 class CouponController extends Controller
 {
+    private $services;
+
+    public function __construct(CouponServices $services)
+    {
+        $this->services = $services;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -39,9 +45,9 @@ class CouponController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CouponRequest $request, CouponServices $service)
-    {  
-        $service->store($request);        
+    public function store(CouponRequest $request)
+    { 
+        $this->services->store($request);  
         return redirect()->route('admin.coupons')->with('success', 'Coupon successfully Created');
     }
 
@@ -74,9 +80,10 @@ class CouponController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateCouponRequest $request, Coupon $coupon,  CouponServices $service)
+    public function update(UpdateCouponRequest $request, Coupon $coupon)
     {
-       $service->update($request, $coupon); 
+            
+       $this->services->update($request, $coupon); 
        return redirect()->route('admin.coupons')->with('success', 'Coupon successfully updated');
     } 
 
@@ -87,21 +94,28 @@ class CouponController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Coupon $coupon)
-    {      
+    {   
         $coupon->delete();
         return back()->with('success','Coupon successfully deleted');        
     }
 
-    public function destroySelectedItem(Request $request, CouponServices $service)
+    public function destroySelectedItem(Request $request)
     {
-        $service->destroySelectedItem($request);
+        $this->services->destroySelectedItem($request);
         return back()->with('success', 'Coupon successfully deleted');
     }
 
     public function search(Request $request)
     {        
-        $coupons = Coupon::Search($request->search)->get();
-        return view('admin.coupons.search')->with('coupons', $coupons );
+        $coupons = Coupon::Search($request->keyword)->paginate(10);
+        return view('admin.coupons.index')->with(['coupons' => $coupons, 'keyword' => $request->keyword]);
+    }
+
+public function findByNameSku(Request $request)
+    {
+        $keyword = $request->keyword;
+        $product = Coupon::where('name',$keyword)->orWhere('sku', $keyword)->first();
+        return response()->json(['product' => $product]);
     }
     
 

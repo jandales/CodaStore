@@ -61,7 +61,7 @@ class AdminController extends Controller
     }
 
     public function destroySelectedItem(Request $request)
-    {
+    {        
         $this->services->destroy($request);
         return back()->with('success', 'User successfully Deleted'); 
     }
@@ -74,7 +74,8 @@ class AdminController extends Controller
 
     public function search(Request $request)
     {        
-        return view('admin.users.index')->with('users', Admin::Search($request->search)->get());
+        $users = Admin::Search($request->search)->get();
+        return view('admin.users.index')->with('users', $users);
     }    
 
     public function sentResetPassword(Admin $admin)

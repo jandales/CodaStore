@@ -21,7 +21,7 @@ class LogoutController extends Controller
     
         Auth::logout();  
 
-        return redirect()->route('user.login');
+        return redirect()->route('admin.login');
 
         // if(session()->has('adminLogined')){
         //     session()->pull('adminLogined');

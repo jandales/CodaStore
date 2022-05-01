@@ -73,9 +73,9 @@
                             </div>
                               <ul class="sub-menu {{ (request()->is('admin/products*')) ? 'show' : '' }} ">
                                 <li class="{{ (request()->is('admin/products')) ? 'active' : ''}}"><a href="{{route('admin.products')}}">Items</a></li>
-                                <li class="{{ (request()->is('admin/products/categories')) ? 'active' : ''}}"><a href="{{route('admin.categories')}}">Category</a></li>
+                                <li class="{{ (request()->is('admin/products/categories*')) ? 'active' : ''}}"><a href="{{route('admin.categories')}}">Category</a></li>
                                 <li class="{{ (request()->is('admin/products/inventory*')) ? 'active' : ''}}"><a href="{{route('admin.inventory')}}">Inventory</a></li>
-                                <li class="{{ (request()->is('admin/products/attributes')) ? 'active' : ''}}"><a href="{{route('admin.attributes')}}">Attributes</a></li>
+                                <li class="{{ (request()->is('admin/products/attributes*')) ? 'active' : ''}}"><a href="{{route('admin.attributes')}}">Attributes</a></li>
                               </ul>
                         </li>
                         <li><a class="{{ (request()->is('admin/orders')) ? 'active' : '' }}" nav-item href="/admin/orders"><i class="fas fa-box"></i><span class="hide-menu">Orders</span></a></li>
@@ -85,7 +85,7 @@
                         <li><a class="{{ (request()->is('admin/users')) ? 'active' : '' }}" nav-item href="{{ route('admin.users') }}"><i class="fas fa-users"></i><span class="hide-menu">Users</span></a></li>
                         <li  class="nav-dropdown {{ (request()->is('admin/setting*')) ? 'active' : '' }} " >
                             <div class="nav-dropdown-btn">
-                                <a><i class="fas fa-users"></i><span class="hide-menu">Settings</span></a>
+                                <a><i class="fa-solid fa-gear"></i><span class="hide-menu">Settings</span></a>
                                 <i class="fas fa-angle-down arrow"></i>
                             </div>
                             <ul class="sub-menu {{ (request()->is('admin/setting*')) ? 'show' : '' }} ">

@@ -75,12 +75,5 @@
 </div>
 
 
-   
-        
-
-<script type="module" src="/js/admin/users.js"></script>
-
-
-
 
 @endsection

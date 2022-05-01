@@ -21,7 +21,7 @@ class ProductController extends Controller
     public function index()
     {    
         $products = Product::with('category','stock')->paginate(10);    
-        return view('admin.products')->with(['products' => $products, 'filter' => 'all']);
+        return view('admin.products.index')->with(['products' => $products, 'filter' => 'all']);
     }
 
     public function filter($filter)
@@ -35,7 +35,7 @@ class ProductController extends Controller
         else
             $products = Product::with('category','stock')->paginate(10);   
 
-        return view('admin.products')->with(['products' => $products, 'filter' => $filter]);
+        return view('admin.products.index')->with(['products' => $products, 'filter' => $filter]);
     }
 
     public function create()
@@ -95,6 +95,13 @@ class ProductController extends Controller
         $product = Product::with('stock')->where('name',$request->keyword)->orWhere('sku', $request->keyword)->first();              
         return response()->json(['product' => $product]);    
     }
+
+    public function getProduct(Request $request)
+    {        
+        $products = Product::with('stock')->where('name',$request->keyword)->orWhere('sku', $request->keyword)->get();              
+        return response()->json(['products' => $products]);    
+    }
+
 
     
 

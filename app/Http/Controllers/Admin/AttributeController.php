@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Attribute;
-use App\Http\Requests\NameRequest;
+use Illuminate\Http\Request;
+use App\Services\AttributeServices;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Admin\AttributeServices;
+use App\Http\Requests\StoreAttributeRequest;
+use App\Http\Requests\UpdateAttributeRequest;
 
 
 
@@ -13,52 +15,54 @@ class AttributeController extends Controller
 {
     private $services;
 
-    public function  __contruct(AttributeServices $services)
+    public function  __construct(AttributeServices $services)
     {
         $this->services = $services;
     }
 
     public function index()
-    {
-        return view('admin.attributes');
+    {      
+        return view('admin.attribute.index')->with('keyword', null);
     }
-    public function getAttributes()
-    {
-        $attributes = Attribute::with('variants')->get();
-        return response()->json(['attributes'=> $attributes]);
-    }    
-    public function store(NameRequest $request)
-    {    
+     
+    public function store(StoreAttributeRequest $request)
+    {       
         $this->services->store($request);     
-        return response()->json(['status' => 'success','message' => 'Attribute Successfully Created']);
+        return back()->with(['status' => 'success','message' => 'Attribute Successfully Created']);
     }
-    public function edit(Attribute $Attribute)
-    {   
-        return response()->json(['attributes' => $Attribute]);
+    public function edit(Attribute $attribute)
+    {  
+        return view('admin.attribute.edit')->with('attribute', $attribute);        
     }
-    public function update(NameRequest $request,Attribute $attribute)
+
+    public function update(UpdateAttributeRequest $request,Attribute $attribute)
     {    
         $this->services->update($attribute, $request);
-        return response()->json(['status' => 'success','message' => 'Attribute Successfully update']);
+        return redirect()->route('admin.attributes')->with(['status' => 'success','message' => 'Attribute Successfully update']);
     }
-    public function destroy(Attribute $Attribute)
+    public function destroy(Attribute $attribute)
     {     
-        $Attribute->delete();        
-        return response()->json(['status' => 'success','message' => 'Attribute Successfully Deleted']);
+        $attribute->delete();        
+        return redirect()->route('admin.attributes')->with(['status' => 'success','message' => 'Attribute Successfully Deleted']);
     }
-    public function Attributes(Product $product)
-    {     
-        return view('admin.products.Attribute')->with('product',$product);
-    }
-    public function Attribute($id)
-    {
-        $Attribute = Attribute::find($id);
-        return  response()->json($Attribute->name);
-    }  
 
-    public function variants(Attribute $attribute)
-    {      
-        return  response()->json(['attribute' => $attribute, 'variants' => $attribute->variants]);
+    public function destroySelected(Request $request)
+    {     
+        $this->services->destroySelected($request->_selected);               
+        return route('admin.attributes');
     }
+
+    public function search(Request $request)
+    {
+        $attributes = Attribute::Search($request->keyword)->get();
+        return view('admin.attribute.index')->with(['attributes' =>  $attributes, 'keyword' => $request->keyword]);
+    }
+    public function getAll()
+    {
+        $attributes = Attribute::get();
+        return response()->json(['attributes' => $attributes]);    
+    }
+
+
  
 }

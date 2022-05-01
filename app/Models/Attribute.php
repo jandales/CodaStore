@@ -27,6 +27,12 @@ class Attribute extends Model
         return $query->where('name', $name);               
                 
     }
+
+    public function scopeSearch($query, $keyword)
+    {
+        return $query->where('name','like','%' . $keyword . '%')                  
+                     ->orWhere('slug','like','%' . $keyword . '%');
+    }
     // protected $fillable = [
     //     'variant_id',
     //     'value',

@@ -11,8 +11,7 @@ use Illuminate\Support\Facades\Hash;
 class AdminLoginController extends Controller
 {
     public function index()
-    {
-
+    {     
         return view('admin.login');
     }
 

@@ -21,10 +21,6 @@
                 <br>
                 <div class="alert alert-success">{{ session('error') }}</div>
             @endif 
-
-           
-
-            
         </div>
  
         <div class="toolbar justify-content-space-between action-toolbar hidden">               
@@ -42,13 +38,11 @@
                     <li class="{{ (request()->is('admin/orders/delivered')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['delivered'])}}">Deliver</a></li>
                     <li class="{{ (request()->is('admin/orders/cancelled')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['cancelled'])}}">Cancelled</a></li>
                 </ul> 
-                <form id="formSearch" action="{{route('admin.orders.search')}}" method="get">
-                    @csrf
-                    <div class="input-group">
-                        <input type="text" name="search"  placeholder="Search here">
-                        <div class="input-group-append">
-                             <span onclick="document.getElementById('formSearch').submit()" class="input-group-text" ><i class="fa fa-search"></i></span>
-                        </div>
+                <form id="formSearch" action="{{route('admin.orders.search')}}" method="get">               
+                    <div class="search-input">
+                        <span class="icon-left" onclick="document.getElementById('formSearch').submit()"><i class="fas fa-search"></i></span>                           
+                        <input type="text" name="keyword"  placeholder="Search here">
+                        <a href="{{ route('admin.orders') }}" class="{{$keyword ?? 'hidden' }}"><span class="icon-right"><i class="fa fa-times"></i></span></a>
                     </div>
                 </form>
           

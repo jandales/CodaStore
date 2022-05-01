@@ -20,32 +20,18 @@
         </div>
         <div class="toolbar justify-content-space-between action-toolbar hidden">               
             <label class="title selected-items">2 item Selected</label>
-            <div class="btn-action"> 
-                <form id="action-form" action="{{route('admin.users.updateSelectItemRoleTo')}}" method="post">
-                    @csrf
-                    @method('put')                      
-                    <div class="select-option">
-                        <select name="role" id="">
-                            <option value="">Change role to..</option>
-                            <option value="0">Employee</option>
-                            <option value="1">Adminstrator</option>
-                        </select>
-                        <span id="update-selected-item-role-to" class="btn btn-light">Change</span>
-                    </div>  
-                </form> 
-                <span class="btn btn-light">Send Password Reset</span>                                
-                <span id="deleteSelected" link = {{ route('admin.users.destroySelectedItem') }} class="btn btn-light"><i class="fas fa-trash"></i></span>
-                <span  onclick="clearSelection()" class="btn btn-light"><i class="fas fa-times"></i></span> 
+            <div class="btn-action">    
+                <span id="customer-selected-destroy" data-url={{route('admin.customers.selected.destroy')}} class="btn btn-light"><i class="fas fa-trash"></i></span>
+                <span id="clear-selection" class="btn btn-light"><i class="fas fa-times"></i></span> 
 
             </div>      
         </div> 
         <div class="toolbar default-toolbar"> 
-                <form id="formSearch" action="{{ route('admin.users.search') }}" method="post">
-                    @csrf
+                <form id="formSearch" action="{{ route('admin.customers.search') }}" method="get">            
                     <div class="search-input"> 
-                        <span class="icon-left"></span>                           
-                        <input type="text" placeholder="Search" name="search">
-                        <span class="icon-right" onclick="document.getElementById('formSearch').submit()"><i class="fas fa-search"></i></span>
+                        <span class="icon-left" onclick="document.getElementById('formSearch').submit()"><i class="fas fa-search"></i></span>                           
+                        <input type="text" placeholder="Search" name="keyword" value ="{{ $keyword ?? ''}}">
+                        <a href="{{ route('admin.customers') }}" class="{{$keyword ?? 'hidden' }}"><span class="icon-right"><i class="fa fa-times"></i></span></a>
                     </div>                     
                 </form>
         </div>
@@ -65,8 +51,9 @@
             </tr>
         </thead>
         <tbody>
-            <form id="form"  method="post">
-                @csrf  @method('delete')           
+            <form id="destroy-customer"  method="post">
+                @csrf  
+                @method('delete')           
                     @if ( count($users) != 0 )
                         @foreach ($users as $user)
                             <tr>
@@ -98,7 +85,7 @@
                                             </li>  
                                                 <li>
                                                     <a href="#" id="delete">
-                                                        <span link ="{{ route('admin.users.destroy', [$user->id]) }}" class="span delete">
+                                                        <span data-url ="{{ route('admin.customers.destroy', [$user->id]) }}" class="span destroy-customer">
                                                             <i class="fas fa-trash"></i>  
                                                         </span>                                                                           
                                                     </a>
@@ -115,11 +102,7 @@
         </tbody>
     </table>
         
-            <form id='destroy' action="{{ route('admin.users.destroy', [$user]) }}" method="post">
-                @csrf      
-                @method('put')  
-            </form>
-
+         
             <div class="mt-2 mb-2 right mr10">
                 {{ $users->links() }}
             </div>
@@ -131,37 +114,7 @@
 </div>
 
 
-<script>   
 
-
-
-
-function url(route){
-    let form =  document.getElementById('form')
-    form.setAttribute('action', route)  
-    form.submit() 
-}
-
-function destroy(route)
-{
-    let form =  document.getElementById('destroy')
-    form.setAttribute('action', route)    
-    form.submit() 
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-</script>
 
 
 @endsection

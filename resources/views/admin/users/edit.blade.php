@@ -162,10 +162,9 @@
     </form>
     <form id="formSendPasswordResetLink" action="{{ route('admin.users.sentPasswordResetPassword', [$user]) }}" method="post">
         @csrf
-    </form>
-        
+    </form>       
 
-    <script type="module" src="/js/admin/users.js"></script>
+
 </div>
 
 @endsection

@@ -39,8 +39,8 @@
                         </div>  
                     </form> 
                     <span class="btn btn-light">Send Password Reset</span>                                
-                    <span id="deleteSelected" link = {{ route('admin.users.destroySelectedItem') }} class="btn btn-light"><i class="fas fa-trash"></i></span>
-                    <span  onclick="clearSelection()" class="btn btn-light"><i class="fas fa-times"></i></span> 
+                    <span id="deleteSelected" data-url={{ route('admin.users.destroySelectedItem') }} class="btn btn-light"><i class="fas fa-trash"></i></span>
+                    <span id="clear-selection" class="btn btn-light"><i class="fas fa-times"></i></span> 
 
                 </div>
           
@@ -116,7 +116,7 @@
                                             </li>    
                                             <li>
                                                 <a href="#" id="delete">
-                                                    <span link ="{{ route('admin.users.destroy', [$user]) }}" class="span delete">
+                                                    <span data-url ="{{ route('admin.users.destroy', [$user]) }}" class="span delete">
                                                         <i class="fas fa-trash"></i>  
                                                     </span>                                                                           
                                                 </a>
@@ -134,42 +134,6 @@
    
 </div>
 
-<script type="module">
-
-    checkBoxProperties.selecteCount = 0;
-
-    function submitForm(route, method){
-        const form = document.getElementById('form');
-        const input = document.querySelector('input[name="_method"]');
-        if(method != null) input.value = method; 
-        form.setAttribute('action', route); 
-        form.submit();       
-    } 
-
-    document.querySelectorAll('.delete').forEach(element => {
-        element.addEventListener('click', event => {
-            const route = element.getAttribute('link');
-            submitForm(route, 'delete');
-        })
-    });
-
-    document.querySelector('#deleteSelected').addEventListener('click', function()  {
-        submitForm(this.getAttribute('link'), 'delete')
-    })
-
-    document.querySelector('#update-selected-item-role-to').addEventListener('click', function() {
-        const form = document.getElementById('action-form');
-      
-        const list = [];
-        document.querySelectorAll('.childCheckbox').forEach(element => {           
-            element.type = 'hidden'
-            form.append(element)  
-        });
-        form.submit();
-    })
-
-    
-</script>
 
 
 @endsection

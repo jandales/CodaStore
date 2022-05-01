@@ -14,7 +14,7 @@ class AdminOrderController extends Controller
     public function index()
     {
         $orders = Order::with('user', 'items')->paginate(10);
-        return view('admin.orders')->with('orders', $orders);
+        return view('admin.orders.index')->with('orders', $orders);
     }
 
     public function listbyStatus($status)
@@ -36,10 +36,11 @@ class AdminOrderController extends Controller
 
     public function search(Request $request)
     {
-        $array = str_split($request->search);
+        $keyword = $request->keyword;
+        $array = str_split($keyword);
         $id = $array[count($array) - 1];
         $orders =  Order::Search($id)->paginate(10);
-        return view('admin.orders.search')->with('orders', $orders);
+        return view('admin.orders.index')->with(['orders' => $orders, 'keyword' => $keyword]);
         
     }
 

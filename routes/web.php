@@ -110,7 +110,11 @@ Route::get('/admin/customers', [UserController::class, 'index'])->name('admin.cu
 
 Route::get('/admin/customers/{id}/show', [UserController::class, 'show'])->name('admin.customers.show');
 
-Route::delete('/admin/users/delete', [UserController::class, 'delete'])->name('admin.users.delete');
+Route::delete('/admin/customers/destroy/{user:id}', [UserController::class, 'destroy'])->name('admin.customers.destroy');
+
+Route::delete('/admin/customers/selected/destroy', [UserController::class, 'selectedDestroy'])->name('admin.customers.selected.destroy');
+
+Route::get('/admin/customers/search',[UserController::class, 'search'])->name('admin.customers.search');
 
 /*
 |--------------------------------------------------------------------------
@@ -128,9 +132,9 @@ Route::get('/admin/users/{admin}/edit/', [AdminController::class, 'edit'])->name
 
 Route::put('/admin/users/{admin}/update/', [AdminController::class, 'update'])->name('admin.users.update');
 
-Route::delete('/admin/users/{admin:id}/destroy',[AdminController::class, 'destroy'])->name('admin.users.destroy');
+Route::post('/admin/users/{admin:id}/destroy',[AdminController::class, 'destroy'])->name('admin.users.destroy');
 
-Route::delete('/admin/users/destroy',[AdminController::class, 'destroySelectedItem'])->name('admin.users.destroySelectedItem');
+Route::post('/admin/users/selected/destory',[AdminController::class, 'destroySelectedItem'])->name('admin.users.destroySelectedItem');
 
 Route::put('/admin/users/change-selected-item-role-to/',[AdminController::class, 'updateSelectItemRoleTo'])->name('admin.users.updateSelectItemRoleTo');
 
@@ -407,7 +411,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
 
     Route::post('/admin/coupons/search', [CouponController::class, 'search'])->name('admin.coupons.search');
 
-    Route::get('/admin/product/searchByajax/{input}',  [ProductController::class, 'searchByajax']);
+
 
 });
 
@@ -434,8 +438,9 @@ Route::group(['middleware' => 'auth:admin'], function(){
     Route::put('/admin/products/{product}/status',[ProductController::class, 'changeStatus'])->name('admin.products.status.update');
     Route::post('/admin/products/status/{status}',[ProductController::class, 'changeSelectedItemStatus'])->name('admin.products.status.updates');    
     Route::get('/admin/products/find',[ProductController::class, 'find'])->name('admin.products.find'); 
-    Route::get('/admin/products/filter={filter}',[ProductController::class, 'filter'])->name('admin.products.filter');    
-   
+    Route::get('/admin/products/filter={filter}',[ProductController::class, 'filter'])->name('admin.products.filter');  
+    Route::get('/admin/products/get',[ProductController::class, 'getProduct']);   
+    
    
     //image route
     Route::post('/admin/image/uploads', [ImageController::class, 'uploads']);
@@ -497,9 +502,10 @@ Route::group(['middleware' => 'auth:admin'], function(){
     Route::get('/admin/products/categories', [CategoryController::class, 'index'])->name('admin.categories');
     Route::get('/api/admin/products/categories', [CategoryController::class, 'lists'])->name('admin.categories.all');
     Route::post('/admin/products/categories/store', [CategoryController::class, 'store'])->name('categories.store');
-    Route::get('/admin/products/categories/{category:id}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
-    Route::put('/admin/products/categories/update/{category:id}', [CategoryController::class, 'update'])->name('categories.update');
-    Route::delete('/admin/products/categories/delete/{category:id}', [CategoryController::class, 'destroy'])->name('admin.categories.destroy');
+    Route::get('/admin/products/categories/{category:slug}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('/admin/products/categories/update/{category:slug}', [CategoryController::class, 'update'])->name('admin.categories.update');
+    Route::delete('/admin/products/categories/delete/{category:slug}', [CategoryController::class, 'destroy'])->name('admin.categories.destroy');
+    Route::delete('/admin/products/categories/selected/delete/', [CategoryController::class, 'destroySelected'])->name('admin.categories.selected.destroy');
     Route::get('/admin/products/categories/search', [CategoryController::class, 'search'])->name('admin.categories.seacrh');
     /*
     |--------------------------------------------------------------------------
@@ -507,12 +513,15 @@ Route::group(['middleware' => 'auth:admin'], function(){
     |--------------------------------------------------------------------------
     */
     Route::get('/admin/products/attributes', [AttributeController::class, 'index'])->name('admin.attributes');
-    Route::get('/admin/attributes/all', [AttributeController::class, 'getAttributes'])->name('admin.attributes.all'); 
-    Route::post('/admin/attributes/store', [AttributeController::class, 'store']);
-    Route::get('/admin/attributes/{attribute:id}', [AttributeController::class, 'edit'])->name('admin.attributes.edit');
-    Route::put('/admin/attributes/update/{attribute:id}', [AttributeController::class, 'update'])->name('admin.attributes.update');
-    Route::delete('/admin/attributes/{attribute:id}/destroy', [AttributeController::class, 'destroy'])->name('admin.attributes.delete');
-    route::get('/admin/attributes/variants/{attribute:id}',[AttributeController::class, 'variants'])->name('admin.attributes.variants');    
+    Route::post('/admin/products/attributes/store', [AttributeController::class, 'store'])->name('admin.attributes.store');
+    Route::get('/admin/products/attributes/{attribute:slug}', [AttributeController::class, 'edit'])->name('admin.attributes.edit');
+    Route::put('/admin/products/attributes/update/{attribute:slug}', [AttributeController::class, 'update'])->name('admin.attributes.update');
+    Route::delete('/admin/products/attributes/{attribute:slug}/destroy', [AttributeController::class, 'destroy'])->name('admin.attributes.destroy');
+    Route::delete('/admin/products/attributes/selected-destroy', [AttributeController::class, 'destroySelected'])->name('admin.attributes.destroy.selected');
+    Route::get('/admin/products/attributes/p/search', [AttributeController::class, 'search'])->name('admin.attributes.search');
+    
+    Route::get('/admin/attributes/all', [AttributeController::class, 'getAll']);
+   
   
    /*
     |--------------------------------------------------------------------------
@@ -547,8 +556,9 @@ Route::group(['middleware' => 'auth:admin'], function(){
     Route::get('/admin/reviews', [ReviewController::class , 'index'])->name('admin.reviews');
     Route::get('/admin/reviews/block/{status}', [ReviewController::class, 'listbyStatus'])->name('admin.reviews.list');
     Route::put('/admin/reviews/block/{review}', [ReviewController::class , 'block'])->name('admin.reviews.block');
-    Route::delete('/admin/reviews/delete/{review}', [ReviewController::class , 'delete'])->name('admin.reviews.destroy');
-    Route::post('/admin/search/', [ReviewController::class , 'search'])->name('admin.reviews.search');
+    Route::delete('/admin/reviews/destroy/{review:id}', [ReviewController::class , 'destroy'])->name('admin.reviews.destroy');
+    Route::delete('/admin/reviews/selected/destroy', [ReviewController::class , 'destroySelected'])->name('admin.reviews.selected.destroy');
+    Route::get('/admin/reviews/search', [ReviewController::class , 'search'])->name('admin.reviews.search');
 
 
     // Shipping method

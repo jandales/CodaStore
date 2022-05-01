@@ -161,16 +161,7 @@
       
     </div>
 
-    <script>
-const btnfilter = document.getElementById('filter');
-btnfilter.addEventListener('change', function() {
-    const url = btnfilter.options[btnfilter.selectedIndex].getAttribute('data-url');
-    if(!url) return;   
-    window.location.href = url;
-})
 
-    </script>
-   
 </div>
 
 

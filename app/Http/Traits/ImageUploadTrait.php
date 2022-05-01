@@ -3,32 +3,26 @@ namespace App\Http\Traits;
 
 use App\Models\Photo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
-trait ImageUploadTrait {
-  
-    private $location = 'img/test/';
+trait ImageUploadTrait { 
 
-    public function upload(Request $request, $name = 'image')
-    {      
+    public function upload($request, $location, $name = 'image')
+    {
         if (!$request->hasFile($name) ) return null;
         $image = $request->file($name);       
-        $name = $this->makeImageName($image);         
-        $path = $this->location . $name;
-        $photo = $this->storePhoto($path, $name, $this->location);
-        if ($photo) $image->move(public_path($this->location),$name);
-        return $photo->path;
+        $image_name = $this->makeImageName($image);         
+        $path = $location . $image_name;        
+        $image->move(public_path($location),$image_name);
+        return $path;
+    } 
+    
+    public function unlinkImage($path)
+    {      
+        $path = public_path() . $path;
+        File::delete($path);        
     }
-
-    private function storePhoto($path, $name, $location)
-    {
-        $photo = Photo::create([        
-            'path' => $path,
-            'name' => $name,
-            'location' => $location
-        ]);
-
-        return $photo;
-    }
+    
 
     private function makeImageName($image){
         $size = $image->getSize(); 

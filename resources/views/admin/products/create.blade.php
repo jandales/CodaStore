@@ -92,7 +92,7 @@
                             <div class="variant-selector">
                                 <select id="selectInput" class="capitalized">
                                 </select>
-                                <button id="btn-add-variant" class="btn btn-default ml20">Add</button>
+                                <span id="btn-add-variant" class="btn btn-default ml20">Add</span>
                             </div>   
                             <div class="options-wrapper">
                             
@@ -232,6 +232,6 @@
         
 </div>
 
-<script  src="/js/admin/productAddupdate.js"></script>
+{{-- <script  src="/js/admin/productAddupdate.js"></script> --}}
 
 @endsection

@@ -10,6 +10,7 @@ class CouponServices
 
     public function store($request)
     {
+       
         $coupon  = Coupon::create([
             'name' => $request->name,
             'description' => $request->description,
@@ -55,7 +56,7 @@ class CouponServices
     private function createProducts($arr, $id)
     {
         $products = json_decode($arr);
-
+       if($products ==  null) return;
         foreach($products as $product){   
             $item = json_decode(json_encode($product)); 
             CouponRestrictionProduct::create([

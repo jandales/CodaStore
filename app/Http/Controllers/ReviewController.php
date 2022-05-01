@@ -12,20 +12,19 @@ class ReviewController extends Controller
 {
     public function index()
     {
-        $reviews = Review::with('product', 'user')->paginate(5);
+        $reviews = Review::with('product', 'user')->paginate(10);
         return view('admin.reviews.index')->with('reviews', $reviews);
     }
 
     public function search(Request $request)
-    {
-        $input = $request->search;
-        $reviews = Review::search($input)->with('product', 'user')->get();
-        return view('admin.reviews.index')->with('reviews', $reviews);
+    {       
+        $reviews = Review::search($request->keyword)->with('product', 'user')->paginate(10);
+        return view('admin.reviews.index')->with(['reviews' => $reviews, 'keyword' => $request->keyword]);
     }
 
     public function listbyStatus($status)
     {
-        $reviews = Review::where('block',$status)->with('product', 'user')->get();
+        $reviews = Review::where('block',$status)->with('product', 'user')->paginate(10);
         return view('admin.reviews.index')->with('reviews', $reviews);
     }
 
@@ -75,12 +74,21 @@ class ReviewController extends Controller
         $review->rating = $request->rate;       
         $review->save();      
         return back();
-
     }   
 
     public function destroy(Review $review)
     {
         $review->delete();
-        return back();
+        return back()->with('success', 'Review successfully Deleted');
+    }
+
+    public function destroySelected(Request $request)
+    {
+        foreach($request->selected as $id){
+            $review = Review::find($id);
+            $review->delete();
+        }
+        return back()->with('success', 'Review successfully Deleted');
+
     }
 }

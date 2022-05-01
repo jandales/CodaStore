@@ -15,12 +15,6 @@ function readURL(input, elem ) {
 
 }
 
-
-
-
-
-
-
 const btnfile = document.getElementById('btn-file')
 const file = document.getElementById('file')
 const inputText =  document.getElementById('input-name') 
@@ -47,8 +41,7 @@ file.addEventListener('change', function() {
 
         image.setAttribute('src', '/img/avatar.png')
         inputText.value = ""   
-        fileinput.value = null
- 
+        fileinput.value = null 
 
 });
 
