@@ -115,6 +115,10 @@
                                 <option value="1">Published</option>                            
                             </select>     
                         </div>
+                        <div class="form-inline">
+                            <input type="checkbox" name="featured" value="1">
+                            <label for="" class="ml10">Featured Product</label>
+                        </div>
                         <div class="form-block w-12">
                             <button id="btnsave" type="create" class="btn btn-primary align-self-end">Save</button>
                         </div>                  

@@ -48,7 +48,7 @@ class CartController extends Controller
             'qty' => 'required|numeric',
         ]); 
 
-
+       
         $productQuantity = $product->stock->qty;  
         $attributes = $request->properties;
         $newQuantity = (int)$request->qty;  
@@ -56,7 +56,7 @@ class CartController extends Controller
 
         if($productQuantity == 0)  return response()->json(['status' => 500, 'message' => 'Product is not available' ]);   
 
-        $cart = Cart::ByUser()->first();
+      $cart = Cart::ByUser()->first();
 
         if($productQuantity <  $newQuantity) $newQuantity = $productQuantity; 
         
@@ -73,11 +73,11 @@ class CartController extends Controller
                 $item->attributes =  $attributes;
                 $item->save();        
                 Cart::UpdateTotal();  
-                return; 
+                return response()->json(['count' => $cart->items->sum('qty')]);     
             }
             self::createItem($cart->id, $product->id, $newQuantity, $attributes);
             Cart::UpdateTotal();
-            return;            
+            return response()->json(['count' => $cart->items->sum('qty')]);           
                  
             
         };  
@@ -91,7 +91,7 @@ class CartController extends Controller
         
         self::createItem($cart->id, $product->id, $newQuantity, $attributes);   
            
-        return;
+        return response()->json(['count' => $cart->items->sum('qty')]);   
     }
 
     private function createItem($cart, $product, $quantity, $attributes)
@@ -120,8 +120,8 @@ class CartController extends Controller
   
     public function count()
     {       
-        $cart =  Cart::ByUser()->first();
-        $cartItemsCount = $cart->items->sum('qty'); 
+        $cart =  Cart::ByUser()->first();         
+        $cartItemsCount = $cart == null ? 0 : $cart->items->sum('qty');
         return response()->json(['cartItemsCount' => $cartItemsCount]);
     }
 

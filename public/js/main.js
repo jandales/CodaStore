@@ -2875,121 +2875,10 @@ navDropdownbtn.forEach(function (element) {
   });
 });
 
-function errorClose(e) {
-  var alert = e.closest('.alert');
-  alert.remove();
-}
-
-function alertMessage(message) {
-  var alert = document.querySelector('.alert-m');
-  alert.style.display = 'block';
-  alert.querySelector('.message').innerText = message;
-}
-
-function alertClose(e) {
-  var alert = e.closest('.alert-m');
-  alert.style.display = 'none';
-}
-
-function progressStart(element, percent) {
-  element.style.display = 'flex';
-  var progessbar = element.querySelector('.progress-bar');
-  progessbar.style.setProperty('--width', percent);
-}
-
-function progressStop(element) {
-  element.style.display = 'none';
-}
-
-function readFile(input, callback) {
-  if (!input) return;
-  var reader = new FileReader();
-  reader.onload = callback;
-  reader.readAsDataURL(input);
-}
-
-function getElementById(selector) {
-  return document.getElementById(selector);
-}
-
 var _token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 var _put = "PUT";
-var _delete = "DELETE";
-
-function requestDelete(url) {
-  var result = null;
-  $.ajax({
-    url: url,
-    type: 'POST',
-    data: {
-      _token: _token,
-      _method: _delete
-    },
-    async: false,
-    success: function success(response) {
-      result = response;
-    }
-  });
-  return result;
-}
-
-function requestLists(url) {
-  var result = null;
-  $.ajax({
-    url: url,
-    type: 'GET',
-    async: false,
-    success: function success(response) {
-      result = response;
-    }
-  });
-  return result;
-} // function requestGet(url){
-//     let result = null
-//     $.ajax({
-//         url : url,
-//         type : 'GET',        
-//         async : false,
-//         success:function(response){
-//             result = response
-//         }
-//     })
-//     return result;
-// }
-
-
-function requestSearch(url, input) {
-  var result = null;
-  $.ajax({
-    url: url,
-    type: 'GET',
-    data: {
-      search: input
-    },
-    async: false,
-    success: function success(response) {
-      result = response;
-    }
-  });
-  return result;
-}
-
-function requestStore(url) {
-  var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var result = null;
-  $.ajax({
-    url: url,
-    type: 'Post',
-    data: data,
-    async: false,
-    success: function success(response) {
-      result = response;
-    }
-  });
-  return result;
-} // tabs
-
+var _delete = "DELETE"; // tabs
 
 function runTabs() {
   document.querySelectorAll(".tabs-button").forEach(function (button) {
@@ -3071,11 +2960,9 @@ __webpack_require__(/*! ../admin/products */ "./resources/js/admin/products.js")
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _module_progressbar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../module/progressbar */ "./resources/js/module/progressbar.js");
 /* harmony import */ var _module_array__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../module/array */ "./resources/js/module/array.js");
 /* harmony import */ var _module_message__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../module/message */ "./resources/js/module/message.js");
-// import { progressStart, progressStop, readFile ,} from '/js/admin/utilities.js'
 
 
 
@@ -3098,9 +2985,12 @@ var product = {
   images: [],
   status: ''
 };
+var variants = [];
+var attributes = [];
+var images = [];
 var optionsContainer = document.querySelector('.options-container');
 var optionsWrapper = document.querySelector('.options-wrapper');
-var hasHariantElement = document.querySelector('.has-variant');
+var hasVariantElement = document.querySelector('.has-variant');
 var btnaddvariant = document.getElementById('btn-add-variant');
 var selectAttributes = document.getElementById('selectInput');
 var btnsave = document.getElementById('btnsave');
@@ -3115,22 +3005,43 @@ if (btnfilter) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  // getCategories()
-  getAttributes();
-}); // function getCategories(){
-//     $.ajax({
-//         url : '/api/admin/categories',
-//         type : 'GET',
-//         async : false,
-//         success : function(res){
-//             const select = document.getElementById('categories')
-//             select.innerHTML = ''
-//             res.categories.forEach(category => {
-//                 select.innerHTML += `<option value = ${category.id}>${category.name}</option>`
-//             })
-//         }
-//     })  
-// }
+  if (hasVariantElement) {
+    if (hasVariantElement.checked) {
+      getAttributes();
+      optionsContainer.style.display = 'block';
+    }
+  }
+
+  loadGalleryImages();
+  loadEditOnEditForm();
+});
+
+function loadEditOnEditForm() {
+  var inputVariant = document.querySelector('input[name="variants"]');
+  var inputImage = document.querySelector('input[name="photos"]');
+  var inputAttribute = document.querySelector('input[name="attributes"]');
+  if (inputVariant) variants = JSON.parse(inputVariant.value);
+  if (inputImage) images = JSON.parse(inputImage.value);
+  if (inputAttribute) attributes = JSON.parse(inputAttribute.value);
+  attributes.forEach(function (attribute) {
+    product.attributes.push({
+      id: attribute.attribute_id,
+      variants: []
+    });
+  });
+  product.attributes.forEach(function (item) {
+    variants.forEach(function (variant) {
+      if (item.id == variant.attribute_id) item.variants.push(variant.variant);
+    });
+  });
+  images.forEach(function (image) {
+    product.images.push({
+      id: image.id,
+      path: image.path,
+      deleted: 0
+    });
+  });
+}
 
 function getAttributes() {
   var res = null;
@@ -3140,7 +3051,6 @@ function getAttributes() {
     async: false,
     success: function success(response) {
       res = response.attributes;
-      console.log(res);
       selectAttributes.innerHTML = '';
       response.attributes.forEach(function (attribute) {
         selectAttributes.innerHTML += "<option value = ".concat(attribute.id, ">").concat(attribute.name, "</option>");
@@ -3164,7 +3074,7 @@ function elementFromHtml(html) {
 }
 
 function createVariantHTML(name, id) {
-  return "<div class=\"variant\">  \n                ".concat(name, "          \n                <span name=\"").concat(name, "\" data-id=\"").concat(id, "\" onclick=\"removeVariantItem(this)\"><i class=\"fas fa-times\"></i></span>\n            </div>");
+  return "<div class=\"variant\">  \n                ".concat(name, "          \n                <span name=\"").concat(name, "\" data-id=\"").concat(id, "\" class=\"remove-variant-item\"><i class=\"fas fa-times\"></i></span>\n            </div>");
 }
 
 function addVariantItem(id, value) {
@@ -3182,20 +3092,6 @@ function existVariantItem(id, value) {
   return (0,_module_array__WEBPACK_IMPORTED_MODULE_1__.arrContains)(product.attributes[i].variants, value);
 }
 
-function fillproductproties() {
-  product.name = input('name').value;
-  product.categories = getElementById('categories').value;
-  product.sku = input('sku').value;
-  product.barcode = input('barcode').value;
-  product.shortDescription = getElementById('short_description').value;
-  product.longDescroption = getElementById('long_description').value;
-  product.sale_price = parseFloat(input("sale_price").value);
-  product.regular_price = parseFloat(input("regular_price").value);
-  product.status = getElementById('status').value;
-  product.quantity = parseInt(input('qty').value);
-  product.isTaxable = input('taxable').checked;
-}
-
 function storeProduct() {
   errors = [];
   (0,_module_message__WEBPACK_IMPORTED_MODULE_2__.errorMessage)([]);
@@ -3210,7 +3106,7 @@ function storeProduct() {
   });
   data.append('image', JSON.stringify(product.image));
   $.ajax({
-    url: '/admin/products/store',
+    url: url,
     type: 'POST',
     data: data,
     datatype: "json",
@@ -3250,7 +3146,7 @@ function updateProduct() {
     data.append('attributes[]', JSON.stringify(attribute));
   });
   data.append('image', JSON.stringify(product.image));
-  data.append('_method', _put);
+  data.append('_method', 'PUT');
   $.ajax({
     url: url,
     type: 'POST',
@@ -3280,8 +3176,8 @@ function updateProduct() {
 } // events //
 
 
-if (hasHariantElement) {
-  hasHariantElement.onchange = function () {
+if (hasVariantElement) {
+  hasVariantElement.onchange = function () {
     if (this.checked) {
       getAttributes();
       optionsContainer.style.display = 'block';
@@ -3297,31 +3193,17 @@ if (hasHariantElement) {
   };
 }
 
-function removeOption(elem) {
-  var id = elem.getAttribute('id');
-  (0,_module_array__WEBPACK_IMPORTED_MODULE_1__.arrRemove)(product.attributes, 'id', id);
-  elem.parentElement.remove();
-}
-
-function addVariantEvent(event) {
-  if (event.keyCode === 13) {
-    event.preventDefault();
-    var value = event.target.value;
-    var id = parseInt(event.target.getAttribute('data-id'));
-    if (value == "") return;
-    if (existVariantItem(id, value)) return event.target.value = "";
-    addVariantItem(id, value);
-    var wrapper = event.target.parentElement.querySelector('.variants-list-wrapper');
-    wrapper.innerHTML += createVariantHTML(value, id);
-    event.target.value = "";
-  }
-}
-
-function removeVariantItem(elem) {
-  var value = elem.getAttribute('name');
-  var variant_id = parseInt(elem.getAttribute('data-id'));
-  deleteVariantItem(variant_id, value);
-  elem.parentElement.remove();
+function removeVariantItem() {
+  var removeVariantItems = document.querySelectorAll('.remove-variant-item');
+  removeVariantItems.forEach(function (item) {
+    item.onclick = function () {
+      console.log(item);
+      var value = item.getAttribute('name');
+      var variant_id = parseInt(item.getAttribute('data-id'));
+      deleteVariantItem(variant_id, value);
+      item.parentElement.remove();
+    };
+  });
 }
 
 if (btnaddvariant) {
@@ -3340,6 +3222,23 @@ if (btnaddvariant) {
 } /// add event 
 
 
+function addVariantEvent(event) {
+  console.log(event);
+
+  if (event.keyCode === 13) {
+    event.preventDefault();
+    var value = event.target.value;
+    var id = parseInt(event.target.getAttribute('data-id'));
+    if (value == "") return;
+    if (existVariantItem(id, value)) return event.target.value = "";
+    addVariantItem(id, value);
+    var wrapper = event.target.parentElement.querySelector('.variants-list-wrapper');
+    wrapper.innerHTML += createVariantHTML(value, id);
+    event.target.value = "";
+    removeVariantItem();
+  }
+}
+
 function variantInput() {
   var inputVariants = optionsWrapper.querySelectorAll('.inputVariant');
   inputVariants.forEach(function (input) {
@@ -3349,12 +3248,17 @@ function variantInput() {
   });
 }
 
+function removeOption(e) {
+  var elem = e.target;
+  var id = elem.getAttribute('id');
+  (0,_module_array__WEBPACK_IMPORTED_MODULE_1__.arrRemove)(product.attributes, 'id', id);
+  elem.parentElement.remove();
+}
+
 function variantRemove() {
   var removes = optionsWrapper.querySelectorAll('.option-remove');
   removes.forEach(function (remove) {
-    remove.addEventListener('click', function () {
-      removeOption(this);
-    });
+    remove.onclick = removeOption;
   });
 } /// file uploader
 
@@ -3365,33 +3269,47 @@ var imagegallery = document.querySelector('.image-gallery');
 var path = "";
 
 function loadGalleryImages() {
+  if (product.images.length == 0) return;
   imagegallery.innerHTML = '';
   product.images.forEach(function (image) {
     if (image.deleted == 0) {
-      imagegallery.innerHTML += "\n            <div class=\"image\">\n                <img src=\"/".concat(image.path, "\" alt=\"\">                                   \n                <span onclick=\"removeGalleryImage(this, ").concat(image.id, ")\" class=\"remove\"><i class=\"fas fa-times\"></i></span>\n            </div>\n            ");
+      imagegallery.innerHTML += "\n            <div class=\"image\">\n                <img src=\"/".concat(image.path, "\" alt=\"\">                                   \n                <span data-id=\"").concat(image.id, "\" class=\"remove remove-gallery-image\"><i class=\"fas fa-times\"></i></span>\n            </div>\n            ");
     }
   });
+  setRemoveGalleryImageEvent();
 }
 
 function loadImage(image) {
   var imageElement = document.querySelector('.image-product .image');
-  imageElement.innerHTML = "<img src=\"/".concat(image.path, "\" alt=\"\"><span onclick=\"removeProductImage(this)\" class=\"remove\"><i class=\"fas fa-times\"></i></span>");
+  imageElement.innerHTML = "<img src=\"/".concat(image.path, "\" alt=\"\"><span class=\"remove remove-product-image\"><i class=\"fas fa-times\"></i></span>");
+  SetRemoveProductImageEvent();
 }
 
-function removeGalleryImage(elem, id) {
-  product.images.forEach(function (image) {
-    if (image.id == id) image.deleted = 1;
+function setRemoveGalleryImageEvent() {
+  var removeGalleryImageElement = document.querySelectorAll('.remove-gallery-image');
+  removeGalleryImageElement.forEach(function (elem) {
+    elem.onclick = function () {
+      var id = parseInt(elem.getAttribute('data-id'));
+      product.images.forEach(function (image) {
+        if (image.id == id) image.deleted = 1;
+      });
+      elem.parentElement.remove();
+    };
   });
-  elem.parentElement.remove();
 }
 
-function removeProductImage(elem) {
-  product['image'] = {
-    id: '',
-    path: ''
-  };
-  elem.parentElement.querySelector('img').remove();
-  elem.remove();
+function SetRemoveProductImageEvent() {
+  var removeProductImageElements = document.querySelectorAll('.remove-product-image');
+  removeProductImageElements.forEach(function (elem) {
+    elem.onclick = function () {
+      product['image'] = {
+        id: '',
+        path: ''
+      };
+      elem.parentElement.querySelector('img').remove();
+      elem.remove();
+    };
+  });
 }
 
 function deleteImage(id) {
@@ -3425,7 +3343,7 @@ function uploads(element) {
       var xhr = new window.XMLHttpRequest();
       xhr.upload.addEventListener("progress", function (e) {
         var percent = e.lengthComputable ? e.loaded / e.total * 100 : 0;
-        progressStart(element, percent.toFixed(2));
+        (0,_module_progressbar__WEBPACK_IMPORTED_MODULE_0__.progressBarStart)(element, percent.toFixed(2));
       }, false);
       return xhr;
     },
@@ -3436,7 +3354,7 @@ function uploads(element) {
     contentType: false,
     processData: false,
     success: function success(res) {
-      progressStop(element);
+      (0,_module_progressbar__WEBPACK_IMPORTED_MODULE_0__.progressBarStop)(element);
       imagesToUpload = [];
 
       if (multiple) {
@@ -4056,6 +3974,29 @@ function errorMessage(errors) {
 function successMessage(message) {
   notifyMessageElement.innerHTML = '';
   notifyMessageElement.innerHTML += "<div class=\"alert alert-success\">\n                                            <div class=\"flex justify-content-space-between\">\n                                                <label class=\"message\">".concat(message, "</label>\n                                                <span class=\"closebtn\" onclick=\"errorClose(this)\"><i class=\"fas fa-times\"></i></span>\n                                            </div> \n                                        </div>");
+}
+
+/***/ }),
+
+/***/ "./resources/js/module/progressbar.js":
+/*!********************************************!*\
+  !*** ./resources/js/module/progressbar.js ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "progressBarStart": () => (/* binding */ progressBarStart),
+/* harmony export */   "progressBarStop": () => (/* binding */ progressBarStop)
+/* harmony export */ });
+function progressBarStart(element, percent) {
+  element.style.display = 'flex';
+  var progessbar = element.querySelector('.progress-bar');
+  progessbar.style.setProperty('--width', percent);
+}
+function progressBarStop(element) {
+  element.style.display = 'none';
 }
 
 /***/ }),
@@ -21507,18 +21448,6 @@ module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBun
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__webpack_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports

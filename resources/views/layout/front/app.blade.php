@@ -83,7 +83,9 @@
    
 
     <script src="/js/front/jquery.min.js"></script>
-    <script src="/js/front/main.js"></script>
+    <script src="{{ asset('js/app.js')}}"></script>
+
+    {{-- <script src="/js/front/main.js"></script>
     <script src="/js/front/sticky-header.js"></script>
     <script src="/js/front/tabs.js"></script>
     <script src="/js/front/modal.js"></script>
@@ -97,7 +99,7 @@
     <script src="/js/product/ratingevent.js"></script>
     <script src="/js/product/addwishlist.js"></script>
     <script src="/js/front/variants.js"></script>
-    <script src="/js/validator.js"></script>
+    <script src="/js/validator.js"></script> --}}
 
     
   

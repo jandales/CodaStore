@@ -1,5 +1,4 @@
-// import { progressStart, progressStop, readFile ,} from '/js/admin/utilities.js'
-import { remove } from 'lodash'
+import { progressBarStart, progressBarStop} from '../module/progressbar'
 import { arrContains, arrFindIndex, arrRemove} from '../module/array'
 import { errorMessage, successMessage } from '../module/message'
 
@@ -22,10 +21,13 @@ const product = {
     images : [],
     status : ''    
 }
+let variants = [];
+let attributes = [];
+let images = [];
 
 const optionsContainer = document.querySelector('.options-container')
 const optionsWrapper = document.querySelector('.options-wrapper')
-const hasHariantElement = document.querySelector('.has-variant')
+const hasVariantElement = document.querySelector('.has-variant')
 const btnaddvariant = document.getElementById('btn-add-variant')
 const selectAttributes = document.getElementById('selectInput')
 const btnsave = document.getElementById('btnsave')
@@ -45,23 +47,39 @@ if(btnfilter) {
 
 
 document.addEventListener("DOMContentLoaded", () => { 
-    // getCategories()
-    getAttributes();
+        if(hasVariantElement){
+            if(hasVariantElement.checked){
+                getAttributes(); 
+                optionsContainer.style.display = 'block'         
+            } 
+        }
+        loadGalleryImages();
+        loadEditOnEditForm();
 })
-// function getCategories(){
-//     $.ajax({
-//         url : '/api/admin/categories',
-//         type : 'GET',
-//         async : false,
-//         success : function(res){
-//             const select = document.getElementById('categories')
-//             select.innerHTML = ''
-//             res.categories.forEach(category => {
-//                 select.innerHTML += `<option value = ${category.id}>${category.name}</option>`
-//             })
-//         }
-//     })  
-// }
+
+function loadEditOnEditForm(){
+    const inputVariant = document.querySelector('input[name="variants"]');
+    const inputImage = document.querySelector('input[name="photos"]');
+    const inputAttribute = document.querySelector('input[name="attributes"]');
+    if(inputVariant) variants =JSON.parse(inputVariant.value);
+    if(inputImage) images = JSON.parse(inputImage.value);    
+    if(inputAttribute) attributes = JSON.parse(inputAttribute.value);
+    
+    attributes.forEach(attribute => {      
+        product.attributes.push({ id : attribute.attribute_id, variants : [] })  
+    });
+
+    product.attributes.forEach(item => {      
+        variants.forEach(variant => {            
+            if(item.id == variant.attribute_id) item.variants.push(variant.variant)
+        })           
+    })  
+
+    images.forEach(image => {
+        product.images.push({id : image.id, path : image.path, deleted : 0 })
+    });
+
+}
 function getAttributes(){ 
     let res = null;
     $.ajax({
@@ -69,8 +87,7 @@ function getAttributes(){
         type : 'GET',
         async : false,
         success : function(response){
-            res = response.attributes      
-            console.log(res);     
+            res = response.attributes  
             selectAttributes.innerHTML = ''
             response.attributes.forEach(attribute => {               
                 selectAttributes.innerHTML += `<option value = ${attribute.id}>${attribute.name}</option>`
@@ -109,7 +126,7 @@ function elementFromHtml(html) {
 function createVariantHTML(name, id){
     return `<div class="variant">  
                 ${name}          
-                <span name="${name}" data-id="${id}" onclick="removeVariantItem(this)"><i class="fas fa-times"></i></span>
+                <span name="${name}" data-id="${id}" class="remove-variant-item"><i class="fas fa-times"></i></span>
             </div>`
 }
 function addVariantItem(id,value){   
@@ -124,20 +141,6 @@ function existVariantItem(id,value){
     let i = arrFindIndex(product.attributes,'id',id)   
     return arrContains(product.attributes[i].variants, value)
 }
-function fillproductproties(){    
-    product.name = input('name').value
-    product.categories = getElementById('categories').value    
-    product.sku = input('sku').value
-    product.barcode = input('barcode').value
-    product.shortDescription = getElementById('short_description').value
-    product.longDescroption = getElementById('long_description').value
-    product.sale_price = parseFloat(input("sale_price").value)
-    product.regular_price = parseFloat(input("regular_price").value)
-    product.status = getElementById('status').value
-    product.quantity = parseInt(input('qty').value) 
-    product.isTaxable = input('taxable').checked
-}
-
 function storeProduct(){ 
    errors = []
    errorMessage([]) 
@@ -153,7 +156,7 @@ function storeProduct(){
    data.append('image',JSON.stringify(product.image))
 
      $.ajax({
-        url : '/admin/products/store',
+        url : url,
         type : 'POST',
         data : data,
         datatype:"json", 
@@ -185,7 +188,7 @@ function updateProduct(){
         data.append('attributes[]', JSON.stringify(attribute))
     })
     data.append('image',JSON.stringify(product.image))
-    data.append('_method', _put);
+    data.append('_method', 'PUT');
      $.ajax({
          url : url,
          type : 'POST',
@@ -207,8 +210,8 @@ function updateProduct(){
     })
 }
 // events //
-if(hasHariantElement) {
-    hasHariantElement.onchange =  function(){
+if(hasVariantElement) {
+    hasVariantElement.onchange =  function(){
         if(this.checked){
             getAttributes(); 
             optionsContainer.style.display = 'block'
@@ -223,34 +226,23 @@ if(hasHariantElement) {
     }
 }
 
-function removeOption(elem){
-    let id = elem.getAttribute('id')
-    arrRemove(product.attributes, 'id', id)   
-    elem.parentElement.remove()
-}
 
 
 
-function addVariantEvent(event){
-   
-    if (event.keyCode === 13) {     
-        event.preventDefault(); 
-        let value = event.target.value
-        let id = parseInt(event.target.getAttribute('data-id')) 
-        if(value == "" ) return   
-        if(existVariantItem(id,value)) return event.target.value = ""  
-        addVariantItem(id,value)  
-        
-        let wrapper = event.target.parentElement.querySelector('.variants-list-wrapper')
-        wrapper.innerHTML += createVariantHTML(value, id) 
-        event.target.value = ""         
-    } 
-}
-function removeVariantItem(elem){ 
-    let value  = elem.getAttribute('name')
-    let variant_id = parseInt(elem.getAttribute('data-id'))     
-    deleteVariantItem(variant_id,value)
-    elem.parentElement.remove();  
+
+
+function removeVariantItem(){ 
+    const removeVariantItems = document.querySelectorAll('.remove-variant-item');
+    removeVariantItems.forEach(item => {
+        item.onclick =  function(){
+            console.log(item);
+            let value  = item.getAttribute('name')
+            let variant_id = parseInt(item.getAttribute('data-id'))     
+            deleteVariantItem(variant_id,value)
+            item.parentElement.remove();  
+        }       
+    })
+  
 }
 
 
@@ -268,6 +260,23 @@ if (btnaddvariant) {
 }
 
 /// add event 
+function addVariantEvent(event){ 
+    console.log(event);  
+    if (event.keyCode === 13) {     
+        event.preventDefault(); 
+        let value = event.target.value
+        let id = parseInt(event.target.getAttribute('data-id')) 
+        if(value == "" ) return   
+        if(existVariantItem(id,value)) return event.target.value = ""  
+        addVariantItem(id,value)      
+        
+        let wrapper = event.target.parentElement.querySelector('.variants-list-wrapper')
+        wrapper.innerHTML += createVariantHTML(value, id) 
+        event.target.value = ""   
+        removeVariantItem();        
+    } 
+}
+
 function variantInput(){
     const inputVariants =  optionsWrapper.querySelectorAll('.inputVariant')      
     inputVariants.forEach(input => {
@@ -277,14 +286,23 @@ function variantInput(){
     })
 }
 
+
+
+function removeOption(e){  
+    const elem = e.target;  
+    let id = elem.getAttribute('id')
+    arrRemove(product.attributes, 'id', id)   
+    elem.parentElement.remove()
+}
+
 function variantRemove(){
     const removes =  optionsWrapper.querySelectorAll('.option-remove')      
     removes.forEach(remove => {
-        remove.addEventListener('click', function(){
-           removeOption(this);
-        });
+        remove.onclick =  removeOption;
     })
 }
+
+
 
 
 
@@ -316,33 +334,50 @@ let path = "";
 
 
 function loadGalleryImages(){ 
-    imagegallery.innerHTML = ''    
+    if(product.images.length == 0) return;
+    imagegallery.innerHTML = ''   
+
     product.images.forEach(image => {
         if(image.deleted == 0){
             imagegallery.innerHTML += `
             <div class="image">
                 <img src="/${image.path}" alt="">                                   
-                <span onclick="removeGalleryImage(this, ${image.id})" class="remove"><i class="fas fa-times"></i></span>
+                <span data-id="${image.id}" class="remove remove-gallery-image"><i class="fas fa-times"></i></span>
             </div>
             `
         }       
-    }) 
+    })    
+    setRemoveGalleryImageEvent()
 } 
 function loadImage(image){    
     const imageElement = document.querySelector('.image-product .image')
-    imageElement.innerHTML = `<img src="/${image.path}" alt=""><span onclick="removeProductImage(this)" class="remove"><i class="fas fa-times"></i></span>`
+    imageElement.innerHTML = `<img src="/${image.path}" alt=""><span class="remove remove-product-image"><i class="fas fa-times"></i></span>`
+    SetRemoveProductImageEvent();
 }
 
-function removeGalleryImage(elem, id){ 
-    product.images.forEach(image => {
-        if (image.id == id) image.deleted = 1
-    }) 
-    elem.parentElement.remove()   
+function setRemoveGalleryImageEvent(){ 
+    const removeGalleryImageElement =  document.querySelectorAll('.remove-gallery-image');
+    removeGalleryImageElement.forEach(elem => {
+        elem.onclick =  function(){
+            const id = parseInt(elem.getAttribute('data-id'));
+            product.images.forEach(image => {                
+                if (image.id == id) image.deleted = 1
+            }) 
+            elem.parentElement.remove() 
+        }
+    })
+     
 }
-function removeProductImage(elem){    
-    product['image'] = {id : '', path : ''}  
-    elem.parentElement.querySelector('img').remove()
-    elem.remove()   
+function SetRemoveProductImageEvent(){   
+    const removeProductImageElements  = document.querySelectorAll('.remove-product-image');
+    removeProductImageElements.forEach(elem => {
+        elem.onclick = function(){
+            product['image'] = {id : '', path : ''}  
+            elem.parentElement.querySelector('img').remove()
+            elem.remove() 
+        }
+    })
+     
 }
 function deleteImage(id){
     let result = false
@@ -372,7 +407,7 @@ function uploads(element, multiple = true){
             var xhr = new window.XMLHttpRequest();
             xhr.upload.addEventListener("progress", function(e) {             
                 const percent = e.lengthComputable ? (e.loaded / e.total) * 100 : 0 
-                progressStart(element,percent.toFixed(2)) 
+                progressBarStart(element,percent.toFixed(2)) 
            }, false);     
            return xhr;
         },
@@ -383,7 +418,7 @@ function uploads(element, multiple = true){
         contentType: false,
         processData: false,       
         success:function(res){
-            progressStop(element)          
+            progressBarStop(element)          
             imagesToUpload = [] 
 
             if(multiple){                             

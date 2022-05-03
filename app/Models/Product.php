@@ -36,7 +36,8 @@ class Product extends Model
         'tags',
         'sale_price',
         'regular_price',
-        'status',        
+        'status',
+        'featured',
     ];
 
     public function category()

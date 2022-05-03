@@ -3216,6 +3216,10 @@ td span.inactive {
   padding: 0.5rem 1rem;
 }
 
+.label-width {
+  min-width: 70px;
+}
+
 /*!
  * Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)

@@ -115,9 +115,9 @@
        
  
 
-        <script src="/js/front/cart/cart.js"></script>
+        {{-- <script src="/js/front/cart/cart.js"></script>
         <script src="/js/front/cart/updateQuantity.js"></script>
-        <script type="module" src="/js/front/cart/coupon.js"></script>
+        <script type="module" src="/js/front/cart/coupon.js"></script> --}}
         @endsection
 
 

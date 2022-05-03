@@ -100,20 +100,21 @@
                                 <div class="options">                       
                                     <div class="options-selector m-t-1" >
                                         <div class="option-attribute">
-                                            {{$item->attributes->name}}
-                                     
+                                            {{$item->attributes->name}}                                     
                                         </div> 
-                                       
+                                     
                                         <div class="variants-wrapper">
                                             <div class="variants-list-wrapper">                                           
-                                                @foreach ($product->variants as $var)
+                                                @foreach ($product->variants as  $variant)  
+                                                    @if( $item->attribute_id ==  $variant->attribute_id)            
                                                         <div class="variant">  
-                                                            {{ $var->variant}}         
-                                                            <span name="{{ $var->variant }} " data-id="{{ $item->attribute_id }}" onclick="removeVariantItem(this)"><i class="fas fa-times"></i></span>
+                                                            {{  $variant->variant}}         
+                                                            <span name="{{  $variant->variant }} " data-id="{{ $item->attribute_id }}" class="remove-variant-item"><i class="fas fa-times"></i></span>
                                                         </div>
+                                                    @endif
                                                 @endforeach                                  
                                             </div>                
-                                            <input data-id="{{ $item->attribute_id }}"class="inputVariant no-border" onkeydown="addVariantEvent(event)" placeholder="Enter varaint name and hit enter" type="text" value=""> 
+                                            <input data-id="{{ $item->attribute_id }}" class="inputVariant no-border"  placeholder="Enter varaint name and hit enter" name="variant_name[]" type="text" value=""> 
                                         </div>                                 
                                     </div>
                                     <span class="option-remove" data-id="{{ $item->attribute_id }}" onclick="removeOption(this)">remove</span>
@@ -137,6 +138,10 @@
                                 <option {{$product->status == 0 ? 'selected' : '' }} value="0">Draft</option>
                                 <option {{$product->status == 1 ? 'selected' : '' }}  value="1">Published</option>                            
                             </select>     
+                        </div>
+                        <div class="form-inline">
+                            <input type="checkbox" {{ $product->featured == 1 ? 'checked' : ''}} name="featured" value="1">
+                            <label for="" class="ml10">Featured Product</label>
                         </div>
                         <div class="form-block w-12">
                             <button id="btnsave" class="btn btn-primary align-self-end">Save</button>
@@ -236,36 +241,6 @@
     </form>
 </div>
 
-<script  src="/js/admin/productAddupdate.js"></script>
-<script>
-    // const attributes = @json($product->attributes);
-    const variants =JSON.parse(document.querySelector('input[name="variants"]').value);
-    const images = JSON.parse(document.querySelector('input[name="photos"]').value);
-    const attributes = JSON.parse(document.querySelector('input[name="attributes"]').value);
-   
-    attributes.forEach(attribute => {      
-        product.attributes.push({ id : attribute.attribute_id, variants : [] })  
-    });
 
-    product.attributes.forEach(item => {      
-        variants.forEach(variant => {            
-           if(item.id == variant.attribute_id) item.variants.push(variant.variant)
-        })           
-    })  
-
-    images.forEach(image => {
-        product.images.push({id : image.id, path : image.path, deleted : 0 })
-    });
-    
-    document.addEventListener("DOMContentLoaded", () => { 
-        loadGalleryImages();
-        if(hasHariantElement.checked){
-            getAttributes(); 
-            optionsContainer.style.display = 'block'
-            return
-        } 
-    })
-
-</script>
 
 @endsection

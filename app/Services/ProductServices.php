@@ -27,7 +27,8 @@ class ProductServices
             'regular_price' =>  $request->regular_price,
             'tags' => $request->tags, 
             'status' => $request->status,
-            'istaxeble' => $request->istaxable
+            'istaxeble' => $request->istaxable,
+            'featured' => $request->featured,
         ]);
 
         $product->stock()->create([
@@ -55,6 +56,7 @@ class ProductServices
         $product->regular_price = $request->regular_price;
         $product->status = $request->status;
         $product->tags = $request->tags;
+        $product->featured = $request->featured;
         $product->imagePath = $image['path'] ?? $product->imagePath;
         $product->save();
 
