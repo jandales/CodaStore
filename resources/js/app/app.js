@@ -1,5 +1,6 @@
 import { cartCountToElement, setCartCookie, cartCount } from "./module/Cart";
-import { openSidebarModal, openModal} from "../module/modal"
+import { openSidebarModal, openModal} from "../module/modal";
+
 const searchTrigger =  document.getElementById("btnsearch");
 const navBar =  document.querySelector(".navbar");
 const navSearch = document.querySelector(".navigation-search");
@@ -110,15 +111,18 @@ function createRemoveImageButton()
         removeImage();
     })
 
-    avatarContainer.append(span);
+    avatarContainer.appendChild(span);
 }
 
 function removeImage(){
     const avatarContainer = document.getElementById('avatarContainer');
     const image = document.getElementById('image-avatar');
     const span = document.getElementById('remove-image')
-    avatarContainer.removeChild(image);
-    avatarContainer.removeChild(span)
+    if(avatarContainer.hasChildNodes){
+        avatarContainer.removeChild(image);
+        avatarContainer.removeChild(span)
+    }
+  
 }
 
 
@@ -145,6 +149,26 @@ modalClose.forEach(elem =>{
 closedrawer.forEach(elem =>{
     elem.addEventListener('click', event => openSidebarModal(event.currentTarget.closest(".modal").id));
 });
+
+
+const msgClose = document.querySelectorAll("[msg-close]");
+
+msgClose.forEach(close => {
+    close.addEventListener('click', function(){
+    const overlay = close.closest('.pop-msg-overlay')
+        overlay.style.display = 'none';
+        
+    })
+})
+
+
+
+
+
+
+
+
+
 
 
 

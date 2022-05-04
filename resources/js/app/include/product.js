@@ -1,16 +1,15 @@
 import { cartCountToElement, getCartCount } from "../module/Cart";
+import { arrContains, arrFindIndex } from "../../module/array";
+import { showMessage } from "../../module/alert"
+
 const _token =  document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-const _put = "PUT"
-const _delete = "DELETE"
 
 const cartBtn = document.getElementById('cart-button');
 const BuyNowBtn = document.getElementById('buy-now');
 const variantsOptions = document.querySelectorAll('.variant-options')
 
-var url = "";
-
 document.addEventListener('DOMContentLoaded', function(){
-    checkHasVariants();  
+    checkHasVariants();     
 })
               
 function selectVaraints(elem){   
@@ -18,12 +17,18 @@ function selectVaraints(elem){
     let value = elem.getAttribute('value')
     populateProperties(name, value);   
     varaintSelected(elem)
+ 
 }
 
+variantsOptions.forEach(variant => {
+    variant.onclick =  function(){
+        selectVaraints(variant);
+    }
+})
 
 // method check if hasVariants
 function checkHasVariants(){ 
-    if(cartBtn){
+    if (cartBtn) {
         let id = cartBtn.getAttribute('data-id')
         getVariants(id)
     }
@@ -47,7 +52,7 @@ let hasVariants = false;
 
 function populateProperties(name, value){
     let  exist = arrContains(properties, 'name' , name)
-    if(exist){
+    if (exist) {
         let index =  arrFindIndex(properties, 'name', name)
         properties[index].value = value                
         return
@@ -65,12 +70,15 @@ function getVariants(id){
         },    
         success : function(response){      
                 hasVariants = response.hasvariant;
-                response.variants.forEach(item => {
+                response.attributes.forEach(item => {
                     populateProperties(item,"");
                 });            
         }
     })
+
+
 }
+
 
 function validateProperties()
 {
@@ -92,7 +100,8 @@ function validateProperties()
 //method ajax request store
 function store(){   
     let qty = document.querySelector('input[name="qty"]').value
-    let url = cartBtn.getAttribute('url')    
+    let url = cartBtn.getAttribute('url')  
+    
     $.ajax({
         url : url,
         type : 'POST',

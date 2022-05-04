@@ -13,7 +13,7 @@
                         <ul>                        
                          @foreach ( $product->photos as $i => $photo )                              
                             <li>
-                                <div class="thumbnail" onclick="selected(this)">
+                                <div class="thumbnail">
                                     <img class="thumbnail-{{ $i }}" src="/{{ $photo->path }}" alt="">
                                     <div class="thumbnail-overlay"></div>
                                 </div>

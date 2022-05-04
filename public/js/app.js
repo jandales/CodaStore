@@ -2066,9 +2066,27 @@ __webpack_require__(/*! ./app/app */ "./resources/js/app/app.js");
 
 __webpack_require__(/*! ./app/include/product */ "./resources/js/app/include/product.js");
 
-__webpack_require__(/*! ./app/include/cart */ "./resources/js/app/include/cart.js");
+__webpack_require__(/*! ./app/include/cart/cart */ "./resources/js/app/include/cart/cart.js");
+
+__webpack_require__(/*! ./app/include/cart/coupon */ "./resources/js/app/include/cart/coupon.js");
 
 __webpack_require__(/*! ./app/include/sidecart */ "./resources/js/app/include/sidecart.js");
+
+__webpack_require__(/*! ./inc/image-slider */ "./resources/js/inc/image-slider.js");
+
+__webpack_require__(/*! ./app/include/sticky-header */ "./resources/js/app/include/sticky-header.js");
+
+__webpack_require__(/*! ./app/include/checkbox */ "./resources/js/app/include/checkbox.js");
+
+__webpack_require__(/*! ./app/include/users */ "./resources/js/app/include/users.js");
+
+__webpack_require__(/*! ./inc/tabs */ "./resources/js/inc/tabs.js");
+
+__webpack_require__(/*! ./app/include/rating/rating */ "./resources/js/app/include/rating/rating.js");
+
+__webpack_require__(/*! ./app/include/rating/ratingevent */ "./resources/js/app/include/rating/ratingevent.js");
+
+__webpack_require__(/*! ./app/include/updateQuantity */ "./resources/js/app/include/updateQuantity.js");
 
 /***/ }),
 
@@ -2178,15 +2196,18 @@ function createRemoveImageButton() {
     file.value = null;
     removeImage();
   });
-  avatarContainer.append(span);
+  avatarContainer.appendChild(span);
 }
 
 function removeImage() {
   var avatarContainer = document.getElementById('avatarContainer');
   var image = document.getElementById('image-avatar');
   var span = document.getElementById('remove-image');
-  avatarContainer.removeChild(image);
-  avatarContainer.removeChild(span);
+
+  if (avatarContainer.hasChildNodes) {
+    avatarContainer.removeChild(image);
+    avatarContainer.removeChild(span);
+  }
 }
 
 function uploadAvatar() {
@@ -2212,19 +2233,26 @@ closedrawer.forEach(function (elem) {
     return (0,_module_modal__WEBPACK_IMPORTED_MODULE_1__.openSidebarModal)(event.currentTarget.closest(".modal").id);
   });
 });
+var msgClose = document.querySelectorAll("[msg-close]");
+msgClose.forEach(function (close) {
+  close.addEventListener('click', function () {
+    var overlay = close.closest('.pop-msg-overlay');
+    overlay.style.display = 'none';
+  });
+});
 
 /***/ }),
 
-/***/ "./resources/js/app/include/cart.js":
-/*!******************************************!*\
-  !*** ./resources/js/app/include/cart.js ***!
-  \******************************************/
+/***/ "./resources/js/app/include/cart/cart.js":
+/*!***********************************************!*\
+  !*** ./resources/js/app/include/cart/cart.js ***!
+  \***********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _module_money_footer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../module/money-footer */ "./resources/js/module/money-footer.js");
-/* harmony import */ var _module_Cart__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../module/Cart */ "./resources/js/app/module/Cart.js");
+/* harmony import */ var _module_money_footer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../module/money-footer */ "./resources/js/module/money-footer.js");
+/* harmony import */ var _module_Cart__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../module/Cart */ "./resources/js/app/module/Cart.js");
 
 
 var cartItemSubtotalElemnt;
@@ -2321,6 +2349,159 @@ function successShippingResponse(response) {
 
 /***/ }),
 
+/***/ "./resources/js/app/include/cart/coupon.js":
+/*!*************************************************!*\
+  !*** ./resources/js/app/include/cart/coupon.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _module_validator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../module/validator */ "./resources/js/module/validator.js");
+/* harmony import */ var _module_money_footer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../module/money-footer */ "./resources/js/module/money-footer.js");
+
+
+
+var _token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+function activateCoupon(e) {
+  e.preventDefault();
+  var couponCode = document.querySelector('input[name="coupon_code"]').value;
+  $.ajax({
+    url: "/cart/coupon/activate",
+    method: 'get',
+    data: {
+      coupon_code: couponCode
+    },
+    error: _module_validator__WEBPACK_IMPORTED_MODULE_0__.errorReponse,
+    success: successCouponResponse
+  });
+}
+
+function successCouponResponse(response) {
+  if (response.status != 200) return;
+  console.log(response);
+  couponElementsState('show');
+  document.getElementById('coupon-code').innerHTML = response.coupon.name;
+  document.getElementById('coupon-amount').innerHTML = (0,_module_money_footer__WEBPACK_IMPORTED_MODULE_1__.moneyFormatter)(response.discount);
+  document.getElementById('coupon-description').innerHTML = response.coupon.description;
+  document.querySelector('input[name="coupon_code"]').value = null;
+  document.getElementById('grand-total').innerHTML = (0,_module_money_footer__WEBPACK_IMPORTED_MODULE_1__.moneyFormatter)(response.grand_total);
+}
+
+function removeCoupon(e) {
+  e.preventDefault();
+  $.ajax({
+    url: "/cart/coupon/remove",
+    method: 'POST',
+    data: {
+      _token: _token,
+      _method: 'PUT'
+    },
+    error: _module_validator__WEBPACK_IMPORTED_MODULE_0__.errorReponse,
+    success: successCouponRemoveResponse
+  });
+}
+
+function successCouponRemoveResponse(response) {
+  if (response.status != 200) return;
+  couponElementsState('hidden');
+  document.getElementById('grand-total').innerHTML = (0,_module_money_footer__WEBPACK_IMPORTED_MODULE_1__.moneyFormatter)(response.grand_total);
+}
+
+function couponElementsState(state) {
+  if (state == 'hidden') {
+    document.getElementById('has-coupon').classList.add('hidden');
+    document.getElementById('coupon-form').classList.remove('hidden');
+    return;
+  }
+
+  document.getElementById('has-coupon').classList.remove('hidden');
+  document.getElementById('coupon-form').classList.add('hidden');
+}
+
+var btncoupon = document.getElementById('btn-coupon-apply');
+var btncouponRemove = document.getElementById('btn-coupon-remove');
+
+if (btncoupon) {
+  btncoupon.onclick = activateCoupon;
+}
+
+if (btncouponRemove) {
+  btncouponRemove.onclick = removeCoupon;
+}
+
+/***/ }),
+
+/***/ "./resources/js/app/include/checkbox.js":
+/*!**********************************************!*\
+  !*** ./resources/js/app/include/checkbox.js ***!
+  \**********************************************/
+/***/ (() => {
+
+// get parent checkbox element
+var parentCheckBox = document.getElementById('parentCheckbox'); // get childCheckbox element
+
+var childCheckbox = document.querySelectorAll('.childCheckbox'); // check if parent element exist
+
+if (parentCheckBox) {
+  // create eventListener
+  parentCheckBox.addEventListener('change', function () {
+    var _this = this;
+
+    // iterate child checkbox
+    childCheckbox.forEach(function (elem) {
+      if (!elem.hasAttribute('disabled')) {
+        elem.checked = _this.checked;
+        rowfucos(elem, _this.checked);
+      }
+    });
+  });
+}
+
+if (childCheckbox) {
+  childCheckbox.forEach(function (checkbox) {
+    checkbox.addEventListener('change', function () {
+      rowfucos(checkbox, checkbox.checked);
+      checked();
+    });
+  });
+}
+
+function checked() {
+  var childCount = childCheckbox.length;
+  var checkedfalse = 0;
+  var checkedtrue = 0;
+  childCheckbox.forEach(function (child) {
+    if (child.checked) {
+      checkedtrue += 1;
+    } else {
+      checkedfalse += 1;
+    }
+  });
+
+  if (checkedtrue == childCount) {
+    parentCheckBox.checked = true;
+  }
+
+  if (checkedfalse == childCount) {
+    parentCheckBox.checked = false;
+  }
+}
+
+function rowfucos(elem) {
+  var bool = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+  var tr = elem.closest('tr');
+
+  if (bool) {
+    tr.classList.add('selected');
+  } else {
+    tr.classList.remove('selected');
+  }
+}
+
+/***/ }),
+
 /***/ "./resources/js/app/include/product.js":
 /*!*********************************************!*\
   !*** ./resources/js/app/include/product.js ***!
@@ -2330,16 +2511,17 @@ function successShippingResponse(response) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _module_Cart__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../module/Cart */ "./resources/js/app/module/Cart.js");
+/* harmony import */ var _module_array__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../module/array */ "./resources/js/module/array.js");
+/* harmony import */ var _module_alert__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../module/alert */ "./resources/js/module/alert.js");
+
+
 
 
 var _token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-var _put = "PUT";
-var _delete = "DELETE";
 var cartBtn = document.getElementById('cart-button');
 var BuyNowBtn = document.getElementById('buy-now');
 var variantsOptions = document.querySelectorAll('.variant-options');
-var url = "";
 document.addEventListener('DOMContentLoaded', function () {
   checkHasVariants();
 });
@@ -2349,8 +2531,13 @@ function selectVaraints(elem) {
   var value = elem.getAttribute('value');
   populateProperties(name, value);
   varaintSelected(elem);
-} // method check if hasVariants
+}
 
+variantsOptions.forEach(function (variant) {
+  variant.onclick = function () {
+    selectVaraints(variant);
+  };
+}); // method check if hasVariants
 
 function checkHasVariants() {
   if (cartBtn) {
@@ -2372,10 +2559,10 @@ var properties = [];
 var hasVariants = false;
 
 function populateProperties(name, value) {
-  var exist = arrContains(properties, 'name', name);
+  var exist = (0,_module_array__WEBPACK_IMPORTED_MODULE_1__.arrContains)(properties, 'name', name);
 
   if (exist) {
-    var index = arrFindIndex(properties, 'name', name);
+    var index = (0,_module_array__WEBPACK_IMPORTED_MODULE_1__.arrFindIndex)(properties, 'name', name);
     properties[index].value = value;
     return;
   }
@@ -2395,7 +2582,7 @@ function getVariants(id) {
     },
     success: function success(response) {
       hasVariants = response.hasvariant;
-      response.variants.forEach(function (item) {
+      response.attributes.forEach(function (item) {
         populateProperties(item, "");
       });
     }
@@ -2451,7 +2638,7 @@ function store() {
 if (cartBtn) {
   cartBtn.addEventListener('click', function () {
     var result = validateProperties();
-    if (result[0].status === true) return showMessage('info', result['0'].message);
+    if (result[0].status === true) return (0,_module_alert__WEBPACK_IMPORTED_MODULE_2__.showMessage)('info', result['0'].message);
     store();
   });
 }
@@ -2465,7 +2652,7 @@ if (BuyNowBtn) {
     var result = validateProperties();
 
     if (result[0].status === true) {
-      showMessage('info', result['0'].message);
+      (0,_module_alert__WEBPACK_IMPORTED_MODULE_2__.showMessage)('info', result['0'].message);
       return;
     }
 
@@ -2486,6 +2673,129 @@ if (btnAddMinusQty) {
       input.value = qty -= 1;
     };
   });
+}
+
+/***/ }),
+
+/***/ "./resources/js/app/include/rating/rating.js":
+/*!***************************************************!*\
+  !*** ./resources/js/app/include/rating/rating.js ***!
+  \***************************************************/
+/***/ (() => {
+
+document.addEventListener('DOMContentLoaded', function () {
+  // execute when page loaded
+  /// execute to create product rating
+  productRating(); /// execute to create reviewer rating
+
+  reviewerRating();
+});
+
+function reviewerRating() {
+  // get the element
+  var reviewer = document.querySelectorAll('.ul-rate-star');
+  reviewer.forEach(function (review) {
+    // get the product rating from the element    
+    var rating = review.getAttribute('rate-star'); // creating the review rating
+
+    createStars(rating, review);
+  });
+}
+
+function productRating() {
+  // get the element
+  var productrating = document.querySelectorAll('.productRating');
+  productrating.forEach(function (item) {
+    // get the product rating from the element
+    var rating = item.getAttribute('rating'); // creating the rating
+
+    createStars(rating, item);
+  });
+}
+
+function createStars(rating, elemContainer) {
+  //default star value
+  var star = 5; // creating solid stars
+
+  for (i = 0; i < rating; i++) {
+    //create an element list item
+    var li = document.createElement('li'); // set li elemenent a innner html 
+
+    li.innerHTML = '<i class="fas fa-star" aria-hidden="true">'; //append star in the elemContainer                   
+
+    elemContainer.appendChild(li);
+  } // creating transparent star
+
+
+  for (j = 0; j < star - rating; j++) {
+    //create an element list item
+    var _li = document.createElement('li'); // set li elemenent a innner html 
+
+
+    _li.innerHTML = '<i class="far fa-star" aria-hidden="true">'; //append star in the elemContainer                          
+
+    elemContainer.appendChild(_li);
+  }
+}
+
+var editbtn = document.querySelector('.edit-review');
+var textEditor = document.getElementById('text-editor');
+var addreviewwrapper = document.querySelector('.add-review-wrapper');
+
+if (editbtn) {
+  editbtn.addEventListener('click', function () {
+    /// scroll to texteditor
+    scrolldown(); //set the review text tot texteditor
+
+    textEditor.innerText = editbtn.getAttribute('value');
+    var rating = this.getAttribute('rate'); /// set the review rate into input element
+
+    document.querySelector('[name="rate"]').value = rating; /// ser rating star
+
+    var rate = document.querySelectorAll('.rate');
+    rate.forEach(function (elem) {
+      if (elem.getAttribute('rate') <= rating) {
+        elem.firstElementChild.classList.replace('far', 'fas');
+        return;
+      }
+    });
+  });
+}
+
+/***/ }),
+
+/***/ "./resources/js/app/include/rating/ratingevent.js":
+/*!********************************************************!*\
+  !*** ./resources/js/app/include/rating/ratingevent.js ***!
+  \********************************************************/
+/***/ (() => {
+
+var ratesbutton = document.querySelectorAll('.rate');
+var rates = 0;
+ratesbutton.forEach(function (rate) {
+  rate.addEventListener('click', function () {
+    rates = rate.getAttribute('rate');
+    document.querySelector('[name="rate"]').value = rates;
+    fillRateStar();
+  });
+});
+
+function fillRateStar() {
+  ratesbutton.forEach(function (rate) {
+    rate.firstElementChild.classList.replace('fas', 'far');
+  });
+
+  for (i = 0; i < ratesbutton.length; i++) {
+    var rate = ratesbutton[i].getAttribute('rate');
+    ratesbutton[i].firstElementChild.classList.replace('far', 'fas');
+    if (rate == rates) return;
+  }
+}
+
+function scrolldown() {
+  var offset = addreviewwrapper.getBoundingClientRect();
+  position = offset.top + offset.height;
+  window.scroll(0, position);
 }
 
 /***/ }),
@@ -2583,6 +2893,209 @@ modalTrigger1.addEventListener('click', function () {
 
 /***/ }),
 
+/***/ "./resources/js/app/include/sticky-header.js":
+/*!***************************************************!*\
+  !*** ./resources/js/app/include/sticky-header.js ***!
+  \***************************************************/
+/***/ (() => {
+
+window.addEventListener("scroll", function (event) {
+  var header = document.querySelector(".header");
+  var page = document.querySelector(".homepage");
+
+  if (window.pageYOffset > 200) {
+    header.classList.add('sticky-header');
+  } else {
+    header.classList.remove('sticky-header');
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/app/include/updateQuantity.js":
+/*!****************************************************!*\
+  !*** ./resources/js/app/include/updateQuantity.js ***!
+  \****************************************************/
+/***/ (() => {
+
+var updateQuantity = document.querySelectorAll('.add-minus-quantity'); // get all quanity Element
+
+var cartQtys = document.querySelectorAll('.cart-qty'); // iterate all quantity
+
+cartQtys.forEach(function (element) {
+  // create event for every element
+  element.addEventListener('change', function () {
+    // get data for each element
+    var cart = element.getAttribute('item'); // get quantity for each element
+
+    var qty = element.value;
+    updateQty(cart, qty);
+  });
+});
+updateQuantity.forEach(function (element) {
+  element.addEventListener('click', function () {
+    // get type (add, minus) 
+    var type = element.getAttribute('type'); // get quantity  element
+
+    var input = element.closest('td').querySelector('.cart-qty'); // get current item in the cart
+
+    var cart = input.getAttribute('item'); // create var qty
+
+    var qty = 0; // if type is add
+
+    if (type == 'add') {
+      qty = parseInt(input.value) + 1; // call ajax request to update cart quantity
+
+      updateQty(cart, qty);
+      return;
+    } // if type is minus
+
+
+    if (type == 'minus') {
+      qty = parseInt(input.value) - 1; // call ajax request to update cart quantity 
+
+      updateQty(cart, qty);
+      return;
+    }
+  });
+}); // ajax call update quantity
+
+function updateQty(cart, qty) {
+  var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  $.ajax({
+    url: "/cart/update/".concat(cart),
+    method: 'post',
+    data: {
+      _token: token,
+      quantity: qty
+    },
+    success: function success(response) {
+      console.log(response);
+
+      if (response.status == "error") {
+        showMessage("danger", response.message);
+        return;
+      }
+
+      return; // location.reload()
+    }
+  });
+}
+
+/***/ }),
+
+/***/ "./resources/js/app/include/users.js":
+/*!*******************************************!*\
+  !*** ./resources/js/app/include/users.js ***!
+  \*******************************************/
+/***/ (() => {
+
+$(document).ready(function () {
+  function removeAlert() {
+    var alert = document.querySelectorAll('.alert-js');
+    alert.forEach(function (elem) {
+      elem.remove();
+    });
+  }
+
+  function clearallinput() {
+    var alert = document.querySelectorAll('input');
+    alert.forEach(function (elem) {
+      elem.value = "";
+    });
+  }
+
+  $('#user-submit').click(function () {
+    //stop submit the form, we will post it manually.
+    event.preventDefault();
+
+    var _token = $("input[name='_token']").val();
+
+    var password = $("input[name='password']").val();
+    var validator = $("input[name='validator']").val();
+    var confirmPassword = $("input[name='confirmPassword']").val();
+    $.ajax({
+      url: "/users/changepassword",
+      type: 'post',
+      data: {
+        _token: _token,
+        password: password,
+        confirmPassword: confirmPassword,
+        validator: validator
+      },
+      success: function success(data) {
+        printMsg(data);
+      },
+      error: function error(xhr) {
+        clearallinput();
+        removeAlert();
+
+        if (xhr.status == 422) {
+          var errors = xhr.responseJSON.errors;
+          $.each(errors, function (i, error) {
+            var el = $(document).find('[name="' + i + '"]');
+            el.after($('<div class="alert alert-text-danger alert-js">' + error[0] + '</div>'));
+          });
+        }
+      }
+    });
+  });
+
+  function printMsg(msg) {
+    removeAlert();
+    var el = $(document).find('#modal-form');
+
+    if (msg.error) {
+      el.before($('<div style="margin-top:15px;" class="alert alert-danger alert-js">' + msg.error + '</div>'));
+      el[0].reset();
+      return;
+    }
+
+    if (msg.success) {
+      el.before($('<div style="margin-top:15px;" class="alert alert-success alert-js">' + msg.success + '</div>'));
+      el[0].reset();
+      return;
+    }
+  }
+
+  $('#upload-submit-avatar').click(function () {
+    //stop submit the form, we will post it manually.
+    event.preventDefault();
+    var form = $('#upload-avatar')[0];
+    var data = new FormData(form);
+
+    var _token = $("input[name='_token']").val();
+
+    var avatar = $("input[name='avatar']").val();
+    $.ajax({
+      url: "/upload/avatar",
+      type: 'post',
+      data: data,
+      contentType: false,
+      cache: false,
+      processData: false,
+      success: function success(data) {
+        printMsg(data);
+        window.location = "/account";
+      },
+      error: function error(xhr) {
+        clearallinput();
+        removeAlert();
+
+        if (xhr.status == 422) {
+          var errors = xhr.responseJSON.errors;
+          $.each(errors, function (i, error) {
+            var el = $(document).find('[name="' + i + '"]');
+            el.after($('<div class="alert alert-text-danger alert-js">' + error[0] + '</div>'));
+          });
+        }
+      }
+    });
+  });
+});
+
+/***/ }),
+
 /***/ "./resources/js/app/module/Cart.js":
 /*!*****************************************!*\
   !*** ./resources/js/app/module/Cart.js ***!
@@ -2660,6 +3173,276 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /***/ }),
 
+/***/ "./resources/js/inc/image-slider.js":
+/*!******************************************!*\
+  !*** ./resources/js/inc/image-slider.js ***!
+  \******************************************/
+/***/ (() => {
+
+// elements
+// get thumbnails element
+var thumbnails = document.querySelectorAll('.thumbnail'); // get arrow next button
+
+var arrowNext = document.querySelector('.arrow-right'); // get arrow left button
+
+var arrowLeft = document.querySelector('.arrow-left'); // variable images array
+
+var images = []; // variable index use for set index in images array
+
+var index = 0; // load when pageload
+
+document.addEventListener('DOMContentLoaded', function () {
+  getImages(); // setFullImage(images[0].src); 
+  // images.forEach(image => {
+  //     image.element.addEventListener('click', () => {
+  //         setFullImage(image.src);
+  //         thumbnailFucos(image.element);
+  //     })
+  // })               
+});
+
+function thumbnailFucos(elem) {
+  removeFucos();
+  var overlay = elem.querySelector(".thumbnail-overlay");
+  overlay.style.borderColor = "#ddd";
+}
+
+function removeFucos() {
+  thumbnails.forEach(function (elem) {
+    //remove borders
+    var overlay = elem.querySelector(".thumbnail-overlay");
+    overlay.removeAttribute("style");
+  });
+} // method get images
+
+
+function getImages() {
+  // get images from thumbnails element
+  thumbnails.forEach(function (image) {
+    // get image
+    var element = image;
+    var src = image.firstElementChild.getAttribute('src'); // push image to array images
+
+    images.push({
+      element: element,
+      src: src
+    });
+  });
+}
+
+function setFullImage(src) {
+  // get images container
+  var fullimage = document.querySelector('.full-image'); // get img tag                 
+
+  var image = document.getElementById('fullImage'); // remove image from container
+
+  fullimage.removeChild(image); // create img tag
+  // set properties
+
+  var img = document.createElement('img');
+  img.src = src;
+  img.id = 'fullImage';
+  img.className = "fadeIn"; // appen img tag to images container
+
+  fullimage.appendChild(img); // image.src = src;
+  // image.classList.add("fadeIn");
+}
+
+if (arrowNext) {
+  arrowNext.addEventListener('click', function () {
+    if (index === images.length - 1) index = 0;else index += 1;
+    setFullImage(images[index].src);
+  });
+}
+
+if (arrowLeft) {
+  arrowLeft.addEventListener('click', function () {
+    if (index === 0) index = images.length;else index -= 1;
+    setFullImage(images[index].src);
+  });
+}
+
+thumbnails.forEach(function (thumbnail) {
+  thumbnail.onclick = function () {
+    var src = thumbnail.querySelector('img').getAttribute('src'); // thumbnailFucos(elem);
+
+    setFullImage(src);
+  };
+});
+
+/***/ }),
+
+/***/ "./resources/js/inc/tabs.js":
+/*!**********************************!*\
+  !*** ./resources/js/inc/tabs.js ***!
+  \**********************************/
+/***/ (() => {
+
+// tabs
+function runTabs() {
+  document.querySelectorAll(".tabs-button").forEach(function (button) {
+    // create EventListener for everu tabs button
+    button.addEventListener("click", function () {
+      // get parent element('tabs')
+      var tabs = button.closest('.tabs'); // get current tab
+
+      var tabNumber = button.dataset.forTab; // get current tab content
+
+      var tabToActivate = tabs.querySelector('.tabs-content[data-tab="' + tabNumber + '"]'); // get if backround color is set
+
+      var background = tabs.getAttribute('background'); /// reset .tabs-content
+
+      reset(tabs, '.tabs-content-active', classList = ['tabs-content-active', background]); // reset .tabs-button;
+
+      reset(tabs, '.tabs-button', classList = ['tab-button-active', background]); // add class in tabs-content
+      // tabs-content-active for active content
+
+      tabToActivate.classList.add('tabs-content-active'); //set background color for active content
+
+      tabToActivate.classList.add(background); // add class in tabs-button
+      // add class tab-button-active for active tab button           
+
+      button.classList.add('tab-button-active'); // add background color for active button
+
+      button.classList.add(background);
+    });
+  });
+} // reset element 
+// remove some classes (active, background)
+
+
+function reset(parent, child, classList) {
+  // find selector element in parent elemet
+  // and iterate the child element
+  parent.querySelectorAll(child).forEach(function (content) {
+    // iterate the classes 
+    classList.forEach(function (classitem) {
+      // if class is not null              
+      if (classitem != null) {
+        // remove class 
+        content.classList.remove(classitem);
+      }
+    });
+  });
+} // run automatically when the page run
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  runTabs();
+  document.querySelectorAll('.tabs').forEach(function (tabcontainer) {
+    tabcontainer.querySelector('.tabs-button').click();
+  });
+});
+
+/***/ }),
+
+/***/ "./resources/js/module/alert.js":
+/*!**************************************!*\
+  !*** ./resources/js/module/alert.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "alertMessage": () => (/* binding */ alertMessage),
+/* harmony export */   "closeAlertMessage": () => (/* binding */ closeAlertMessage),
+/* harmony export */   "icon": () => (/* binding */ icon),
+/* harmony export */   "removeAlert": () => (/* binding */ removeAlert),
+/* harmony export */   "showMessage": () => (/* binding */ showMessage)
+/* harmony export */ });
+function alertMessage(message) {
+  var alert = document.querySelector('.alert');
+  var span = alert.querySelector('.alert-message');
+  if (message == null) return alert.classList.add('hidden');
+  alert.classList.remove('hidden');
+  span.innerHTML = message;
+}
+function closeAlertMessage(elem) {
+  var parent = elem.parentElement;
+  parent.classList.add('hidden');
+}
+function removeAlert() {
+  var alert = document.querySelectorAll('.alert-js');
+  alert.forEach(function (elem) {
+    elem.remove();
+  });
+}
+function showMessage(status, message) {
+  var mgsSuccess = document.getElementById('msg-popup');
+
+  var _title = mgsSuccess.querySelector('.title');
+
+  _title.textContent = status;
+
+  var _message = mgsSuccess.querySelector('.message');
+
+  _message.textContent = message;
+  var msgContent = mgsSuccess.querySelector('.msg-content');
+  msgContent.classList.replace(msgContent.classList[1], status);
+  var msgIcon = msgContent.querySelector('.fas');
+  msgIcon.classList.replace(msgIcon.classList[1], icon(status));
+  var msgButton = mgsSuccess.querySelector('.btn');
+  msgButton.classList.replace(msgButton.classList[1], 'btn-' + status);
+  mgsSuccess.style.display = "block";
+}
+function icon(value) {
+  var icon = "";
+
+  if (value == "info") {
+    return icon = "fa-info-circle";
+  }
+
+  if (value == "success") {
+    return icon == "fa-check-circle";
+  }
+
+  if (value == "danger" || "warning") {
+    return icon == "fa-exclamation-circle";
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/js/module/array.js":
+/*!**************************************!*\
+  !*** ./resources/js/module/array.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "arrContains": () => (/* binding */ arrContains),
+/* harmony export */   "arrFindIndex": () => (/* binding */ arrFindIndex),
+/* harmony export */   "arrRemove": () => (/* binding */ arrRemove)
+/* harmony export */ });
+///array function // get array index
+function arrFindIndex(arr, key, value) {
+  for (var i = 0; i < arr.length; i++) {
+    if (arguments.length === 2) if (arr[i] === key) return i;
+    if (arguments.length === 3) if (arr[i][key] == value) return i;
+  }
+}
+function arrContains(arr, key, value) {
+  for (var i = 0; i < arr.length; i++) {
+    if (arguments.length === 2) if (arr[i] === key) return true;
+    if (arguments.length === 3) if (arr[i][key] === value) return true;
+  }
+
+  return false;
+}
+function arrRemove(arr, key, value) {
+  for (var i = 0; i < arr.length; i++) {
+    if (arguments.length === 2) if (arr[i] == key) return arr.splice(i, 1);
+    if (arguments.length === 3) if (arr[i][key] == value) return arr.splice(i, 1);
+  }
+
+  return arr;
+}
+
+/***/ }),
+
 /***/ "./resources/js/module/modal.js":
 /*!**************************************!*\
   !*** ./resources/js/module/modal.js ***!
@@ -2720,6 +3503,69 @@ function moneyFormatter(number) {
     currency: 'PHP'
   });
   return formatter.format(number);
+}
+
+/***/ }),
+
+/***/ "./resources/js/module/validator.js":
+/*!******************************************!*\
+  !*** ./resources/js/module/validator.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "errorRemove": () => (/* binding */ errorRemove),
+/* harmony export */   "errorReponse": () => (/* binding */ errorReponse)
+/* harmony export */ });
+function showErrors(errors) {
+  if (errors === null || errors.length == 0) return;
+  errorRemove();
+  errors.forEach(function (error) {
+    setErrors(error.name, error.message);
+  });
+}
+
+function setErrors(selector, message) {
+  validatorInput(selector);
+  validatorMessage(selector, message);
+}
+
+function validatorMessage(selector, message) {
+  var validatorElement = document.querySelector(["[validator-for=\"".concat(selector, "\"]")]);
+  if (!validatorElement) return;
+  validatorElement.classList.add('show');
+  validatorElement.innerHTML = message;
+}
+
+function validatorInput(selector) {
+  var input = document.querySelector("[validator-input=\"".concat(selector, "\"]"));
+  if (!input) return;
+  input.classList.add('border-danger');
+}
+
+function errorReponse(xhr) {
+  console.log(xhr);
+  var errors = [];
+  var resErrors = xhr.responseJSON.errors;
+
+  for (var key in resErrors) {
+    errors.push({
+      name: key,
+      message: resErrors[key][0]
+    });
+  }
+
+  showErrors(errors);
+}
+function errorRemove() {
+  document.querySelectorAll("[validator-for]").forEach(function (el) {
+    el.classList.remove('show');
+  });
+  document.querySelectorAll("[validator-input]").forEach(function (el) {
+    el.classList.remove('border-danger');
+  });
 }
 
 /***/ }),

@@ -107,15 +107,6 @@ class Product extends Model
     {
         return $this->carts->where('product_id', $this->id)->contains('user_id',auth()->user()->id);
     }  
-    
-
-    public function getAttr($variant_id)
-    {       
-       return ProductAttribute::where('product_id', $this->id)
-                                ->where('variant_id', $variant_id)
-                                 ->get();        
-    }
-
 
     public function image()
     {

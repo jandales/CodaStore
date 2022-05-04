@@ -26,6 +26,7 @@ class ShopController extends Controller
 
     public function view(Product $product)
     { 
+       
         return view('product')->with('product',$product);
     }
 
@@ -135,16 +136,16 @@ class ShopController extends Controller
     public function hasVariants(Product $product)
     {
         $count = $product->hasVariants();
-        $variant = [];
+        $attributes = [];
         $hasvariants = false;    
-        foreach($product->variants as $item)
+        foreach($product->attributes as $item)
         {
-          array_push($variant,$item->varaints->name);
+          array_push($attributes, $item->attributes->name);
         }      
-        if($count > 0){
-           $hasvariants = true;
-        }
-        return response()->json(['variants' => $variant, 'hasvariant' => $hasvariants]);
+        if($count > 0) $hasvariants = true;
+          
+        
+        return response()->json(['attributes' => $attributes, 'hasvariant' => $hasvariants]);
     }
 
    

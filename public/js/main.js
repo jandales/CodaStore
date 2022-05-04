@@ -3908,7 +3908,15 @@ function reset(parent, child, classList) {
       }
     });
   });
-}
+} // run automatically when the page run
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  runTabs();
+  document.querySelectorAll('.tabs').forEach(function (tabcontainer) {
+    tabcontainer.querySelector('.tabs-button').click();
+  });
+});
 
 /***/ }),
 

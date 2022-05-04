@@ -43,7 +43,7 @@
                                                     @csrf
                                                     @method('put')
                                                     <button class="tbl-action">
-                                                        <i class="far fa-hand-pointer"></i>
+                                                            <i class="fa-solid {{ $option->status == 1 ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i>                                                          
                                                     </button>
                                                 </form>
                                               
@@ -90,59 +90,5 @@
 
 @endsection
 
-<script>
-    
-    class Card {  
 
-        static store(url, data) {
-            let response;
-            $.ajax({
-                url : url,
-                type : 'Post',
-                data : data,
-                async : false,
-                error : this.error
-                success : function(res){
-                    response = res;
-                }
-            
-            })
-            return response;
-        }
 
-        static error(res){
-            console.log(res)
-        }
-
-    }
-
-   
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('add-card').onclick = function() {
-            openModal('modal-add-new-card')
-        }
-
-        document.getElementById('btn-card-submit').onclick = (e) => {
-            e.preventDefault();
-            const form =  document.getElementById('form-card');
-            const url = form.getAttribute('action')
-            const formData = new FormData(foem);
-            const res = Card.store(url, formData);
-
-        }
-    })
-
- 
-
-        
-    
-    function submitDefault(url){
-        const form = document.getElementById('form-default');
-        form.setAttribute("action",url);      
-        form.submit()
-    }
-
- 
-    
-
-</script>

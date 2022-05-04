@@ -82,24 +82,10 @@
 
    
 
-    <script src="/js/front/jquery.min.js"></script>
+    <script src="/js/jquery.min.js"></script>
     <script src="{{ asset('js/app.js')}}"></script>
 
-    {{-- <script src="/js/front/main.js"></script>
-    <script src="/js/front/sticky-header.js"></script>
-    <script src="/js/front/tabs.js"></script>
-    <script src="/js/front/modal.js"></script>
-    <script src="/js/front/sidecart.js"></script>  
-    <script src="/js/front/tableaction.js"></script>
-    <script src="/js/front/users/users.js"></script> 
-    <script src="/js/message.js"></script>
-    <script src="/js/admin/arrayFunc.js"></script>
-    <script src="/js/front/product.js"></script>
-    <script src="/js/front/image-slider.js"></script>
-    <script src="/js/product/ratingevent.js"></script>
-    <script src="/js/product/addwishlist.js"></script>
-    <script src="/js/front/variants.js"></script>
-    <script src="/js/validator.js"></script> --}}
+
 
     
   

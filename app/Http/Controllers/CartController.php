@@ -48,15 +48,16 @@ class CartController extends Controller
             'qty' => 'required|numeric',
         ]); 
 
-       
+
         $productQuantity = $product->stock->qty;  
         $attributes = $request->properties;
         $newQuantity = (int)$request->qty;  
         $total = 0; 
-
+   
         if($productQuantity == 0)  return response()->json(['status' => 500, 'message' => 'Product is not available' ]);   
 
-      $cart = Cart::ByUser()->first();
+        $cart = Cart::ByUser()->first();
+        
 
         if($productQuantity <  $newQuantity) $newQuantity = $productQuantity; 
         
@@ -66,15 +67,15 @@ class CartController extends Controller
         {   
             //check if an item  already in the cart;
             $item = $cart->hasThisProduct($product->id);
-
-            if($item)
-            {  
+   
+            if($item) {               
                 $item->qty += $newQuantity;
-                $item->attributes =  $attributes;
+                $item->attributes = $attributes;
                 $item->save();        
                 Cart::UpdateTotal();  
                 return response()->json(['count' => $cart->items->sum('qty')]);     
             }
+          
             self::createItem($cart->id, $product->id, $newQuantity, $attributes);
             Cart::UpdateTotal();
             return response()->json(['count' => $cart->items->sum('qty')]);           
@@ -87,20 +88,23 @@ class CartController extends Controller
              'total' => $total,
              'cart_id' =>  Cookie::get('cart-id'),
              'expired_at' => Carbon::now()->addDays(5),
-        ]);      
+        ]);
         
-        self::createItem($cart->id, $product->id, $newQuantity, $attributes);   
+        
+      
+       return self::createItem($cart->id, $product->id, $newQuantity, $attributes);   
            
-        return response()->json(['count' => $cart->items->sum('qty')]);   
+       return response()->json(['count' => $cart->items->sum('qty')]);   
     }
 
     private function createItem($cart, $product, $quantity, $attributes)
     {
+   
         return CartItem::create([
             'cart_id' => $cart,
             'product_id' => $product,
             'qty' => $quantity,
-            'attributes' => $attributes,
+            'attributes' => json_encode($attributes),
         ]);
     }
 

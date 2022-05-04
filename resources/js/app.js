@@ -1,5 +1,14 @@
 require('./bootstrap');
 require('./app/app');
 require('./app/include/product');
-require('./app/include/cart');
+require('./app/include/cart/cart');
+require('./app/include/cart/coupon');
 require('./app/include/sidecart');
+require('./inc/image-slider')
+require('./app/include/sticky-header')
+require('./app/include/checkbox')
+require('./app/include/users')
+require('./inc/tabs')
+require('./app/include/rating/rating')
+require('./app/include/rating/ratingevent')
+require('./app/include/updateQuantity')

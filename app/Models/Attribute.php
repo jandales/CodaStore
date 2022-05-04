@@ -21,6 +21,7 @@ class Attribute extends Model
     {
         return $this->hasMany(Variant::class);
     }
+  
 
     public function scopeExist($query,$name)
     {   
