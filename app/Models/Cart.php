@@ -33,10 +33,7 @@ class Cart extends Model
         return $this->belongsTo(Coupon::class);
     }
 
-    public function totalItems()
-    {
-        return $this->items->sum('qty');
-    }
+
 
     // public function scopeExist($query,$id)
     // {
@@ -79,6 +76,13 @@ class Cart extends Model
         $cart->save();
         return $cart;
     }
+
+    public function scopeTotalItems()
+    {
+        $cart = self::scopeByUser()->first();  
+        return $cart->items->sum('qty') ?? 0;
+    }
+
 
     public function netTotal()
     {

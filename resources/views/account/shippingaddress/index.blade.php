@@ -46,7 +46,7 @@
                                         <td>
                                             <ul class="address-ul">
                                                 <li>
-                                                    <span class="tbl-action" onclick="document.getElementById('form-default-{{ $item->id }}').submit();">
+                                                    <span class="borderless" onclick="document.getElementById('form-default-{{ $item->id }}').submit();">
                                                         <i class="fa-solid  {{ $item->status == 1 ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i>
                                                     </span>
                                                     <form id="form-default-{{ $item->id }}" action="{{ route('account.shippingaddress.update-status',[$item]) }}"  method="post">

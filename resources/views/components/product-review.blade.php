@@ -3,16 +3,12 @@
         <ul>
             @auth
             <li>
-                @php
-                  
-                    $userReview =  auth()->user()->review($product); 
-              
-                    if($userReview == null){
+                @php                  
+                    $userReview =  auth()->user()->review($product);               
+                    if($userReview == null)
                         $reviews = $product->reviews; 
-                    }else {
+                    else 
                         $reviews = $product->reviews->except($userReview->id); 
-                    }         
-     
                 @endphp
 
 
@@ -110,12 +106,12 @@
 
                         <form  action = "{{route('review.store',[$product])}}" method="POST">
                             @csrf
-                                <input type="number" id="input-rate"  name="rate" value="0" hidden>
+                                <input type="hidden" id="input-rate"  name="rate" value="0" hidden>
                                 <div class="form-block">
                                     <label for="#">Your Review</label>
                                     <textarea id="text-editor"  name="comments"  cols="30" rows="6"></textarea>
                                 </div> 
-                            <button class="btn">SUBMIT</button>    
+                            <button class="btn btn-dark">SUBMIT</button>    
                         <form>  
                             
             </div>

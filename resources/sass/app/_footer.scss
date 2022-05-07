@@ -1,0 +1,134 @@
+
+/*---- footer ----*/
+
+.footer {  
+
+    margin-top: auto;
+    background: #1E1E1E;
+    width: 100%;
+    min-height: 300px;
+    color: #fff;       
+}
+
+.footer-row{
+    display: flex;
+    justify-items: center;
+    justify-content: space-between;
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
+
+
+.footer .column{
+    flex-basis: 25%; 
+    width: 100%;
+    justify-content: space-around;
+    
+}
+.footer h2{
+    font-size:16px;
+    color: #eee;
+    font-weight: bold;
+}
+
+.footer-menu{
+    margin-top: 30px;
+}
+.footer .footer-menu ul{
+    margin-top: 25px;
+}
+
+.footer .footer-menu ul li{
+    list-style: none;
+    margin-bottom: 20px;
+}
+
+.footer ul li a{   
+    color:rgb(178,178,178);
+}
+.footer p {
+    padding-right: 20px;
+    margin-top: 10px;
+}
+
+.line{
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #fff;
+}
+
+.footer .subcribe{
+    font-size: 12px; 
+    background: #fff;
+    color: rgb(97, 97, 97);
+    padding:8px 20px;   
+    border-radius: 20px;
+}
+.footer .social-icon li{
+    display: inline-block;   
+}
+.footer .social-icon li a{
+    padding-right:5px !important;
+}
+
+.footer ul li a:hover{
+    color: #eee;
+}
+
+
+@media screen and (max-width:800px) {
+
+    footer{
+
+        height: auto;
+    }
+    .footer-row{
+        flex-wrap: wrap;
+        
+    }
+    .footer .column{
+        flex-basis: 50% !important;        
+        
+    }
+
+}
+
+@media screen and (max-width:500px) {
+
+    footer{
+        height: auto;
+    }
+
+    .footer-row{
+        flex-wrap: wrap;
+        padding: 10px;
+        
+    }
+    .footer .column{
+        flex-basis: 100% !important;        
+        
+    }
+
+}
+
+.footer-block{
+    padding-bottom: 5rem;
+    padding-top: 5rem;
+    display: block;
+}
+.footer-block-menu{
+    width: 100%;
+}
+.footer-block-heading{
+    display: block;
+    text-align: center;
+}
+.footer-block-list{
+    width: max-content;
+    margin: 2rem auto;
+    display: flex;   
+    gap: 2rem;
+}
+.list-social-item  a i{
+    font-size: 1.5rem;
+}

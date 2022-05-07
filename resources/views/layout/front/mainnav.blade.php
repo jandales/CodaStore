@@ -26,7 +26,7 @@
                 @endauth
                 <li>                    
                     <div class="lst-icon-wrapper">
-                         <a href="#"  data-modal-target="sidecartModal"><i class="fas fa-shopping-cart"></i></a>
+                         <a href="#" id="open-side-cart-modal"><i class="fas fa-shopping-cart"></i></a>
                      
                         <div class="icon-top-wrapper hidden">
                             <span class="cart-count"></span>

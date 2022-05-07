@@ -103,12 +103,6 @@ class Order extends Model
      
     }
 
-
-
-
-  
-
-
     public function statusColor()
     {
         switch($this->status)

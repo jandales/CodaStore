@@ -42,7 +42,7 @@
                                                 <form action="{{ route('account.payment-option.update.status', [$option] )}}" method="post">
                                                     @csrf
                                                     @method('put')
-                                                    <button class="tbl-action">
+                                                    <button class="borderless">
                                                             <i class="fa-solid {{ $option->status == 1 ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i>                                                          
                                                     </button>
                                                 </form>

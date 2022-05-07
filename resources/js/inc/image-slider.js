@@ -84,10 +84,8 @@ if (arrowNext) {
 
 if (arrowLeft){
     arrowLeft.addEventListener('click', () => {         
-        if(index === 0)        
-            index = images.length;
-        else 
-            index -= 1;
+        if(index === 0) index = images.length;  
+        index -= 1;
         setFullImage(images[index].src);
     })
 }

@@ -9,24 +9,28 @@ const closeSearch =  document.querySelector(".close-search");
 const _token =  document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 const _put = "PUT"
 const _delete = "DELETE"
+if(searchTrigger){
+    searchTrigger.addEventListener('click', ()  => {
 
-searchTrigger.addEventListener('click', ()  => {
+        if(navBar.style.display == "flex"){
+            navBar.style.display = 'none';
+            navSearch.style.display = "flex";
+            document.getElementById("inputSearch").focus();
+            return;
+        }
+    
+        navBar.style.display = "flex";
+        navSearch.style.display = "none";
+    });
+}
 
-    if(navBar.style.display == "flex"){
-        navBar.style.display = 'none';
-        navSearch.style.display = "flex";
-        document.getElementById("inputSearch").focus();
-        return;
-    }
+if (closeSearch) {
+    closeSearch.addEventListener('click', () => {
+        navBar.style.display = "flex";
+        navSearch.style.display = "none";
+    });
+}
 
-    navBar.style.display = "flex";
-    navSearch.style.display = "none";
-});
-
-closeSearch.addEventListener('click', () => {
-    navBar.style.display = "flex";
-    navSearch.style.display = "none";
-});
 
 
 var menu = document.getElementById("main-navigation");
@@ -160,6 +164,79 @@ msgClose.forEach(close => {
         
     })
 })
+
+
+const btnSorting =  document.getElementById('sorting');
+
+if (btnSorting){
+    btnSorting.onchange = function(){
+        const id = this.selectedIndex;
+        url = this.options[id].value;
+        window.location.href = url;
+    }
+}
+
+
+import Splide from '@splidejs/splide';
+
+var splideCollectionElement = document.querySelector('.splide-collection');
+if(splideCollectionElement){
+    var splideCollection = new Splide( '.splide-collection', {
+        type   : 'loop',
+        perPage: 3,
+        perMove: 1,   
+        breakpoints: {
+            1024: {
+              perPage: 3,
+              gap: 0,
+             
+            },
+            767: {
+              perPage: 2,
+          
+            },
+            640: {
+              perPage: 1,
+        
+            },
+          },
+        gap: '2em',
+        pagination: false,
+      } );
+      splideCollection.mount();
+}
+
+
+const splideProductElement = document.querySelector('.splide-featured-products');
+
+if (splideProductElement){
+    var splide = new Splide( '.splide-featured-products', {
+        type   : 'loop',
+        perPage: 4,
+        perMove: 1,
+        breakpoints: {
+            1024: {
+              perPage: 3,
+              gap: 0,
+             
+            },
+            767: {
+              perPage: 2,
+          
+            },
+            640: {
+              perPage: 1,
+        
+            },
+          },
+        gap: '2em',
+      } );
+      splide.mount();
+    
+}
+
+
+
 
 
 

@@ -40,140 +40,70 @@
       
         @yield('content')
     </div>
+
+    <div class="modal" id="shipping-address-modal">
+        <div class="modal-sidebar">
+            <div class="sidebar-close">                    
+                <span class="close-drawer"><i class="fas fa-times"></i></span>
+            </div>         
+            <div class="sidebar-heading">
+                <p>Shipping Address</p>
+            </div>
+            <div class="sidebar-body">
+                <form id="form-shipping-address" method="post">
+                    @csrf          
+                    @method('PUT')    
+                    @foreach (shippingAddress() as $item)        
+                            <div class="address-item {{$item->status == 1 ? 'active' : ''}}">
+                                <input type="radio" name="selected"  class="shipping-address-input"  value="{{route('account.shippingaddress.update-status',[ $item->id ])}}" {{$item->status == 1 ? 'checked' : ''}}>
+                                <ul>
+                                    <li>{{ $item->fullName() }}</li>
+                                    <li>{{ $item->fullAddress() }}</li>
+                                </ul>
+                            </div>                 
+                    @endforeach
+               <button id="confirm-shipping-address" class="btn btn-success" >CONFIRM</button>
+            </form>
+            </div>
+           
+            <div class="sidebar-footer">
+                
+            </div>
+        </div> 
+    </div>
+    <div class="modal" id="payment-option-modal">
+        <div class="modal-sidebar">
+            <div class="sidebar-close">                    
+                <span class="close-drawer"><i class="fas fa-times"></i></span>
+            </div>         
+            <div class="sidebar-heading">
+                <p>Shipping Address</p>
+            </div>
+            <div class="sidebar-body">
+                <form id="form-payment-option" method="post">
+                    @csrf          
+                    @method('PUT')    
+                    @foreach (paymentOptions() as $item)        
+                            <div class="payment-option-item {{$item->status == 1 ? 'active' : ''}}">
+                                <input type="radio" name="selected"  class="payment-option-input"  value="{{route('account.payment-option.update.status',[ $item->id ])}}" {{$item->status == 1 ? 'checked' : ''}}>
+                                <ul>
+                                    <li>{{ $item->card_name }}</li>
+                                    <li>{{ $item->card_number }}</li>
+                                </ul>
+                            </div>                 
+                    @endforeach
+                    <button id="confirm-payment-option" class="btn btn-success" >CONFIRM</button>
+                </form>
+            </div>
+           
+            <div class="sidebar-footer">
+                
+            </div>
+        </div> 
+    </div>
+
+
 </body>
-<script src="/js/front/jquery.min.js"></script>
-
-
-
-
-<script type="module">
-
-import { errorReponse, errorRemove } from '/js/validator.js';
-
-const btncheckoutInfo = document.getElementById('btn-continue');
-
- if(btncheckoutInfo){
-     btncheckoutInfo.onclick = submit;
- }
-
-function submit(e){
-    e.preventDefault();
-    const form = document.getElementById('form');
-    const url = form.getAttribute('action');
-    
-    $.ajax({
-        url : url,
-        type : 'POST',
-        data :  new FormData(form),
-        processData: false,
-        contentType: false,
-        cache: false,        
-        error : errorReponse,
-        success : redirectResponse,
-    })
-}
-
-function redirectResponse(res){
-    if (res.status === 200)
-        window.location.href = res.url;
-}
-
-
-
-function moneyFormatter(number){
-    
-    var formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'PHP',
-    });
-
-    return formatter.format(number);
-
-}
-
-function updateCartInfo(id){ 
-    let res = getShippingMethod(id) 
-    let cart = getCart();  
-    const shippingcharge =  res.shipping_method.amount; 
-    const total =  (cart.total - cart.discount) + shippingcharge;
-    document.querySelector('.span-shipping-fee').innerHTML = moneyFormatter(shippingcharge);
-    document.getElementById('grand-total').innerHTML = moneyFormatter(total);
-   
-}
-
-
-function updateCartTotal(cart, coupon = 0, ){
-    let total = 0;
-    total =  total + coupon;
-}
-
-function getShippingMethod(id){
-    let response;
-    $.ajax({
-        url : `/get-shipping-method/${id}`,
-        type : 'get',
-        async : false,
-        success :function(res) {
-             response = res;              
-        }
-    })
-    return response;
-}
-
-function getCart(){
-    let response;
-    $.ajax({
-        url : `/get-user-cart`,
-        type : 'get',
-        async : false,
-        success :function(res) {        
-             response = res.cart;              
-        }
-    })
-    return response;
-}
-
-
-
-const inputRadios = document.querySelectorAll('input[type="radio"]');
-if(inputRadios){
-    inputRadios.forEach(element => {
-        element.onchange =  function() {
-            updateCartInfo(element.value)
-        }
-    })
-}
-
-
-//coupon
-
-    function activateCoupon(e){
-        e.preventDefault();
-        const couponCode = document.querySelector('input[name="coupon_code"]').value;
-        $.ajax({
-            url: `/coupon/activate`,
-            method: 'get',       
-            data : {coupon_code : couponCode},
-            error: errorReponse,
-            success: function(response){                
-                console.log(response);
-                document.querySelector('.coupon_code').innerHTML = response.coupon.name;
-                document.querySelector('.span-coupon-amount').innerHTML = moneyFormatter(response.coupon.amount);
-            }
-        })
-    }
-
-
-const btncoupon = document.getElementById('btn-coupon-apply');
-btncoupon.onclick = activateCoupon;
-
-
-
-</script>
-
-
-<script src="/js/front/cart/cart.js"></script>
-<script type="module" src="/js/front/cart/coupon.js"></script>
-
-
+<script src="/js/jquery.min.js"></script>
+<script src="{{ asset('js/app.js')}}"></script>
 </html>

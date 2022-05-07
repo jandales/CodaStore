@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Review extends Model
 {
-    use HasFactory, DateAndTimeFormat;
+    use HasFactory;
 
     protected $fillable = [
         'product_id',

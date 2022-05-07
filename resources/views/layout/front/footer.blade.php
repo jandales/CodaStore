@@ -1,6 +1,6 @@
 <div class="footer">
     <div class="container">
-        <div class="footer-row">
+        {{-- <div class="footer-row">
             <div class="column">
                 <div class="footer-menu">
                     <div class="footer-categories">
@@ -61,13 +61,26 @@
                 
 
 
+        </div> --}}
+        <div class="footer-block">
+            <div class="footer-block-menu">
+                <h2 class="footer-block-heading">Quick links</h2>
+                <ul class="footer-block-list">
+                    <li><a href="/search" class="link link--text list-menu__item list-menu__item--link">SEARCH</a></li>
+                    <li><a href="/pages/contact-us" class="link link--text list-menu__item list-menu__item--link">CONTACT US</a></li>
+                    <li><a href="/pages/refund-policy" class="link link--text list-menu__item list-menu__item--link">ABOUT</a></li>
+                </ul>
+            </div>
+            <div class="footer-block-menu">
+                <ul class="footer-block-list" role="list">
+                    @foreach (socialList() as $site)
+                        <li class="list-social-item">
+                            <a href="{{ $site->url}}"><i class="{{ $site->code }}"></i></a>
+                        </li>
+                    @endforeach              
+                </ul>
+            </div> 
         </div>
-
-        
-
-        
-        
-        
-        
+              
     </div> 
 </div>

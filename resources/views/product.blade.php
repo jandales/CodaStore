@@ -7,6 +7,7 @@
                 @if (session('success'))
                     <div class="alert alert-success">{{session('success')}}</div>
                 @endif         
+            </div>
             <div class="panel-view">
                 <div class="product-images">
                     <div class="thumbnails-wrapper">             
@@ -65,7 +66,6 @@
                 </div>
             
             </div>
-
             <div class="product-additional-info-wrapper mt-7 mb-7">
                 <div class="tabs tab-product-detail">
                     <ul class="tab-navigation">
@@ -83,11 +83,4 @@
                 </div>
             </div>
         </div>
-           
-        </div>   
-    
-    
-
-
-    
 @endsection

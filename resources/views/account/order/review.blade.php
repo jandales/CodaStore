@@ -34,12 +34,12 @@
                                 </div>
     
                                 <div class="add-review-wrapper mt-3">               
-    
+
                                     <div class="mt-2">
                                         <div class="inline">
                                              <h4>Your Rating</h4>
                                            
-                                             <ul id="rating" class="rate-stars ml-1" value="{{$review->rating}}">
+                                             <ul id="rating" class="rate-stars ml-1" value="{{$review->rating ?? 0}}">
                                                  <li class="rate" rate="1"><i class="far fa-star" aria-hidden="true"></i></li>
                                                  <li class="rate" rate="2"><i class="far fa-star" aria-hidden="true"></i></li>
                                                  <li class="rate" rate="3"><i class="far fa-star" aria-hidden="true"></i></li>
@@ -51,10 +51,10 @@
                 
                                                  <form action = "{{route('review.store',[$product])}}" method="POST">
                                                      @csrf
-                                                         <input type="number" id="input-rate"  name="rate" value="0" hidden>
+                                                         <input type="hidden" id="input-rate"  name="rate" value="0">
                                                          <div class="form-block">
                                                              <label for="#">Your Review</label>
-                                                             <textarea  name="comments" cols="30" rows="6">@if ($review != null) {{ $review->comments }} @endif</textarea>
+                                                             <textarea  name="comments" cols="30" rows="6">{{ $review->comments ?? '' }}</textarea>
                                                          </div> 
                                                          @error('comments')
                                                          <div class="alert alert-danger mb-2">{{ $message }}</div>

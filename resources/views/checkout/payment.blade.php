@@ -1,12 +1,6 @@
 @extends('checkout')
 @section('content')    
 
-        @if (session('success'))
-                <div class="alert alert-success mt-1">{{ session('success')}}</div>
-        @endif
-        @if (session('message'))
-                <div class="alert alert-warning mt-1">{{ session('message')}}</div>
-        @endif  
 
         <div class="flex space-between gap50 mt-5 mb-5">
             <div class="w-6">
@@ -61,54 +55,7 @@
 
 
    
-        <script type="module">
 
-            import { errorReponse, errorRemove } from '/js/validator.js';           
-            
-
-            document.getElementById('use-differ').onclick = function() {
-
-                document.getElementById('use-same').checked = false;
-                this.parentElement.classList.add('hidden');    
-                document.getElementById('form-shipping').classList.remove('hidden');           
-            }
-
-            document.getElementById('use-same').onclick = function() {
-                this.checked = true;
-                const usediffer = document.getElementById('use-differ');
-                usediffer.checked = false;
-                usediffer.parentElement.classList.remove('hidden')    
-                document.getElementById('form-shipping').classList.add('hidden');           
-            }
-
-            document.getElementById('paynow').onclick = function(e) {
-                e.preventDefault();
-      
-                const form = document.getElementById('form');
-                const url = form.getAttribute('action');
-                let formData =  new FormData(form);         
-               
-    
-
-                $.ajax({
-                    url : url,
-                    type : 'POST',
-                    data : formData,
-                    datatype:"json", 
-                    processData: false,
-                    contentType: false,
-                    cache: false,
-                    error : errorReponse,
-                    success : function(res){                      
-                        errorRemove();
-                        if (res.status === 200)
-                        {                          
-                           window.location.href = res.route;
-                        }
-                    }
-                })
-            }
-        </script>
 
         
 

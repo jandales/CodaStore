@@ -19,10 +19,10 @@ class CartController extends Controller
 
     public function __construct()
     {
-        // $this->middleware(function ($request, $next) {  
-        //    Self::deleteExpireCart();
-        //     return $next($request);
-        // });
+        $this->middleware(function ($request, $next) {  
+            Self::deleteExpiredCart();
+            return $next($request);
+        });
     }     
 
     public function index()
@@ -68,36 +68,31 @@ class CartController extends Controller
             //check if an item  already in the cart;
             $item = $cart->hasThisProduct($product->id);
    
-            if($item) {               
-                $item->qty += $newQuantity;
-                $item->attributes = $attributes;
-                $item->save();        
-                Cart::UpdateTotal();  
-                return response()->json(['count' => $cart->items->sum('qty')]);     
-            }
-          
-            self::createItem($cart->id, $product->id, $newQuantity, $attributes);
-            Cart::UpdateTotal();
-            return response()->json(['count' => $cart->items->sum('qty')]);           
+            if($item)               
+                self::updateCartItem($item, $newQuantity, $attributes);            
+            else 
+                self::storeCartItem($cart->id, $product->id, $newQuantity, $attributes); 
+
+            Cart::UpdateTotal(); 
+                        
+            return response()->json(['count' => Cart::TotalItems()]);           
                  
             
         };  
  
-        // stored new cart and item
-        $cart = Cart::create([             
+       // stored new cart and item
+       $cart = Cart::create([             
              'total' => $total,
              'cart_id' =>  Cookie::get('cart-id'),
              'expired_at' => Carbon::now()->addDays(5),
-        ]);
-        
-        
-      
-       return self::createItem($cart->id, $product->id, $newQuantity, $attributes);   
+       ]);       
+              
+       self::storeCartItem($cart->id, $product->id, $newQuantity, $attributes);   
            
-       return response()->json(['count' => $cart->items->sum('qty')]);   
+       return response()->json(['count' => Cart::TotalItems() ]);   
     }
 
-    private function createItem($cart, $product, $quantity, $attributes)
+    private function storeCartItem($cart, $product, $quantity, $attributes)
     {
    
         return CartItem::create([
@@ -127,6 +122,14 @@ class CartController extends Controller
         $cart =  Cart::ByUser()->first();         
         $cartItemsCount = $cart == null ? 0 : $cart->items->sum('qty');
         return response()->json(['cartItemsCount' => $cartItemsCount]);
+    }
+
+    public function updateCartItem(CartItem $cartitem, $qty, $attributes)
+    {
+        $item->qty += $newQuantity;
+        $item->attributes = $attributes;
+        $item->save(); 
+        return $cartitem;
     }
 
  
@@ -161,7 +164,7 @@ class CartController extends Controller
     {        
         $item->delete(); 
         Cart::UpdateTotal();
-        return response()->json(['status' => 200]);
+        return response()->json(['status' => 200, 'count' =>  Cart::TotalItems() ]);
     } 
 
     public function couponActivate(Request $request)
@@ -170,6 +173,7 @@ class CartController extends Controller
             'coupon_code' => 'required',
         ]);
 
+      
         $coupon = Coupon::where('name', $request->coupon_code)->first();
         
         if($coupon == null) return  response()->json(["status" => 500, "message" => "Coupon not Found"]);        
@@ -247,6 +251,19 @@ class CartController extends Controller
     {
         $cart = Cart::ByUser()->first();     
         return response()->json(['cart' => $cart]);
+    }
+
+    public function deleteExpiredCart(){
+        $currentDate = now();
+        $carts = Cart::with('items')->where('expired_at', '<', $currentDate)->get();       
+        foreach($carts as $cart){                
+            if($cart->expired_at < now()){
+                foreach($cart->items as $item){
+                    $item->delete();
+                }
+                $cart->delete();
+            }
+        }     
     }
     
 }

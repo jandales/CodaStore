@@ -5,9 +5,10 @@ namespace App\Services;
 use App\Models\User;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Traits\ImageUploadTrait;
 
 class CustomerServices {
-
+    use ImageUploadTrait ;
     public function update($request)
     {
          $user = auth()->user();
@@ -29,22 +30,17 @@ class CustomerServices {
     public function updateAvatar($request)
     {
         $location = "/img/avatar/";   
-        
-        if(!$request->hasFile('avatar'))  return back()->with(['error' => 'Please select image to upload']); 
-        
-        $file = $request->file('avatar');
-  
+    
+        if(!$request->hasFile('avatar'))  return false; 
+
         $user = auth()->user(); 
-        $oldimage = $user->imagePath;
+        $oldpath = $user->imagePath;
   
-       
-        $image =  ImageMake($file);
-        $user->imagePath = $location . $image['name'];
-  
-        if($user->save()){           
-            ImageUpload($image, $location);
-            File::delete(public_path() . $oldimage);
-        }  
+        $path = $this->upload($request, $location, 'avatar');      
+        $user->imagePath = $path;
+        $user->save();
+        File::delete(public_path() .  $oldpath);
+        return true;
     }
 
     public function deleteSelectedItem($users)

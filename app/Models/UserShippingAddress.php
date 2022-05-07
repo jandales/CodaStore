@@ -32,11 +32,12 @@ class UserShippingAddress extends Model
          return $query->get()->count();
     }
 
-    public function name(){
+    public function fullName()
+    {     
         return $this->firstname . " " . $this->lastname;    
     }
 
-    public function full()
+    public function fullAddress()
     {
         return $this->street . " " . $this->city . " " . $this->region . " " . $this->country;      
     }

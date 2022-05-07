@@ -34,7 +34,7 @@
                             <div class="order">
                                 <div class="order-header">
                                     <div class="align-items-content-center">
-                                        <span>OR#:</span><a href="{{ route('orders.details',[$order])}}" for="order">{{ $order->ordernumber() }}</a></div>
+                                        <span>OR#:</span><a href="{{ route('orders.details',[$order->encryptedId()])}}" for="order">{{ $order->ordernumber() }}</a></div>
                                         <label class="capitalize order-status" for="status">{{$order->status }}</label>
                                     </div>
                                     <div class="order-body">

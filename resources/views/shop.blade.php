@@ -67,19 +67,8 @@
             </div>
     
          
-        </div>
-        
-        <script src="/js/product/rating.js"></script>
-        <script src="/js/product/addwishlist.js"></script>
-        <script>
-            document.getElementById('sorting').onchange = function(){
-                const id = this.selectedIndex;
+        </div>        
+      
 
-                url = this.options[id].value;
-                window.location.href = url;
-            }
-
-        </script>
-    
     
      @endsection

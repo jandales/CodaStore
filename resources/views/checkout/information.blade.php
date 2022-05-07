@@ -1,11 +1,5 @@
 @extends('checkout')
-@section('content') 
-        @if (session('success'))
-                <div class="alert alert-success mt-1">{{ session('success')}}</div>
-        @endif
-        @if (session('message'))
-                <div class="alert alert-warning mt-1">{{ session('message')}}</div>
-        @endif 
+@section('content')        
         <form id="form" action="{{ route('checkout.information.store') }}" method="post">
             @csrf
             <input type="hidden" name="is_form_empty" value="{{ $address ? 1 : 0}}">
@@ -15,7 +9,7 @@
                     <div class="flex space-between  border-b-solid py-1">
                         <h2 class="uppercase">Contact Information</h2>
                         @guest
-                            <span>Already have an account? <a href="" class="link link-primary"> Log in</a></span> 
+                            <span>Already have an account?  <a href="" class="link link-primary"> Log in</a></span> 
                         @endguest    
                                                   
                     </div>            
@@ -26,7 +20,10 @@
                         </div>
             
                         <div class="flex space-between mt-2 border-b-solid py-1">                
-                            <h2 class="uppercase">Shipping Details</h2>                           
+                            <h2 class="uppercase">Shipping Details</h2>    
+                            @auth
+                                <span id="open-modal-shipping" class="change">Change</span>
+                            @endauth                       
                         </div> 
 
                         <x-form-shipping :address="$address"></x-form-shipping>  

@@ -18,5 +18,7 @@ class UserPaymentOption extends Model
         'status'
     ];
 
+
+
  
 }

@@ -1,9 +1,11 @@
 
 import { moneyFormatter } from "../../module/money-footer";
 import { openSidebarModal } from "../../module/modal"
+import { cartCountToElement, updateCartDOMELement } from '../../app/module/Cart';
 let cart;
 
-
+const _token =  document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+const _delete = "DELETE"
 
 function getCarts(){                         
      $.ajax({
@@ -24,8 +26,8 @@ function deleteCart(id){
              _token : _token,
              _method : _delete
          },                  
-         success :  function(response){  
-             console.log(response);             
+         success :  function(response){        
+            cartCountToElement(response)           
          }
      });
 }
@@ -41,17 +43,16 @@ function cartsToViews(){
         let cartItemsElement = document.createElement('div')
         cartItemsElement.classList.add('cart-items','gap10')
         let items = `<div class="cart-image">
-                <img class="img" src="/${item.product.imagePath}" alt="" srcset="">
-                <div class="cart-image-overlay flex-vert-center">
-                    <span onclick="cartRemove(this)" data-id="${item.id}"><i class="fas fa-times"></i></span>
-                </div>
-            </div>
-            <div class="cart-decription">
-                <p class="cart-item-name">${item.product.name}</p>  
-                <span class="cart-item-info">${item.qty}  x  ${item.product.regular_price}</span>  
-                <ul class="cart-item-variant">    
-                </ul> 
-            </div>`  
+                        <img class="img" src="/${item.product.imagePath}" alt="" srcset="">              
+                     </div>
+                    <div class="cart-decription">
+                        <p class="cart-item-name">${item.product.name}</p>  
+                        <span class="cart-item-info">${item.qty}  x  ${item.product.regular_price}</span>  
+                        <ul class="cart-item-variant">    
+                        </ul> 
+                    </div>
+                    <span class="cart-remove" data-id="${item.id}">Remove</span>           
+            `  
         
         cartItemsElement.innerHTML = items
         let ul = cartItemsElement.querySelector('.cart-item-variant')
@@ -63,6 +64,8 @@ function cartsToViews(){
         }   
         wrapperElement.appendChild(cartItemsElement);
     });  
+
+
     return wrapperElement        
 }
  
@@ -80,23 +83,30 @@ function clearCartElement()
    
 }
 
-function cartRemove(elem){
-     let id = elem.getAttribute('data-id')
-     let parent = elem.closest('.cart-items');
-     parent.remove();    
-     deleteCart(id)
+function dispatchRemoveCartEvent(){
+     const cartRemoveELement = document.querySelectorAll('.cart-remove');
+     cartRemoveELement.forEach(elem => {
+         elem.onclick = function(){     
+            let id = elem.getAttribute('data-id')
+            let parent = elem.closest('.cart-items');
+            parent.remove();    
+            deleteCart(id)
+         }
+     })
+    
 }
 
- const modalTrigger1 = document.querySelector("[data-modal-target]");  
-
- modalTrigger1.addEventListener('click', function(){
-     clearCartElement();
-     getCarts();
-     sidecart.appendChild(cartsToViews())
-     const total = cart != null ? cart.total : 0;
-     sidecartTotal.innerHTML =  moneyFormatter(total);
-
-     let id = this.getAttribute("data-modal-target") 
-     openSidebarModal(id)
- });
+ const modalTrigger1 = document.getElementById('open-side-cart-modal');  
+if(modalTrigger1){
+    modalTrigger1.addEventListener('click', function(){
+        clearCartElement();
+        getCarts();
+        sidecart.appendChild(cartsToViews())
+        const total = cart != null ? cart.total : 0;
+        sidecartTotal.innerHTML =  moneyFormatter(total);  
+        openSidebarModal('sidecartModal')
+        dispatchRemoveCartEvent();
+    });
+   
+}
 

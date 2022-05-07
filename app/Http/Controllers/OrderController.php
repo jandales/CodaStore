@@ -36,7 +36,7 @@ class OrderController extends Controller
     }
 
     public function details(Order $order)
-    {        
+    {    
         return view('account.order.detail')->with('order', $order);
     }
 

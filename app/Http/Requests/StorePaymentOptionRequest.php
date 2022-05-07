@@ -25,7 +25,7 @@ class StorePaymentOptionRequest extends FormRequest
     {
         return [
             'card_name' => 'required',
-            'card_number'  => 'required|min:21|unique:payment_options',
+            'card_number'  => 'required|min:21|unique:user_payment_options',
             'card_expire_date' => 'required',
             'card_cvc' => 'required|min:3',     
         ];

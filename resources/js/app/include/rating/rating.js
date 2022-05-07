@@ -77,8 +77,8 @@ if(editbtn){
 
     editbtn.addEventListener('click', function() {
 
-         /// scroll to texteditor
-         scrolldown();    
+        //  /// scroll to texteditor
+        //  scrolldown();    
         //set the review text tot texteditor
         textEditor.innerText = editbtn.getAttribute('value')
 

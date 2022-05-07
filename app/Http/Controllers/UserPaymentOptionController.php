@@ -52,9 +52,11 @@ class UserPaymentOptionController extends Controller
 
     public function updateStatus(UserPaymentOption $option)
     {         
-        if (!$this->services->updateStatus($option)) return redirect()->route('account.payment-option')->with('success', 'Card Already set default payment method');    
+        
+        if (!$this->services->updateStatus($option)) 
+            return back()->with('success', 'Card Already set default payment method');    
 
-        return redirect()->route('account.payment-option')->with('success', 'Card Successfully updated');
+        return back()->with('success', 'Card Successfully updated');
     }
    
 }

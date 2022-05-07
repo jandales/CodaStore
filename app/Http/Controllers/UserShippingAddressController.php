@@ -73,13 +73,13 @@ class UserShippingAddressController extends Controller
 
         if(empty($currentAddress)) {
             $this->updateStatus($address, 1);
-            return redirect()->route('account.shippingaddress')->with('success', 'Address successfully updated');  
+            return back()->with('success', 'Address successfully updated');  
         }  
 
         $this->updateStatus($currentAddress, 0);
         $this->updateStatus($address, 1);
       
-        return redirect()->route('account.shippingaddress')->with('success', 'Address successfully updated');  
+        return back()->with('success', 'Address successfully updated');  
         
     }
 
@@ -89,4 +89,5 @@ class UserShippingAddressController extends Controller
         $address->save();
         return $address;     
     }
+
 }

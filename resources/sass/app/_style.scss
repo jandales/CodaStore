@@ -607,13 +607,11 @@ ul  li{
 }
 .collection{
     margin-top: 50px;
-    display: flex;
-    position: relative;
-    gap: 20px;
+  
 }
 
 .collection .item{
-    width: 33.33%;
+    width: 100%;
     height: 380px;
     background: #eee;
 }
@@ -994,119 +992,6 @@ ul  li{
    justify-content: space-around; 
 }
 
-/*---- footer ----*/
-
-.footer {  
-
-    margin-top: auto;
-    background: #1E1E1E;
-    width: 100%;
-    height: 400px;
-    color: #fff;       
-}
-
-.footer-row{
-    display: flex;
-    justify-items: center;
-    justify-content: space-between;
-    margin-top: 30px;
-    margin-bottom: 50px;
-}
-
-
-.footer .column{
-    flex-basis: 25%; 
-    width: 100%;
-    justify-content: space-around;
-    
-}
-.footer h2{
-    font-size:16px;
-    color: #eee;
-    font-weight: bold;
-}
-
-.footer-menu{
-    margin-top: 30px;
-}
-.footer .footer-menu ul{
-    margin-top: 25px;
-}
-
-.footer .footer-menu ul li{
-    list-style: none;
-    margin-bottom: 20px;
-}
-
-.footer ul li a{   
-    color:rgb(178,178,178);
-}
-.footer p {
-    padding-right: 20px;
-    margin-top: 10px;
-}
-
-.line{
-    margin-top: 5px;
-    margin-bottom: 20px;
-    border: 1px solid #fff;
-}
-
-.footer .subcribe{
-    font-size: 12px; 
-    background: #fff;
-    color: rgb(97, 97, 97);
-    padding:8px 20px;   
-    border-radius: 20px;
-}
-.footer .social-icon li{
-    display: inline-block;   
-}
-.footer .social-icon li a{
-    padding-right:5px !important;
-}
-
-.footer ul li a:hover{
-    color: #eee;
-}
-
-
-@media screen and (max-width:800px) {
-
-    footer{
-
-        height: auto;
-    }
-    .footer-row{
-        flex-wrap: wrap;
-        
-    }
-    .footer .column{
-        flex-basis: 50% !important;        
-        
-    }
-
-}
-
-@media screen and (max-width:500px) {
-
-    footer{
-        height: auto;
-    }
-
-    .footer-row{
-        flex-wrap: wrap;
-        padding: 10px;
-        
-    }
-    .footer .column{
-        flex-basis: 100% !important;        
-        
-    }
-
-}
-
-
 
 .shopnow{    
     display:inline-block;
@@ -1137,6 +1022,17 @@ ul  li{
     display: block;   
     background: #fff;
 
+}
+
+.cart-remove{
+    margin-left: auto;
+    cursor: pointer;
+    color: #555;
+    font-size: 14px;
+}
+
+.cart-remove:hover{
+    color: var(--bs-danger) ;
 }
 
 .cart-table-1 {
@@ -5004,6 +4900,7 @@ color:#555;
 
 .change{
     color:  #198754;
+    cursor: pointer;
 }
 
 
@@ -5286,8 +5183,6 @@ width: 800px !important;
     margin-right: 30px;
 }
 
-
-
 .col1{
     width:250px;
 }
@@ -5299,7 +5194,80 @@ width: 800px !important;
     color:  var(--bs-success);
 }
 
+.fa-toggle-off{
+    color:  var(--bs-gray);
+}
+.borderless{
+    padding: 0!important;
+    background: transparent !important;
+    border: 0 !important;
+}
+button .fa-toggle-on, 
+button .fa-toggle-off,
+span .fa-toggle-off,
+span .fa-toggle-on{
+    font-size: 2rem;
+}
 
+.splide-feature-product .items{
+    width: 100% !important;    
+}
+.collection .splide__arrow{
+    transform: translateY(calc(-50% + 2rem)) !important;
+}
+
+.splide__pagination{
+   bottom: -2rem !important;
+}
+.splide__pagination__page{
+    background-color: (--bs-gray) !important;
+}
+.splide__pagination__page.is-active {
+    background: var(--bs-dark) !important;
+    transform: scale(1.4);
+    z-index: 1;
+}
+
+
+
+#shipping-address-modal .address-item{
+    display: flex;
+    align-items: center;
+    gap:1rem;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #eee;
+    padding: 10px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+#shipping-address-modal .address-item.active{
+    color: var(--bs-success);
+    background-color:  #d4edda;
+    border-color: #c3e6cb !important;
+}
+
+
+
+#payment-option-modal .payment-option-item{
+    display: flex;
+    align-items: center;
+    gap:1rem;
+    width: 100%;
+    color: #555;
+    background-color: #fff;
+    border: 1px solid #eee;
+    padding: 10px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+#payment-option-modal .payment-option-item.active{
+    color: var(--bs-success);
+    background-color:  #d4edda;
+    border-color: #c3e6cb !important;
+}
 
  
  

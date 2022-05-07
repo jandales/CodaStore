@@ -56,6 +56,8 @@ class ReviewController extends Controller
             return back()->with('success', 'Your review successfully submitted');
         }
 
+        
+
         Review::create([
             'product_id' => $product->id,
             'user_id' => $user->id,      

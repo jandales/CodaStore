@@ -224,7 +224,7 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::delete('/account/shipping-address/{address}/destroy', [UserShippingAddressController::class, 'destroy'])->name('account.shippingaddress.destroy');
 
-    Route::put('/account/shipping-address/{address}/update-status', [UserShippingAddressController::class, 'set_default_address'])->name('account.shippingaddress.update-status');
+    Route::put('/account/shipping-address/{address:id}/update-status', [UserShippingAddressController::class, 'set_default_address'])->name('account.shippingaddress.update-status');
     // payment Method
     Route::get('/account/payment-option', [UserPaymentOptionController::class, 'index'])->name('account.payment-option');
 
@@ -238,7 +238,7 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::delete('/account/payment-option/destroy/{option}', [UserPaymentOptionController::class, 'destroy'])->name('account.payment-option.destroy');
 
-    Route::put('/account/payment-option/status/{option}', [UserPaymentOptionController::class, 'updateStatus'])->name('account.payment-option.update.status');   
+    Route::put('/account/payment-option/status/{option:id}', [UserPaymentOptionController::class, 'updateStatus'])->name('account.payment-option.update.status');   
 
     Route::get('/checkout/information', [CheckOutController::class, 'index' ])->name('checkout.information');
 
@@ -267,7 +267,7 @@ Route::group(['middleware' => 'auth'], function(){
     
     Route::get('/account/orders/{status}', [OrderController::class, 'index'])->name('account.orders');
 
-    Route::get('/account/orders/detail/{order}', [OrderController::class, 'details'])->name('orders.details');
+    Route::get('/account/orders/detail/{order:id}', [OrderController::class, 'details'])->name('orders.details');
 
     Route::get('/account/orders/{product}/review', [OrderController::class, 'review'])->name('orders.review');
 

@@ -30,10 +30,11 @@ class UserPaymentOptionServices {
   
     public function updateStatus(UserPaymentOption $option)
     {         
-
+       
         if ($option->status == 1) return false;
          // update default option to false
-        $default_option = auth()->user()->defaultPayment();
+       
+        $default_option = auth()->user()->defaultPayment()->first();
         if($default_option){
             self::optionStatus($default_option, 0);
         }       

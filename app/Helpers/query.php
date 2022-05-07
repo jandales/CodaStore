@@ -2,8 +2,20 @@
 
 use App\Models\Variant;
 use App\Models\Category;
+use App\Models\SocialSite;
+use App\Models\UserShippingAddress;
 
+function socialList() {
+   return SocialSite::get();
+}
 
+function shippingAddress() {
+    return  auth()->user()->shippingAddress;
+}
+
+function paymentOptions() {
+    return auth()->user()->payment_options;
+}
 
 function timezone_list() {
     $return = array();

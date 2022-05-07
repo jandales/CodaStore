@@ -3,11 +3,12 @@
 <div class="credit-card mt-1">
     <div class="credit-card-header">
         <span>Credit Card Payment</span>
-        <div class="flex gap10">
+        <span id="payment-option-change"  class="change">Change</span>
+        {{-- <div class="flex gap10">
             <span><i class="fas fa-credit-card"></i></span>
             <span><i class="fas fa-credit-card"></i></span>
             <span><i class="fas fa-credit-card"></i></span>
-        </div>
+        </div> --}}
     </div>
     <div class="credit-card-body">
         <div class="form-block">

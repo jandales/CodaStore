@@ -6,8 +6,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use App\Services\CustomerServices;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -27,7 +25,6 @@ class UserController extends Controller
    {         
       $user->delete_at = 1;
       $user->save();
-
       return back()->with('success', 'User successfully deleted');
    }
 
@@ -55,14 +52,11 @@ class UserController extends Controller
       return view('account.upload');
    }
 
-   
-
    public function update(Request $request, CustomerServices $service)
    { 
       $service->update($request); 
       return redirect()->route('account')->with('status','Profile updated successfully');
    }
-
 
    public function show($id)
    {   
@@ -83,8 +77,9 @@ class UserController extends Controller
 
    public function avatar(Request $request, CustomerServices $service)
    {     
-      $service->updateAvatar($request);
-      return  back()->with(['success' => 'Image Successfully upload']);
+     $result = $service->updateAvatar($request);
+     if(!$result) return back()->with(['error' => 'Please select image to upload']);
+     return  back()->with(['success' => 'Image Successfully upload']);
    }
    
 }

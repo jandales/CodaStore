@@ -5,7 +5,7 @@
         <div class="panel {{ $key != $shippingmethods->count() - 1 ? 'border-b-0' : ''}}">
             <div class="flex space-between">
                 <div class="flex gap10">                 
-                    <input type="radio"  @if ($active == 0)  {{ $key == 0 ? 'checked' : '' }}
+                    <input type="radio" class="shipping-input"  @if ($active == 0)  {{ $key == 0 ? 'checked' : '' }}
                     @else
                         {{ $method->id == $active ? 'checked' : '' }}
                     @endif

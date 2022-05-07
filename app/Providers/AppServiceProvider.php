@@ -31,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
     {
         View::share('categories', Category::All());
         View::share('attributes', Attribute::All());
+     
         
         Blade::directive('money', function ($amount) {
             return "<?php echo '₱'.number_format($amount, 2); ?>";

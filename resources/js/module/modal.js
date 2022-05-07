@@ -11,6 +11,8 @@ export function openModal(modalId){
 
 
 export function openSidebarModal(modalId){
+
+
     const modal = document.getElementById(modalId); 
     const sidebar = modal.querySelector('.modal-sidebar'); 
     if(modal.style.display === "flex"){

@@ -1,9 +1,12 @@
 export function cartCountToElement(count)
 {
     let elem = document.querySelector('.cart-count')
-    if(count == 0) return elem.parentElement.classList.add('hidden')  
-    elem.parentElement.classList.remove('hidden')
-    elem.innerText = count;
+    if(elem) {
+        if(count == 0) return elem.parentElement.classList.add('hidden')  
+        elem.parentElement.classList.remove('hidden')
+        elem.innerText = count;
+    }
+   
 }
 
 export function cartCount(){
