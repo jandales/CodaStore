@@ -10,12 +10,10 @@
         </div>
     
         
-        <div class="container">
-           
-    
-          <div class="row space-between  mt-2 mb-2">
+        <div class="container">              
+          <div class="contact-wrapper mt-2 mb-2">
             <div class="contact-form">
-                <h3>Send us Message</h3>
+                <h3 class="text-center">Send us Message</h3>
                 <form action="{{ route('sendMessage') }}" method="POST">
                   @csrf
                     <div class="form-block">
@@ -34,13 +32,12 @@
                     </div>
     
                     <div class="form-block">
-                      <button class="btn btn-dark">Submit</button>
-                    </div>
-                    
+                      <button class="btn btn-dark">Send</button>
+                    </div>                   
     
                 </form>
             </div> 
-            <div class="contactinfo">
+            {{-- <div class="contactinfo">
                
               <div class="mt-2">
                 <div class="info">
@@ -59,7 +56,7 @@
                  </div>
               </div>
     
-            </div>
+            </div> --}}
           </div>
     
          

@@ -14,10 +14,7 @@
                         </div>
         </div>      
     <!--Featured Product-->
-        <div class="container">
-       
-            
-           
+        <div class="container"> 
             <section class="splide splide-collection" aria-label="Splide Basic HTML Example">
                 <h1 class="home-title">Collections</h1>
                 <div class="collection">                    
@@ -36,8 +33,7 @@
                     </div>
                   
                 </div>
-            </section>
-        
+            </section>        
 
             <section class="splide splide-featured-products mb-5" aria-label="Splide ">
                 <h1 class="home-title">Feature Products</h1>

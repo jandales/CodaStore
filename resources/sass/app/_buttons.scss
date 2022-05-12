@@ -1,0 +1,125 @@
+input[type="submit"],
+button,
+.btn{ 
+    outline: none;  
+    display: inline-block; 
+    font-size: 1rem;
+    min-width: 12rem;
+    line-height: 1.5;  
+    text-align: center !important;
+    color: #fff;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;   
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;  
+   
+}
+
+input[type="submit"]:hover,
+button:hover,
+.btn:hover{ 
+    opacity: .9;
+}
+
+button:disabled {
+  opacity: 0.6;
+  
+}
+
+
+
+.btn-primary{
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-default{
+    color: #2e2e2e;
+    background-color: #fff;
+    border-color: #eee;
+}
+
+.btn-success{
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-danger{
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-warning {
+    color: #000;
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+.btn-info {
+    color: #fff;
+    background-color: #0dcaf0;
+    border-color: #0dcaf0;
+}
+
+.btn-dark{
+    color: #fff;
+    background-color: #2e2e2e;
+    border-color: #2e2e2e
+}
+
+.btn-light{
+    color: #2e2e2e;
+    background-color: #fff;
+    border-color: #2e2e2e !important;
+}
+
+.btn-theme{
+    color: #fff;
+    background-color: #ff523b;
+    border-color: #ff523b !important;
+}
+
+.btn-link{
+    padding: 0;
+    margin: 0;
+    background: none;
+    border: none;
+
+}
+.btn-link:hover{
+    background: none;
+    color: inherit;
+}
+
+.btn-icon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.btn-icon i{
+    color: #fd7e14;
+}
+.btn-filter{
+    background: #fff !important;
+    color: #555;
+    border: 1px solid #eee; 
+}
+
+.btn-filter:hover{
+    background: #555 !important;
+    color: #fff;
+}
+.btn-cancel{
+    background: #EC7063;
+    color: #fff;
+}

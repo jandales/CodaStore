@@ -1,0 +1,57 @@
+
+
+.about-column{
+    margin-top:50px;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+
+.about-column h2{
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.about-column p{
+   line-height:1.5;
+}
+
+.about-description {    
+    flex-basis: 60%;
+}
+
+.about-image{    
+    flex-basis: 30%;   
+}
+
+.mission{
+    order: 2;
+}
+
+@media screen and (max-width:768px) {    
+    .about-column{
+        flex-direction: column;
+    }
+
+    .about-image{
+        width: 100%;
+    }
+    .about-description {
+       flex-basis: 100% !important;
+       margin-bottom: 20px !important;      
+      
+    }
+    .mission{
+        order: 0;
+    }
+
+     
+            
+ 
+
+
+    
+    
+}

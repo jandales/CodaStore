@@ -11,7 +11,15 @@
             <div class="productPage mt-2">              
                 <div class="product-nav">              
                     <nav>
+                        <div class="category-hamburger">
+                            <span><i class="fa-solid fa-bars"></i></span>
+                            <label for="">Collections</label>
+                        </div>  
                         <ul class="ul-product-categories">
+                            <div class="close-category">
+                                <span><i class="fa-solid fa-times"></i></span>
+                                <label for="">Collections</label>
+                            </div> 
                             <li><a href="{{ route('shop')}}">All Products</a></li>
                             @foreach (categories() as $category)                            
                                 <li><a href="{{ route('shop.category',[$category])}}">{{ $category->name }}</a></li>

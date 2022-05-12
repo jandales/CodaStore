@@ -1,0 +1,59 @@
+
+.table-responsive{
+    overflow: auto;
+}
+
+.table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table tr  {    
+    text-align: left;
+    font-size: 1rem;    
+    border-bottom: 1px solid #eee;
+     
+    
+}
+
+.table thead tr th,.table tbody tr td{
+    padding: 15px 20px;
+    color: #555; 
+  
+}
+
+.table thead tr th{
+    font-size: 14px;
+    line-height: 1.2;
+    text-transform: uppercase;
+
+}
+
+.table-address tbody tr td:first-child span i{
+    font-size: 14px;
+    color:#4b4b4b;
+
+}
+
+.table-address tbody tr:hover{
+    background: #EDF9FF!important;
+    border-color: #EDF9FF;
+}
+.table .variant .attribute-name {
+    
+    width: 50px;
+}
+
+.table  .variant  .attribute {
+    width: 25px;
+    height: 25px;
+}
+
+.table  .variant  .attribute p {
+    font-size: 12px;
+}
+
+
+.table tbody tr:hover{
+    background: #f8f8f8;
+}

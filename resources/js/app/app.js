@@ -3,48 +3,60 @@ import { openSidebarModal, openModal} from "../module/modal";
 
 const searchTrigger =  document.getElementById("btnsearch");
 const navBar =  document.querySelector(".navbar");
-const navSearch = document.querySelector(".navigation-search");
+const navSearch = document.querySelector(".form-search");
 const closeSearch =  document.querySelector(".close-search");
 
-const _token =  document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-const _put = "PUT"
-const _delete = "DELETE"
-if(searchTrigger){
-    searchTrigger.addEventListener('click', ()  => {
+const DISPLAY_FLEX = 'flex';
+const DISPLAY_BLOCK =  'block';
+const DISPLAY_NONE = 'none';
 
-        if(navBar.style.display == "flex"){
-            navBar.style.display = 'none';
-            navSearch.style.display = "flex";
+
+
+if(searchTrigger){
+    searchTrigger.addEventListener('click', ()  => {     
+
+        if(!navBar.hasAttribute('style') || navBar.style.display == DISPLAY_FLEX ) {
+            navBar.style.display = DISPLAY_NONE;
+            navSearch.style.display = DISPLAY_BLOCK;
             document.getElementById("inputSearch").focus();
             return;
-        }
-    
-        navBar.style.display = "flex";
-        navSearch.style.display = "none";
+        }     
+        navBar.style.display = DISPLAY_FLEX;
+        navSearch.style.display = DISPLAY_NONE; 
+   
+
     });
 }
 
 if (closeSearch) {
     closeSearch.addEventListener('click', () => {
-        navBar.style.display = "flex";
-        navSearch.style.display = "none";
+        navBar.style.display = DISPLAY_FLEX;
+        navSearch.style.display = DISPLAY_NONE;
     });
 }
 
 
 
 var menu = document.getElementById("main-navigation");
-var hamburger  = document.getElementById("hamburger-icon");
+var hamburger  = document.querySelector(".hamburger");
+var closeNavigation  = document.querySelector(".close-navigation");
  
-
+if (hamburger) {
+    hamburger.onclick = function(){
+        menutoggle();
+    }
+}
+if (closeNavigation) {
+    closeNavigation.onclick =  function(){
+        menutoggle();
+    }
+}
 function menutoggle(){
     if(menu.hasAttribute('class')){      
-        menu.removeAttribute('class','open'); 
-        hamburger.setAttribute('class','fa fa-bars'); 
+        menu.removeAttribute('class','open');        
 
     }else{     
-        menu.setAttribute('class','open');
-        hamburger.setAttribute('class','fa fa-times')
+        menu.setAttribute('class','open');     
     }
 }    
 
@@ -169,10 +181,24 @@ msgClose.forEach(close => {
 const btnSorting =  document.getElementById('sorting');
 
 if (btnSorting){
-    btnSorting.onchange = function(){
-        const id = this.selectedIndex;
-        url = this.options[id].value;
+    btnSorting.onchange = function(){    
+        const url = this.options[this.selectedIndex].value;
         window.location.href = url;
+    }
+}
+
+const categoryhamburger = document.querySelector('.category-hamburger');
+const collectionList = document.querySelector('.ul-product-categories');
+if (categoryhamburger){
+    categoryhamburger.onclick =  function(){     
+        collectionList.classList.add('open');
+    }
+}
+
+const closecategory = document.querySelector('.close-category');
+if (closecategory) {
+    closecategory.onclick = function(){      
+        collectionList.classList.remove('open');
     }
 }
 
@@ -186,19 +212,21 @@ if(splideCollectionElement){
         perPage: 3,
         perMove: 1,   
         breakpoints: {
+            1300: {
+                perPage: 3,
+                gap: '2em',
+               
+            },
             1024: {
               perPage: 3,
-              gap: 0,
+              gap: '1em',
              
             },
-            767: {
+            768: {
               perPage: 2,
+              gap: '1em',
           
-            },
-            640: {
-              perPage: 1,
-        
-            },
+            },           
           },
         gap: '2em',
         pagination: false,
@@ -215,19 +243,17 @@ if (splideProductElement){
         perPage: 4,
         perMove: 1,
         breakpoints: {
+            
             1024: {
               perPage: 3,
-              gap: 0,
+              gap: '1rem',
              
             },
-            767: {
-              perPage: 2,
-          
+            768: {
+              perPage: 2, 
+              gap: '1rem',         
             },
-            640: {
-              perPage: 1,
-        
-            },
+         
           },
         gap: '2em',
       } );
