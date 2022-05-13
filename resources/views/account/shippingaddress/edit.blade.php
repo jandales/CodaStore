@@ -12,7 +12,7 @@
                             <h2>Edit Shipping Adddress</h2>                        
                         </div>
                         
-                        <div class="form mt-1 w-3">
+                        <div class="form mt-1 w-6 sm-w-12">
                             <form action="{{ route('account.shippingaddress.update', [$address] ) }}" method="post">
                                 @csrf    
                                 @method('put')
@@ -86,7 +86,7 @@
                                 @enderror
                             
                                 <div class="form-block">
-                                        <button class="btn btn-primary user-btn">Save Changes</button>                              
+                                        <button class="btn btn-dark w-12">SAVE CHANGES</button>                              
                                 </div>
                             </form>
                         </div>

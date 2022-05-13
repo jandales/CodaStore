@@ -12,7 +12,7 @@
                             <h2>Create address book</h2>                        
                         </div>
                      
-                        <div class="form mt-2 w-3">
+                        <div class="form mt-2 w-6 sm-w-12">
                             <form action="{{ route('account.shippingaddress.store')}}" method="post">
                                 @csrf                         
                          
@@ -87,7 +87,7 @@
                                 @enderror
                             
                                 <div class="form-block">
-                                        <button class="btn btn-primary user-btn">Create</button>                              
+                                        <button class="btn btn-dark w-12">CREATE</button>                              
                                 </div>
                             </form>
                         </div>

@@ -14,7 +14,7 @@
                         <div class="card-heading">
                             <h2>Change Password</h2>
                         </div>
-                        <div class="form w-3 mt-1">
+                        <div class="form w-3 sm-width-full mt-1">
                             
                              @if (session('success'))
                                 <div class="alert alert-success alert-bordered mt-1 mb-1">{{ session('success')}}</div>
@@ -52,9 +52,11 @@
                                 </div> 
                              
                                 
-                                <div class="flex">
-                                    <button id="submit" class="button p-15 w-6  dark">SAVE</button> 
-                                    <a href="{{ url()->previous() }}"  class="btn w-6 p-15  btn-danger ml-1">CANCEL</a>  
+                                <div class="flex sm-flex-column gap10">
+                                    <button id="submit" class="btn btn-dark">SAVE</button> 
+                                    <a href="{{ url()->previous() }}">
+                                        <button class="btn btn-danger sm-width-full">CANCEL</button>
+                                    </a>  
                                 </div>
                             
                                                        

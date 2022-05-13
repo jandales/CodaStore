@@ -11,9 +11,9 @@
                     <div class="card-heading">
                             <h2>Profile</h2>
                     </div>    
-                    <div class="flex">                           
+                    <div class="flex sm-flex-column">                           
                         <div class="profile-wrapper">
-                            <div class="avatar mt-2">
+                            <div class="avatar">
                                     <img src="{{ auth()->user()->imagePath }}" alt="">   
                                     <a href="{{ route('account.upload') }}"><span><i class="fa fa-camera" aria-hidden="true"></i></span></a>                     
                             </div>    
@@ -22,8 +22,8 @@
                                     <a class="button p-15 dark" href="{{ route('account.password') }}">Change Password</a>
                             </div> 
                         </div> 
-                        <div class="profile-info-wrapper  mt-2 ml-2">
-                           <div class="flex wrap ">
+                        <div class="profile-info-wrapper">
+                           <div class="flex wrap">
                                 <div class="profile-info">
                                     <label class="title">Name</label>
                                     <label for="name">{{ auth()->user()->name }}</label>

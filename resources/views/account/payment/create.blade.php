@@ -12,7 +12,7 @@
                     <div class="card-heading">
                         <h2>Add new Card</h2>                        
                     </div>
-                    <div class="w-3">
+                    <div class="w-3 sm-w-12">
                         
                         <div class="mt-1">
                             <span><i class="fa fa-shield"></i> Your credit card details are protected.</span>                    
@@ -64,9 +64,9 @@
                           
                             <span class="text-md mt-1">PHP1.00 will be deducted as verification fee. It will be refunded to your card within 14 days.</span>
                 
-                            <div class="flex justify-content-flex-end gap10 mt-2">
-                                <button class="btn btn-light w-3">Cancel</button>
-                                <button id="btn-card-submit" class="btn btn-dark w-3">Submit</button>    
+                            <div class="flex flex-column gap10 mt-2">
+                                <button id="btn-card-submit" class="btn btn-dark">Submit</button>
+                                <button class="btn btn-light">Cancel</button>                                  
                             </div>
                            
                 

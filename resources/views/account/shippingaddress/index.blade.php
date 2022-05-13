@@ -9,7 +9,7 @@
                 <div class="card no-border pad-2 bg-grey min-height-400">
                     <div class="card-heading">
                         <h2>Shipping Address</h2>
-                        <a  href="{{ route('account.shippingaddress.create') }}" class="btn btn-primary">Add address</a>
+                        <a  href="{{ route('account.shippingaddress.create') }}" class="btn btn-dark">Add address</a>
                     </div>
                     <div class="address-wrapper">
                         @if(session('success'))
@@ -22,8 +22,7 @@
                         
                         <table class="table table-address bordered bg-white p-20">
                             <thead>
-                                    <tr>  
-                                        <th></th>                                     
+                                    <tr>                                                                        
                                         <th>Name</th>
                                         <th>Phone Number</th>
                                         <th>Address</th>
@@ -33,12 +32,7 @@
                             </thead>
                             <tbody>                                     
                                 @foreach ($shippingaddress as $item) 
-                                    <tr class = "bg-grey-hover @if($item->status == 1) address-default  @endif">
-                                        <td class="text-align-center address-type">                                        
-                                            <div class="rounded {{ $item->status == 1 ? 'active' : '' }}">
-                                                    
-                                            </div>
-                                        </td>
+                                    <tr class = "bg-grey-hover {{ $item->status == 1 ? 'address-default' : '' }} ">                                       
                                         <td>{{ $item->firstname . " " . $item->lastname }}</td>
                                         <td>{{ $item->phone }}</td>
                                         <td>{{ $item->street . " " . $item->city . " " . $item->region }}</td>

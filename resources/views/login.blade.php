@@ -5,8 +5,7 @@
             <div class="login-register">
         
                     <div class="login-register-header">
-                        <h1>Welcome back</h1>
-                        <div class="p"><p>We make it easy for everyone to shop for clothing needs</p></div>
+                        <h1>Login</h1>                   
                     </div>
         
                     <div class="login-register-body"> 
@@ -15,28 +14,22 @@
                             <div class="alert alert-danger">{{ Session('error') }}</div>
                         @endif
             
-                        <form class="form form-login" action="{{ route('login') }}" method="POST">
+                        <form class="form" action="{{ route('login') }}" method="POST">
                             @csrf
-                            <div class="form-input">
-                                <div class="form-group-input">
-                                    <span class="btn"><i class="fas fa-user"></i></span>
-                                    <input name="email" type="username" placeholder="Email Address"  value="{{ old('email') }}">
-                                </div>
-                                
-                                @error('email')
-                                    <div class="alert alert-danger">{{ $message }}</div>
-                                @enderror                      
+                            <div class="form-block">
+                                <label for="username">Email</label>
+                                <input name="email" type="username" placeholder="Email Address"  value="{{ old('email') }}">                                                                 
                             </div>
-                            <div class="form-input">
-                                <div class="form-group-input">
-                                    <span class="btn"><i class="fas fa-lock"></i></span>
-                                    <input name="password" type="password" placeholder="Password">
-                                </div>
-                                
-                                @error('password')
+                            @error('email')
                                 <div class="alert alert-danger">{{ $message }}</div>
-                                @enderror
+                            @enderror  
+                            <div class="form-block">
+                                <label for="password">Password</label>     
+                                <input name="password" type="password" placeholder="Password">  
                             </div>
+                            @error('password')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
                             <div class="flex space-between">
                                 <div class="checkbox">
                                     <input name="rememberToken" type="checkbox">
@@ -45,13 +38,12 @@
                                 <div class="forgor-password">
                                     <a href="/forgot-password" class="login-register-link">Forgot password?</a>
                                 </div>
-                            </div>
-                            
+                            </div>                            
                             <br>
-                            <button>Sign in</button>
+                            <button class="btn btn-dark">Login</button>
                         </form>  
                         <br>  
-                        <span>Dont have an account yet? <a href="/register" class="login-register-link"> Sign up now</a></span>
+                        <a href="/register" class="login-register-link">Create account</a>
                     </div>
             
             </div>

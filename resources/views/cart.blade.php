@@ -82,16 +82,15 @@
                             </table>
                     
                             <div class="cart-summary">
-                                <a href="{{ route('shop')}}" class="link"> Continue shopping </a>
-                               <div class="flex flex-column gap30">
-                                    <div class="flex justify-content-flex-end gap20">
+                                <a href="{{ route('shop')}}" class="link continue-shopping"> Continue shopping </a>
+                               <div class="flex flex-column sm-justify-center gap30">
+                                    <div class="flex justify-content-flex-end sm-justify-center gap20">
                                         <span class="bold">Subtotal</span>
                                         <span>@money($cart->total)</span>
                                     </div>
                                     <span>Taxes and shipping calculated at checkout</span>
-                                    <a href="{{ route('checkout.information') }}"><button class="btn btn-dark button-py10">CHECK OUT</button></a>
-                               </div>
-
+                                    <a href="{{ route('checkout.information') }}"><button class="btn btn-dark">CHECK OUT</button></a>
+                            </div>
                               
                             </div>
 

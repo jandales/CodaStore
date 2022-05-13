@@ -208,8 +208,8 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::get('/account/upload/avatar',[UserController::class, 'upload'])->name('account.upload');
 
-    Route::get('/account/edit/profile', [UserController::class, 'edit'])->name('account.edit');
-    Route::put('/account/change-password', [UserController::class, 'changePassword'])->name('account.changePassword');
+    Route::get('/account/profile/edit', [UserController::class, 'edit'])->name('account.edit');
+    Route::put('/account/profile/change-password', [UserController::class, 'changePassword'])->name('account.changePassword');
    
     // route Shipping address    
     Route::get('/account/shipping-address', [UserShippingAddressController::class, 'index'])->name('account.shippingaddress');

@@ -85,7 +85,7 @@
         </ul>
     </div>
 
-    <div class="add-review-wrapper mt-3">
+    <div class="add-review-wrapper">
        <div>
             <h2>Add Review</h2>
             <p class="mt">Your email address will not be published.</p>

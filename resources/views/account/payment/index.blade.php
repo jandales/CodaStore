@@ -9,7 +9,7 @@
                 <div class="card no-border pad-2 bg-grey min-height-400">
                     <div class="card-heading">
                         <h2>Payment Option</h2>
-                        <a href="{{ route('account.payment-option.create') }}"  class="btn btn-primary">Add new Card</a>
+                        <a href="{{ route('account.payment-option.create') }}"  class="btn btn-dark">Add new Card</a>
                     </div>
                     <div class="address-wrapper">
                         @if(session('success'))

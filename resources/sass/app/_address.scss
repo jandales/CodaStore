@@ -1,0 +1,83 @@
+.address-wrapper{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.address{
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    width:450px;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+   
+}  
+
+.address-icon{
+    background: #eee;
+}
+
+.address-icon span{
+  color: #2e2e2e;
+}
+
+.address span{
+    width: 100px;
+    height: 100px;
+}
+
+.address span i{
+    font-size: 3rem;
+}
+.address-ul{
+    display: flex;
+}
+.address-ul li{
+  margin-right: 10px;
+   
+}
+
+.address-ul li form{
+    display: inline !important;
+}
+
+
+
+
+.address-info{
+    width: 100%;
+    padding: 10px;;
+}
+
+
+.recipient{
+ 
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.address-default{
+    background: #EDF9FF!important;
+    border-color: #EDF9FF;
+   
+}
+
+.address-type{
+    color:#0dcaf0 !important;
+}
+
+@media screen and (max-width:768px) {
+    .address-wrapper{
+        overflow-x: auto;
+    }
+}

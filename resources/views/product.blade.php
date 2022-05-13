@@ -2,12 +2,10 @@
 
 @section('content')  
     <!--Featured Product-->
-        <div class="container">    
-            <div class="productPage mt-5">            
-                @if (session('success'))
-                    <div class="alert alert-success">{{session('success')}}</div>
-                @endif         
-            </div>
+        <div class="container">   
+            @if (session('success'))
+                 <div class="alert alert-success">{{session('success')}}</div>
+            @endif   
             <div class="panel-view">
                 <div class="product-images">
                     <div class="thumbnails-wrapper">             
@@ -50,19 +48,10 @@
                             <input  id="quantity-input" class=" num-product bg-grey"  name="qty" value="1" type="number">
                             <div class="btn-num-product-up flex-vert-center btn-add-minus" type="add"> <i class="fas fa-plus"></i></div>
                         </div>
-                        <div class="inline mt-2">                                         
-                            <button id="cart-button" data-id="{{ $product->id }}" url="{{route('cart.store',[$product->id])}}" class="button buy-cart-button btn-dark">
-                                <span class="mr"><i class="fas fa-cart-plus"></i></span>
-                                 Add to Cart
-                            </button>                       
+                        <div class="mt-2">                                         
+                            <button id="cart-button" data-id="{{ $product->id }}" url="{{route('cart.store',[$product->id])}}" class="btn btn-dark btn-add-cart">Add to Cart</button>                       
                         </div>
-                    </div> 
-            
-                    <ul class="social-icons-inline mt-2"> 
-                        <li><a href="https://web.facebook.com/"><i class="fab fa-facebook"></i></a></li>
-                        <li><a href="https://web.facebook.com/"><i class="fab fa-instagram"></i></a></li>
-                        <li><a href="https://web.facebook.com/"><i class="fab fa-twitter"></i></a></li>
-                    </ul>
+                    </div>             
                 </div>
             
             </div>

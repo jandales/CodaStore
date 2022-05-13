@@ -57,3 +57,12 @@
 .table tbody tr:hover{
     background: #f8f8f8;
 }
+
+@media screen and (max-width:768px) {
+    .table tr th.status, .table tr td.status{
+        width: 40px !important;
+    }
+    .table tr th, .table tr td{
+        min-width: 200px !important;
+    }
+}

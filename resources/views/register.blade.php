@@ -1,63 +1,42 @@
 @extends('layout.front.app')
 
-@section('content')
-    
+@section('content')    
     <div class="container">
         <div class="login-register-wrapper"> 
             <div class="login-register">
                 <div class="login-register-header">
-                    <h1>Sign up Now</h1>
-                    <div class="p"><p>We make it easy for everyone to shop for clothing needs</p></div>
-                </div>
-                
-                    <div class="login-register-body"> 
-                        
-                        <form action="{{ route('register') }}" method="post">
-                            @csrf
-                            <div class="form">
-                                <div class="form-input">
-                                    <div class="form-group-input">
-                                        <span class="btn"><i class="fas fa-user"></i></span>
-                                        <input type="text" name="name" placeholder="Name" value="{{ old('name')}}">
-                                    </div>
-                                    @error('name')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="form-input">
-                                    <div class="form-group-input">
-                                        <span class="btn"><i class="fas fa-user"></i></span>
-                                        <input type="email" name="email" placeholder="Email" value="{{ old('email')}}">
-                                    </div>
-                                    @error('email')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="form-input">
-                                    <div class="form-group-input">
-                                        <span class="btn"><i class="fas fa-lock"></i></span>
-                                        <input type="password" name="password" placeholder="Password">
-                                    </div>
-                                    @error('password')
-                                    <div class="alert alert-danger">{{ $message }}</div>
-                                @enderror
-                                </div>
-                                <button class="button" name="submit">Register</button>
-                                    
-                            </div>
-                        </form>
-                        <br>  
-                        <span>You already have account? <a href="/login" class="login-register-link">Sign in</a></span>
-                    
-                
-                
-                       
-                    </div>    
-
-            
-            
+                    <h1>Create Account</h1>            
+                </div>                
+                <div class="login-register-body">                         
+                    <form class="form" action="{{ route('register') }}" method="post">
+                        @csrf 
+                        <div class="form-block">
+                            <label for="name">Name</label>
+                            <input type="text" name="name"  value="{{ old('name')}}">
+                        </div>  
+                        @error('name')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror                               
+                        <div class="form-block">
+                            <label for="email">Email</label>
+                            <input type="email" name="email"  value="{{ old('email')}}">
+                        </div>
+                        @error('email')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror                            
+                        <div class="form-block">
+                            <label for="password">Password</label>
+                            <input type="password" name="password">
+                        </div>
+                        @error('password')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                        <button class="btn btn-dark" name="submit">Create</button>
+                    </form>
+                    <br>  
+                    <a href="/login" class="login-register-link">Login</a>
+                </div>   
             </div>
         </div>
-    </div>           
-    
+    </div>  
  @endsection

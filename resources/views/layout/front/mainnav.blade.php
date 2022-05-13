@@ -14,8 +14,8 @@
                         <li><a href="{{ route('shop') }}">Shop</a></li>
                         <li><a href="{{ route('about') }}">About</a></li>
                         <li><a href="{{ route('contact') }}">Contact</a></li>
-                        <li class="nav-item-hidden mt-auto"><a href="{{ route('account') }}">My Account</a></li>
-                        <li class="nav-item-hidden"><a  href="{{ route('logout') }}">Logout</a></li>
+                        <li class="md-hidden mt-auto"><a href="{{ route('account') }}">My Account</a></li>
+                        <li class="md-hidden"><a  href="{{ route('logout') }}">Logout</a></li>
                     </ul> 
             </nav> 
             <nav id="navigation-icon"> 

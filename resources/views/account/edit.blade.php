@@ -5,7 +5,7 @@
     
         <div class="container">
 
-            <div class="flex full-width mt-3 mb-3"> 
+            <div class="flex account mt-3 mb-3"> 
                 <div class="col1">
                     @include('layout.front.sidebar')
                 </div>
@@ -16,14 +16,14 @@
                         </div>
     
                         <div class="flex">   
-                             <div class="form mt-1">
+                             <div class="form mt-1 sm-width-full">
                                     @if (session('status'))
                                        <div class="alert alert-success alert-bordered mt-1 mb-1">{{ session('status')}}</div>
                                     @endif
                                    <form  id="form" action="{{ route('users.update')}}" method="post">
                                        @csrf
     
-                                       <div class="profile flex wrap">
+                                       <div class="profile flex  wrap sm-flex-column">
                                             <div class="form-block">
                                                 <label>Name</label>
                                                 <input type="text" class="user-name"  name="name" value="{{ auth()->user()->name }}">
@@ -51,9 +51,11 @@
                                       
                                        <br>                                 
                                        
-                                       <div class="flex">
-                                        <button id="submit" class="button p-15 w-3 dark">SAVE</button> 
-                                        <a href="{{ url()->previous() }}"  class="btn p-15 w-3 btn-danger ml-1">CANCEL</a>   
+                                       <div class="flex gap10 sm-flex-column">
+                                        <button id="submit" class="btn btn-dark">SAVE</button> 
+                                        <a href="{{ url()->previous() }}">
+                                            <button class="btn btn-danger sm-width-full">CANCEL </button>
+                                        </a>   
                                        </div>
                                                         
                                        
