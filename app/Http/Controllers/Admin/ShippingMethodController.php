@@ -6,9 +6,17 @@ use Illuminate\Http\Request;
 use App\Models\ShippingMethod;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ShippingMethodRequest;
+use App\Services\Admin\ShippingMethodServices;
 
 class ShippingMethodController extends Controller
 {
+    private $services;
+
+    public function __construct(ShippingMethodServices $services)
+    {
+        $this->services = $services;
+    }
+
     public function index()
     {
         $shipping_methods = ShippingMethod::all();
@@ -22,14 +30,8 @@ class ShippingMethodController extends Controller
 
     public function store(ShippingMethodRequest $request)
     {
-        ShippingMethod::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'amount' => $request->amount,
-            'status' => $request->status,
-        ]);
-
-        return redirect()->route('admin.shipping.method');    
+       $this->services->store($request);
+       return redirect()->route('admin.shipping.method');    
     }
 
     public function edit(ShippingMethod $method)
@@ -40,11 +42,7 @@ class ShippingMethodController extends Controller
     public function update(ShippingMethodRequest $request, ShippingMethod $method)
     {
        
-        $method->name = $request->name;
-        $method->description = $request->description;
-        $method->amount =$request->amount;
-        $method->status =$request->status;
-        $method->save();        
+        $this->services->update($request, $method); 
         return redirect()->route('admin.shipping.method');   
     }
 
@@ -56,19 +54,14 @@ class ShippingMethodController extends Controller
 
     public function selected_destroy(Request $request)
     {
-        foreach($request->selected as $method_id)
-        {         
-            $method = ShippingMethod::find($method_id);
-            $method->delete();
-        }
+        $this->services->selected_destroy($request);
         return redirect()->route('admin.shipping.method');
         
     }
 
     public function update_status(ShippingMethod $method, $status)
     {        
-        $method->status = $status;
-        $method->save();
+        $this->services->update_status($method, $status);
         return redirect()->route('admin.shipping.method');  
     }
 
@@ -76,24 +69,13 @@ class ShippingMethodController extends Controller
 
     public function selected_update_status(Request $request)
     {       
-        $request->validate([
-            'status' => 'required',
-        ]);
-      
-        foreach($request->selected as $method_id)
-        {         
-            $method = ShippingMethod::find($method_id);
-            $method->status = $request->status;
-            $method->save();
-        }
-
+        $this->services->selected_update_status($request); 
         return redirect()->route('admin.shipping.method');
         
     }
 
-    public function getShippingMethod($id)
+    public function getShippingMethod(ShippingMethod $shipping_method)
     {
-        $shipping_method = ShippingMethod::find($id);
         return response()->json(['shipping_method' => $shipping_method]);
     }
 

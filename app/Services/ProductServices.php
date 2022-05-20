@@ -115,6 +115,23 @@ class ProductServices
         }  
     }  
 
+   
+    public function filter($filterBy, $value)
+    {   
+
+        $products = Product::with(['category', 'stock'])
+            ->whereHas('category', function ($query) use ($filterBy, $value) {
+                if($filterBy != 'all') $query->where($filterBy, $value);                              
+        })->paginate(10);
+
+        if ($value == 0)
+            $filterBy = "status=unpublished";
+        
+        if ($value == 1)
+            $filterBy = "status=published";
+        
+        return ['products' => $products, 'filter' => $filterBy];
+    }
 
     private function updateStatus(Product $product, $status)
     {   

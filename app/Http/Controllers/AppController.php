@@ -12,11 +12,8 @@ use Illuminate\Support\Facades\Cookie;
 class AppController extends Controller
 {
     public function index()
-    {
-        
-        $products = Product::where('featured', 1)->get(); 
-        $collection = Category::get();
-        return view('index')->with(['products' => $products, 'collection' => $collection]);
+    {       
+        return view('index');
     }
 
     public function setCartCookie()
@@ -53,6 +50,7 @@ class AppController extends Controller
             'email' => 'required|email',
             'content' => 'required'
         ]);
+        
         return $request->all();
     }
 }

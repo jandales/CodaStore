@@ -4,11 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\SocialSite;
 use Illuminate\Http\Request;
+use App\Services\SocailServices;
 use App\Http\Requests\StoreSocialSiteRequest;
 use App\Http\Requests\UpdateSocialSiteRequest;
 
 class SocialSiteController extends Controller
 {
+    private $services;
+
+    public function __construct(SocailServices $services)
+    {
+        $this->services = $services;
+    }
+
     public function index()
     {
         $sites = SocialSite::get();
@@ -17,23 +25,13 @@ class SocialSiteController extends Controller
 
     public function store(StoreSocialSiteRequest $request)
     {
-        $site = SocialSite::create([
-            'name' => $request->name,
-            'url' => $request->url,
-            'code' => $request->code,
-        ]);
-
-        return back()->with('success', "Successfully created" . $site->name . " ");
-
-
+       $site = $this->services->store($request);
+       return back()->with('success', "Successfully created" . $site->name . " ");
     }
 
     public function update(UpdateSocialSiteRequest $request, SocialSite $site)
     {
-        $site->name = $request->name;
-        $site->url = $request->url;
-        $site->code = $request->code;
-        $site->save();
+        $site = $this->services->update($request);
         return back()->with('success', "Successfully update " . $site->name . " ");
 
     }

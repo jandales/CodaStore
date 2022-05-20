@@ -138,3 +138,20 @@ if(confirmShippingAddress){
         form.submit();     
     }
 }
+
+
+const openCartSummary = document.getElementById('open-cart-summary');
+if(openCartSummary) {
+    openCartSummary.onclick =  function(){
+        const cartContainer = document.querySelector('.cart-container');
+        cartContainer.classList.add('open');
+    }
+}
+
+const closeCartSummary = document.getElementById('close-cart-summary');
+if(closeCartSummary){
+    closeCartSummary.onclick = function() {
+        const cartContainer = document.querySelector('.cart-container');
+        cartContainer.classList.remove('open');
+    }
+}

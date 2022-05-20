@@ -37,7 +37,7 @@ class PaymentRequest extends FormRequest
         }
 
         $rules['card_name'] = 'required';
-        $rules['card_number'] = 'required|min:16|numeric';
+        $rules['card_number'] = 'required|min:16';
         $rules['card_expire_date'] = 'required:max:5';
         $rules['card_cvc'] = 'required:numeric';
         

@@ -14,8 +14,9 @@
                             <div class="alert alert-danger">{{ Session('error') }}</div>
                         @endif
             
-                        <form class="form" action="{{ route('login') }}" method="POST">
+                        <form class="form" action="{{ route('login')}}" method="POST">
                             @csrf
+                            <input type="hidden" name="url" value="{{ url()->previous() }}">
                             <div class="form-block">
                                 <label for="username">Email</label>
                                 <input name="email" type="username" placeholder="Email Address"  value="{{ old('email') }}">                                                                 

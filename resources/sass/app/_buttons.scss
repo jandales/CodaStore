@@ -121,3 +121,10 @@ button:disabled {
     background: #EC7063;
     color: #fff;
 }
+
+
+@media screen and (min-width:1024px) {
+    .md-btn{
+        width: 100% !important;
+    }
+}

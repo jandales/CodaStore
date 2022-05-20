@@ -1,23 +1,29 @@
-<div class="bg-grey p-20">
+<div class="cart-container bg-grey p-20">
+        <div class="sm-visible">
+            <div class="cart-heading">
+                <span id="close-cart-summary"><i class="fa fa-times"></i></span>
+                <h2 class="cart-title sm-text-center">Cart</h2>
+            </div>          
+        </div>
     <div class="flex flex-column gap20">
         @foreach ($cart->items as $cart_item)
-        <div class="cart-sm gap10">                    
-            <div class="cart-image">
-                <img class="img" src="/{{ $cart_item->product->imagePath }}" alt="" srcset="">
-                <div class="cart-image-overlay flex-vert-center">
-                    <span class="cart-item-remove" data-id="{{$cart_item->id}}"><i class="fas fa-times"></i></span>
+            <div class="cart-sm gap10">                    
+                <div class="cart-image">
+                    <img class="img" src="/{{ $cart_item->product->imagePath }}" alt="" srcset="">
+                    <div class="cart-image-overlay flex-vert-center">
+                        <span class="cart-item-remove" data-id="{{$cart_item->id}}"><i class="fas fa-times"></i></span>
+                    </div>
                 </div>
+                <div class="w-12">
+                    <div class="flex space-between">
+                        <span class="cart-item-name">{{$cart_item->product->name}}</span> 
+                        <span class="cart-item-name">@money($cart_item->product->regular_price)</span>   
+                    </div>                           
+                    <span class="cart-item-info">Qty: {{ $cart_item->qty  }}</span>  
+                    <ul class="cart-item-variant">    
+                    </ul> 
+                </div>  
             </div>
-            <div class="w-12">
-                <div class="flex space-between">
-                    <span class="cart-item-name">{{$cart_item->product->name}}</span> 
-                    <span class="cart-item-name">@money($cart_item->product->regular_price)</span>   
-                </div>                           
-                <span class="cart-item-info">Qty: {{ $cart_item->qty  }}</span>  
-                <ul class="cart-item-variant">    
-                </ul> 
-            </div>  
-        </div>
         @endforeach
     </div>
 

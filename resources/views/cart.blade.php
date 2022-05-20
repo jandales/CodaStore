@@ -89,7 +89,9 @@
                                         <span>@money($cart->total)</span>
                                     </div>
                                     <span>Taxes and shipping calculated at checkout</span>
-                                    <a href="{{ route('checkout.information') }}"><button class="btn btn-dark">CHECK OUT</button></a>
+                                    <a href="{{ route('checkout.information') }}">
+                                        <button class="btn btn-dark md-btn">CHECK OUT</button>
+                                    </a>
                             </div>
                               
                             </div>
@@ -104,19 +106,6 @@
             
                
         </div>
-
- 
-  
-    
-    
-      
- 
-       
- 
-
-        {{-- <script src="/js/front/cart/cart.js"></script>
-        <script src="/js/front/cart/updateQuantity.js"></script>
-        <script type="module" src="/js/front/cart/coupon.js"></script> --}}
         @endsection
 
 

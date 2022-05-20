@@ -13,7 +13,7 @@
     <div class="credit-card-body">
         <div class="form-block">
             <label for="contact" class="text-sm">Card Number</label>
-            <input type="text" validator-input="card_number" name="card_number" placeholder="xxxx-xxxx-xxxx-xxxx" value="{{ $card->card_number ?? '' }}"/>
+            <input type="text" class="card-number" validator-input="card_number" name="card_number" placeholder="xxxx-xxxx-xxxx-xxxx" value="{{ $card->card_number ?? '' }}"/>
             <small class="validator-text" validator-for="card_number">Please Enter Card Number</small>
         </div>
         <div class="form-block">
@@ -24,7 +24,7 @@
         <div class="flex gap20">
             <div class="form-block w-6 mb-0">
                 <label for="contact" class="text-sm">Expiration Date (MM/YY)</label>
-                <input type="text" name="card_expire_date"  validator-input="card_expire_date" placeholder="MM/YY" value="{{ $card->card_expire_date ?? '' }}"/>
+                <input type="text" class="expired-date" name="card_expire_date"  validator-input="card_expire_date" placeholder="MM/YY" value="{{ $card->card_expire_date ?? '' }}"/>
                 <small class="validator-text" validator-for="card_expire_date">Please Enter Card Number</small>
             </div>
             <div class="form-block w-6 mb-0">

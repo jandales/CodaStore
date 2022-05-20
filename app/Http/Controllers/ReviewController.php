@@ -10,71 +10,45 @@ use App\Http\Requests\StoreReviewRequest;
 
 class ReviewController extends Controller
 {
+    private $services;
+    public function __construct(ReviewServices $services)
+    {
+        $this->services = $services;
+    }
     public function index()
     {
-        $reviews = Review::with('product', 'user')->paginate(10);
+        $reviews = $this->services->list_review();
         return view('admin.reviews.index')->with('reviews', $reviews);
     }
 
     public function search(Request $request)
     {       
-        $reviews = Review::search($request->keyword)->with('product', 'user')->paginate(10);
+        $reviews = $this->services->search($request);
         return view('admin.reviews.index')->with(['reviews' => $reviews, 'keyword' => $request->keyword]);
     }
 
     public function listbyStatus($status)
     {
-        $reviews = Review::where('block',$status)->with('product', 'user')->paginate(10);
+        $reviews = $this->services->list_review_status($status);
         return view('admin.reviews.index')->with('reviews', $reviews);
     }
 
     public function block(Review $review)
     {
-        if($review->block == 1)
-        {
-            $review->block = 0;
-            $review->save();
-            return back()->with('success', 'Review successfully unblock');
-        }
-     
-        $review->block = 1;
-        $review->save();
+        $this->services->block($review);
         return back()->with('success', 'Review successfully block');
 
     }
 
-    public function store(StoreReviewRequest  $request, Product $product)
+    public function store(StoreReviewRequest $request, Product $product)
     { 
-        $user = auth()->user();
-
-        if($product->reviewby($user)) 
-        {
-            $review = $user->review($product);
-            $review->comments = $request->comments; 
-            $review->rating = $request->rate;       
-            $review->save(); 
-            return back()->with('success', 'Your review successfully submitted');
-        }
-
-        
-
-        Review::create([
-            'product_id' => $product->id,
-            'user_id' => $user->id,      
-            'comments' => $request->comments,
-            'rating' => $request->rate,
-        ]);      
-        
-        return back()->with('success', 'Your review successfully submitted');
-
+        $this->services->store($request, $product);        
+        return back()->with('success', 'Your review successfully submitted'); 
     }
-
 
     public function update(StoreReviewRequest  $request, Review $review)
     {        
-        $review->comments = $request->comments; 
-        $review->rating = $request->rate;       
-        $review->save();      
+        $this->services->update($request, $review);
         return back();
     }   
 
@@ -86,10 +60,7 @@ class ReviewController extends Controller
 
     public function destroySelected(Request $request)
     {
-        foreach($request->selected as $id){
-            $review = Review::find($id);
-            $review->delete();
-        }
+        $this->services->destroySelected($request);
         return back()->with('success', 'Review successfully Deleted');
 
     }

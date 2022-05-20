@@ -89,7 +89,7 @@ Route::get('/cart/coupon/activate', [CartController::class , 'couponActivate'])-
 
 Route::put('/cart/coupon/remove', [CartController::class, 'couponRemove'])->name('coupon.remove');
 
-Route::get('/cart/select/{id}/shipping-method/',[CartController::class, 'selectShippingMethod'])->name('cart.select.shippingMethod');
+Route::get('/cart/select/{ShippingMethod:id}/shipping-method/',[CartController::class, 'selectShippingMethod'])->name('cart.select.shippingMethod');
 //cart ajax request 
 Route::get('/get-user-cart', [CartController::class, 'get_user_cart']);
 
@@ -256,7 +256,7 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::get('/checkout/completed', [CheckOutController::class, 'completed' ])->name('checkout.completed');    
 
-    Route::get('/get-shipping-method/{id}', [ShippingMethodController::class, 'getShippingMethod']);
+    Route::get('/get-shipping-method/{ShippingMethod:id}', [ShippingMethodController::class, 'getShippingMethod']);
  
 /*
 |--------------------------------------------------------------------------
@@ -412,7 +412,7 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){
     Route::put('/products/{product}/status',[ProductController::class, 'changeStatus'])->name('admin.products.status.update');
     Route::post('/products/status/{status}',[ProductController::class, 'changeSelectedItemStatus'])->name('admin.products.status.updates');    
     Route::get('/products/find',[ProductController::class, 'find'])->name('admin.products.find'); 
-    Route::get('/products/filter={filter}',[ProductController::class, 'filter'])->name('admin.products.filter');  
+    Route::get('/products/{filterBy}/{value}',[ProductController::class, 'filter'])->name('admin.products.filter');  
     Route::get('/products/get',[ProductController::class, 'getProduct']);     
    
     //image route

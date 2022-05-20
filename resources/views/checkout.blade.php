@@ -12,8 +12,8 @@
 
 <body>
     <div class="container-lg mx-auto">
-            <h1 class="block text-center mt-4 text-2xl">CodaStore</h1>      
-        <div class="step-progress-wrapper w-6">
+        <a href="{{route('home')}}"><h1 class="block text-center mt-4 md-mt-2 text-2xl">CodaStore</h1></a>      
+        <div class="step-progress-wrapper w-6 sm-w-12">
             <div class="step-circles">
                 <div class="step {{ checkoutProgress() == 0 || checkoutProgress() == 30 ||  checkoutProgress() == 60 ||  checkoutProgress() == 100 ? 'active' : '' }}">
                     <div class="circle"><i class="fas fa-info"></i></div>
@@ -37,7 +37,14 @@
             </div>
             <div style="--width:{{ checkoutProgress() }};" class="progress-bar"></div>       
         </div>
-      
+        @if (!route('checkout.completed'))
+            <div class="sm-visible mt-5">
+                <span id="open-cart-summary" class="sm-text-right change">
+                    <i class="fa fa-bag"></i>
+                    Open Cart
+                </span>
+            </div>
+        @endif
         @yield('content')
     </div>
 
@@ -62,7 +69,7 @@
                                 </ul>
                             </div>                 
                     @endforeach
-               <button id="confirm-shipping-address" class="btn btn-success" >CONFIRM</button>
+               <button id="confirm-shipping-address" class="btn btn-success sm-w-12" >CONFIRM</button>
             </form>
             </div>
            
@@ -92,7 +99,7 @@
                                 </ul>
                             </div>                 
                     @endforeach
-                    <button id="confirm-payment-option" class="btn btn-success" >CONFIRM</button>
+                    <button id="confirm-payment-option" class="btn btn-success sm-w-12" >CONFIRM</button>
                 </form>
             </div>
            

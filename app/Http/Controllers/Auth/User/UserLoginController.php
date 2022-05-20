@@ -21,11 +21,16 @@ class UserLoginController extends Controller
         return view('login');
     }
 
-    public function login(UserLoginRequest $request){ 
+    public function login(UserLoginRequest $request)
+    { 
 
-       if(auth()->attempt($request->only('email', 'password')))
+       $url = $request->input('url');
+  
+       if (auth()->attempt($request->only('email', 'password')))
        {
-           return redirect()->route('home');
+            if ($url == route('login.store')) return redirect()->route('home');
+            return redirect()->to($url);
+       
        }
        
        return back()->with('error','email not found');

@@ -2,8 +2,8 @@
 @section('content')    
 
 
-        <div class="flex space-between gap50 mt-5 mb-5">
-            <div class="w-6">
+        <div class="flex  space-between gap50 mt-5 sm-flex-column md-mt-2">
+            <div class="w-6 sm-w-12">
 
                <x-checkout-information-component/>
 
@@ -33,22 +33,23 @@
                             <x-form-billing-component/>
                         </div> 
                     </div>
-
-                    <div class="flex align-items-center gap10 mt-2">
-                        <input type="checkbox" name="" id="">
-                        <label for="">Save my Information for fastest checkout</label>
-                    </div>             
+                    @guest
+                        <div class="flex align-items-center gap10 mt-2">
+                            <input type="checkbox" names="save-details" id="">
+                            <label for="">Save my Information for fastest checkout</label>
+                        </div>             
+                    @endguest
 
 
                         <div class="form-block mt-2">
-                            <button id="paynow" class="btn btn-dark w-3 p-10 mr-1">Pay Now</button> 
-                            <a href="{{route('checkout.shipping')}}" class="change">Return to Shipping</a>
+                            <button id="paynow" class="btn btn-dark mr-1 md-mr-0">Pay Now</button> 
+                            <a href="{{route('checkout.shipping')}}" class="change sm-text-center">Return to Shipping</a>
                         </div> 
                 </form>
               
                
             </div>            
-            <div class="w-6">
+            <div class="w-6 sm-w-12">
                 <x-small-cart-component :cart="$cart" :shippingcharge="session('shipping_method')['amount']"/>               
             </div>
         </div>

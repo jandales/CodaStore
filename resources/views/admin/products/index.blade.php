@@ -9,8 +9,7 @@
 <div class="row" >
     <div class="panel-table m-t-2 w-12">
         <div class="panel-header">            
-        </div>
-           
+        </div>         
                 <div class="toolbar justify-content-space-between action-toolbar hidden"> 
                     <label class="title selected-items">2 item Selected</label>
                     <div class="btn-action">
@@ -25,17 +24,17 @@
                            <div class="flex items-center">
                                 <label for="" class="label-width">Filter :</label>
                                 <select name="filter" id="filter">
-                                    <option  data-url="{{ route('admin.products.filter',['all'])}}"  value="all" {{ $filter == 'all' ? 'selected' : ''}}>All</option>
-                                    <option  data-url="{{ route('admin.products.filter',['published'])}}"  value="published" {{ $filter == 'published' ? 'selected' : ''}}>Published</option>
-                                    <option  data-url="{{ route('admin.products.filter',['featured-products'])}}"  value="featured-products" {{ $filter == 'featured-products' ? 'selected' : ''}}>Feautured Product</option>
-                                    <option   data-url="{{ route('admin.products.filter',['unpublished'])}}" value="unpublished" {{ $filter == 'unpublished' ? 'selected' : ''}}>Unpublished</option>
+                                    <option  data-url="{{ route('admin.products.filter',['all', 'all'])}}"  value="all" {{ $filter == 'all' ? 'selected' : ''}}>All</option>
+                                    <option  data-url="{{ route('admin.products.filter',['status',1])}}"  value="published" {{ $filter == 'status=published' ? 'selected' : ''}}>Published</option>
+                                    <option  data-url="{{ route('admin.products.filter',['featured', 1])}}"  value="featured" {{ $filter == 'featured' ? 'selected' : ''}}>Feautured Product</option>
+                                    <option   data-url="{{ route('admin.products.filter',['status', 0])}}" value="unpublished" {{ $filter == 'status=unpublished' ? 'selected' : ''}}>Unpublished</option>
                                 </select>
                            </div>
                            
                            <div class="flex gap20">
                                 <form id="formSearch" action="{{ route('admin.products.search') }}" method="get">
                                     
-                                    <div class="search-input"> 
+                                    <div class="search-input">
                                         <span class="icon-left"></span>                           
                                         <input type="text" placeholder="Search" name="keyword">
                                         <span class="icon-right" onclick="document.getElementById('formSearch').submit()"><i class="fas fa-search"></i></span>

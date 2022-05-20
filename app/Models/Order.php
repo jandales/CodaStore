@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Order extends Model
 {
-    use HasFactory,  DateAndTimeFormat, Crypted ;
+    use HasFactory, Crypted;
 
     protected $fillable = [
         'user_id', 
@@ -151,12 +151,7 @@ class Order extends Model
                             ->orderBy('id', 'desc');
     }
 
-    public function scopeByAuthUserStatus($query, $status)
-    {
-       return $query->where([['user_id', auth()->user()->id],['status', $status]])
-                            ->with('payment_detail', 'items', 'items.product', 'shipping', 'billing', 'payment', 'couponUsed')
-                            ->orderBy('id', 'desc');
-    }
+
 
  
 

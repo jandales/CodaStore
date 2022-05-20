@@ -163,10 +163,10 @@
     transition: all ease-in-out 1000ms;
 }
 
-@media screen and (max-width:768px) {
-    
+@media screen and (max-width:768px) {   
     .modal-sidebar{
         width:100% !important;
+        right: -100%;
     }
     
 }

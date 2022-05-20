@@ -13,6 +13,12 @@ use App\Http\Controllers\Controller;
 
 class StockController extends Controller
 {  
+    private $services;
+    
+    public function __construct(StockServices $services)
+    {
+        $this->services = $services;
+    }
 
     public function edit(Stock $stock)
     {   
@@ -21,22 +27,13 @@ class StockController extends Controller
 
     public function update(StockRequest $request, Stock $stock)
     {
-        $stock->qty += $request->qty;
-        $stock->remarks = $request->remarks;         
-        $stock->save();     
-        return back()->with('success', 'Quantity Successfully Updated');       
+       $this->services->update($request, $stock);   
+       return back()->with('success', 'Quantity Successfully Updated');       
     }
 
     public function updateQuantity(StockRequest $request, Stock $stock)
-    {     
-        $qty = (int)$request->qty;
-
-        if ($request->action == 1)
-            $stock->qty += $qty;
-        else  
-            $stock->qty = $stock->qty < $qty ? 0 : $stock->qty - $qty;    
-
-        $stock->save();
+    {   
+        $stock = $this->services->updateQuantity($request, $stock);
         return response()->json(['status' => 200, 'stock' => $stock]);        
     }
 
@@ -47,12 +44,8 @@ class StockController extends Controller
     }
 
     public function filter($filter)
-    {  
-        if ($filter == 'all')
-            $products = Product::with('category','stock')->paginate(10);  
-        else
-            $products = Product::FilterByCategory($filter)->paginate(10);
-            
+    {          
+        $products = Product::FilterByCategory($filter)->paginate(10);           
         return view('admin.products.inventory')->with(['products' => $products, 'filter' => $filter, 'keyword' => '']);
     }
 

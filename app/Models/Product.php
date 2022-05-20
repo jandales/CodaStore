@@ -141,8 +141,10 @@ class Product extends Model
     {
         return $query->with(['category', 'stock'])
                 ->whereHas('category', function ($q) use ($filter) {
-                    $q->where('slug', $filter)
-                    ->orWhere('name', $filter);
+                    if($filter != 'all'){
+                        $q->where('slug', $filter)
+                        ->orWhere('name', $filter);
+                    }                   
                 });
     }
 

@@ -55,6 +55,7 @@
                 </div>
             
             </div>
+            
             <div class="product-additional-info-wrapper mt-7 mb-7">
                 <div class="tabs tab-product-detail">
                     <ul class="tab-navigation">
@@ -71,5 +72,9 @@
                     </div>
                 </div>
             </div>
+
+            <x-featured-product-component/>
+
+
         </div>
 @endsection

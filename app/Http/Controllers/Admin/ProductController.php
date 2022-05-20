@@ -24,18 +24,10 @@ class ProductController extends Controller
         return view('admin.products.index')->with(['products' => $products, 'filter' => 'all']);
     }
 
-    public function filter($filter)
-    {         
-        if ($filter == 'published')
-            $products = Product::with('category','stock')->where('status', 1)->paginate(10);
-        else if ($filter == 'unpublished')
-            $products = Product::with('category','stock')->where('status', 0)->paginate(10);
-        else if ($filter == 'featured-products')
-            $products = Product::with('category','stock')->where('featured', 1)->paginate(10);
-        else
-            $products = Product::with('category','stock')->paginate(10);   
-
-        return view('admin.products.index')->with(['products' => $products, 'filter' => $filter]);
+    public function filter($filterBy, $value)
+    {   
+        $result  = $this->services->filter($filterBy, $value);    
+        return view('admin.products.index')->with(['products' => $result["products"],'filter' => $result["filter"]]);
     }
 
     public function create()
