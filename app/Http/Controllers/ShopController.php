@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Price;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Attribute;
@@ -104,29 +103,6 @@ class ShopController extends Controller
 
     }
 
-    public function filterByTags($tag){      
-        $products = Product::Tags($tag)->with('reviews', 'wishlist')->get();
-        return view('shop')->with([ 'products' => $products ]);
-
-    }
-
-    public function filterPriceDesc($prices)
-    {
-       
-        if($prices == 'high')
-        {
-            $products = Price::OrderbyDesc(); 
-            return view('shop')->with(['products' => $products ]);
-        }
-
-        if( $prices == 'low')
-        {
-            $products = Price::OrderbyAsc();
-            return view('shop')->with(['products' => $products ]);
-        }
-       
-    }
-
     public function filterLatest()
     {
        $products = Product::latest()->with('reviews', 'wishlist')->get();
@@ -137,13 +113,13 @@ class ShopController extends Controller
     {
         $count = $product->hasVariants();
         $attributes = [];
-        $hasvariants = false;    
-        foreach($product->attributes as $item)
-        {
+        $hasvariants = false;
+
+        foreach($product->attributes as $item){
           array_push($attributes, $item->attributes->name);
-        }      
-        if($count > 0) $hasvariants = true;
-          
+        }  
+
+        if($count > 0) $hasvariants = true;          
         
         return response()->json(['attributes' => $attributes, 'hasvariant' => $hasvariants]);
     }

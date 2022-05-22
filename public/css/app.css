@@ -1367,6 +1367,12 @@ a.delete {
   border-radius: 0.25rem;
 }
 
+.alert-text {
+  display: block;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 .alert-success {
   color: #155724;
   background-color: #d4edda;
@@ -1562,7 +1568,7 @@ a.delete {
 }
 
 .w-3 {
-  width: 33.33%;
+  width: 33.33% !important;
 }
 
 .w-2 {
@@ -3110,6 +3116,40 @@ span .fa-toggle-on {
     display: block;
   }
 }
+.flex-btn-form {
+  display: flex;
+  gap: 1rem;
+}
+
+.flex-btn-form .btn {
+  width: calc(50% - 1rem);
+}
+
+.full-width {
+  width: 100%;
+}
+
+.inline-form-group {
+  width: 100%;
+  display: flex;
+}
+
+.inline-form-group input {
+  border: 0 !important;
+}
+
+.input-custom {
+  outline: none;
+  display: block;
+  width: 100%;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+}
+
 .header-container {
   width: 100%;
   background: rgb(243, 241, 241);

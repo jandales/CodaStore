@@ -3,8 +3,12 @@
 use App\Models\Variant;
 use App\Models\Category;
 use App\Models\SocialSite;
+use App\Models\GeneralSetting;
 use App\Models\UserShippingAddress;
 
+function siteSettings(){
+    return GeneralSetting::find(1);
+}
 function socialList() {
    return SocialSite::get();
 }

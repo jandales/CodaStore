@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdatePaymentOptionRequest extends FormRequest
+class SendUsMessageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,8 @@ class UpdatePaymentOptionRequest extends FormRequest
     public function rules()
     {
         return [
-            'card_name' => 'required',
-            'card_number'  => "required|min:16|unique:user_payment_options,card_number,{$this->option->id}",
-            'card_expire_date' => 'required',
-            'card_cvc' => 'required|min:3|max:3',    
+            'email' => 'required|email',
+            'content' => 'required'
         ];
     }
 }

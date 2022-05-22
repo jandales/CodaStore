@@ -37,7 +37,7 @@
             </div>
             <div style="--width:{{ checkoutProgress() }};" class="progress-bar"></div>       
         </div>
-        @if (!route('checkout.completed'))
+        @if (!(request()->is('/checkout/completed')))
             <div class="sm-visible mt-5">
                 <span id="open-cart-summary" class="sm-text-right change">
                     <i class="fa fa-bag"></i>

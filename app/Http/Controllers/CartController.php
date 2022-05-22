@@ -27,8 +27,9 @@ class CartController extends Controller
 
     public function index()
     { 
-        $result = $this->services->index();            
-        return view('cart')->with(['cart' =>  $result->cart, 'shipping_methods' => $result->shipping_methods]);
+        // $result = $this->services->index(); 
+        $cart = Cart::ByUser()->first();           
+        return view('cart')->with('cart',$cart);
     }
 
     public function store(QuantityRequest $request, Product $product)

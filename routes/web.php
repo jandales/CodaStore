@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\ImageController;
 use App\Http\Controllers\Admin\StockController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\CouponFrontController;
+use App\Http\Controllers\SendUsEmailController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SettingController;
@@ -64,7 +65,7 @@ Route::get('/create-cart-cookie', [AppController::class, 'setCartCookie']);
 Route::get('/about', [AppController::class, 'about'])->name('about');
 Route::get('/contact', [AppController::class, 'contact'])->name('contact');
 
-Route::post('/send-message', [AppController::class, 'sendMessage'])->name('sendMessage');
+Route::post('/send-message', [SendUsEmailController::class, 'send'])->name('sendMessage');
 
 /*
 |--------------------------------------------------------------------------
@@ -148,7 +149,6 @@ Route::post('/users/{admin}/send-reset-password/', [AdminController::class, 'sen
 
 Route::put('/changepassword/{admin:id}',[AdminController::class, 'updatePassword'])->name('users.updatePassword');
 
-
 // Shop route
 
 Route::get( '/shop', [ ShopController::class, 'index' ])->name( 'shop' ); 
@@ -160,16 +160,6 @@ Route::get( '/shop/item/{product}', [ ShopController::class, 'view' ])->name( 's
 Route::get('/shop/sort-by/{value}', [ShopController::class, 'sortBy'])->name('shop.sort');
 
 Route::post( '/shop/search', [ ShopController::class, 'search' ])->name( 'shop.search' ); 
-
-Route::get( '/shop/filter/price/{prices}', [ ShopController::class, 'filterByPrice' ])->name( 'shop.filter.price' ); 
-
-Route::get( '/shop/filter/color/{attribute}', [ ShopController::class, 'filterByAttribute' ])->name( 'shop.filter.attribute' ); 
-
-Route::get( '/shop/filter/tags/{tag}', [ ShopController::class, 'filterByTags' ])->name( 'shop.filter.tags' ); 
-
-Route::get( '/shop/filter/price/desc/{price}', [ ShopController::class, 'filterPriceDesc' ])->name( 'shop.filter.price.order' ); 
-
-Route::get( '/shop/filter/latest', [ ShopController::class, 'filterLatest' ])->name( 'shop.filter.latest' ); 
 
 Route::get( '/product/hasvariant/{product:id}', [ ShopController::class, 'hasVariants' ])->name( 'product.hasvariants' ); 
 

@@ -18,7 +18,7 @@ class CartServices
         $shipping_methods = ShippingMethod::where('status', 1)->get(); 
         session(['shipping_charge' => $shipping_methods[0]->amount]);        
         $cart = Cart::ByUser()->first(); 
-        return (object)['cart' =>  $result->cart, 'shipping_methods' => $result->shipping_methods];
+        return (object)['cart' =>  $cart, 'shipping_methods' => $shipping_methods];
     }
 
     public function store($request, Product $product)

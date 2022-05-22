@@ -1634,6 +1634,12 @@ a.delete{
     border-radius: .25rem;   
  }
 
+ .alert-text{
+    display: block;
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+ }
+
  .alert-success{     
     color: #155724;
     background-color: #d4edda;
@@ -1843,7 +1849,7 @@ a.delete{
 
 
  .w-3{
-     width: 33.33%;
+     width: 33.33% !important;
  }
 
  .w-2{
@@ -3412,6 +3418,38 @@ span .fa-toggle-on{
 }
 
 
+.flex-btn-form{
+    display: flex;
+    gap: 1rem;
+}
 
+.flex-btn-form .btn{
+    width: calc((100% / 2) - 1rem);
+}
+
+.full-width{
+    width: 100%;
+}
+
+
+.inline-form-group{
+    width: 100%;
+    display: flex;
+}
+
+.inline-form-group input{
+   border: 0 !important;
+}
+.input-custom{    
+    outline: none;
+    display: block;
+    width: 100%;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+}
  
  

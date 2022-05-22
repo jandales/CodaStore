@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\Product;
+use App\Models\Product;     
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -44,13 +44,7 @@ class AppController extends Controller
         return view('contact');
     }
 
-    public function sendMessage(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'content' => 'required'
-        ]);
-        
-        return $request->all();
-    }
+
+
+
 }
