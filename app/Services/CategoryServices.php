@@ -49,8 +49,8 @@ class CategoryServices
     public function selectedDestroy($list)
     {
         foreach($list as $id)
-        {
-            $category = Category::find($id);
+        {            
+            $category = Category::find(decrypt($id));
             $this->destroy($category);
         }
     }

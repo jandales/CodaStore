@@ -3,15 +3,16 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use App\Http\Traits\DateAndTimeFormat ;
+use App\Http\Traits\Crypted;
 use App\Models\CouponUsageUser;
+use App\Http\Traits\DateTimeFormat;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Coupon extends Model
 {
-    use HasFactory,  DateAndTimeFormat;
-
+    use HasFactory, Crypted, DateTimeFormat;
+    protected $primaryKey = "id";
     protected $fillable  = [
         'name',
         'description',

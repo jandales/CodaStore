@@ -8,7 +8,7 @@
 </div>
 
 
-    <form id="form" action="{{ route('admin.coupon.update', [$coupon])}}" data-products="{{ $coupon->products }}" method="post">
+    <form id="form" action="{{ route('admin.coupon.update', [ $coupon->encryptedId() ])}}" data-products="{{ $coupon->products }}" method="post">
         @csrf
         @method('put')
         <input type="hidden" id="productlist" name="products" value="">      

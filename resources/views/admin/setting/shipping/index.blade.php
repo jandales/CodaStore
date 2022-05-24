@@ -74,7 +74,7 @@
                                     <td class="column-1">
                                     
                                             <div class="checkbox">
-                                                    <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{$method->id}}">
+                                                    <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{$method->encryptedId()}}">
                                             </div>  
                                                                 
                                     </td>
@@ -86,7 +86,7 @@
                                         <div class="table-action">
                                             <ul>  
                                                 <li>                          
-                                                    <a href="{{route('admin.shipping.method.edit', [$method])}}">
+                                                    <a href="{{route('admin.shipping.method.edit', [$method->encryptedId()])}}">
                                                         <span class="span">
                                                             <i class="fas fa-pen"></i>  
                                                         </span>                                                                           
@@ -107,7 +107,7 @@
                                                     </li>     
                                                 @else
                                                 <li>
-                                                    <form  action="{{route('admin.shipping.method.update.status', [$method->id, 0])}}" method="post">
+                                                    <form  action="{{route('admin.shipping.method.update.status', [$method->encryptedId(), 0])}}" method="post">
                                                         @csrf
                                                         @method('put')
                                                         <button href="#" class="span">
@@ -121,7 +121,7 @@
                                                 @endif
                                                                                           
                                                 <li>
-                                                    <form action="{{route('admin.shipping.method.destroy', [$method])}}" method="post">
+                                                    <form action="{{route('admin.shipping.method.destroy', [$method->encryptedId()])}}" method="post">
                                                         @csrf
                                                         @method('delete')
                                                         <button href="#" class="span">

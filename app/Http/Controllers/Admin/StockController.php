@@ -9,6 +9,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Requests\StockRequest;
 use App\Http\Controllers\Controller;
+use App\Services\Admin\StockServices;
 
 
 class StockController extends Controller

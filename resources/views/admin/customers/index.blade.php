@@ -59,7 +59,7 @@
                             <tr>
                                 <td class="column-1">
                                     <div class="checkbox">
-                                        <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{ $user->id }}">
+                                        <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{ $user->encryptedId() }}">
                                     </div>
                                 </td>
                                 <td>
@@ -77,7 +77,7 @@
                                     <div class="table-action">
                                         <ul>  
                                             <li>                          
-                                                <a href="{{ route('admin.customers.show',[$user]) }}">
+                                                <a href="{{ route('admin.customers.show',[$user->encryptedId()]) }}">
                                                     <span class="span">
                                                         <i class="fas fa-eye"></i>  
                                                     </span>                                                                           
@@ -85,7 +85,7 @@
                                             </li>  
                                                 <li>
                                                     <a href="#" id="delete">
-                                                        <span data-url ="{{ route('admin.customers.destroy', [$user->id]) }}" class="span destroy-customer">
+                                                        <span data-url ="{{ route('admin.customers.destroy', [$user->encryptedId()]) }}" class="span destroy-customer">
                                                             <i class="fas fa-trash"></i>  
                                                         </span>                                                                           
                                                     </a>

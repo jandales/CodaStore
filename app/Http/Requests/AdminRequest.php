@@ -26,6 +26,9 @@ class AdminRequest extends FormRequest
         return [
             'username' => 'required|unique:admins',
             'email' => 'required|unique:admins|email',
+            'role' => 'numeric',
+            'firstname' => 'string',
+            'lastname' => 'string',
             'password' => 'required|min:8',
         ];
     }

@@ -21,7 +21,7 @@
                          <div class="centered flex-column">
                              <h4>{{ empty($user->fullName()) ? $user->fullName() : $user->username  }}</h4>
                              <label for="" class="m-t-1">is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</label>                            
-                             <a href="{{route('admin.users.edit',[$user]) }}"  class="btn btn-primary m-t-1">Edit user</a> 
+                             <a href="{{route('admin.users.edit',[$user->encryptedId() ]) }}"  class="btn btn-primary m-t-1">Edit user</a> 
                          </div>                 
                     </div>
         

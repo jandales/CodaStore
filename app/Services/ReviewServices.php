@@ -3,10 +3,12 @@
 namespace App\Services;
 
 use App\Models\Review;
+use App\Http\Traits\Crypted;
 use Illuminate\Http\Request;
 
 class ReviewServices
 {
+   
     public function list_review()
     {
         return Review::with('product', 'user')->paginate(10);
@@ -56,8 +58,9 @@ class ReviewServices
     }
 
     public function destroySelected(Request $request)
-    {
+    {       
         foreach($request->selected as $id){
+            $id = decrypt($id);
             $review = Review::find($id);
             $review->delete();
         }

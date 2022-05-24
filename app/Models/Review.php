@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use App\Http\Traits\DateAndTimeFormat;
+use App\Http\Traits\Crypted;
+use App\Http\Traits\DateTimeFormat;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Review extends Model
 {
-    use HasFactory;
+    use HasFactory, DateTimeFormat, Crypted;
 
     protected $fillable = [
         'product_id',

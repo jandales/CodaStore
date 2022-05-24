@@ -82,7 +82,7 @@
                             <tr>
                                 <td class="column-1">
                                     <div class="checkbox">
-                                            <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{ $user->id }}">
+                                            <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{ $user->encryptedId() }}">
                                     </div>                                
                                 </td>
                                 <td>
@@ -101,14 +101,14 @@
                                     <div class="table-action">
                                         <ul>  
                                             <li>                          
-                                                <a href="{{ route('admin.users.edit',[$user]) }}">
+                                                <a href="{{ route('admin.users.edit',[$user->encryptedId()]) }}">
                                                     <span class="span">
                                                         <i class="fas fa-pen"></i>  
                                                     </span>                                                                           
                                                 </a>
                                             </li>
                                             <li>                          
-                                                <a href="{{ route('admin.users.show',[$user]) }}">
+                                                <a href="{{ route('admin.users.show',[$user->encryptedId()]) }}">
                                                     <span class="span">
                                                         <i class="fas fa-eye"></i>  
                                                     </span>                                                                           
@@ -116,7 +116,7 @@
                                             </li>    
                                             <li>
                                                 <a href="#" id="delete">
-                                                    <span data-url ="{{ route('admin.users.destroy', [$user]) }}" class="span delete">
+                                                    <span data-url ="{{ route('admin.users.destroy', [$user->encryptedId()]) }}" class="span delete">
                                                         <i class="fas fa-trash"></i>  
                                                     </span>                                                                           
                                                 </a>

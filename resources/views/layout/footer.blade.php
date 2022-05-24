@@ -5,8 +5,9 @@
 </div>
 
 </div>
+<script src="{{asset('js/jquery.min.js')}}"></script>
 <script src="{{ asset('js/main.js') }}"></script>
-<script src="/js/front/jquery.min.js"></script>
+
 
 
 {{-- <script> 

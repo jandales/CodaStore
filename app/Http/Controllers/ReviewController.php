@@ -6,11 +6,13 @@ use App\Models\Rate;
 use App\Models\Review;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Services\ReviewServices;
 use App\Http\Requests\StoreReviewRequest;
 
 class ReviewController extends Controller
 {
     private $services;
+
     public function __construct(ReviewServices $services)
     {
         $this->services = $services;
@@ -59,9 +61,9 @@ class ReviewController extends Controller
     }
 
     public function destroySelected(Request $request)
-    {
+    {        
         $this->services->destroySelected($request);
         return back()->with('success', 'Review successfully Deleted');
-
     }
+
 }

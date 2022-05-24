@@ -48,8 +48,8 @@ class CouponServices
     public function destroySelectedItem($request)
     {
         foreach($request->selected as $id)
-        {
-            Coupon::find($id)->delete();
+        {         
+            Coupon::find(decrypt($id))->delete();
         }
     }
 

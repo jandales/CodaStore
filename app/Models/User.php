@@ -8,8 +8,9 @@ use App\Models\Product;
 use App\Models\Checkout;
 use App\Models\WishList;
 use App\Models\AddressBook;
+use App\Http\Traits\Crypted;
 use App\Models\ShippingAddress;
-use App\Http\Traits\DateAndTimeFormat;
+use App\Http\Traits\DateTimeFormat;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,7 +18,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, DateAndTimeFormat;
+    use HasFactory, Notifiable, DateTimeFormat, Crypted;
 
     /**
      * The attributes that are mass assignable.

@@ -109,7 +109,7 @@ Route::get('/get-user-cart', [CartController::class, 'get_user_cart']);
 
 Route::get('/customers', [UserController::class, 'index'])->name('admin.customers');
 
-Route::get('/customers/{id}/show', [UserController::class, 'show'])->name('admin.customers.show');
+Route::get('/customers/show/{user:id}', [UserController::class, 'show'])->name('admin.customers.show');
 
 Route::delete('/customers/destroy/{user:id}', [UserController::class, 'destroy'])->name('admin.customers.destroy');
 
@@ -129,11 +129,11 @@ Route::get('/users/create', [AdminController::class, 'create'])->name('admin.use
 
 Route::post('/users/store', [AdminController::class, 'store'])->name('admin.users.store');
 
-Route::get('/users/{admin}/edit/', [AdminController::class, 'edit'])->name('admin.users.edit');
+Route::get('/users/edit/{admin:id}', [AdminController::class, 'edit'])->name('admin.users.edit');
 
-Route::put('/users/{admin}/update/', [AdminController::class, 'update'])->name('admin.users.update');
+Route::put('/users/update/{admin:id}', [AdminController::class, 'update'])->name('admin.users.update');
 
-Route::post('/users/{admin:id}/destroy',[AdminController::class, 'destroy'])->name('admin.users.destroy');
+Route::post('/users/destroy/{admin:id}',[AdminController::class, 'destroy'])->name('admin.users.destroy');
 
 Route::post('/users/selected/destory',[AdminController::class, 'destroySelectedItem'])->name('admin.users.destroySelectedItem');
 
@@ -145,7 +145,7 @@ Route::post('/users/search', [AdminController::class, 'search'])->name('admin.us
 
 Route::get('/users/show/{admin:id}', [AdminController::class, 'show'])->name('admin.users.show');
 
-Route::post('/users/{admin}/send-reset-password/', [AdminController::class, 'sentResetPassword'])->name('admin.users.sentPasswordResetPassword');
+Route::post('/users/send-reset-password/{admin:id}', [AdminController::class, 'sentResetPassword'])->name('admin.users.sentPasswordResetPassword');
 
 Route::put('/changepassword/{admin:id}',[AdminController::class, 'updatePassword'])->name('users.updatePassword');
 
@@ -394,12 +394,12 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){
     Route::get('/products', [ProductController::class,  'index'])->name('admin.products');
     Route::get('/products/add',[ProductController::class, 'create'])->name('admin.products.create');
     Route::post('/products/store',[ProductController::class, 'store'])->name('admin.products.store');
-    Route::put( '/products/{product}/update', [ProductController::class, 'update'] )->name('admin.products.update');
-    Route::get('/products/{product}/edit',[ProductController::class, 'edit'])->name('admin.products.edit');
-    Route::delete('/products/destroy/{product}',[ProductController::class, 'destroy'])->name('admin.products.destroy');
+    Route::put( '/products/update/{product:id}', [ProductController::class, 'update'] )->name('admin.products.update');
+    Route::get('/products/edit/{product:id}',[ProductController::class, 'edit'])->name('admin.products.edit');
+    Route::delete('/products/destroy/{product:id}',[ProductController::class, 'destroy'])->name('admin.products.destroy');
     Route::post('/products/delete', [ProductController::class, 'delete'])->name('admin.products.destroys');      
     Route::get('/products/search', [ProductController::class, 'search'])->name('admin.products.search');
-    Route::put('/products/{product}/status',[ProductController::class, 'changeStatus'])->name('admin.products.status.update');
+    Route::put('/products/{product:id}/status',[ProductController::class, 'changeStatus'])->name('admin.products.status.update');
     Route::post('/products/status/{status}',[ProductController::class, 'changeSelectedItemStatus'])->name('admin.products.status.updates');    
     Route::get('/products/find',[ProductController::class, 'find'])->name('admin.products.find'); 
     Route::get('/products/{filterBy}/{value}',[ProductController::class, 'filter'])->name('admin.products.filter');  
@@ -442,11 +442,11 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){
     Route::get('/dashboard',[DashboardController::class,'dashboard'])->name('admin.dashboard');
     Route::get('/coupons', [CouponController::class, 'index'])->name('admin.coupons');
     route::get('/coupons/create', [CouponController::class, 'create'])->name('admin.coupon.create');
-    Route::get('/coupons/edit/{coupon}', [CouponController::class, 'edit'])->name('admin.coupon.edit');
-    Route::get('/coupons/detail/{coupon}', [CouponController::class, 'show'])->name('admin.coupon.show');
+    Route::get('/coupons/edit/{coupon:id}', [CouponController::class, 'edit'])->name('admin.coupon.edit');
+    Route::get('/coupons/show/{coupon:id}', [CouponController::class, 'show'])->name('admin.coupon.show');
     Route::post('/coupons/store', [CouponController::class, 'store'])->name('admin.coupon.store');
-    Route::put('/coupons/update/{coupon}', [CouponController::class, 'update'])->name('admin.coupon.update');
-    Route::delete('/coupons/destroy/{coupon}', [CouponController::class, 'destroy'])->name('admin.coupon.destroy');
+    Route::put('/coupons/update/{coupon:id}', [CouponController::class, 'update'])->name('admin.coupon.update');
+    Route::delete('/coupons/destroy/{coupon:id}', [CouponController::class, 'destroy'])->name('admin.coupon.destroy');
     Route::delete('/coupons/destroy-selected-item', [CouponController::class, 'destroySelectedItem'])->name('admin.coupon.destroy.selected');
     Route::post('/coupons/search', [CouponController::class, 'search'])->name('admin.coupons.search');
      /*
@@ -469,7 +469,7 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){
     */
     Route::get('/products/attributes', [AttributeController::class, 'index'])->name('admin.attributes');
     Route::post('/products/attributes/store', [AttributeController::class, 'store'])->name('admin.attributes.store');
-    Route::get('/products/attributes/{attribute:slug}', [AttributeController::class, 'edit'])->name('admin.attributes.edit');
+    Route::get('/products/attributes/edit/{attribute:slug}', [AttributeController::class, 'edit'])->name('admin.attributes.edit');
     Route::put('/products/attributes/update/{attribute:slug}', [AttributeController::class, 'update'])->name('admin.attributes.update');
     Route::delete('/products/attributes/{attribute:slug}/destroy', [AttributeController::class, 'destroy'])->name('admin.attributes.destroy');
     Route::delete('/products/attributes/selected-destroy', [AttributeController::class, 'destroySelected'])->name('admin.attributes.destroy.selected');
@@ -485,24 +485,6 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){
     */
     Route::post('/variants/store', [VariantController::class, 'store'])->name('variants.store');
     Route::delete('/variants/destroy/{variant:id}', [VariantController::class, 'destroy'])->name('variants.destroy');
-    /*
-    |--------------------------------------------------------------------------
-    | stock Routes
-    |--------------------------------------------------------------------------
-    */
-    // Route::get('/products/stock/{product}/create', [StockController::class, 'create'])->name('stock.create');
-    // Route::post('/products/stock/{stock}/store', [StockController::class, 'store'])->name('stock.store');
-    Route::get('/products/stock/{stock}/edit', [StockController::class, 'edit'])->name('stock.edit');
-    Route::post('/products/stock/{stock}/update', [StockController::class, 'update'])->name('stock.update');
-    /*
-    |--------------------------------------------------------------------------
-    | Price Routes
-    |--------------------------------------------------------------------------
-    */
-    // Route::get('/products/price/{product}/create', [PriceController::class , 'create'])->name('price.create');
-    // Route::post('/products/price/{price}/store', [PriceController::class , 'store'])->name('price.store');
-    Route::get('/products/price/{product}/edit', [PriceController::class , 'edit'])->name('price.edit');
-    Route::post('/products/price/{product}/update', [PriceController::class , 'update'])->name('price.update');
      /*
     |--------------------------------------------------------------------------
     | Review admin Routes
@@ -510,7 +492,7 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){
     */
     Route::get('/reviews', [ReviewController::class , 'index'])->name('admin.reviews');
     Route::get('/reviews/block/{status}', [ReviewController::class, 'listbyStatus'])->name('admin.reviews.list');
-    Route::put('/reviews/block/{review}', [ReviewController::class , 'block'])->name('admin.reviews.block');
+    Route::put('/reviews/block/{review:id}', [ReviewController::class , 'block'])->name('admin.reviews.block');
     Route::delete('/reviews/destroy/{review:id}', [ReviewController::class , 'destroy'])->name('admin.reviews.destroy');
     Route::delete('/reviews/selected/destroy', [ReviewController::class , 'destroySelected'])->name('admin.reviews.selected.destroy');
     Route::get('/reviews/search', [ReviewController::class , 'search'])->name('admin.reviews.search');
@@ -521,9 +503,9 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){
     Route::get('/setting/shipping-method/index',[ShippingMethodController::class, 'index'])->name('admin.shipping.method');
     Route::get('/setting/shipping-method/create',[ShippingMethodController::class, 'create'])->name('admin.shipping.method.create');
     Route::post('/setting/shipping-method/store',[ShippingMethodController::class, 'store'])->name('admin.shipping.method.store');
-    Route::get('/setting/shipping-method/{method}/edit',[ShippingMethodController::class, 'edit'])->name('admin.shipping.method.edit');
-    Route::put('/setting/shipping-method/{method}/update',[ShippingMethodController::class, 'update'])->name('admin.shipping.method.update');
-    Route::delete('/setting/shipping-method/{method}/destroy',[ShippingMethodController::class, 'destroy'])->name('admin.shipping.method.destroy');
+    Route::get('/setting/shipping-method/{method:id}/edit',[ShippingMethodController::class, 'edit'])->name('admin.shipping.method.edit');
+    Route::put('/setting/shipping-method/{method:id}/update',[ShippingMethodController::class, 'update'])->name('admin.shipping.method.update');
+    Route::delete('/setting/shipping-method/{method:id}/destroy',[ShippingMethodController::class, 'destroy'])->name('admin.shipping.method.destroy');
     Route::delete('/setting/shipping-method/selected-destroy',[ShippingMethodController::class, 'selected_destroy'])->name('admin.shipping.method.selected.destroy');
     Route::put('/setting/shipping-method/update-status/{method}/{status}',[ShippingMethodController::class, 'update_status'])->name('admin.shipping.method.update.status');
     Route::put('/setting/shipping-method/selected-update-status',[ShippingMethodController::class, 'selected_update_status'])->name('admin.shipping.method.selected.update.status');

@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Models\Admin;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Traits\ImageUploadTrait;
 
@@ -14,17 +15,10 @@ class UsersServices
         return Admin::all()->except(auth()->guard('admin')->user()->id);
     }
 
-    public function store($request)
+    public function store(Request $request)
     {
-        return Admin::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
-        ]);
-        
+        $validated = $request->validated();  
+        return Admin::create($validated);
     }
 
     public function update($request, Admin $admin)

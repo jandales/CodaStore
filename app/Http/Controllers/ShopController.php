@@ -86,29 +86,7 @@ class ShopController extends Controller
         return view('shop')->with(['products' => $products ]);
 
     }
-
-    public function filterByPrice($prices)
-    {
-             
-        $products = Price::Between($prices);
-        return view('shop')->with([ 'products' => $products ]);
-    }
-
-    public function filterByAttribute($attribute)
-    {
-
-       $products = Attribute::Products($attribute);      
-
-       return view('shop')->with([ 'products' => $products ]);
-
-    }
-
-    public function filterLatest()
-    {
-       $products = Product::latest()->with('reviews', 'wishlist')->get();
-       return view('shop')->with(['products' => $products ]);
-    }
-
+    
     public function hasVariants(Product $product)
     {
         $count = $product->hasVariants();

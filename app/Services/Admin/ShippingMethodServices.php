@@ -47,16 +47,13 @@ class ShippingMethodServices
     
 
     public function selected_update_status(Request $request)
-    {       
-      
-        foreach($request->selected as $method_id)
+    {     
+        foreach($request->selected as $id)
         {         
-            $method = ShippingMethod::find($method_id);
+            $method = ShippingMethod::find(decrypt($id));
             $method->status = $request->status;
             $method->save();
         }
-
-      
         
     }
 

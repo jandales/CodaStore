@@ -15,7 +15,7 @@
                 <label class="panel-title">Edit Shipping Method</label>          
             </div>
             <div class="panel-body">
-                <form id="form" method="POST"  action="{{route('admin.shipping.method.update', [$shipping_method])}}">
+                <form id="form" method="POST"  action="{{route('admin.shipping.method.update', [$shipping_method->encryptedId() ])}}">
                     @csrf 
                     @method('put')
                 <div class="form-block">

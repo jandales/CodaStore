@@ -58,7 +58,7 @@
                             <tr>
                                 <td class="column-1">                         
                                     <div class="checkbox">
-                                            <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{ $review->id }}">                            
+                                            <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{ $review->encryptedId() }}">                            
                                     </div>
                                 </td>
                                 <td class="column-3">
@@ -97,7 +97,7 @@
                                             </li>    
                                             <li>
                                             
-                                                    <span class="span destroy-review" data-url={{ route('admin.reviews.destroy',[$review->id])}}>
+                                                    <span class="span destroy-review" data-url={{ route('admin.reviews.destroy',[$review->encryptedId()])}}>
                                                         <i class="fas fa-trash"></i>  
                                                     </span>                                                                           
                                                 

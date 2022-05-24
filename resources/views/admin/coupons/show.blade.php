@@ -5,7 +5,7 @@
 <div class="page-title">
     <h1>Coupon</h1>
     <div>
-        <a href="{{ route('admin.coupon.edit',[$coupon]) }}" class="btn btn-primary">Edit</a> 
+        <a href="{{ route('admin.coupon.edit',[$coupon->encryptedId()]) }}" class="btn btn-primary">Edit</a> 
         <a href="{{route('admin.coupons') }}"   class="btn btn-danger">Cancel</a> 
     </div>
 
@@ -14,7 +14,7 @@
 <div class="alert alert-danger">{{session('error')}}</div>
 @endif
 
-    <form id="form" action="{{ route('admin.coupon.update', [$coupon])}}" method="post">
+    <form id="form" action="{{ route('admin.coupon.update', [$coupon->encryptedId()])}}" method="post">
         @csrf
         @method('put')
         <input type="hidden" id="productlist" name="products" value="">      

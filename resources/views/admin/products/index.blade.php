@@ -75,7 +75,7 @@
                                     <tr>
                                         <td class="column-1">
                                             <div class="checkbox">
-                                                <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{ $product->id }}">
+                                                <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{ $product->encryptedId() }}">
                                             </div>
                                         </td>                                
                                         <td class="column-image">
@@ -96,7 +96,7 @@
                                             <div class="table-action">
                                                 <ul>   
                                                     <li>                                   
-                                                        <a href="{{route('admin.products.edit',[$product])}}">
+                                                        <a href="{{route('admin.products.edit',[$product->encryptedId()])}}">
                                                             <span class="span">
                                                                 <i class="fas fa-pen"></i>  
                                                             </span>                                                                           
@@ -110,7 +110,7 @@
                                                         </span>
                                                         <ul class="table-dropdown-list">
                                                             <li>
-                                                                <span onclick="published('{{ route('admin.products.status.update',[$product]) }}')">
+                                                                <span onclick="published('{{ route('admin.products.status.update',[$product->encryptedId() ]) }}')">
                                                                     <i class="fas {{ $product->status == 'published' ? 'fa-download' : 'fa-upload'}}"></i>
                                                                     <span class="ml-1">@if($product->status == 1) {{ 'Unpublished' }} @else  {{ 'Published' }} @endif</span>
                                                                 </span>
@@ -123,7 +123,7 @@
                                                             </li>
                                                                                                                    
                                                             <li>
-                                                            <a  onclick="urldelete('{{route('admin.products.destroy',[$product])}}')">
+                                                            <a  onclick="urldelete('{{route('admin.products.destroy',[$product->encryptedId()])}}')">
                                                                     <i class="far fa-trash-alt"></i>
                                                                     <span class="ml-1">Delete</span>
                                                                 </a>  

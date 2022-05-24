@@ -10,7 +10,7 @@
     @if(session('success'))
         <div class="alert alert-success mt10">{{ session('success') }}</div>                
     @endif 
-    <form id="form" method="POST"  action="{{route('admin.users.update',[$user])}}">
+    <form id="form" method="POST"  action="{{route('admin.users.update',[$user->encryptedId() ])}}">
         @csrf
         @method('put')
         
@@ -152,7 +152,7 @@
                 </div>
             </div>         
             <div class="flex justify-content-end gap10">
-                <button id="btnsave" type="create" class="btn btn-primary">Save Changes</button>              
+                <button  type="create" class="btn btn-primary">Save Changes</button>              
             </div>    
         </div>
       
@@ -160,7 +160,7 @@
 
 
     </form>
-    <form id="formSendPasswordResetLink" action="{{ route('admin.users.sentPasswordResetPassword', [$user]) }}" method="post">
+    <form id="formSendPasswordResetLink" action="{{ route('admin.users.sentPasswordResetPassword', [$user->encryptedId()]) }}" method="post">
         @csrf
     </form>       
 

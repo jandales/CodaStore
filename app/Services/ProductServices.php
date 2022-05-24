@@ -94,7 +94,8 @@ class ProductServices
     public function destroySelectedItem($selected)
     {
         foreach($selected as $id)
-        {          
+        {      
+            $id = decrypt($id);
             $product = Product::find($id);
             Self::destroy($product);          
         }

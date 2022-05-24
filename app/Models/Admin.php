@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Http\Traits\Crypted;
+use App\Http\Traits\DateTimeFormat;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -11,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Admin extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, Crypted, DateTimeFormat;
 
     /**
      * The attributes that are mass assignable.
@@ -46,6 +48,8 @@ class Admin extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
 
     public function fullName()
     {

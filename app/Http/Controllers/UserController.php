@@ -58,9 +58,9 @@ class UserController extends Controller
       return redirect()->route('account')->with('status','Profile updated successfully');
    }
 
-   public function show($id)
+   public function show(User $user)
    {   
-      $user = User::where('id',$id)->with('orders')->first();       
+      // $user = User::where('id',$id)->with('orders')->first();      
       return view('admin.customers.show')->with('user', $user);
    }
 

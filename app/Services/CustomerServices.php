@@ -46,6 +46,7 @@ class CustomerServices {
     public function deleteSelectedItem($users)
     {      
         foreach($users as $id){ 
+            $id = decrypt($id);
             $user = User::find($id);
             $user->delete_at = 1;
             $user->save();   

@@ -16,11 +16,6 @@ trait Crypted
         return Crypt::decrypt($this->attributes['id']);
     }
 
-    public function decrypt($id)
-    {
-        return Crypt::decrypt($this->attributes['id']);
-    }
-
     public function resolveRouteBinding($encryptedId, $field = null)
     {
         return $this->where('id', decrypt($encryptedId))->firstOrFail();

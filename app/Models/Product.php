@@ -6,7 +6,9 @@ use App\Models\Cart;
 use App\Models\Stock;
 use App\Models\Variant;
 use App\Models\Category;
+use App\Http\Traits\Crypted;
 use App\Models\ProductAttribute;
+use App\Http\Traits\DateTimeFormat;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -14,7 +16,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Product extends Model
 {
 
-    use HasFactory;
+    use HasFactory, DateTimeFormat, Crypted;
 
 
     protected $primaryKey = "id";

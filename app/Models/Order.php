@@ -9,13 +9,13 @@ use App\Models\Shipping;
 use App\Http\Traits\Crypted;
 use App\Models\PaymentDetail;
 use App\Models\BillingDetails;
-use App\Http\Traits\DateAndTimeFormat ;
+use App\Http\Traits\DateTimeFormat;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Order extends Model
 {
-    use HasFactory, Crypted;
+    use HasFactory, Crypted, DateTimeFormat;
 
     protected $fillable = [
         'user_id', 

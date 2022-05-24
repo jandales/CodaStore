@@ -64,10 +64,10 @@
                         <tr>
                             <td class="tr-checkbox">
                                 <div class="checkbox">
-                                    <input  type="checkbox" class="childCheckbox" name="selected[]"   value="{{ $coupon->id }}">
+                                    <input  type="checkbox" class="childCheckbox" name="selected[]"   value="{{ $coupon->encryptedId() }}">
                                 </div>                             
                             </td>
-                            <td><a href="{{ route('admin.coupon.show',[$coupon]) }}"  >{{ $coupon->name }}</a></td>
+                            <td><a href="{{ route('admin.coupon.show',[ $coupon->encryptedId() ]) }}"  >{{ $coupon->name }}</a></td>
                             <td>{{ $coupon->discountType() }}</td>
                             <td>{{ $coupon->amount }}</td>
                             <td> @if($coupon->limit_per_coupon == 0 ) <span class="infinite">&#8734;</span>   @else <span>{{ $coupon->usegeLimit() }}</span> @endif </td>                                              
@@ -86,21 +86,21 @@
                                 <div class="table-action">
                                     <ul>  
                                         <li>                          
-                                            <a href="{{ route('admin.coupon.edit',[$coupon]) }}">
+                                            <a href="{{ route('admin.coupon.edit',[$coupon->encryptedId()]) }}">
                                                 <span class="span">
                                                     <i class="fas fa-pen"></i>  
                                                 </span>                                                                           
                                             </a>
                                         </li>
                                         <li>                          
-                                            <a href="{{ route('admin.coupon.show',[$coupon]) }}">
+                                            <a href="{{ route('admin.coupon.show',[ $coupon->encryptedId() ]) }}">
                                                 <span class="span">
                                                     <i class="fas fa-eye"></i>  
                                                 </span>                                                                           
                                             </a>
                                         </li>    
                                             <li>
-                                                <span  data-url={{ route('admin.coupon.destroy',[$coupon])}} class="span coupon-destroy">
+                                                <span  data-url={{ route('admin.coupon.destroy',[$coupon->encryptedId()])}} class="span coupon-destroy">
                                                         <i class="fas fa-trash"></i>  
                                                 </span>  
                                             </li>

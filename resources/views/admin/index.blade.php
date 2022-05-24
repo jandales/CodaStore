@@ -99,7 +99,7 @@
                 @forEach($orders as $order)
                     <tr>  
                         <td class="py-30">
-                            <a class="link link-primary" href="{{ route('admin.orders.show',[$order])}}">
+                            <a class="link link-primary" href="{{ route('admin.orders.show',[$order->encryptedId()])}}">
                                 <div class="flex items-center gap10">
                                     <div class="avatar-sm">
                                         <img src="{{ $order->user->avatar() }}" alt="" srcset="">
