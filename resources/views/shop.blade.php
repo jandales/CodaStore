@@ -6,7 +6,7 @@
     <!--Featured Product-->
         <div class="container">    
             <div class="pagetitle">
-                <h3>Shop</h3>
+                <h1 class="capitalize">{{$category}}</h1>
             </div>
             <div class="productPage mt-2">              
                 <div class="product-nav">              
@@ -20,7 +20,7 @@
                                 <span><i class="fa-solid fa-times"></i></span>
                                 <label for="">Collections</label>
                             </div> 
-                            <li><a href="{{ route('shop')}}">All Products</a></li>
+                            <li><a href="{{ route('shop')}}">All Collections</a></li>
                             @foreach (categories() as $category)                            
                                 <li><a href="{{ route('shop.category',[$category])}}">{{ $category->name }}</a></li>
                             @endforeach          
@@ -51,13 +51,13 @@
                         @foreach ($products as $product)
                                 <div class="items mb-2">                                  
                                     <div class="item">
-                                        <a href="{{ route('shop.product',[ $product ] )}}">
+                                        <a href="{{ route('shop.product',[$product->encryptedId() ] )}}">
                                             <img src="/{{ $product->imagePath }}">      
                                         </a>                                                                         
                                     </div>
                                     <div class="item-description">
                                         <div class="product-detail-wrapper">
-                                            <a href="{{ route('shop.product',[ $product ] )}}">{{ $product->name }}</a>                                       
+                                            <a href="{{ route('shop.product',[$product->encryptedId() ] )}}">{{$product->name}}</a>                                       
                                             <label class="mt10 text-dark">@money($product->regular_price)</label>
                                         </div>                                       
                                     </div>

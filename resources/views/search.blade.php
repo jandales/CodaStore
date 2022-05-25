@@ -5,12 +5,19 @@
 
     <!--Featured Product-->
         <div class="container">  
-            <div class="pagetitle">
-                <h3>Shop</h3>
-            </div>  
+           
     
-            <div class="productPage mt-2">                
-                <label>Items found "{{ $products->count() }}"</label>
+            <div class="productPage mt-2">    
+                <div class="search-page">
+                    <h2>Search results</h2> 
+                    <form  action="{{ route('search') }}" method="get">
+                        <div class="input-search">                        
+                            <input type="text"  name="keyword" placeholder="Search Here...." value="{{$keyword}}">
+                            <span class="close-search"><i class="fa fa-search" aria-hidden="true"></i></span>
+                        </div>
+                    </form>  
+                </div>         
+                {{-- <label>Search Found"{{ $products->count() }}"</label> --}}
                 <div class="product-nav">              
                     <nav>
                         <ul class="ul-product-categories">

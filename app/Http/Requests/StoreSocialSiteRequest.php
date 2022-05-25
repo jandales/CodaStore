@@ -25,6 +25,7 @@ class StoreSocialSiteRequest extends FormRequest
     {
         return [
             'name' => 'required|unique:social_sites',
+            'code' => 'string',
             'url' => 'required',
         ];
     }

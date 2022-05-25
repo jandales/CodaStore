@@ -69,7 +69,7 @@
                                 </ul>
                             </div>                 
                     @endforeach
-               <button id="confirm-shipping-address" class="btn btn-success sm-w-12" >CONFIRM</button>
+               <button id="confirm-shipping-address" class="btn btn-success w-12" >CONFIRM</button>
             </form>
             </div>
            
@@ -99,7 +99,7 @@
                                 </ul>
                             </div>                 
                     @endforeach
-                    <button id="confirm-payment-option" class="btn btn-success sm-w-12" >CONFIRM</button>
+                    <button id="confirm-payment-option" class="btn btn-success w-12" >CONFIRM</button>
                 </form>
             </div>
            
@@ -109,6 +109,15 @@
         </div> 
     </div>
 
+    <div class="spinner-wrapper">
+        <div class="spinner-container">
+           <div class="spinner"></div>
+           <div class="loading-success">
+               <span><i class="fa fa-check"></i></span>
+               <a href="#" id="btn-payment-completed">OK</a>
+           </div>
+        </div>            
+   </div>
 
 </body>
 <script src="/js/jquery.min.js"></script>

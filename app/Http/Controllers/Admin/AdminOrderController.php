@@ -31,17 +31,13 @@ class AdminOrderController extends Controller
     public function toShip(Order $order, AdminOrderServices $service)
     {       
         $service->updateStatus($order);
-        return redirect()->route("admin.orders.show",[$order]);
+        return redirect()->route("admin.orders.show",[$order->encryptedId()]);
     }
 
-    public function search(Request $request)
+    public function search(Request $request, AdminOrderServices $service)
     {
-        $keyword = $request->keyword;
-        $array = str_split($keyword);
-        $id = $array[count($array) - 1];
-        $orders =  Order::Search($id)->paginate(10);
-        return view('admin.orders.index')->with(['orders' => $orders, 'keyword' => $keyword]);
-        
+        $data = $service->search($request);
+        return view('admin.orders.index')->with(['orders' => $data['orders'], 'keyword' => $data['keyword']]);        
     }
 
     public function deliver(AdminOrderServices $service)

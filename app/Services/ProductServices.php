@@ -17,7 +17,7 @@ class ProductServices
         $product =  Product::create([
             'name' => $request->name,
             'category_id' =>  $request->categories,            
-            'slug_name' => productSlug($request->name),           
+            'slug' => productSlug($request->name),           
             'short_description' =>  $request->short_description,
             'long_description' =>  $request->long_description,
             'imagePath' =>   $image['path'] ?? '',

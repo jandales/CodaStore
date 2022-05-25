@@ -14,6 +14,7 @@
     --bs-cyan: #0dcaf0;
     --bs-white: #fff;
     --bs-gray: #6c757d;
+    --bs-default : #555;
     --bs-gray-dark: #343a40;
     --bs-primary: #0d6efd;
     --bs-secondary: #6c757d;
@@ -26,6 +27,7 @@
     --bs-font-sans-serif: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
     --bs-font-monospace: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
     --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+    --font-heading-scale: 1.0;
 }
 
 @font-face {
@@ -44,9 +46,14 @@
     box-sizing: border-box;   
 }
 
-a,p,label{
+a,p,label,span{
     text-decoration: none;
-    color: #555;
+    color: var(--bs-default);
+}
+h1{
+    color :var(--bs-dark);
+    font-weight: lighter;
+    font-size: 1.7rem;
 }
 .html{
     width: 100%;
@@ -636,13 +643,11 @@ body{
 
 
 .pagetitle{
-    margin:30px 0px;
+    margin: 3rem 0px;
     
 }
 
-.pagetitle h3{
-    font-size: 24px;
-}
+
 
 
 
@@ -2356,9 +2361,40 @@ a.delete{
 .bgff523b{
     background: #ff523b;
 }
+.search-page{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  
+}
+.search-page h2{
+    font-size: 1.5rem;
+    font-weight: lighter;
+    color: var(--bs-default);
+}
 
+.input-search{
+    display: flex; 
+    align-items: center;   
+    width: 400px;
+    border: 1px solid #dddddd;
+    padding: 0 .3rem;
+    padding-left: 0 !important;
+}
 
-
+.input-search input{
+    border: none !important;
+}
+.input-search span{
+    padding: 0 .3rem;
+    color:var(--bs-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 
 .fadeIn{
@@ -2618,7 +2654,7 @@ a.delete{
     display: block;
 }
 .flex{
-    display: flex;    
+    display: flex !important;    
  
 }
 .flex-end{
@@ -3452,4 +3488,5 @@ span .fa-toggle-on{
     border: 1px solid #ced4da;
 }
  
+
  

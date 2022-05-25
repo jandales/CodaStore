@@ -9,7 +9,8 @@ use App\Http\Requests\PaymentRequest;
 class PlaceOrderController extends Controller
 { 
     public function store(PaymentRequest $request, PlaceOrderServices $service)
-    {      
+    {    
+       
         $order = $service->storeOrder($request);
 
         return response()->json([

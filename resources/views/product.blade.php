@@ -49,7 +49,7 @@
                             <div class="btn-num-product-up flex-vert-center btn-add-minus" type="add"> <i class="fas fa-plus"></i></div>
                         </div>
                         <div class="mt-2">                                         
-                            <button id="cart-button" data-id="{{ $product->id }}" url="{{route('cart.store',[$product->id])}}" class="btn btn-dark btn-add-cart">Add to Cart</button>                       
+                            <button id="cart-button" data-id="{{ $product->encryptedId() }}" url="{{route('cart.store',[$product->encryptedId()])}}" class="btn btn-dark btn-add-cart">Add to Cart</button>                       
                         </div>
                     </div>             
                 </div>

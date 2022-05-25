@@ -1,10 +1,13 @@
-import { functionsIn, identity } from 'lodash';
+import { functionsIn, identity, set } from 'lodash';
 import { errorReponse, errorRemove } from '../../../module/validator';   
-import { openSidebarModal } from '../../../module/modal';     
+import { openSidebarModal } from '../../../module/modal';  
+import { startSpin, stopSpin, spinCompleted } from '../../module/spinner';   
             
 const usediffer = document.getElementById('use-differ');
 const usesame = document.getElementById('use-same');
 const payNow = document.getElementById('paynow');
+
+
 if (usediffer){
     usediffer.onclick = function() {
         document.getElementById('use-same').checked = false;
@@ -22,15 +25,24 @@ if (usesame) {
         document.getElementById('form-shipping').classList.add('hidden');  
     }
 }
+
+function submitProggress(){
+
+     var xhr = new window.XMLHttpRequest();
+        xhr.upload.addEventListener("progress", function(e) {   
+            startSpin();
+       }, false);     
+       return xhr;
+    
+}
 if (payNow) {
     payNow.onclick = function(e) {
         e.preventDefault();
-    
         const form = document.getElementById('form');
         const url = form.getAttribute('action');
-        let formData =  new FormData(form); 
-    
+        let formData =  new FormData(form);         
         $.ajax({
+            xhr: submitProggress ,
             url : url,
             type : 'POST',
             data : formData,
@@ -38,13 +50,17 @@ if (payNow) {
             processData: false,
             contentType: false,
             cache: false,
-            error : errorReponse,
+            error : function(res){
+                errorReponse(res);
+                stopSpin();
+            },
+
             success : function(res){                      
                 errorRemove();
-                if (res.status === 200)
-                {                          
-                   window.location.href = res.route;
+                if (res.status === 200){  
+                    spinCompleted(true,  res.route);
                 }
+                  
             }
         })
     }

@@ -31,7 +31,7 @@ class AppController extends Controller
     public function search(Request $request)
     {        
         $products = Product::PublishedSearch($request->keyword)->paginate(16);
-        return view('search')->with('products',$products);
+        return view('search')->with(['products' => $products, 'keyword' => $request->keyword]);
     }
 
     public function about()

@@ -88,18 +88,17 @@
                                 <td class="column-action"> 
                                     <div class="table-action">
                                         <ul>                                     
-                                            <li>                          
-                                                <a data-modal-target="read-review" modal-data="{{ json_encode($review) }}" href="#">
+                                            <li>                      
+                                                <a class="read-review"  modal-data="{{ json_encode($review) }}">
                                                     <span class="span">
                                                         <i class="fas fa-eye"></i>  
                                                     </span>                                                                           
                                                 </a>
                                             </li>    
-                                            <li>
-                                            
-                                                    <span class="span destroy-review" data-url={{ route('admin.reviews.destroy',[$review->encryptedId()])}}>
-                                                        <i class="fas fa-trash"></i>  
-                                                    </span>                                                                           
+                                            <li>                                            
+                                                <span class="span destroy-review" data-url={{ route('admin.reviews.destroy',[$review->encryptedId()])}}>
+                                                     <i class="fas fa-trash"></i>  
+                                                </span>                                                                           
                                                 
                                             </li>
                                         </ul>
@@ -119,9 +118,9 @@
 </div>
 
 
-<div id="read-review"  class="modal">
+<div id="modal-read-review"  class="modal">
     <div class="modal-content">    
-        <div class="modal-header">
+    <div class="modal-header">
             <h4>Review</h4> 
             <span  class="modal-close">&times</span>
         </div>  
@@ -152,53 +151,7 @@
 </div>
 
 
-<script>
 
-
-const modaltrigger = document.querySelectorAll('[data-modal-target]');
-
-
-modaltrigger.forEach(modal => {
-
-    modal.addEventListener('click', function(){
-
-        const array = modal.getAttribute('modal-data');       
-        let data = JSON.parse(array);
-
-
-        document.getElementById('user').value = data.user.name;
-        document.getElementById('product').value = data.product.name;
-        document.getElementById('comment').value = data.comments;
-
-        const button = document.getElementById('modal-button')
-
-        button.addEventListener('click', function(){
-            destroy('/admin/reviews/block/'+ data.id);
-        })
-
-        if(data.block == 1){
-            button.innerText = 'Unblock';
-            button.classList.replace("btn-danger", "btn-primary")
-            return;
-        }
-      
-            button.innerText = 'Block';
-            button.classList.replace("btn-primary", "btn-danger")
-    })
-})
-
-
-
-
-
-
-
-
-
-
-
-
-</script>
 
 
 @endsection

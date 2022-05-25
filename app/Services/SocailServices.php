@@ -2,17 +2,15 @@
 namespace App\Services;
 
 use App\Models\SocialSite;
+use Illuminate\Http\Request;
 
 class SocailServices
 {
 
     public function store(Request $request)
     {
-        return  SocialSite::create([
-            'name' => $request->name,
-            'url' => $request->url,
-            'code' => $request->code,
-        ]);
+        $validated = $request->validated();
+        return  SocialSite::create($validated);
     }
 
     public function update(Request $request, SocialSite $site)

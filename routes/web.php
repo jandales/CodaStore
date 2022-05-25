@@ -155,7 +155,7 @@ Route::get( '/shop', [ ShopController::class, 'index' ])->name( 'shop' );
 
 Route::get( '/shop/{category}', [ ShopController::class, 'category' ])->name( 'shop.category' );
 
-Route::get( '/shop/item/{product}', [ ShopController::class, 'view' ])->name( 'shop.product' ); 
+Route::get( '/shop/item/{product:id}', [ ShopController::class, 'view' ])->name( 'shop.product' ); 
 
 Route::get('/shop/sort-by/{value}', [ShopController::class, 'sortBy'])->name('shop.sort');
 
@@ -411,7 +411,7 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){
     // orders Route
     Route::get('/orders',[AdminOrderController::Class, 'index'])->name('admin.orders');
     Route::get('/orders/{order:id}/show',[AdminOrderController::Class, 'show'])->name('admin.orders.show');
-    Route::put('/orders/{order:id}/ship',[AdminOrderController::Class, 'toShip'])->name('admin.orders.shipped');
+    Route::put('/orders/ship/{order:id}',[AdminOrderController::Class, 'toShip'])->name('admin.orders.shipped');
     Route::put('/orders/deliver',[AdminOrderController::Class, 'deliver'])->name('admin.orders.deliver');
     Route::get('/orders/search',[AdminOrderController::Class, 'search'])->name('admin.orders.search');
     Route::get('/orders/{status}',[AdminOrderController::Class, 'listbyStatus'])->name('admin.orders.list');

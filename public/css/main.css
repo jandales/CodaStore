@@ -1574,6 +1574,11 @@ button:disabled {
   align-items: flex-start;
 }
 
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+}
+
 .modal-content {
   position: relative;
   background-color: #fff;

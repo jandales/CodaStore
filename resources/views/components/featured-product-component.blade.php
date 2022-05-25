@@ -7,13 +7,13 @@
                 <li class="splide__slide">
                     <div class="items">                                  
                         <div class="item">
-                            <a href="{{ route('shop.product',[ $product ] )}}">
+                            <a href="{{ route('shop.product',[ $product->slug ] )}}">
                                 <img src="/{{ $product->imagePath }}">      
                             </a>                              
                         </div>
                         <div class="item-description">
                             <div class="product-detail-wrapper">
-                                <a href="{{ route('shop.product',[ $product ] )}}">{{ $product->name }}</a>
+                                <a href="{{ route('shop.product',[ $product->encryptedId() ] )}}">{{ $product->name }}</a>
                                 <label class="mt-1">@money($product->regular_price)</label>
                             </div>
                         </div>

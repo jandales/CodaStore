@@ -94,7 +94,7 @@
                                                 </li> 
                                                 @if($method->status == 0)                                             
                                                     <li>
-                                                        <form  action="{{route('admin.shipping.method.update.status', [$method->id, 1])}}" method="post">
+                                                        <form  action="{{route('admin.shipping.method.update.status', [$method->encryptedId(), 1])}}" method="post">
                                                             @csrf
                                                             @method('put')
                                                             <button href="#" class="span">

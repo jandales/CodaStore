@@ -17,10 +17,7 @@ class Product extends Model
 {
 
     use HasFactory, DateTimeFormat, Crypted;
-
-
-    protected $primaryKey = "id";
-
+    
      /**
      * The attributes that are mass assignable.
      *
@@ -29,7 +26,7 @@ class Product extends Model
     protected $fillable = [
         'name',
         'category_id',
-        'slug_name',        
+        'slug',        
         'short_description',
         'imagePath',
         'long_description',
@@ -155,7 +152,7 @@ class Product extends Model
     {
         return $query->where('status',1)
                      ->where('name','like','%' . $input . '%')                  
-                     ->orWhere('slug_name','like','%' . $input . '%');
+                     ->orWhere('slug','like','%' . $input . '%');
                 
     }
 

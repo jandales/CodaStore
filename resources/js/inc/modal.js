@@ -43,6 +43,8 @@ function openSidebarModal(modalId){
     setTimeout(function () { sidebar.classList.add("right-0"); },0);
 }
 
+export default openModal;
+
 
 
 

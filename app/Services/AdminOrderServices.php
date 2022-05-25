@@ -32,5 +32,14 @@ class AdminOrderServices
            }      
         }
     }
+
+    public function search(Request $request)
+    {
+        $keyword = $request->keyword;
+        $array = str_split($keyword);
+        $id = $array[count($array) - 1];
+        $orders =  Order::Search($id)->paginate(10);
+        return ['orders' => $orders, 'keyword' => $keyword];
+    }
        
 }

@@ -3409,7 +3409,12 @@ if (btnsave) {
 /*!***************************************!*\
   !*** ./resources/js/admin/reviews.js ***!
   \***************************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _module_modal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../module/modal */ "./resources/js/module/modal.js");
+
 
 function destroyReview(route) {
   var form = document.getElementById('destroy-reviews');
@@ -3431,6 +3436,30 @@ btnDestroyReviews.forEach(function (review) {
   review.onclick = function () {
     var route = this.getAttribute('data-url');
     destroyReview(route);
+  };
+});
+var readViewTrigger = document.querySelectorAll('.read-review');
+readViewTrigger.forEach(function (review) {
+  review.onclick = function () {
+    var array = this.getAttribute('modal-data');
+    var data = JSON.parse(array);
+    document.getElementById('user').value = data.user.name;
+    document.getElementById('product').value = data.product.name;
+    document.getElementById('comment').value = data.comments;
+    var button = document.getElementById('modal-button');
+    button.addEventListener('click', function () {
+      destroy('/admin/reviews/block/' + data.id);
+    });
+
+    if (data.block == 1) {
+      button.innerText = 'Unblock';
+      button.classList.replace("btn-danger", "btn-primary");
+      return;
+    }
+
+    button.innerText = 'Block';
+    button.classList.replace("btn-primary", "btn-danger");
+    (0,_module_modal__WEBPACK_IMPORTED_MODULE_0__.openModal)('modal-read-review');
   };
 });
 
@@ -3609,8 +3638,13 @@ if (defualtImage) {
 /*!***********************************!*\
   !*** ./resources/js/inc/modal.js ***!
   \***********************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
 // const modalTrigger = document.querySelectorAll("[data-modal-target]");
 var modalClose = document.querySelectorAll(".modal-close");
 var closedrawer = document.querySelectorAll(".close-drawer"); // modalTrigger.forEach(elem =>{
@@ -3657,6 +3691,8 @@ function openSidebarModal(modalId) {
     sidebar.classList.add("right-0");
   }, 0);
 }
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (openModal);
 
 /***/ }),
 
@@ -3982,6 +4018,49 @@ function errorMessage(errors) {
 function successMessage(message) {
   notifyMessageElement.innerHTML = '';
   notifyMessageElement.innerHTML += "<div class=\"alert alert-success\">\n                                            <div class=\"flex justify-content-space-between\">\n                                                <label class=\"message\">".concat(message, "</label>\n                                                <span class=\"closebtn\" onclick=\"errorClose(this)\"><i class=\"fas fa-times\"></i></span>\n                                            </div> \n                                        </div>");
+}
+
+/***/ }),
+
+/***/ "./resources/js/module/modal.js":
+/*!**************************************!*\
+  !*** ./resources/js/module/modal.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "openModal": () => (/* binding */ openModal),
+/* harmony export */   "openSidebarModal": () => (/* binding */ openSidebarModal)
+/* harmony export */ });
+function openModal(modalId) {
+  var modal = document.getElementById(modalId);
+  modal.style.display === "flex";
+
+  if (modal.style.display === "flex") {
+    modal.style.display = "none";
+    return;
+  }
+
+  modal.style.display = "flex";
+}
+function openSidebarModal(modalId) {
+  var modal = document.getElementById(modalId);
+  var sidebar = modal.querySelector('.modal-sidebar');
+
+  if (modal.style.display === "flex") {
+    sidebar.classList.remove("right-0");
+    setTimeout(function () {
+      modal.style.display = "none";
+    }, 1000);
+    return;
+  }
+
+  modal.style.display = "flex";
+  setTimeout(function () {
+    sidebar.classList.add("right-0");
+  }, 0);
 }
 
 /***/ }),

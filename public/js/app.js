@@ -6542,6 +6542,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _module_validator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../module/validator */ "./resources/js/module/validator.js");
 /* harmony import */ var _module_modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../module/modal */ "./resources/js/module/modal.js");
+/* harmony import */ var _module_spinner__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../module/spinner */ "./resources/js/app/module/spinner.js");
+
 
 
 
@@ -6567,6 +6569,14 @@ if (usesame) {
   };
 }
 
+function submitProggress() {
+  var xhr = new window.XMLHttpRequest();
+  xhr.upload.addEventListener("progress", function (e) {
+    (0,_module_spinner__WEBPACK_IMPORTED_MODULE_3__.startSpin)();
+  }, false);
+  return xhr;
+}
+
 if (payNow) {
   payNow.onclick = function (e) {
     e.preventDefault();
@@ -6574,6 +6584,7 @@ if (payNow) {
     var url = form.getAttribute('action');
     var formData = new FormData(form);
     $.ajax({
+      xhr: submitProggress,
       url: url,
       type: 'POST',
       data: formData,
@@ -6581,12 +6592,15 @@ if (payNow) {
       processData: false,
       contentType: false,
       cache: false,
-      error: _module_validator__WEBPACK_IMPORTED_MODULE_1__.errorReponse,
+      error: function error(res) {
+        (0,_module_validator__WEBPACK_IMPORTED_MODULE_1__.errorReponse)(res);
+        (0,_module_spinner__WEBPACK_IMPORTED_MODULE_3__.stopSpin)();
+      },
       success: function success(res) {
         (0,_module_validator__WEBPACK_IMPORTED_MODULE_1__.errorRemove)();
 
         if (res.status === 200) {
-          window.location.href = res.route;
+          (0,_module_spinner__WEBPACK_IMPORTED_MODULE_3__.spinCompleted)(true, res.route);
         }
       }
     });
@@ -7291,6 +7305,71 @@ function setCartCookie() {
     async: false,
     success: function success(response) {}
   });
+}
+
+/***/ }),
+
+/***/ "./resources/js/app/module/spinner.js":
+/*!********************************************!*\
+  !*** ./resources/js/app/module/spinner.js ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "spinCompleted": () => (/* binding */ spinCompleted),
+/* harmony export */   "startSpin": () => (/* binding */ startSpin),
+/* harmony export */   "stopSpin": () => (/* binding */ stopSpin)
+/* harmony export */ });
+var spinnerWrapper = document.querySelector('.spinner-wrapper');
+var spinner = document.querySelector('.spinner');
+var successElement = document.querySelector('.loading-success');
+var btn = document.getElementById('btn-payment-completed');
+var redirectTo;
+var FIXED = 'fixed';
+var FLEX = 'flex';
+var NONE = 'none';
+function startSpin() {
+  start();
+  spinnerWrapper.classList.add(FLEX);
+
+  if (spinner.classList.contains('hidden')) {
+    spinner.classList.remove('hidden');
+  }
+
+  spinner.classList.add('start');
+}
+function stopSpin() {
+  spinnerWrapper.classList.remove(FLEX);
+  stop();
+}
+function spinCompleted() {
+  var redirect = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  var url = arguments.length > 1 ? arguments[1] : undefined;
+  stop();
+  redirectTo = url;
+  successElement.classList.add(FLEX);
+
+  if (!redirect) {
+    spinnerWrapper.classList.add(FLEX);
+  }
+}
+
+function stop() {
+  spinner.classList.remove('start');
+  spinner.classList.add('hidden');
+}
+
+function start() {
+  successElement.classList.remove(FLEX);
+}
+
+if (btn) {
+  btn.onclick = function (e) {
+    e.preventDefault();
+    window.location.href = redirectTo;
+  };
 }
 
 /***/ }),
