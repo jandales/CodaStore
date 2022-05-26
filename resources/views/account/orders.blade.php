@@ -29,14 +29,15 @@
                             </li>
                         </ul> 
 
-                    <div class="orders">
-                        @foreach ($orders as $order)
-                            <div class="order">
-                                <div class="order-header">
-                                    <div class="align-items-content-center">
-                                        <span>OR#:</span><a href="{{ route('orders.details',[$order->encryptedId()])}}" for="order">{{ $order->ordernumber() }}</a></div>
-                                        <label class="capitalize order-status" for="status">{{$order->status }}</label>
-                                    </div>
+                        <div class="orders">
+                            @foreach ($orders as $order)
+                                <div class="order">
+                                    <div class="order-header">
+                                        <div class="align-items-content-center">
+                                            <span>OR#:</span><a href="{{ route('orders.details',[$order->encryptedId()])}}" for="order">{{ $order->ordernumber() }}</a>
+                                        </div>
+                                            <label class="capitalize order-status" for="status">{{$order->status }}</label>
+                                    </div>                              
                                     <div class="order-body">
                                         @foreach ($order->items as $item)
                                             <div class="order-wrapper">
@@ -62,10 +63,13 @@
                                                 </div>
                                             </div>
                                         @endforeach
-                                    </div>
+                                    </div>                                    
                                 </div>       
                             @endforeach
-                        </div>
+                        </div>                    
+                    </div>
+                    <div class="pagination-wrapper">
+                        {{ $orders->links() }}
                     </div>
                 </div>
             </div>

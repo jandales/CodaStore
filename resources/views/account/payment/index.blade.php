@@ -18,7 +18,6 @@
                         @if(session('danger'))
                         <div class="alert alert-warning mt-1 w-12">{{ session('danger') }}</div>
                     @endif 
-
                     <table class="table table-address bordered bg-white p-20">
                         <thead>
                                 <tr>                                   
@@ -39,40 +38,24 @@
                                     <td>
                                         <ul class="address-ul">
                                             <li>
-                                                <form action="{{ route('account.payment-option.update.status', [$option] )}}" method="post">
+                                                <form action="{{ route('account.payment-option.update.status', [$option->encryptedId()] )}}" method="post">
                                                     @csrf
                                                     @method('put')
-                                                    <button class="borderless">
-                                                            <i class="fa-solid {{ $option->status == 1 ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i>                                                          
-                                                    </button>
-                                                </form>
-                                              
+                                                    <button class="borderless"><i class="fa-solid {{ $option->status == 1 ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i></button>
+                                                </form>                                              
                                             </li>
                                             <li>
-                                                <a href="{{ route('account.payment-option.edit',[$option]) }}">
-                                                    <span class="tbl-action">
-                                                        <i class="fas fa-pen"></i>
-                                                    </span>
+                                                <a href="{{ route('account.payment-option.edit',[ $option->encryptedId() ]) }}">
+                                                    <span class="tbl-action"><i class="fas fa-pen"></i></span>
                                                 </a>                                                    
                                             </li>
                                             <li>
-                                                <form action="{{ route('account.payment-option.destroy', [$option]) }}"  method="post">
+                                                <form action="{{ route('account.payment-option.destroy', [$option->encryptedId()]) }}"  method="post">
                                                     @csrf
                                                     @method('delete')
-                                                    <button  class="tbl-action">
-                                                        <i class="far fa-trash-alt"></i>
-                                                    </button>
+                                                    <button  class="tbl-action"><i class="far fa-trash-alt"></i></button>
                                                 </form>                                               
                                             </li>
-                                                <form id="form-default"  method="post">
-                                                    @csrf @method('put')                                                    
-                                                </form>
-                                            
-                                                <form id="form-delete"   method="post">
-                                                    @csrf @method('delete')                                                             
-                                                </form>
-                                               
-                                           
                                         </ul>      
                                     </td>
                                 </tr>       
@@ -84,10 +67,6 @@
             </div> 
         </div>
     </div>
-
-  
-
-
 @endsection
 
 

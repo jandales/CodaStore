@@ -16,10 +16,8 @@
                             <div class="alert alert-success mt-1 w-12">{{ session('success') }}</div>
                         @endif
                         @if(session('danger'))
-                        <div class="alert alert-warning mt-1 w-12">{{ session('danger') }}</div>
-                    @endif
-                    
-                        
+                             <div class="alert alert-warning mt-1 w-12">{{ session('danger') }}</div>
+                        @endif  
                         <table class="table table-address bordered bg-white p-20">
                             <thead>
                                     <tr>                                                                        
@@ -39,34 +37,29 @@
                                         <td>{{ $item->country }}</td>                                           
                                         <td>
                                             <ul class="address-ul">
-                                                <li>
-                                                    <span class="borderless" onclick="document.getElementById('form-default-{{ $item->id }}').submit();">
-                                                        <i class="fa-solid  {{ $item->status == 1 ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i>
-                                                    </span>
-                                                    <form id="form-default-{{ $item->id }}" action="{{ route('account.shippingaddress.update-status',[$item]) }}"  method="post">
-                                                        @csrf @method('put')                                                    
+                                                <li>                                                   
+                                                    <form  action="{{ route('account.shippingaddress.update-status',[$item->encryptedId()]) }}"  method="post">
+                                                        @csrf @method('put')  
+                                                        <button class="borderless">
+                                                            <i class="fa-solid  {{ $item->status == 1 ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i>
+                                                        </button>                                                  
                                                     </form>
                                                 </li>
                                                 <li>
-                                                    <a href="{{ route('account.shippingaddress.edit',[$item]) }}">
+                                                    <a href="{{ route('account.shippingaddress.edit',[$item->encryptedId() ]) }}">
                                                         <span class="tbl-action">
                                                             <i class="fas fa-pen"></i>
                                                         </span>
                                                     </a>                                                    
                                                 </li>
-                                                <li>
-                                                    <span  class="tbl-action" onclick="document.getElementById('form-delete-{{$item->id}}').submit();">
-                                                        <i class="far fa-trash-alt"></i>
-                                                    </span>
-                                                    <form id="form-delete-{{ $item->id }}" action="{{ route('account.shippingaddress.destroy', [$item]) }} "  method="post">
-                                                        @csrf @method('delete')                                                             
+                                                <li>                                                    
+                                                    <form action="{{ route('account.shippingaddress.destroy', [$item->encryptedId()]) }} "  method="post">
+                                                        @csrf @method('delete')  
+                                                        <button  class="tbl-action">
+                                                            <i class="far fa-trash-alt"></i>
+                                                        </button>                                                           
                                                     </form>
                                                 </li>
-                                                   
-                                                
-                                                
-                                                   
-                                               
                                             </ul>      
                                         </td>
                                     </tr>       
@@ -80,15 +73,3 @@
     </div>
 @endsection
 
-<script>
- 
-    function submitDefault(url){
-        const form = document.getElementById('form-default');
-        form.setAttribute("action",url);      
-        form.submit()
-    }
-
- 
-    
-
-</script>

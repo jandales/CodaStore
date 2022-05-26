@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\Product;     
+use App\Models\Cart;
 use App\Models\Category;
+use App\Models\Product;     
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cookie;
@@ -18,12 +19,20 @@ class AppController extends Controller
 
     public function setCartCookie()
     {        
+      
         if(Cookie::has('cart-id')) return;
-            
+
         $minutes = (60 * 24) * 7;  
-        $value = Carbon::now()->timestamp;          
+        $timestamp = Carbon::now()->timestamp;  
+        $value = $timestamp;        
         $response = new Response('Hello World');
-        $response->withCookie(cookie('cart-id', $value, $minutes));
+        $response->withCookie(cookie('cart-id', $value, $minutes));    
+
+        Cart::create([    
+            'cart_id' => $value,
+            'expired_at' =>  Carbon::parse($timestamp)->addDays(5),
+        ]); 
+
         return $response;
     }
 

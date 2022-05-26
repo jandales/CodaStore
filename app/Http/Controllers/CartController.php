@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Cart;
 use App\Models\Product;
 use App\Models\CartItem;
@@ -27,6 +28,7 @@ class CartController extends Controller
 
     public function index()
     { 
+       return  Carbon::now()->addDays(5);
         // $result = $this->services->index(); 
         $cart = Cart::ByUser()->first();           
         return view('cart')->with('cart',$cart);
@@ -37,10 +39,7 @@ class CartController extends Controller
        return $this->services->store($request, $product);       
     }
 
-    public function createCart()
-    {     
-        return $this->services->createCart();
-    }
+
   
     public function count()
     {       

@@ -13,7 +13,7 @@
                         <h2>Edit Card</h2>                        
                     </div>
                     <div class="w-6 sm-w-12">
-                        <form action="{{ route('account.payment-option.update',[$option]) }}" method="post" class="mt-1">
+                        <form action="{{ route('account.payment-option.update',[$option->encryptedId()]) }}" method="post" class="mt-1">
                             @csrf
                             @method('put')
                             <div class="form-block">

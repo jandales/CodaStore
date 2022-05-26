@@ -2162,6 +2162,15 @@ a.delete {
   justify-content: center;
 }
 
+@media screen and (max-width: 640px) {
+  .search-page form {
+    width: 100% !important;
+  }
+
+  .input-search {
+    width: 100% !important;
+  }
+}
 .fadeIn {
   -webkit-animation: fadeIn 1s;
           animation: fadeIn 1s;
@@ -4060,10 +4069,6 @@ ul li {
 
   .items {
     width: 100%;
-  }
-
-  .product-nav nav {
-    flex-direction: column;
   }
 }
 .container {

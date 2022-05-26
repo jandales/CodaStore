@@ -16,7 +16,7 @@ class Cart extends Model
     protected $fillable = [       
         'cart_id',
         'total',  
-        'expire_at',
+        'expired_at',
     ];
 
     public function items()

@@ -12,21 +12,23 @@ use App\Models\ProductAttribute;
 class ShopController extends Controller
 {
     private $services;
+    private $perpage;
 
     public function __construct(ShopServices $services)
     {
         $this->services = $services;
+        $this->perpage = config('setting.shop.perpage');
     }
 
     public function index()
     {  
-        $products = Product::with('reviews')->paginate(16);
+        $products = Product::with('reviews')->paginate($this->perpage);
         return view('shop')->with(['products' => $products, 'category' => 'All Collection']);
     }
 
     public function category(Category $category)
     {    
-        $products = Product::where('category_id', $category->id)->with('reviews')->paginate(16);       
+        $products = Product::where('category_id', $category->id)->with('reviews')->paginate($this->perpage);       
         return view('shop')->with(['products' => $products, 'category' => $category->name]);
     }
 

@@ -2397,6 +2397,16 @@ a.delete{
 }
 
 
+@media screen and (	max-width: 640px) {
+    .search-page form{
+        width: 100% !important;
+    }
+    .input-search{
+        width: 100% !important;
+    }
+}
+
+
 .fadeIn{
   animation: fadeIn 1s;
 }

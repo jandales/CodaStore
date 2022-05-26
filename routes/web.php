@@ -199,6 +199,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/account/upload/avatar',[UserController::class, 'upload'])->name('account.upload');
 
     Route::get('/account/profile/edit', [UserController::class, 'edit'])->name('account.edit');
+    
     Route::put('/account/profile/change-password', [UserController::class, 'changePassword'])->name('account.changePassword');
    
     // route Shipping address    
@@ -208,11 +209,11 @@ Route::group(['middleware' => 'auth'], function(){
     
     Route::post('/account/shipping-address/store', [UserShippingAddressController::class, 'store'])->name('account.shippingaddress.store');
 
-    Route::get('/account/shipping-address/{address}/edit', [UserShippingAddressController::class, 'edit'])->name('account.shippingaddress.edit');
+    Route::get('/account/shipping-address/{address:id}/edit', [UserShippingAddressController::class, 'edit'])->name('account.shippingaddress.edit');
 
-    Route::put('/account/shipping-address/{address}/update', [UserShippingAddressController::class, 'update'])->name('account.shippingaddress.update');
+    Route::put('/account/shipping-address/{address:id}/update', [UserShippingAddressController::class, 'update'])->name('account.shippingaddress.update');
 
-    Route::delete('/account/shipping-address/{address}/destroy', [UserShippingAddressController::class, 'destroy'])->name('account.shippingaddress.destroy');
+    Route::delete('/account/shipping-address/{address:id}/destroy', [UserShippingAddressController::class, 'destroy'])->name('account.shippingaddress.destroy');
 
     Route::put('/account/shipping-address/{address:id}/update-status', [UserShippingAddressController::class, 'set_default_address'])->name('account.shippingaddress.update-status');
     // payment Method
@@ -222,11 +223,11 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::post('/account/payment-option/store', [UserPaymentOptionController::class, 'store'])->name('account.payment-option.store');
 
-    Route::get('/account/payment-option/edit/{option}', [UserPaymentOptionController::class, 'edit'])->name('account.payment-option.edit');
+    Route::get('/account/payment-option/edit/{option:id}', [UserPaymentOptionController::class, 'edit'])->name('account.payment-option.edit');
 
-    Route::put('/account/payment-option/update/{option}', [UserPaymentOptionController::class, 'update'])->name('account.payment-option.update');
+    Route::put('/account/payment-option/update/{option:id}', [UserPaymentOptionController::class, 'update'])->name('account.payment-option.update');
 
-    Route::delete('/account/payment-option/destroy/{option}', [UserPaymentOptionController::class, 'destroy'])->name('account.payment-option.destroy');
+    Route::delete('/account/payment-option/destroy/{option:id}', [UserPaymentOptionController::class, 'destroy'])->name('account.payment-option.destroy');
 
     Route::put('/account/payment-option/status/{option:id}', [UserPaymentOptionController::class, 'updateStatus'])->name('account.payment-option.update.status');   
 

@@ -85,18 +85,6 @@ class CartServices
         ]);
     }
 
-    public function createCart()
-    {     
-        $cart_id =  Cookie::get('cart-id');
-        $cart = Cart::where('cart_id', $cart_id)->first();
-        if(!empty($cart)) return;      
-
-        return Cart::create([             
-            'total' => 0,
-            'cart_id' => $cart_id,
-            'expired_at' => Carbon::now()->addDays(5),
-        ]); 
-    }
 
     public function update(Request $request, CartItem $cartitem)
     {        
