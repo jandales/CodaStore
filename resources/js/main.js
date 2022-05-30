@@ -11,4 +11,8 @@ require('./inc/notifacation');
 require('./admin/main');
 
 
+// var editor = new FroalaEditor('#short-description');
+// var editor1 = new FroalaEditor('#long-description');
+
+
 

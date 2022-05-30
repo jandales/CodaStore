@@ -18,6 +18,8 @@ class CreateCouponUsageUsersTable extends Migration
             $table->integer('coupon_id');
             $table->integer('user_id');
             $table->integer('usage');
+            $table->integer('used');
+            $table->integer('deleted')->default(0);
             $table->timestamps();
         });
     }

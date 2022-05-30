@@ -17,10 +17,18 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->string('name');
             $table->integer('category_id');
-            $table->string('slug_name');
+            $table->string('slug');
             $table->string('sku');
-            $table->longText('description');
+            $table->string('barcode');
+            $table->longText('short_description');
+            $table->longText('long_description');
+            $table->integer('sale_price');
+            $table->integer('regular_price');
+            $table->integer('is_taxeble');
+            $table->integer('featured'); 
             $table->string('imagePath');
+            $table->string('tags');
+            $table->string('status');
             $table->timestamps();
         });
     }

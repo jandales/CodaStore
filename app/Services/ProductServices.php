@@ -46,7 +46,7 @@ class ProductServices
         $image = json_decode($request->image, true);
       
         $product->name = $request->name;
-        $product->slug_name = productSlug($request->name);
+        $product->slug = productSlug($request->name);
         $product->category_id = $request->categories;    
         $product->short_description = $request->short_description;
         $product->long_description = $request->long_description;
@@ -123,15 +123,9 @@ class ProductServices
         $products = Product::with(['category', 'stock'])
             ->whereHas('category', function ($query) use ($filterBy, $value) {
                 if($filterBy != 'all') $query->where($filterBy, $value);                              
-        })->paginate(10);
-
-        if ($value == 0)
-            $filterBy = "status=unpublished";
+        })->paginate(10);       
         
-        if ($value == 1)
-            $filterBy = "status=published";
-        
-        return ['products' => $products, 'filter' => $filterBy];
+        return ['products' => $products, 'filter' => $value == 0 ? "status=unpublished" : "status=published"];
     }
 
     private function updateStatus(Product $product, $status)
@@ -142,8 +136,7 @@ class ProductServices
     
     private function updateProductImage($request, $photo)
     {
-        if ($request == null)  return;  
-        return $photo;         
+        if ($request == null) return;                
         if ($photo != null)  Self::unlink($photo); 
     }
     private function ImageGalleryUpdate($images, $product_id)
@@ -184,7 +177,7 @@ class ProductServices
                 ProductVariant::create([
                     'product_id' => $product_id,
                     'attribute_id' => $attribute['id'],
-                    'variant' => $variant,                   
+                    'name' => $variant,                   
                 ]);
             }            
         }

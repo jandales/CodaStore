@@ -20,7 +20,7 @@ class AdminOrderController extends Controller
     public function listbyStatus($status)
     {
         $orders = Order::where('status', $status)->with('user', 'items')->paginate(10);
-        return view('admin.orders')->with('orders', $orders);
+        return view('admin.orders.index')->with('orders', $orders);
     }
 
     public function show(Order $order)

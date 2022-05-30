@@ -4,7 +4,7 @@
     <!--Featured Product-->
         <div class="container">   
             @if (session('success'))
-                 <div class="alert alert-success">{{session('success')}}</div>
+                 <div class="alert alert-success mt-1">{{session('success')}}</div>
             @endif   
             <div class="panel-view">
                 <div class="product-images">

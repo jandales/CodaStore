@@ -166,11 +166,11 @@ Route::get( '/product/hasvariant/{product:id}', [ ShopController::class, 'hasVar
 
 Route::group(['middleware' => 'auth'], function(){
 
-    Route::post('/shop/review/{product}',[ReviewController::class, 'store'])->name('review.store');
+    Route::post('/shop/review/{product:id}',[ReviewController::class, 'store'])->name('review.store');
 
-    Route::put('/shop/review/{review}/edit/{rate}',[ReviewController::class, 'update'])->name('review.update');
+    Route::put('/shop/review/{review:id}/edit/{rate}',[ReviewController::class, 'update'])->name('review.update');
 
-    Route::delete('/shop/review/{review}',[ReviewController::class, 'destroy'])->name('review.destroy');
+    Route::delete('/shop/review/{review:id}',[ReviewController::class, 'destroy'])->name('review.destroy');
 
 
 });
@@ -231,6 +231,8 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::put('/account/payment-option/status/{option:id}', [UserPaymentOptionController::class, 'updateStatus'])->name('account.payment-option.update.status');   
 
+
+    
     Route::get('/checkout/information', [CheckOutController::class, 'index' ])->name('checkout.information');
 
     Route::post('/checkout/information/store', [CheckOutController::class, 'store' ])->name('checkout.information.store');

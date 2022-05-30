@@ -15,10 +15,11 @@ class CreateCartsTable extends Migration
     {
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
-            $table->integer('product_id')->unsigned();
-            $table->string('product_name');
-            $table->integer('qty')->default(0);
-            $table->integer('price')->default(0);
+            $table->bigInteger('cart_id')->unsigned();
+            $table->double('total');
+            $table->double('discount')->default(0);
+            $table->integer('coupon_id')->unsigned();            
+            $table->timestamps('expired_at');
             $table->timestamps();
         });
     }

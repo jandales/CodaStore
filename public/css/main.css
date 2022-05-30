@@ -1,3 +1,29 @@
+:root {
+  --bs-orange: #ff523b;
+  --bs-blue: #0d6efd;
+  --bs-indigo: #6610f2;
+  --bs-purple: #6f42c1;
+  --bs-pink: #d63384;
+  --bs-red: #dc3545;
+  --bs-orange: #fd7e14;
+  --bs-yellow: #ffc107;
+  --bs-green: #198754;
+  --bs-teal: #20c997;
+  --bs-cyan: #0dcaf0;
+  --bs-white: #fff;
+  --bs-gray: #6c757d;
+  --bs-grey:#eee;
+  --bs-gray-dark: #343a40;
+  --bs-primary: #0d6efd;
+  --bs-secondary: #6c757d;
+  --bs-success: #198754;
+  --bs-info: #0dcaf0;
+  --bs-warning: #ffc107;
+  --bs-danger: #dc3545;
+  --bs-light: #f8f9fa;
+  --bs-dark: #212529;
+}
+
 @font-face {
   font-family: "Lato";
   font-style: normal;
@@ -71,7 +97,7 @@ body {
   flex-direction: column;
   width: calc(100% - 250px);
   min-height: calc(100vh - 64px);
-  background-color: #f7f7f7;
+  background-color: var(--bs-grey);
 }
 
 .flex {
@@ -85,7 +111,7 @@ body {
 
 .flex-gap {
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 1rem;
 }
 
 .flex-column {
@@ -2669,7 +2695,7 @@ details ul li:last-child {
 }
 
 .container {
-  width: 1200px;
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -2803,7 +2829,7 @@ details ul li:last-child {
 
 .image-gallery .image {
   position: relative;
-  width: 140px;
+  width: calc(50% - 1rem);
   min-height: 173px;
   height: auto;
   background: #eee;

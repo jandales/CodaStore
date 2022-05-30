@@ -17,14 +17,14 @@ class CreateCouponsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('description');
-            $table->string('discount_type');
-            $table->integer('include_product_id');
-            $table->integer('exclude_product_id');
+            $table->integer('discount_type');
+            $table->double('amount');
             $table->double('min_amount');
-            $table->double('max_amount');
+            $table->double('max_amount');              
             $table->integer('limit_per_coupon');
             $table->integer('limit_to_xitems');
             $table->integer('limit_per_user');
+            $table->integer('usage');    
             $table->timestamp('expire_at')->nullable();
             $table->timestamps();
         });

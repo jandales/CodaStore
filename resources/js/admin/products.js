@@ -53,8 +53,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 optionsContainer.style.display = 'block'         
             } 
         }
-        loadGalleryImages();
         loadEditOnEditForm();
+        loadGalleryImages();
+     
+
+        
 })
 
 function loadEditOnEditForm(){
@@ -78,6 +81,9 @@ function loadEditOnEditForm(){
     images.forEach(image => {
         product.images.push({id : image.id, path : image.path, deleted : 0 })
     });
+
+
+    
 
 }
 function getAttributes(){ 
@@ -230,20 +236,24 @@ if(hasVariantElement) {
 
 
 
+function removeVariantItem(elem){
+    let value  = elem.getAttribute('name')
+    let variant_id = parseInt(elem.getAttribute('data-id'))     
+    deleteVariantItem(variant_id,value)
+    elem.parentElement.remove();  
+}
 
-function removeVariantItem(){ 
-    const removeVariantItems = document.querySelectorAll('.remove-variant-item');
-    removeVariantItems.forEach(item => {
-        item.onclick =  function(){
-            console.log(item);
-            let value  = item.getAttribute('name')
-            let variant_id = parseInt(item.getAttribute('data-id'))     
-            deleteVariantItem(variant_id,value)
-            item.parentElement.remove();  
-        }       
+function removeVariantItemEvent(){ 
+    document.querySelectorAll('.remove-variant-item').forEach(item => {
+        item.onclick = () => { removeVariantItem(item) }
     })
   
 }
+const removeVariantItems = document.querySelectorAll('.remove-variant-item');
+removeVariantItems.forEach(item => {
+    item.onclick =  () => { removeVariantItem(item) };        
+})
+
 
 
 
@@ -261,7 +271,6 @@ if (btnaddvariant) {
 
 /// add event 
 function addVariantEvent(event){ 
-    console.log(event);  
     if (event.keyCode === 13) {     
         event.preventDefault(); 
         let value = event.target.value
@@ -273,7 +282,7 @@ function addVariantEvent(event){
         let wrapper = event.target.parentElement.querySelector('.variants-list-wrapper')
         wrapper.innerHTML += createVariantHTML(value, id) 
         event.target.value = ""   
-        removeVariantItem();        
+        removeVariantItemEvent();        
     } 
 }
 
@@ -301,6 +310,11 @@ function variantRemove(){
         remove.onclick =  removeOption;
     })
 }
+
+const removes =  optionsWrapper.querySelectorAll('.option-remove')      
+removes.forEach(remove => {
+        remove.onclick =  removeOption;
+})
 
 
 

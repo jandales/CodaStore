@@ -32,11 +32,15 @@
                                     <div class="comment-action mt-1">
                                         <ul>
                                             <li><span class="edit-review" value="{{ $userReview->comments }}" rate="{{ $userReview->rating }}"><i class="far fa-edit"></i></span></li>
-                                            <li><span onclick="document.getElementById('form-review-delete').submit()" class="btn-link"><i class="far fa-trash-alt"></i></span>
-                                                <form id="form-review-delete" action="{{ route('review.destroy',[ $userReview ])}}" method="POST">
+                                            <li>
+                                                <form id="form-review-delete" action="{{ route('review.destroy',[ $userReview->encryptedId() ])}}" method="POST">
                                                     @csrf
-                                                    @method('delete')                                                  
+                                                    @method('delete')  
+                                                <button class="btn-link">
+                                                    <i class="far fa-trash-alt"></i>
+                                                </button>                                                
                                                 </form>
+                                                
                                             </li>
                                         </ul>
                                     </div> 
@@ -104,7 +108,7 @@
            </div>
            <div class="mt-1">
 
-                        <form  action = "{{route('review.store',[$product])}}" method="POST">
+                        <form  action = "{{route('review.store',[$product->encryptedId() ])}}" method="POST">
                             @csrf
                                 <input type="hidden" id="input-rate"  name="rate" value="0" hidden>
                                 <div class="form-block">

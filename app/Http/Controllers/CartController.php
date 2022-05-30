@@ -27,8 +27,7 @@ class CartController extends Controller
     }     
 
     public function index()
-    { 
-       return  Carbon::now()->addDays(5);
+    {      
         // $result = $this->services->index(); 
         $cart = Cart::ByUser()->first();           
         return view('cart')->with('cart',$cart);

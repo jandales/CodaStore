@@ -3012,8 +3012,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  loadGalleryImages();
   loadEditOnEditForm();
+  loadGalleryImages();
 });
 
 function loadEditOnEditForm() {
@@ -3193,18 +3193,27 @@ if (hasVariantElement) {
   };
 }
 
-function removeVariantItem() {
-  var removeVariantItems = document.querySelectorAll('.remove-variant-item');
-  removeVariantItems.forEach(function (item) {
+function removeVariantItem(elem) {
+  var value = elem.getAttribute('name');
+  var variant_id = parseInt(elem.getAttribute('data-id'));
+  deleteVariantItem(variant_id, value);
+  elem.parentElement.remove();
+}
+
+function removeVariantItemEvent() {
+  document.querySelectorAll('.remove-variant-item').forEach(function (item) {
     item.onclick = function () {
-      console.log(item);
-      var value = item.getAttribute('name');
-      var variant_id = parseInt(item.getAttribute('data-id'));
-      deleteVariantItem(variant_id, value);
-      item.parentElement.remove();
+      removeVariantItem(item);
     };
   });
 }
+
+var removeVariantItems = document.querySelectorAll('.remove-variant-item');
+removeVariantItems.forEach(function (item) {
+  item.onclick = function () {
+    removeVariantItem(item);
+  };
+});
 
 if (btnaddvariant) {
   btnaddvariant.addEventListener('click', function (e) {
@@ -3223,8 +3232,6 @@ if (btnaddvariant) {
 
 
 function addVariantEvent(event) {
-  console.log(event);
-
   if (event.keyCode === 13) {
     event.preventDefault();
     var value = event.target.value;
@@ -3235,7 +3242,7 @@ function addVariantEvent(event) {
     var wrapper = event.target.parentElement.querySelector('.variants-list-wrapper');
     wrapper.innerHTML += createVariantHTML(value, id);
     event.target.value = "";
-    removeVariantItem();
+    removeVariantItemEvent();
   }
 }
 
@@ -3260,8 +3267,12 @@ function variantRemove() {
   removes.forEach(function (remove) {
     remove.onclick = removeOption;
   });
-} /// file uploader
+}
 
+var removes = optionsWrapper.querySelectorAll('.option-remove');
+removes.forEach(function (remove) {
+  remove.onclick = removeOption;
+}); /// file uploader
 
 var fileProductImage = document.getElementById('file-product-image');
 var fileImageGallery = document.getElementById('file-image-gallery');
@@ -21607,7 +21618,8 @@ __webpack_require__(/*! ./inc/password */ "./resources/js/inc/password.js");
 
 __webpack_require__(/*! ./inc/notifacation */ "./resources/js/inc/notifacation.js");
 
-__webpack_require__(/*! ./admin/main */ "./resources/js/admin/main.js");
+__webpack_require__(/*! ./admin/main */ "./resources/js/admin/main.js"); // var editor = new FroalaEditor('#short-description');
+// var editor1 = new FroalaEditor('#long-description');
 })();
 
 /******/ })()

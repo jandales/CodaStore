@@ -20,7 +20,7 @@ class CreateCartItemsTable extends Migration
             $table->foreign('cart_id')->references('id')->on('carts');
             $table->foreign('product_id')->references('id')->on('products');
             $table->integer('qty')->default(1);
-            $table->json('properties'); 
+            $table->json('attributes'); 
             $table->timestamps();
         });
     }

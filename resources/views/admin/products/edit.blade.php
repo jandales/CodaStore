@@ -8,7 +8,7 @@
     <div id="notify-message" class="m-t-2">
         
     </div>
-    <form id="form" method="post" action="{{route('admin.products.update',[$product])}}" enctype="multipart/form-data">
+    <form id="form" method="post" action="{{route('admin.products.update',[$product->encryptedId()])}}" enctype="multipart/form-data">
         @csrf   
         <input type="hidden" name="attributes" value="{{$product->attributes}}">
         <input type="hidden" name="variants" value="{{$product->variants}}">  
@@ -108,8 +108,9 @@
                                                 @foreach ($product->variants as  $variant)  
                                                     @if( $item->attribute_id ==  $variant->attribute_id)            
                                                         <div class="variant">  
-                                                            {{  $variant->variant}}         
-                                                            <span name="{{  $variant->variant }} " data-id="{{ $item->attribute_id }}" class="remove-variant-item"><i class="fas fa-times"></i></span>
+                                                            {{  $variant->name}}         
+                                                            <span name="{{  $variant->name }} " data-id="{{ $item->attribute_id }}" class="remove-variant-item"><i class="fas fa-times"></i></span>
+                                                            <span name="red" data-id="1" class="remove-variant-item"><i class="fas fa-times"></i></span>
                                                         </div>
                                                     @endif
                                                 @endforeach                                  
@@ -117,7 +118,7 @@
                                             <input data-id="{{ $item->attribute_id }}" class="inputVariant no-border"  placeholder="Enter varaint name and hit enter" name="variant_name[]" type="text" value=""> 
                                         </div>                                 
                                     </div>
-                                    <span class="option-remove" data-id="{{ $item->attribute_id }}" onclick="removeOption(this)">remove</span>
+                                    <span class="option-remove" data-id="{{ $item->attribute_id }}">remove</span>
                                 </div>
                                 @endforeach
                             
@@ -217,7 +218,7 @@
                     <div class="panel-body"> 
                         <div class="image-gallery-wrapper">                       
                             <div class="image-gallery">
-                                                   
+                                             
                             </div>
                             <div class="progress-bar-wrapper progress-images">  
                                 <div class="progress-bar" style="--width:0" data-value="Loading...."></div>                                  

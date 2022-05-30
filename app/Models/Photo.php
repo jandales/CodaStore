@@ -16,10 +16,8 @@ class Photo extends Model
 */
 protected $fillable = [
     'product_id',
-    'path',
-    'owner',
-    'name',
-    'location'  
+    'path',   
+    'location',
 ];
 
 

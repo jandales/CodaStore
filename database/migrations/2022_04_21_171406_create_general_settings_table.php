@@ -22,6 +22,15 @@ class CreateGeneralSettingsTable extends Migration
             $table->string('timezone');
             $table->string('date_format');
             $table->string('time_format');
+            $table->string('campany_name');
+            $table->string('campany_address');
+            $table->string('campany_city');
+            $table->string('campany_region');
+            $table->string('campany_county');
+            $table->string('campany_zipcode');
+            $table->string('campany_phone');
+            $table->integer('app_perpage');
+            $table->integer('shop_perpage');
             $table->timestamps();
         
         });

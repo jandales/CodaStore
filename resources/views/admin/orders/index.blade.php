@@ -27,7 +27,7 @@
             <label class="title selected-items">2 item Selected</label>
             <div class="btn-action">      
                 <span id="deleteSelected" link = {{ route('admin.users.destroySelectedItem') }} class="btn btn-light"><i class="fas fa-trash"></i></span>
-                <span  onclick="clearSelection()" class="btn btn-light"><i class="fas fa-times"></i></span> 
+                <span  id="clear-selection" class="btn btn-light"><i class="fas fa-times"></i></span> 
             </div>      
         </div> 
         <div class="toolbar default-toolbar space-between">

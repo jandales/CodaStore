@@ -18,6 +18,8 @@ class CreateReviewsTable extends Migration
             $table->integer('product_id')->unsigned();           
             $table->integer('user_id')->unsigned();    
             $table->string('comments')->nullable();
+            $table->integer('block')->nullable();
+            $table->integer('rating')->default(0);
             $table->timestamps();
         });
     }

@@ -15,7 +15,8 @@ class CreateCouponRestrictionProductTable extends Migration
     {
         Schema::create('coupon_restriction_product', function (Blueprint $table) {
             $table->id();
-            $table->integer('product_id');
+            $table->integer('coupon_id')->unsigned();
+            $table->integer('product_id')->unsigned();
             $table->string('type');
             $table->timestamps();
         });
