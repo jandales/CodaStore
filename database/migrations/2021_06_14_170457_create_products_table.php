@@ -24,7 +24,7 @@ class CreateProductsTable extends Migration
             $table->longText('long_description');
             $table->integer('sale_price');
             $table->integer('regular_price');
-            $table->integer('is_taxeble');
+            $table->integer('is_taxeble')->default(0);
             $table->integer('featured'); 
             $table->string('imagePath');
             $table->string('tags');

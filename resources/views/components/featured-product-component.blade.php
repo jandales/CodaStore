@@ -8,7 +8,7 @@
                     <div class="items">                                  
                         <div class="item">
                             <a href="{{ route('shop.product',[ $product->slug ] )}}">
-                                <img src="/{{ $product->imagePath }}">      
+                                <img src="{{ $product->imagePath }}">      
                             </a>                              
                         </div>
                         <div class="item-description">

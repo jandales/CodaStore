@@ -21,20 +21,22 @@ class ProductFactory extends Factory
      */
     public function definition()
     {
-        return [
-            'name' => $this->faker->name(),
-            'category_id' => 1,            
-            'slug_name' =>  slug($this->faker->name()),         
-            'short_description' =>  $this->faker->paragraph(),
-            'long_description' =>  $this->faker->paragraph(),
-            'imagePath' =>   'img/products/default.jpg',
-            'sku' =>  $this->faker->name(),
-            'barcode' => $this->faker->randomNumber(12),
-            'sale_price' => $this->faker->randomNumber(5),
-            'regular_price' =>  $this->faker->randomNumber(5),
-            'tags' => $this->faker->tags, 
-            'status' => 'draft',
-            'istaxeble' => 0,       
+        $TYPE = '.webp';
+        $name = $this->faker->word();
+        return [  
+            'name' => $this->faker->word,
+            'category_id' => rand(1,3),
+            'slug' => slug($name),        
+            'short_description' => $this->faker->sentence(),            
+            'long_description' => $this->faker->sentence(),
+            'imagePath' => '/img/products/default/' . rand(1,20) . $TYPE,
+            'sku' => $this->faker->phoneNumber(),  
+            'barcode' => $this->faker->phoneNumber(),      
+            'tags' => $name,
+            'sale_price' => 399,
+            'regular_price' => 500,
+            'status' => 1,
+            'featured' => rand(0,1),
         ];
 
         // $users = factory(App\User::class, 3)

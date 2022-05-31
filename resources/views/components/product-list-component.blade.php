@@ -39,7 +39,7 @@
                 <div class="items mb-2">                                  
                     <div class="item">
                         <a href="{{ route('shop.product',[$product->encryptedId() ] )}}">
-                            <img src="/{{ $product->imagePath }}">      
+                            <img src="{{ $product->imagePath }}">      
                         </a>                                                                         
                     </div>
                     <div class="item-description">

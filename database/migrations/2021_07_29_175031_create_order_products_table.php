@@ -19,7 +19,7 @@ class CreateOrderProductsTable extends Migration
             $table->integer('product_id')->unsigned();
             $table->integer('qty')->default(0);
             $table->integer('price')->default(0); 
-            $table->json>('properties');
+            $table->json('properties');
             $table->timestamps();      
             $table->foreign('order_id')->references('id')->on('orders');
         });
@@ -32,6 +32,6 @@ class CreateOrderProductsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_items');
+        Schema::dropIfExists('order_products');
     }
 }

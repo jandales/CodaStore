@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStocksTable extends Migration
+class CreateAttributesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateStocksTable extends Migration
      */
     public function up()
     {
-        Schema::create('stocks', function (Blueprint $table) {
+        Schema::create('attributes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_id'); 
-            $table->integer('qty')->default(0);;
-            $table->longText('remarks')->nullable();
+            $table->string('name');
+            $table->string('description')->nullble();
+            $table->string('slug');
             $table->timestamps();
-            $table->foreign('product_id')->references('id')->on('products');           
         });
     }
 
@@ -30,6 +29,6 @@ class CreateStocksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stocks');
+        Schema::dropIfExists('attributes');
     }
 }

@@ -29,15 +29,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        View::share('categories', Category::All());
-        View::share('attributes', Attribute::All());
+        // View::share('categories', Category::All());
+        // View::share('attributes', Attribute::All());
      
         
         Blade::directive('money', function ($amount) {
             return "<?php echo '₱'.number_format($amount, 2); ?>";
         });
 
-        Paginator::defaultView('vendor.pagination.default');
+         Paginator::defaultView('vendor.pagination.default');
 
     }
 }

@@ -14,8 +14,7 @@ class Cart extends Model
     use HasFactory;
     
     protected $fillable = [       
-        'cart_id',
-        'total',  
+        'cart_id',        
         'expired_at',
     ];
 

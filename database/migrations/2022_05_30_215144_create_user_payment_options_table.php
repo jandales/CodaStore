@@ -14,13 +14,13 @@ class CreateUserPaymentOptionsTable extends Migration
     public function up()
     {
         Schema::create('user_payment_options', function (Blueprint $table) {
-            $table->id();            
+            $table->id(); 
+            $table->integer('user_id');          
             $table->string('card_name');
             $table->string('card_number');
             $table->string('card_expire_date');
-            $table->string('card_cvc');            
-            $table->integer('user_id');
-            $table->integer('status');
+            $table->string('card_cvc');  
+            $table->integer('status');         
             $table->timestamps();
         });
     }
@@ -32,6 +32,6 @@ class CreateUserPaymentOptionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payment_options');
+        Schema::dropIfExists('user_payment_options');
     }
 }

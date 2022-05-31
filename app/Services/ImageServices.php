@@ -15,7 +15,7 @@ class ImageServices
     
         foreach($request->file('images') as $image){ 
             $name = imageName($image); 
-            $location = 'img/test/';
+            $location = '/img/test/';
             $path =  $location . $name;
             $photo = Photo::create([        
                 'path' => $path,

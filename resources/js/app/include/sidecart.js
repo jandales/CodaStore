@@ -43,7 +43,7 @@ function cartsToViews(){
         let cartItemsElement = document.createElement('div')
         cartItemsElement.classList.add('cart-items','gap10')
         let items = `<div class="cart-image">
-                        <img class="img" src="/${item.product.imagePath}" alt="" srcset="">              
+                        <img class="img" src="${item.product.imagePath}" alt="" srcset="">              
                      </div>
                     <div class="cart-decription">
                         <p class="cart-item-name">${item.product.name}</p>  

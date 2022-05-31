@@ -10,20 +10,23 @@ use App\Http\Requests\UserRegisterRequest;
 class RegisterController extends Controller
 {
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->middleware(['guest']);
     }
     
-    public function index(){
+    public function index()
+    {
         return view('register');
     }
+
     public function store(UserRegisterRequest $request)
     {
-        User::create([
-            'name' => $request['name'],
-            'email' => $request['email'],       
-            'password' => Hash::make($request['password'])
-        ]);
+
+        $validated = $request->validated();
+        $validated['password'] = Hash::make($request['password']);
+        User::create($validated);
+        // auto login
         $credentials = $request->only('email', 'password');
         auth()->attempt($credentials);
         return redirect()->route('account');

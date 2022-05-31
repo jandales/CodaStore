@@ -51,5 +51,4 @@ class ForgotPasswordController extends Controller
         return back()->with('success','Please check your Email to reset your password');
     }
 
-   
 }
