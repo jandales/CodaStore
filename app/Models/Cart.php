@@ -47,9 +47,9 @@ class Cart extends Model
         return $this->where('cart_id',$id)->with('items','items.product','items.product.stock', 'coupon');
     }
 
-    public function scopeGrandTotal()
+    public function scopeTotal()
     {       
-        $cart = self::scopeCartByUser();
+        $cart = self::scopeByUser()->first();
         $total = 0;
         foreach($cart->items as $item)
         {

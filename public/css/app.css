@@ -2244,8 +2244,7 @@ a.delete {
 }
 
 .variant .attribute {
-  width: 30px;
-  height: 30px;
+  padding: 0.5rem;
   color: #666;
   background-color: #fff;
   display: flex;

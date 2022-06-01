@@ -11,10 +11,8 @@
                     @foreach ($product->variants as $variant) 
                         @if ($item->attribute_id ==  $variant->attribute_id )
                              <li  class="variant-options" name="{{ $item->attributes->name }}" value="{{ $variant->name }}">
-                                <div class="attribute {{ $item->attributes->name != 'color' ? 'capitalize' : ''}} {{  $variant->name }}">
-                                    @if ($item->attributes->name != 'color') 
-                                        {{ $variant->name }}
-                                    @endif
+                                <div class="attribute  capitalize">                                
+                                        {{ $variant->name }}                                   
                                 </div>
                             </li>
                         @endif

@@ -46,12 +46,11 @@
           
         </div> 
         <div class="toolbar justify-content-space-between  default-toolbar"> 
-                <form id="formSearch" action="{{ route('admin.users.search') }}" method="post">
-                    @csrf
-                    <div class="search-input"> 
-                        <span class="icon-left"></span>                           
-                        <input type="text" placeholder="Search" name="search">
-                        <span class="icon-right" onclick="document.getElementById('formSearch').submit()"><i class="fas fa-search"></i></span>
+                <form id="formSearch" action="{{ route('admin.users.search') }}" method="get">                  
+                    <div class="search-input">   
+                        <span class="icon-left" onclick="document.getElementById('formSearch').submit()"><i class="fas fa-search"></i></span>                                               
+                        <input type="text" placeholder="Search" name="keyword" value="{{ $keyword ?? '' }}">                                              
+                        <a href="{{ route('admin.users') }}" class="{{$keyword ?? 'hidden' }}"><span class="icon-right"><i class="fa fa-times"></i></span></a>
                     </div>                     
                 </form>
                
@@ -77,12 +76,15 @@
                 <tbody id="tbody">
                     <form id="form"  method="post">
                         @csrf   
-                        <input name="_method" type="hidden" value="post">              
+                        <input name="_method" type="hidden" value="post"> 
+                        @if ($users->count() == 0)
+                            <tr> <td colspan="6" ><label class="text-center">No found Record</label></td> </tr>
+                        @endif             
                         @foreach ($users as $user) 
                             <tr>
                                 <td class="column-1">
                                     <div class="checkbox">
-                                            <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{ $user->encryptedId() }}">
+                                        <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{ $user->encryptedId() }}">
                                     </div>                                
                                 </td>
                                 <td>
@@ -91,8 +93,7 @@
                                             <img src="/{{ $user->avatar() }}" alt="" srcset="">
                                         </div>
                                         <span>{{ $user->username }}</span>
-                                    </div>
-                                   
+                                    </div>                                   
                                 </td>
                                 <td> {{ $user->fullName() }} </td>                         
                                 <td>{{$user->email}}</td> 

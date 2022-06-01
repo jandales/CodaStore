@@ -310,11 +310,13 @@ function variantRemove(){
         remove.onclick =  removeOption;
     })
 }
+if(optionsWrapper){
+    const removes =  optionsWrapper.querySelectorAll('.option-remove')      
+    removes.forEach(remove => {
+            remove.onclick =  removeOption;
+    })
+}
 
-const removes =  optionsWrapper.querySelectorAll('.option-remove')      
-removes.forEach(remove => {
-        remove.onclick =  removeOption;
-})
 
 
 
@@ -355,7 +357,7 @@ function loadGalleryImages(){
         if(image.deleted == 0){
             imagegallery.innerHTML += `
             <div class="image">
-                <img src="/${image.path}" alt="">                                   
+                <img src="${image.path}" alt="">                                   
                 <span data-id="${image.id}" class="remove remove-gallery-image"><i class="fas fa-times"></i></span>
             </div>
             `
@@ -365,7 +367,7 @@ function loadGalleryImages(){
 } 
 function loadImage(image){    
     const imageElement = document.querySelector('.image-product .image')
-    imageElement.innerHTML = `<img src="/${image.path}" alt=""><span class="remove remove-product-image"><i class="fas fa-times"></i></span>`
+    imageElement.innerHTML = `<img src="${image.path}" alt=""><span class="remove remove-product-image"><i class="fas fa-times"></i></span>`
     SetRemoveProductImageEvent();
 }
 

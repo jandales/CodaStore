@@ -19,7 +19,7 @@ class CreateOrderProductsTable extends Migration
             $table->integer('product_id')->unsigned();
             $table->integer('qty')->default(0);
             $table->integer('price')->default(0); 
-            $table->json('properties');
+            $table->json('properties')->nullable();
             $table->timestamps();      
             $table->foreign('order_id')->references('id')->on('orders');
         });

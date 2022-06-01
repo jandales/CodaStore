@@ -27,13 +27,13 @@ class CouponRequest extends FormRequest
             'name' => "required|unique:coupons",          
             'discount_type' => 'required',
             'amount' => 'required|numeric',
-            'expire_at' => 'required|date|after_or_equal:today'            
-            // 'min_amount' => 'numeric',
-            // 'max_amount' => 'numeric',
-            // 'limit_per_coupon' => 'numeric',
-            // 'limit_to_xitems' => 'numeric',
-            // 'limit_per_user' => 'numeric',
-            // 'expire_at' => 'date'
+            'expire_at' => 'required|date|after_or_equal:today',            
+            'min_amount' => 'numeric',
+            'max_amount' => 'numeric',
+            'limit_per_coupon' => 'numeric',
+            'limit_to_xitems' => 'numeric',
+            'limit_per_user' => 'numeric',
+            'expire_at' => 'date'
         ];
     }
 }

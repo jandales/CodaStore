@@ -54,50 +54,49 @@
             <form id="destroy-customer"  method="post">
                 @csrf  
                 @method('delete')           
-                    @if ( count($users) != 0 )
-                        @foreach ($users as $user)
-                            <tr>
-                                <td class="column-1">
-                                    <div class="checkbox">
-                                        <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{ $user->encryptedId() }}">
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="flex items-center gap10">
-                                        <div class="avatar-sm">
-                                            <img src="{{ $user->avatar() }}" alt="" srcset="">
-                                        </div>
-                                        <span>{{ $user->name }}</span>
-                                     </div>
-                                </td>                        
-                                <td>{{$user->email}}</td> 
-                                <td><p>{{ $user->contact }}</p></td>                             
-                                <td><p>{{ $user->createdAtDate()}}</p></td>
-                                <td class="column-action"> 
-                                    <div class="table-action">
-                                        <ul>  
-                                            <li>                          
-                                                <a href="{{ route('admin.customers.show',[$user->encryptedId()]) }}">
-                                                    <span class="span">
-                                                        <i class="fas fa-eye"></i>  
-                                                    </span>                                                                           
-                                                </a>
-                                            </li>  
-                                                <li>
-                                                    <a href="#" id="delete">
-                                                        <span data-url ="{{ route('admin.customers.destroy', [$user->encryptedId()]) }}" class="span destroy-customer">
-                                                            <i class="fas fa-trash"></i>  
-                                                        </span>                                                                           
-                                                    </a>
-                                                </li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>           
-                        @endforeach
-                    @else
-                            <tr><td>No found Record</td></tr>
-                    @endif
+                @if ( count($users) == 0 )
+                    <tr> <td colspan="6" ><label class="text-center">No found Record</label></td> </tr>
+                @endif
+                @foreach ($users as $user)
+                    <tr>
+                        <td class="column-1">
+                            <div class="checkbox">
+                                <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{ $user->encryptedId() }}">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="flex items-center gap10">
+                                <div class="avatar-sm">
+                                    <img src="{{ $user->avatar() }}" alt="" srcset="">
+                                </div>
+                                <span>{{ $user->name }}</span>
+                                </div>
+                        </td>                        
+                        <td>{{$user->email}}</td> 
+                        <td><p>{{ $user->contact }}</p></td>                             
+                        <td><p>{{ $user->createdAtDate()}}</p></td>
+                        <td class="column-action"> 
+                            <div class="table-action">
+                                <ul>  
+                                    <li>                          
+                                        <a href="{{ route('admin.customers.show',[$user->encryptedId()]) }}">
+                                            <span class="span">
+                                                <i class="fas fa-eye"></i>  
+                                            </span>                                                                           
+                                        </a>
+                                    </li>  
+                                        <li>
+                                            <a href="#" id="delete">
+                                                <span data-url ="{{ route('admin.customers.destroy', [$user->encryptedId()]) }}" class="span destroy-customer">
+                                                    <i class="fas fa-trash"></i>  
+                                                </span>                                                                           
+                                            </a>
+                                        </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>           
+                @endforeach                 
             </form>
         </tbody>
     </table>

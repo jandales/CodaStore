@@ -141,7 +141,7 @@ Route::put('/users/change-selected-item-role-to/',[AdminController::class, 'upda
 
 Route::put('/users/change-selected-item-role-to/',[AdminController::class, 'updateSelectItemRoleTo'])->name('admin.users.updateSelectItemRoleTo');
 
-Route::post('/users/search', [AdminController::class, 'search'])->name('admin.users.search');
+Route::get('/users/search', [AdminController::class, 'search'])->name('admin.users.search');
 
 Route::get('/users/show/{admin:id}', [AdminController::class, 'show'])->name('admin.users.show');
 
@@ -153,7 +153,7 @@ Route::put('/changepassword/{admin:id}',[AdminController::class, 'updatePassword
 
 Route::get( '/shop', [ ShopController::class, 'index' ])->name( 'shop' ); 
 
-Route::get( '/shop/{category}', [ ShopController::class, 'category' ])->name( 'shop.category' );
+Route::get( '/shop/{category:slug}', [ ShopController::class, 'category' ])->name( 'shop.category' );
 
 Route::get( '/shop/item/{product:id}', [ ShopController::class, 'view' ])->name( 'shop.product' ); 
 
@@ -400,9 +400,9 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){
     Route::put( '/products/update/{product:id}', [ProductController::class, 'update'] )->name('admin.products.update');
     Route::get('/products/edit/{product:id}',[ProductController::class, 'edit'])->name('admin.products.edit');
     Route::delete('/products/destroy/{product:id}',[ProductController::class, 'destroy'])->name('admin.products.destroy');
-    Route::post('/products/delete', [ProductController::class, 'delete'])->name('admin.products.destroys');      
+    Route::post('/products/selected-destroy', [ProductController::class, 'destroySelectedItem'])->name('admin.products.destroys');      
     Route::get('/products/search', [ProductController::class, 'search'])->name('admin.products.search');
-    Route::put('/products/{product:id}/status',[ProductController::class, 'changeStatus'])->name('admin.products.status.update');
+    Route::post('/products/{product:id}/status',[ProductController::class, 'changeStatus'])->name('admin.products.status.update');
     Route::post('/products/status/{status}',[ProductController::class, 'changeSelectedItemStatus'])->name('admin.products.status.updates');    
     Route::get('/products/find',[ProductController::class, 'find'])->name('admin.products.find'); 
     Route::get('/products/{filterBy}/{value}',[ProductController::class, 'filter'])->name('admin.products.filter');  
@@ -451,7 +451,7 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){
     Route::put('/coupons/update/{coupon:id}', [CouponController::class, 'update'])->name('admin.coupon.update');
     Route::delete('/coupons/destroy/{coupon:id}', [CouponController::class, 'destroy'])->name('admin.coupon.destroy');
     Route::delete('/coupons/destroy-selected-item', [CouponController::class, 'destroySelectedItem'])->name('admin.coupon.destroy.selected');
-    Route::post('/coupons/search', [CouponController::class, 'search'])->name('admin.coupons.search');
+    Route::get('/coupons/search', [CouponController::class, 'search'])->name('admin.coupons.search');
      /*
     |--------------------------------------------------------------------------
     | Categories Routes

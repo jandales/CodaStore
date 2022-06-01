@@ -896,6 +896,17 @@ table ul.ul {
   color: #999;
 }
 
+.table-dropdown-list button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  border: 0 !important;
+  background: none !important;
+  background-color: none !important;
+}
+
 .table-dropdown-list li a span, .table-dropdown-list li span {
   color: #222;
   font-weight: bold;
@@ -3249,6 +3260,11 @@ td span.inactive {
 
 .label-width {
   min-width: 70px;
+}
+
+.text-center {
+  display: block;
+  text-align: center;
 }
 
 /*!

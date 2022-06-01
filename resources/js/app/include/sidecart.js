@@ -26,8 +26,9 @@ function deleteCart(id){
              _token : _token,
              _method : _delete
          },                  
-         success :  function(response){        
-            cartCountToElement(response)           
+         success :  function(response){             
+            cartCountToElement(response.count)   
+            updateTotal(response.total)    
          }
      });
 }
@@ -74,7 +75,7 @@ function cartsToViews(){
 
 
  const sidecart = document.querySelector('.sidebar-body')
- const sidecartTotal = document.querySelector('.cart-item-total')
+
 
 function clearCartElement()
 {
@@ -96,6 +97,11 @@ function dispatchRemoveCartEvent(){
     
 }
 
+
+function updateTotal(total){
+    const sidecartTotal = document.querySelector('.cart-item-total')
+    sidecartTotal.innerText =  moneyFormatter(total);  
+}
  const modalTrigger1 = document.getElementById('open-side-cart-modal');  
 if(modalTrigger1){
     modalTrigger1.addEventListener('click', function(){
@@ -103,7 +109,7 @@ if(modalTrigger1){
         getCarts();
         sidecart.appendChild(cartsToViews())
         const total = cart != null ? cart.total : 0;
-        sidecartTotal.innerHTML =  moneyFormatter(total);  
+        updateTotal(total)
         openSidebarModal('sidecartModal')
         dispatchRemoveCartEvent();
     });

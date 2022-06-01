@@ -2925,8 +2925,21 @@ function reset(parent, child, classList) {
       }
     });
   });
-} // run automatically when the page run
+}
 
+var inputNumber = document.querySelectorAll('input[type="number"]');
+inputNumber.forEach(function (input) {
+  input.addEventListener("mouseleave", function () {
+    var value = parseInt(input.value);
+    if (isNaN(value)) input.value = 0;
+  });
+});
+inputNumber.forEach(function (input) {
+  input.addEventListener("focus", function () {
+    var value = parseInt(input.value);
+    if (value == 0) input.value = null;
+  });
+}); // run automatically when the page run
 
 document.addEventListener("DOMContentLoaded", function () {
   deliver();
@@ -2949,6 +2962,39 @@ __webpack_require__(/*! ../admin/reviews */ "./resources/js/admin/reviews.js");
 __webpack_require__(/*! ../admin/coupon */ "./resources/js/admin/coupon.js");
 
 __webpack_require__(/*! ../admin/products */ "./resources/js/admin/products.js");
+
+__webpack_require__(/*! ../admin/product-table */ "./resources/js/admin/product-table.js");
+
+/***/ }),
+
+/***/ "./resources/js/admin/product-table.js":
+/*!*********************************************!*\
+  !*** ./resources/js/admin/product-table.js ***!
+  \*********************************************/
+/***/ (() => {
+
+var btnSelectedDestroy = document.getElementById('deleteSelectedProducts');
+var selectedItemUpdateStatus = document.querySelectorAll('[data-onClick]');
+
+function formTableSubmit(route) {
+  var form = document.getElementById('form-table');
+  form.setAttribute('action', route);
+  console.log(form);
+  form.submit();
+}
+
+if (btnSelectedDestroy) {
+  btnSelectedDestroy.onclick = function () {
+    formTableSubmit(this.getAttribute('data-url'));
+  };
+}
+
+selectedItemUpdateStatus.forEach(function (item) {
+  item.onclick = function () {
+    var route = item.getAttribute('data-url');
+    formTableSubmit(route);
+  };
+});
 
 /***/ }),
 
@@ -3269,10 +3315,13 @@ function variantRemove() {
   });
 }
 
-var removes = optionsWrapper.querySelectorAll('.option-remove');
-removes.forEach(function (remove) {
-  remove.onclick = removeOption;
-}); /// file uploader
+if (optionsWrapper) {
+  var removes = optionsWrapper.querySelectorAll('.option-remove');
+  removes.forEach(function (remove) {
+    remove.onclick = removeOption;
+  });
+} /// file uploader
+
 
 var fileProductImage = document.getElementById('file-product-image');
 var fileImageGallery = document.getElementById('file-image-gallery');
@@ -3284,7 +3333,7 @@ function loadGalleryImages() {
   imagegallery.innerHTML = '';
   product.images.forEach(function (image) {
     if (image.deleted == 0) {
-      imagegallery.innerHTML += "\n            <div class=\"image\">\n                <img src=\"/".concat(image.path, "\" alt=\"\">                                   \n                <span data-id=\"").concat(image.id, "\" class=\"remove remove-gallery-image\"><i class=\"fas fa-times\"></i></span>\n            </div>\n            ");
+      imagegallery.innerHTML += "\n            <div class=\"image\">\n                <img src=\"".concat(image.path, "\" alt=\"\">                                   \n                <span data-id=\"").concat(image.id, "\" class=\"remove remove-gallery-image\"><i class=\"fas fa-times\"></i></span>\n            </div>\n            ");
     }
   });
   setRemoveGalleryImageEvent();
@@ -3292,7 +3341,7 @@ function loadGalleryImages() {
 
 function loadImage(image) {
   var imageElement = document.querySelector('.image-product .image');
-  imageElement.innerHTML = "<img src=\"/".concat(image.path, "\" alt=\"\"><span class=\"remove remove-product-image\"><i class=\"fas fa-times\"></i></span>");
+  imageElement.innerHTML = "<img src=\"".concat(image.path, "\" alt=\"\"><span class=\"remove remove-product-image\"><i class=\"fas fa-times\"></i></span>");
   SetRemoveProductImageEvent();
 }
 

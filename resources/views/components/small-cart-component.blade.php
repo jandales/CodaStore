@@ -9,7 +9,7 @@
         @foreach ($cart->items as $cart_item)
             <div class="cart-sm gap10">                    
                 <div class="cart-image">
-                    <img class="img" src="/{{ $cart_item->product->imagePath }}" alt="" srcset="">
+                    <img class="img" src="{{ $cart_item->product->imagePath }}" alt="" srcset="">
                     <div class="cart-image-overlay flex-vert-center">
                         <span class="cart-item-remove" data-id="{{$cart_item->id}}"><i class="fas fa-times"></i></span>
                     </div>

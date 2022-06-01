@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->date('dateofbirth')->nullable();
             $table->integer('age')->default(0);
             $table->string('contact')->nullable();
-            $table->text('imagePath')->default('\img\avatar\default-avatar.jpg');
+            $table->text('imagePath')->nullable();
             $table->rememberToken();
             $table->timestamp('email_verified_at')->nullable();
             $table->integer('delete_at')->default(0);

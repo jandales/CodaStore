@@ -55,13 +55,14 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {          
         $this->services->destroy($product);
-        return back()->with('success', 'Successfully Deleted');
+        return redirect()->route('admin.products')->with('success', 'Successfully Deleted');
     } 
 
     public function destroySelectedItem(Request $request)
     {
+        
         $this->services->destroySelectedItem($request->input('selected'));    
-        return back()->with('success', 'Successfully Deleted');
+        return redirect()->route('admin.products')->with('success', 'Successfully Deleted');
     }
 
     public function changeStatus(Product $product)
@@ -72,14 +73,17 @@ class ProductController extends Controller
 
     public function changeSelectedItemStatus(Request $request, $status)
     {
+        
         $this->services->changeSelectedItemStatus($request->input('selected'), $status);
         return back()->with('success', 'Successfully published');
     } 
 
     public function search(Request $request)
-    { 
-        $products = Product::search($request->keyword)->with('category','stock')->paginate(10);        
-        return view('admin.products.search')->with(['products' => $products, 'search' => $request->keyword]);
+    {         
+        $keyword = $request->keyword  ?? 'null';
+        $products = Product::search($keyword)->with('category','stock')->paginate(10); 
+
+        return view('admin.products.search')->with(['products' => $products, 'keyword' => $request->keyword, 'filter' => 'all']);
     }
 
     public function find(Request $request)

@@ -3,26 +3,16 @@
 namespace  App\Services;
 
 use App\Models\Coupon;
+use Illuminate\Http\Request;
 use App\Models\CouponRestrictionProduct;
 
 class CouponServices
 {
 
-    public function store($request)
+    public function store(Request $request)
     {
-       
-        $coupon  = Coupon::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'discount_type' => $request->discount_type,
-            'amount' => $request->amount,         
-            'max_amount' => $request->max_amount,
-            'limit_per_coupon' => $request->limit_per_coupon,
-            'limit_to_xitems' => $request->limit_to_xitems,
-            'limit_per_user' => $request->limit_per_user,
-            'expire_at' => $request->expire_at,
-        ]);
-
+        $validated = $request->validated();     
+        $coupon  = Coupon::create($validated);
         Self::createProducts($request->products, $coupon->id);
         return $coupon;
     }

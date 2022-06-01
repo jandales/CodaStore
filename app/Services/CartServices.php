@@ -149,7 +149,7 @@ class CartServices
     {    
         $item->delete(); 
         Cart::UpdateTotal();
-        return response()->json(['status' => 200, 'count' =>  Cart::TotalItems() ]);
+        return response()->json(['status' => 200, 'count' =>  Cart::TotalItems(), 'total' => Cart::Total() ]);
     } 
 
 

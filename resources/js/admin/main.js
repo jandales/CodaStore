@@ -189,6 +189,23 @@ function reset(parent,child,classList)
     });
 }
 
+
+
+const inputNumber = document.querySelectorAll('input[type="number"]');
+inputNumber.forEach(input => {
+    input.addEventListener("mouseleave" , function() {
+        const value = parseInt(input.value);
+        if(isNaN(value)) input.value = 0;
+    });
+});
+inputNumber.forEach(input => {
+    input.addEventListener("focus" , function() {
+        const value = parseInt(input.value);
+        if(value == 0) input.value = null;
+    });
+});
+
+
 // run automatically when the page run
 document.addEventListener("DOMContentLoaded", () => {   
     deliver();
@@ -206,6 +223,7 @@ require('../admin/inventory');
 require('../admin/reviews');
 require('../admin/coupon');
 require('../admin/products');
+require('../admin/product-table');
 
 
 

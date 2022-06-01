@@ -13,10 +13,10 @@
                 <div class="toolbar justify-content-space-between action-toolbar hidden"> 
                     <label class="title selected-items">2 item Selected</label>
                     <div class="btn-action">
-                        <span onclick="url('post','{{route('admin.products.status.updates',[1])}}')" class="btn btn-light"><i class="fas fa-upload"></i></span>
-                        <span onclick="url('post','{{route('admin.products.status.updates',[0])}}')" class="btn btn-light"><i class="fas fa-download"></i></span>                           
-                        <span  onclick="url('post','{{route('admin.products.destroys')}}')" class="btn btn-light"><i class="fas fa-trash"></i></span>
-                        <span  onclick="clearSelection()" class="btn btn-light"><i class="fas fa-times"></i></span> 
+                        <span data-onClick data-url={{route('admin.products.status.updates',[1])}} class="btn btn-light"><i class="fas fa-upload"></i></span>
+                        <span data-onClick data-url={{route('admin.products.status.updates',[0])}} class="btn btn-light"><i class="fas fa-download"></i></span>                           
+                        <span  id="deleteSelectedProducts" data-url="{{route('admin.products.destroys')}}" class="btn btn-light"><i class="fas fa-trash"></i></span>
+                        <span  id="clear-selection" class="btn btn-light"><i class="fas fa-times"></i></span> 
                     </div>
                 </div> 
                 <div class="toolbar default-toolbar space-between"> 
@@ -27,13 +27,12 @@
                                     <option  data-url="{{ route('admin.products.filter',['all', 'all'])}}"  value="all" {{ $filter == 'all' ? 'selected' : ''}}>All</option>
                                     <option  data-url="{{ route('admin.products.filter',['status',1])}}"  value="published" {{ $filter == 'status=published' ? 'selected' : ''}}>Published</option>
                                     <option  data-url="{{ route('admin.products.filter',['featured', 1])}}"  value="featured" {{ $filter == 'featured' ? 'selected' : ''}}>Feautured Product</option>
-                                    <option   data-url="{{ route('admin.products.filter',['status', 0])}}" value="unpublished" {{ $filter == 'status=unpublished' ? 'selected' : ''}}>Unpublished</option>
+                                    <option  data-url="{{ route('admin.products.filter',['status', 0])}}" value="unpublished" {{ $filter == 'status=unpublished' ? 'selected' : ''}}>Unpublished</option>
                                 </select>
                            </div>
                            
                            <div class="flex gap20">
-                                <form id="formSearch" action="{{ route('admin.products.search') }}" method="get">
-                                    
+                                <form id="formSearch" action="{{ route('admin.products.search') }}" method="get">                                    
                                     <div class="search-input">
                                         <span class="icon-left"></span>                           
                                         <input type="text" placeholder="Search" name="keyword">
@@ -50,7 +49,7 @@
                      
                 </div> 
 
-                <form id="form" method="post" action="">  
+                <form id="form-table" method="post" action="">  
                     @csrf
                     <table class="table">                          
                         <thead>
@@ -79,7 +78,7 @@
                                             </div>
                                         </td>                                
                                         <td class="column-image">
-                                            <div class="image-50"> <img src="\{{$product->imagePath}}"></div>
+                                            <div class="image-50"> <img src="{{$product->imagePath}}"></div>
                                         </td>   
                                         <td class="column-product">
                                             <div class="product-image-container">                                               
@@ -110,10 +109,14 @@
                                                         </span>
                                                         <ul class="table-dropdown-list">
                                                             <li>
-                                                                <span onclick="published('{{ route('admin.products.status.update',[$product->encryptedId() ]) }}')">
-                                                                    <i class="fas {{ $product->status == 'published' ? 'fa-download' : 'fa-upload'}}"></i>
-                                                                    <span class="ml-1">@if($product->status == 1) {{ 'Unpublished' }} @else  {{ 'Published' }} @endif</span>
-                                                                </span>
+                                                                <form action="{{ route('admin.products.status.update',[$product->encryptedId() ]) }}" method="post">
+                                                                    @csrf
+                                                                    {{-- @method('put') --}}
+                                                                    <button>
+                                                                        <i class="fas {{ $product->status == 'published' ? 'fa-download' : 'fa-upload'}}"></i>
+                                                                        <span class="ml-1">@if($product->status == 1) {{ 'Unpublished' }} @else  {{ 'Published' }} @endif</span>
+                                                                    </button>
+                                                                </form>                                                               
                                                             </li>                                                                             
                                                             <li>
                                                                 <a href="#">
@@ -123,10 +126,11 @@
                                                             </li>
                                                                                                                    
                                                             <li>
-                                                            <a  onclick="urldelete('{{route('admin.products.destroy',[$product->encryptedId()])}}')">
-                                                                    <i class="far fa-trash-alt"></i>
-                                                                    <span class="ml-1">Delete</span>
-                                                                </a>  
+                                                                <form action="route('admin.products.destroy',[$product->encryptedId()])}}" method="post">
+                                                                    @csrf
+                                                                     @method('delete')
+                                                                    <button><i class="far fa-trash-alt"></i> <span class="ml-1">Delete</span></button> 
+                                                                </form>
                                                             </li>                                    
                                                         </ul>
                                                     </li>
@@ -136,7 +140,7 @@
                                     </tr>
                                 @endforeach
                             @else
-                                <tr><td>No found Record</td></tr>
+                                <td colspan="8" ><label class="text-center">No found Record</label></td> 
                             @endif
                         </tbody>
                     </table>
@@ -146,15 +150,7 @@
                 {{ $products->links() }}
             </div>
 
-            <form  id="deleteform" method="POST">
-                @csrf
-                @method('delete')
-            </form>
-
-            <form id="updateform" method="POST">
-                @csrf
-                @method('PUT')
-            </form>
+            
         
             
       

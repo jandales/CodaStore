@@ -45,10 +45,7 @@
                                 <label for="name">Regular Price</label>
                                 <input type="number" name="regular_price" value="">                 
                             </div>                 
-                        </div>
-                        <div class="form-checkbox">
-                            <input type="checkbox" name="taxable"><label for="">Charge tax on this product</label>
-                        </div>
+                        </div>                       
                     </div>
                 </div>
                 <!-- invetory --->

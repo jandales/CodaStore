@@ -52,7 +52,7 @@
                         @csrf 
                         @method('delete')
                         @if ( count($reviews) == 0 )
-                            <tr><td colspan="7">No found Record</td></tr>
+                            <tr> <td colspan="7" ><label class="text-center">No found Record</label></td> </tr>
                         @endif
                         @foreach ($reviews as $review) 
                             <tr>

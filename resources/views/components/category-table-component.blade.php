@@ -31,7 +31,10 @@
             <th class="column-action"></th> 
         </tr>
         </thead>
-        <tbody>                        
+        <tbody> 
+               @if ($categories->count() == 0 )
+                    <tr> <td colspan="7" ><label class="text-center">No found Record</label></td> </tr>
+              @endif                       
               @foreach ($categories as $category)
                     <tr>
                         <td>

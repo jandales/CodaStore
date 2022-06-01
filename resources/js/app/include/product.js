@@ -26,6 +26,13 @@ variantsOptions.forEach(variant => {
     }
 })
 
+function variantsOptionsUnSelect()
+{
+    variantsOptions.forEach(variant => {
+       variant.classList.remove('selected');
+    })
+}
+
 // method check if hasVariants
 function checkHasVariants(){ 
     if (cartBtn) {
@@ -111,7 +118,11 @@ function store(){
             properties : properties
         },       
         success : function(res){
+            showMessage('success', 'Successfully Added to your') 
+            variantsOptionsUnSelect();
+            properties = [];
             cartCountToElement(res.count);
+            console.log(res)
         },
         error: function(res){        
             console.log(res);    

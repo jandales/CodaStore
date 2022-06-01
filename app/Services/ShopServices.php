@@ -49,7 +49,7 @@ class ShopServices
           
         };     
 
-        return  Product::with('wishlist')->orderBy($column,$columnValue)->paginate(16);
+        return  Product::orderBy($column,$columnValue)->paginate(16);
         
     }
 

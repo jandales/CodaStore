@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\File;
 
 class ProductServices 
 {
+    private $defaultImage = '/img/products/default.jpg';
     public function store($request)
     {       
         $image = json_decode($request->image, true);
@@ -20,7 +21,7 @@ class ProductServices
             'slug' => productSlug($request->name),           
             'short_description' =>  $request->short_description,
             'long_description' =>  $request->long_description,
-            'imagePath' =>   $image['path'] ?? '',
+            'imagePath' =>   $image['path'] ?? $this->defaultImage,
             'sku' =>  $request->sku,
             'barcode' => $request->barcode,
             'sale_price' =>  $request->sale_price,
@@ -28,7 +29,7 @@ class ProductServices
             'tags' => $request->tags, 
             'status' => $request->status,
             'istaxeble' => $request->istaxable,
-            'featured' => $request->featured,
+            'featured' => $request->featured ?? 0,
         ]);
 
         $product->stock()->create([
@@ -56,7 +57,7 @@ class ProductServices
         $product->regular_price = $request->regular_price;
         $product->status = $request->status;
         $product->tags = $request->tags;
-        $product->featured = $request->featured;
+        $product->featured = $request->featured ?? 0;
         $product->imagePath = $image['path'] ?? $product->imagePath;
         $product->save();
 
@@ -111,6 +112,7 @@ class ProductServices
     {
         foreach($productIDs as $id)
         {
+            $id = decrypt($id);
             $product = Product::find($id);
             Self::updateStatus($product, $status);
         }  

@@ -25,6 +25,9 @@
         </tr>
     </thead>
     <tbody>
+        @if ($list->count() == 0 )
+            <tr> <td colspan="7" ><label class="text-center">No found Record</label></td> </tr>
+        @endif 
         @foreach ($list as $item)
             <tr>
                 <td><div class="checkbox"><input type="checkbox"  class="childCheckbox" name="selected[]"  value="{{ $item->slug }}"> </div></td>

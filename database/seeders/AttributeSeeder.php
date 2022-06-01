@@ -14,7 +14,7 @@ class AttributeSeeder extends Seeder
      */
     public function run()
     {
-        $attributes = ['size', 'color'];
+        $attributes = ['color', 'size'];
         
         foreach($attributes as $attribute)
         {

@@ -36,7 +36,12 @@ class Product extends Model
         'sale_price',
         'regular_price',
         'status',
+        'is_taxeble',
         'featured',
+    ];
+
+    protected $attributes = [    
+        'is_taxeble' => 0,
     ];
 
     public function category()
@@ -107,11 +112,7 @@ class Product extends Model
         return $this->carts->where('product_id', $this->id)->contains('user_id',auth()->user()->id);
     }  
 
-    public function image()
-    {
-        if($this->imagePath == null) return '/img/products/default.jpg';
-        return "/".$this->imagePath;
-    }
+
 
     public function imageDetail()
     {
@@ -132,7 +133,7 @@ class Product extends Model
     public function scopeSearch($query,$input)
     {
         return $query->where('name','like','%' . $input . '%')                  
-                     ->orWhere('slug_name','like','%' . $input . '%');
+                     ->orWhere('slug','like','%' . $input . '%');
                 
     }
 

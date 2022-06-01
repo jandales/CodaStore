@@ -18,12 +18,12 @@ class CreateOrdersTable extends Migration
             $table->integer('user_id')->unsigned(); 
             $table->integer('shipping_method_id')->unsigned(); 
             $table->integer('shipping_charge')->unsigned();
-            $table->integer('num_items_sold');
-            $table->double('tax_total');
-            $table->double('gross_total');
-            $table->double('net_total');
-            $table->integer('coupin_id');
-            $table->double('coupon_amount');
+            $table->integer('num_items_sold')->default(0);
+            $table->double('tax_total')->default(0);
+            $table->double('gross_total')->default(0);
+            $table->double('net_total')->default(0);
+            $table->integer('coupon_id')->nullable();
+            $table->double('coupon_amount')->default(0);
             $table->timestamp('shipped_at')->nullable();
             $table->timestamp('delivered_at')->nullable();
             $table->string('status')->nullable();           

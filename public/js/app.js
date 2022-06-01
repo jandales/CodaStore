@@ -6680,7 +6680,14 @@ variantsOptions.forEach(function (variant) {
   variant.onclick = function () {
     selectVaraints(variant);
   };
-}); // method check if hasVariants
+});
+
+function variantsOptionsUnSelect() {
+  variantsOptions.forEach(function (variant) {
+    variant.classList.remove('selected');
+  });
+} // method check if hasVariants
+
 
 function checkHasVariants() {
   if (cartBtn) {
@@ -6769,7 +6776,11 @@ function store() {
       properties: properties
     },
     success: function success(res) {
+      (0,_module_alert__WEBPACK_IMPORTED_MODULE_2__.showMessage)('success', 'Successfully Added to your');
+      variantsOptionsUnSelect();
+      properties = [];
       (0,_module_Cart__WEBPACK_IMPORTED_MODULE_0__.cartCountToElement)(res.count);
+      console.log(res);
     },
     error: function error(res) {
       console.log(res);
@@ -6993,7 +7004,8 @@ function deleteCart(id) {
       _method: _delete
     },
     success: function success(response) {
-      (0,_app_module_Cart__WEBPACK_IMPORTED_MODULE_2__.cartCountToElement)(response);
+      (0,_app_module_Cart__WEBPACK_IMPORTED_MODULE_2__.cartCountToElement)(response.count);
+      updateTotal(response.total);
     }
   });
 }
@@ -7025,7 +7037,6 @@ function cartsToViews() {
 }
 
 var sidecart = document.querySelector('.sidebar-body');
-var sidecartTotal = document.querySelector('.cart-item-total');
 
 function clearCartElement() {
   var wrapper = sidecart.querySelector('.cart-items-wrapper');
@@ -7044,6 +7055,11 @@ function dispatchRemoveCartEvent() {
   });
 }
 
+function updateTotal(total) {
+  var sidecartTotal = document.querySelector('.cart-item-total');
+  sidecartTotal.innerText = (0,_module_money_footer__WEBPACK_IMPORTED_MODULE_0__.moneyFormatter)(total);
+}
+
 var modalTrigger1 = document.getElementById('open-side-cart-modal');
 
 if (modalTrigger1) {
@@ -7052,7 +7068,7 @@ if (modalTrigger1) {
     getCarts();
     sidecart.appendChild(cartsToViews());
     var total = cart != null ? cart.total : 0;
-    sidecartTotal.innerHTML = (0,_module_money_footer__WEBPACK_IMPORTED_MODULE_0__.moneyFormatter)(total);
+    updateTotal(total);
     (0,_module_modal__WEBPACK_IMPORTED_MODULE_1__.openSidebarModal)('sidecartModal');
     dispatchRemoveCartEvent();
   });

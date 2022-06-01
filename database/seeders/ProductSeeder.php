@@ -16,6 +16,7 @@ class ProductSeeder extends Seeder
    private $colors = ['grey', 'black', 'white', 'red'];
    private $TYPE = '.webp';
    private $location = '/img/products/default/';
+   private $attributesCount = 2;
 
     /**
      * Run the database seeds.
@@ -23,56 +24,69 @@ class ProductSeeder extends Seeder
      * @return void
      */
     public function run()
-    {
-        // $attributesCount = Attribute::get()->count(); 
+    {       
         Product::factory(100)
         ->create()
         ->each(function($user) {
             Stock::factory()->create([
                 'product_id' => $user->id,                
             ]);  
-            $attribute_id = rand(1, 2);       
-            ProductAttribute::factory()->create([
-                'product_id' => $user->id,
-                'attribute_id' => $attribute_id,
-            ]);  
-            $this->createAttributes($user->id,$attribute_id); 
+            $this-> createAllRelatedTable($user->id);
+                  
         });
     }
 
 
-    private function createAttributes($user_id, $attribute_id)
+    private function createAllRelatedTable($user_id)
     {
-        Self::createSizes($user_id, $attribute_id);
-        Self::createColor($user_id, $attribute_id);
+        Self::createAttributes($user_id);  
+        Self::createVaraints($user_id);
         Self::createPhotos($user_id);
-
     }
 
-    private function createSizes($user_id, $attribute_id)
+    private function createAttributes($user_id)
     {
-        foreach($this->sizes as $size)
-        {            
-            ProductVariant::factory()->create([
+        for ($i=1; $i < $this->attributesCount + 1; $i++) { 
+            ProductAttribute::factory()->create([
                 'product_id' => $user_id,
-                'attribute_id' => $attribute_id,
-                'name' => $size,
-            ]);            
-        }
-      
-    }
-
-    private function createColor($user_id, $attribute_id)
-    {       
-        foreach($this->colors as $color)
-        {
-            ProductVariant::factory()->create([
-                'product_id' => $user_id,
-                'attribute_id' => $attribute_id,
-                'name' => $color,
+                'attribute_id' => $i,
             ]);
         }
     }
+
+    private function createVaraints($user_id)
+    {
+        
+        for ($i=1; $i < $this->attributesCount + 1; $i++)
+        { 
+                   
+           if($i == 1){
+                foreach($this->colors as $color)
+                {
+                    ProductVariant::factory()->create([
+                        'product_id' => $user_id,
+                        'attribute_id' => $i,
+                        'name' => $color,
+                    ]);
+                }    
+           }         
+
+            if($i == $this->attributesCount) {
+                foreach($this->sizes as $size)
+                {            
+                    ProductVariant::factory()->create([
+                        'product_id' => $user_id,
+                        'attribute_id' => $i,
+                        'name' => $size,
+                    ]);            
+                }
+            }
+
+        }       
+      
+    }
+
+
 
     private function createPhotos($user_id)
     {

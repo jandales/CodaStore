@@ -22,13 +22,13 @@ class ShopController extends Controller
 
     public function index()
     {  
-        $products = Product::with('reviews')->paginate($this->perpage);
+        $products = Product::paginate($this->perpage);
         return view('shop')->with(['products' => $products, 'category' => 'All Collection']);
     }
 
     public function category(Category $category)
     {    
-        $products = Product::where('category_id', $category->id)->with('reviews')->paginate($this->perpage);       
+        $products = Product::where('category_id', $category->id)->paginate($this->perpage);       
         return view('shop')->with(['products' => $products, 'category' => $category->name]);
     }
 
@@ -40,12 +40,9 @@ class ShopController extends Controller
     public function sortBy($value)
     {
         $products = $this->services->sortBy($value);
-        if($products == null)
-            return redirect()->route('shop');  
+        if($products == null)  return redirect()->route('shop');             
         return view('shop')->with(['products'  => $products, 'category' => 'All Collection']);
-    }   
-
- 
+    }    
     
     public function hasVariants(Product $product)
     {

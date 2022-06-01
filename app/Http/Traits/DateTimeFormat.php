@@ -9,30 +9,31 @@ trait DateTimeFormat
 
   public function createdAtDate()
   {     
-     $date = siteSettings()->date_format;
+     $date = siteSettings()->date_format ?? 'Y-m-d H:i:s';
+     
      return Carbon::parse($this->attributes['created_at'])->format($date);
   }
 
   public function updatedAtDate()
   {  
-     $date = siteSettings()->date_format;
+     $date = siteSettings()->date_format ?? 'Y-m-d H:i:s';
      return Carbon::parse($this->attributes['updated_at'])->format($date);
   }
 
   public function createdAtTime()
   {   
-     $time = siteSettings()->date_format;
+     $time = siteSettings()->time_format ?? 'H:i:s';
      return Carbon::parse($this->attributes['created_at'])->format($time);
   }
 
   public function updatedAtTime()
   {    
-     $time = siteSettings()->time_format;
+     $time = siteSettings()->time_format ?? 'H:i:s';
      return Carbon::parse($this->attributes['updated_at'])->format($time);
   }
   public function dateFormat($date)
   {
-      $dateformat = siteSettings()->date_format;
+      $dateformat = siteSettings()->date_format ?? 'Y-m-d H:i:s';
       return Carbon::parse($date)->format($dateformat);
   }
 

@@ -64,7 +64,9 @@
                     </tr>
                 </thead>
                 <tbody>
-
+                    @if ( $orders->count() == 0 )
+                        <tr> <td colspan="7" ><label class="text-center">No found Record</label></td> </tr>
+                    @endif 
                     @forEach($orders as $order)
                         <tr>
                             <td class="tr-checkbox"> 

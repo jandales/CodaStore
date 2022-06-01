@@ -46,10 +46,7 @@
                                 <label for="name">Regular Price</label>
                                 <input type="number" name="regular_price" value="{{ $product->regular_price }}">                 
                             </div>                 
-                        </div>
-                        <div class="form-checkbox">
-                            <input type="checkbox" name="taxable"><label for="">Charge tax on this product</label>
-                        </div>
+                        </div>                        
                     </div>
                 </div>
                 <!-- invetory --->
@@ -191,7 +188,7 @@
                         <div class="form-block">
                             <div class="image-product">
                                 <div class="image">
-                                        <img src="{{ $product->image() }}" alt=""> 
+                                        <img src="{{ $product->imagePath }}" alt=""> 
                                         <span onclick="removeProductImage(this, 1 )" class="remove"><i class="fas fa-times"></i></span>                                   
                                 </div>
                                 <div class="progress-bar-wrapper progress-image">  

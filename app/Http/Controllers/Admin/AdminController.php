@@ -74,8 +74,8 @@ class AdminController extends Controller
 
     public function search(Request $request)
     {        
-        $users = Admin::Search($request->search)->get();
-        return view('admin.users.index')->with('users', $users);
+        $users = Admin::Search($request->keyword)->get()->except(auth()->guard('admin')->user()->id);
+        return view('admin.users.index')->with(['users' => $users, 'keyword' => $request->keyword]);
     }    
 
     public function sentResetPassword(Admin $admin)

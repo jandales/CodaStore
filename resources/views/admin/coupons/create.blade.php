@@ -49,7 +49,7 @@
                     </div>
                     <div class="form-block">
                         <label for="email">Coupon amount</label>
-                        <input type="text" name="amount" value="{{ old('amount') }}">                 
+                        <input type="number" name="amount" value="{{ old('amount') ?? 0  }}">                 
                     </div>
                     @error('amount')
                      <div class="alert alert-danger m-t-1">{{ $message }}</div>                
@@ -76,7 +76,7 @@
                         <div class="tabs-content" data-tab= "2">                                
                                 <div class="form-block">
                                     <label for="email">Minimun spend amount</label>
-                                    <input type="text" name="min_amount" value="{{ old('min_amount') }}">                 
+                                    <input type="number" name="min_amount" value="{{ old('min_amount') ?? 0 }}">                 
                                 </div>
                                 @error('min_amount')
                                     <div class="alert alert-danger m-t-1">{{ $message }}</div>                
@@ -84,7 +84,7 @@
                     
                                 <div class="form-block">
                                     <label for="email">Maximun spend amount</label>
-                                    <input type="text" name="max_amount" value="{{ old('max_amount') }}">                 
+                                    <input type="number" name="max_amount" value="{{ old('max_amount') ?? 0  }}">                 
                                 </div>
                                 @error('max_amount')
                                     <div class="alert alert-danger m-t-1">{{ $message }}</div>                
@@ -154,21 +154,21 @@
                         <div class="tabs-content" data-tab= "3">
                                 <div class="form-block">
                                     <label for="email">Limit per coupon</label>
-                                    <input type="number" name="limit_per_coupon" value="">                 
+                                    <input type="number" name="limit_per_coupon" value="{{ old('limit_per_user') ?? 0 }}">                 
                                 </div>
                                 @error('limit_per_coupon')
                                     <div class="alert alert-danger m-t-1">{{ $message }}</div>                
                                 @enderror 
                                 <div class="form-block">
                                     <label for="email">Limit usage to included item</label>
-                                    <input type="number" name="limit_to_xitems" value="">                 
+                                    <input type="number" name="limit_to_xitems" value="{{ old('limit_per_user') ?? 0 }}">                 
                                 </div>
                                 @error('limit_to_xitems')
                                     <div class="alert alert-danger m-t-1">{{ $message }}</div>                
                                  @enderror 
                                 <div class="form-block">
                                     <label for="email">Limit per user</label>
-                                    <input type="number" name="limit_per_user" value="">                 
+                                    <input type="number" name="limit_per_user" value="{{ old('limit_per_user') ?? 0 }}">                 
                                 </div>
                                 @error('limit_per_user')
                                     <div class="alert alert-danger m-t-1">{{ $message }}</div>                
