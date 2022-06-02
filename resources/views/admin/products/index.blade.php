@@ -34,13 +34,11 @@
                            <div class="flex gap20">
                                 <form id="formSearch" action="{{ route('admin.products.search') }}" method="get">                                    
                                     <div class="search-input">
-                                        <span class="icon-left"></span>                           
+                                        <span class="icon-left" onclick="document.getElementById('formSearch').submit()"><i class="fas fa-search"></i></span>                           
                                         <input type="text" placeholder="Search" name="keyword">
-                                        <span class="icon-right" onclick="document.getElementById('formSearch').submit()"><i class="fas fa-search"></i></span>
+                                        <a href="{{route('admin.products')}}" class="{{ $keyword ?? 'hidden'}}"><span class="icon-right"><i class="fas fa-times"></i></span></a>
                                     </div>                     
-                                </form>
-                            
-        
+                                </form>   
                                 <a href="/admin/products/add" class="btn btn-primary mr-2">
                                     <span><i class="fas fa-plus-circle"></i></span>
                                     Add item
@@ -83,7 +81,7 @@
                                         <td class="column-product">
                                             <div class="product-image-container">                                               
                                                 <div class="image-description ml-0">
-                                                    <a href="{{ route('shop.product', [$product ]) }}" class="item-name">{{ $product->name}}</a>
+                                                    <a href="{{ route('shop.product', [ $product->encryptedId() ]) }}" class="item-name">{{ $product->name}}</a>
                                                 </div>                           
                                             </div>
                                         </td>   
@@ -126,7 +124,7 @@
                                                             </li>
                                                                                                                    
                                                             <li>
-                                                                <form action="route('admin.products.destroy',[$product->encryptedId()])}}" method="post">
+                                                                <form action="{{ route('admin.products.destroy',[$product->encryptedId()]) }}" method="post">
                                                                     @csrf
                                                                      @method('delete')
                                                                     <button><i class="far fa-trash-alt"></i> <span class="ml-1">Delete</span></button> 

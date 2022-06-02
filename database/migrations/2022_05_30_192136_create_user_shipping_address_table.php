@@ -16,14 +16,14 @@ class CreateUserShippingAddressTable extends Migration
         Schema::create('user_shipping_address', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id')->unsigned();
-            $table->string('firstname');
-            $table->string('lastname');      
-            $table->string('street');
-            $table->string('city');
-            $table->string('phone');
-            $table->string('country');
-            $table->string('region');
-            $table->string('zipcode');
+            $table->string('firstname')->nullable();
+            $table->string('lastname')->nullable();     
+            $table->string('street')->nullable();
+            $table->string('city')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('country')->nullable();
+            $table->string('region')->nullable();
+            $table->string('zipcode')->nullable();
             $table->timestamps();
         });
     }

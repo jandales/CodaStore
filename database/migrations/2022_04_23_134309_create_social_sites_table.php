@@ -17,7 +17,7 @@ class CreateSocialSitesTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('url');
-            $table->string('code');
+            $table->string('code')->nullable();
             $table->timestamps();
         });
     }

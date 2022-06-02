@@ -12,14 +12,11 @@
 <div class="row" >
     <div class="panel-table m-t-2 w-12">
         <div class="panel-header">             
-             @if(session('success'))
-              <br>
-                  <div class="alert alert-success">{{ session('success') }}</div>    
-             @endif
-
-             @if(session('error'))
-                <br>
-                <div class="alert alert-success">{{ session('error') }}</div>
+            @if(session('success'))
+                <br><div class="alert alert-success">{{ session('success') }}</div>    
+            @endif
+            @if(session('error'))
+                <br><div class="alert alert-success">{{ session('error') }}</div>
             @endif 
         </div>
  
@@ -33,9 +30,9 @@
         <div class="toolbar default-toolbar space-between">
                 <ul class="order-navigation">
                     <li class="{{ (request()->is('admin/orders')) ? 'selected' : '' }}"><a href="{{ route('admin.orders')}}">All</a></li>
-                    <li class="{{ (request()->is('admin/orders/pending')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['pending'])}}">Pending</a></li>              
-                    <li class="{{ (request()->is('admin/orders/shipped')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['shipped'])}}">Shipped</a></li>
-                    <li class="{{ (request()->is('admin/orders/delivered')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['delivered'])}}">Deliver</a></li>
+                    <li class="{{ (request()->is('admin/orders/to-ship')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['to-ship'])}}">To Ship</a></li>              
+                    <li class="{{ (request()->is('admin/orders/to-recieve')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['to-recieve'])}}">To Recieve</a></li>
+                    <li class="{{ (request()->is('admin/orders/completed')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['completed'])}}">Completed</a></li>
                     <li class="{{ (request()->is('admin/orders/cancelled')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['cancelled'])}}">Cancelled</a></li>
                 </ul> 
                 <form id="formSearch" action="{{route('admin.orders.search')}}" method="get">               
@@ -55,7 +52,8 @@
                                 <input type="checkbox" id="parentCheckbox" name="checkbox" >
                              </div>
                          </th>
-                        <th>Person</th>                                                    
+                        <th>Person</th> 
+                        <th>Order Number</th>                                                   
                         <th>Quantity</th>
                         <th>Amount</th>
                         <th>Date</th>
@@ -80,12 +78,13 @@
                                         <div class="avatar-sm">
                                             <img src="{{ $order->user->avatar() }}" alt="" srcset="">
                                         </div>
-                                        <span>{{ $order->user->name }}</span>
+                                        <span class="link-primary">{{ $order->user->name }}</span>
                                      </div>
                                 </a>
                             </td>
+                            <td> <a class="link-primary" href="{{ route('admin.orders.show',[$order->encryptedId()])}}">{{$order->order_number}}</a></td>
                             <td>{{ $order->totalItems() . " items" }}</td>
-                            <td>@money($order->total())</td>
+                            <td>@money($order->gross_total)</td>
                             <td>{{  $order->createdAtDate() }}</td>
                             <td><span class="status capitalized {{ $order->statusColor() }}">{{ $order->status }}</span></td>
                             <td width="100px"> 

@@ -4,6 +4,7 @@ namespace  App\Services;
 
 use App\Models\Photo;
 use App\Models\Product;
+use Illuminate\Http\Request;
 use App\Models\ProductVariant;
 use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\File;
@@ -12,6 +13,12 @@ use Illuminate\Support\Facades\File;
 class ProductServices 
 {
     private $defaultImage = '/img/products/default.jpg';
+
+    public function list()
+    {
+        return Product::with('category','stock')->paginate(10);
+    }
+    
     public function store($request)
     {       
         $image = json_decode($request->image, true);
@@ -197,12 +204,17 @@ class ProductServices
     }
     private function unlink(Photo $photo)
     {  
-         $deleted = $photo->delete();  
-         if(!$deleted) return back()->with('error','Image cant delete');  
-         $path = public_path($photo->path);
-         File::delete($path);           
-         return response()->json(['deleted' => $deleted]);  
-  
+        $deleted = $photo->delete();  
+        if(!$deleted) return back()->with('error','Image cant delete');  
+        $path = public_path($photo->path);
+        File::delete($path);           
+        return response()->json(['deleted' => $deleted]); 
+    }
+
+    public function search(Request $request)
+    {
+        $keyword = $request->keyword  ?? 'null';
+        return Product::search($keyword)->with('category','stock')->paginate(10); 
     }
 
 }

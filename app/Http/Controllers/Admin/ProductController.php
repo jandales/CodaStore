@@ -20,14 +20,22 @@ class ProductController extends Controller
 
     public function index()
     {    
-        $products = Product::with('category','stock')->paginate(10);    
-        return view('admin.products.index')->with(['products' => $products, 'filter' => 'all']);
+        $products = $this->services->list();    
+        return view('admin.products.index')->with(
+            ['products' => $products, 
+            'filter' => 'all',
+            'keyword' => null,
+        ]);
     }
 
     public function filter($filterBy, $value)
-    {   
+    {          
         $result  = $this->services->filter($filterBy, $value);    
-        return view('admin.products.index')->with(['products' => $result["products"],'filter' => $result["filter"]]);
+        return view('admin.products.index')->with([
+            'products' => $result["products"],
+            'filter' => $result["filter"],
+             'keyword' => null,
+        ]);
     }
 
     public function create()
@@ -72,18 +80,19 @@ class ProductController extends Controller
     }
 
     public function changeSelectedItemStatus(Request $request, $status)
-    {
-        
+    {        
         $this->services->changeSelectedItemStatus($request->input('selected'), $status);
         return back()->with('success', 'Successfully published');
     } 
 
     public function search(Request $request)
     {         
-        $keyword = $request->keyword  ?? 'null';
-        $products = Product::search($keyword)->with('category','stock')->paginate(10); 
-
-        return view('admin.products.search')->with(['products' => $products, 'keyword' => $request->keyword, 'filter' => 'all']);
+        $products = $this->services->search($request);
+        return view('admin.products.index')->with([
+            'products' => $products, 
+            'keyword' => $request->keyword,
+            'filter' => 'all'
+        ]);
     }
 
     public function find(Request $request)

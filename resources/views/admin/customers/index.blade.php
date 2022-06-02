@@ -69,7 +69,7 @@
                                 <div class="avatar-sm">
                                     <img src="{{ $user->avatar() }}" alt="" srcset="">
                                 </div>
-                                <span>{{ $user->name }}</span>
+                               <a href="{{ route('admin.customers.show',[$user->encryptedId()]) }}"><span>{{ $user->name }}</span></a>
                                 </div>
                         </td>                        
                         <td>{{$user->email}}</td> 

@@ -24,7 +24,7 @@
                                 <div class="circle centered bor-success">
                                     {{ $user->completed() }}
                                 </div>
-                                <label class="txt-center mt10">Delivered</label>
+                                <label class="txt-center mt10">Completed</label>
                             </div>
                             <div>
                                 <div class="circle centered bor-warning">
@@ -48,23 +48,23 @@
                 <div class="w-9">
                     <div class="form-block">
                         <label for="name">Name</label>
-                        <input type="text" name="username" value="{{ $user->name }}">                 
+                        <input type="text" name="username" value="{{ $user->name }}" disabled>                 
                     </div>
                     <div class="form-block">
                         <label for="name">Email</label>
-                        <input type="text" name="username" value="{{ $user->name }}">                 
+                        <input type="text" name="username" value="{{ $user->name }}" disabled>                 
                     </div>
                     <div class="form-block">
                         <label for="name">Contact Number</label>
-                        <input type="text" name="username" value="{{ $user->contact }}">                 
+                        <input type="text" name="username" value="{{ $user->contact }}" disabled>                 
                     </div>
                     <div class="form-block">
                         <label for="name">BirthDate</label>
-                        <input type="text" name="username" value="{{ $user->dateofbirth }}">                 
+                        <input type="text" name="username" value="{{ $user->dateofbirth }}" disabled>                 
                     </div>
                     <div class="form-block">
                         <label for="name">Age</label>
-                        <input type="text" name="username" value="{{ $user->age }}">                 
+                        <input type="text" name="username" value="{{ $user->age }}" disabled>                 
                     </div>
                 </div> 
             </div>           

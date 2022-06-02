@@ -11,15 +11,22 @@ use App\Services\AdminOrderServices;
 
 class AdminOrderController extends Controller
 {
-    public function index()
+    private $services;
+
+    public function __construct(AdminOrderServices $services)
     {
-        $orders = Order::with('user', 'items')->paginate(10);
-        return view('admin.orders.index')->with('orders', $orders);
+        $this->services = $services;
     }
 
-    public function listbyStatus($status)
+    public function index()
     {
-        $orders = Order::where('status', $status)->with('user', 'items')->paginate(10);
+        $orders = $this->services->list();     
+        return view('admin.orders.index')->with('orders', $orders);
+    }  
+
+    public function listbyStatus($status)
+    {        
+        $orders = $this->services->list($status);
         return view('admin.orders.index')->with('orders', $orders);
     }
 
@@ -28,20 +35,20 @@ class AdminOrderController extends Controller
         return view('admin.orders.show')->with('order' , $order);
     }
 
-    public function toShip(Order $order, AdminOrderServices $service)
+    public function toShip(Order $order)
     {       
-        $service->updateStatus($order);
+        $this->services->updateStatus($order);
         return redirect()->route("admin.orders.show",[$order->encryptedId()]);
     }
 
-    public function search(Request $request, AdminOrderServices $service)
+    public function search(Request $request)
     {
-        $data = $service->search($request);
+        $data = $this->services->search($request);
         return view('admin.orders.index')->with(['orders' => $data['orders'], 'keyword' => $data['keyword']]);        
     }
 
-    public function deliver(AdminOrderServices $service)
+    public function deliver()
     {
-       $service->deliver();
+       $this->service->deliver();
     }
 }

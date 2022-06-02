@@ -21,6 +21,12 @@ class StockController extends Controller
         $this->services = $services;
     }
 
+    public function inventory()
+    {             
+        $products = $this->services->list();
+        return view('admin.products.inventory')->with(['products' => $products, 'filter' => 0, 'keyword' => null ]);
+    }
+
     public function edit(Stock $stock)
     {   
         return view('admin.stock.edit')->with('stock', $stock);
@@ -38,11 +44,12 @@ class StockController extends Controller
         return response()->json(['status' => 200, 'stock' => $stock]);        
     }
 
-    public function inventory()
-    {             
-        $products = Product::with('category','stock')->paginate(10);
-        return view('admin.products.inventory')->with(['products' => $products, 'filter' => 0, 'keyword' => '' ]);
+    public function productsFilterListLink()
+    {
+        
     }
+
+
 
     public function filter($filter)
     {          
@@ -51,7 +58,7 @@ class StockController extends Controller
     }
 
     public function search(Request $request)
-    {  
+    { 
         $products = Product::with('stock')->where('name',$request->keyword)->orWhere('sku', $request->keyword)->paginate(10);              
         return view('admin.products.inventory')->with(['products' => $products, 'filter' => 0, 'keyword' => $request->keyword ]); 
     }

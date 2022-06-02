@@ -19,6 +19,7 @@ class Order extends Model
 
     protected $fillable = [
         'user_id', 
+        'order_number',
         'shipping_method_id',
         'status',
         'shipping_charge',
@@ -29,6 +30,11 @@ class Order extends Model
         'coupon_id',
         'coupon_amount',
     ];
+
+    private $COMPLETED = 'completed';
+    private $TOSHIP = 'to-ship';
+    private $TORECIEVE = 'to-receive';
+    private $CANCELLED = 'cancelled';
 
     public function user()
     {
@@ -96,12 +102,7 @@ class Order extends Model
       return shippingFee() + $this->subtotal() - $coupon;
     }
 
-    public function ordernumber()
-    {
-       $date = $this->created_at->format('Y-m-d');      
-       return str_replace("-","",$date) . $this->id;
-     
-    }
+
 
     public function statusColor()
     {
@@ -135,12 +136,15 @@ class Order extends Model
     }
 
     public function isDelivered(){
-        return $this->status == 'delivered' ? true : false;
+        return $this->status == $this->COMPLETED ? true : false;
     }
 
-    public function scopeSearch($query, $input)
+    public function scopeSearch($query, $keyword)
     {
-        return $query->where('id', $input);
+        return $query->whereHas('user', function($q) use  ($keyword){
+            return $q->where('name', 'like','%' . $keyword . '%')
+                    ->orWhere('email','like','%' . $keyword . '%');
+        })->orWhere('order_number', $keyword);
                    
     }
 

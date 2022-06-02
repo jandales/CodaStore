@@ -9,10 +9,11 @@
         <div class="flex gap20">
             <div class="flex  items-center gap20 w-2">
                 <label for="filter">Filter</label>
-                <select name="filter" id="filter">   
-                    
-                    @if($keyword != null)   <option value="">-- Select -- </option>       @endif
-                    <option value="all" {{ $filter == 'all' ? 'selected' : ''  }} data-url="{{route('admin.inventory.filter',['all'])}}" >All</option>
+                <select name="filter" id="filter"> 
+                    @if($keyword != null)   
+                            <option value="">-- Select -- </option>  
+                    @endif
+                        <option value="all" {{ $filter == 'all' ? 'selected' : ''  }} data-url="{{route('admin.inventory.filter',['all'])}}" >All</option>
                     @foreach ($categories as $category)
                         <option value="{{$category->slug}}" {{ $filter == $category->slug ? 'selected' : ''}}  data-url="{{route('admin.inventory.filter',[$category->slug])}}">{{$category->name}}</option>
                     @endforeach
@@ -22,6 +23,7 @@
                     <div class="search-input">
                         <span class="icon-right"><i class="fas fa-search"></i></span>
                         <input type="text" id="keyword" name="keyword" placeholder="Search by Name or Sku">
+                        <a href="{{ route('admin.inventory') }}" class="{{ $keyword ?? 'hidden'}}"><span class="icon-right"><i class="fas fa-times"></i></span></a>
                     </div>
             </form>   
         </div>

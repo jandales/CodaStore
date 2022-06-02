@@ -21,6 +21,14 @@ function paymentOptions() {
     return auth()->user()->payment_options;
 }
 
+function app_per_page(){
+    return config('setting.app.perpage');
+}
+
+function shop_per_page(){
+    return config('setting.app.perpage');
+}
+
 function timezone_list() {
     $return = array();
     $timezone_identifiers_list = timezone_identifiers_list();

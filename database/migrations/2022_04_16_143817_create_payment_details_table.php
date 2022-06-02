@@ -16,7 +16,7 @@ class CreatePaymentDetailsTable extends Migration
         Schema::create('payment_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id'); 
-            $table->double('amount');
+            $table->double('amount')->default(0);
             $table->string('provider');
             $table->string('status');
             $table->foreign('order_id')->references('id')->on('orders');

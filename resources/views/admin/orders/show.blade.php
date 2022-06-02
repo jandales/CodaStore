@@ -35,7 +35,7 @@
                                         <td>
                                             <div class="prod-desc-wrapper flex flex-start">
                                                 <div class="image-70">
-                                                    <img class="img" src="/{{ $item->product->imagePath }}" alt="">                                        
+                                                    <img class="img" src="{{ $item->product->imagePath }}" alt="">                                        
                                                 </div>
                                                 <div class="prod-description ml10">
                                                     <label for="name">{{ $item->product->name }}</label>                                          
@@ -79,7 +79,7 @@
 
                 <div class="row items-center mt10">
                     <h4>Order Number</h4>
-                    <span class="link-primary">{{ $order->orderNumber() }}</span>
+                    <span class="link-primary">{{ $order->order_number }}</span>
                 </div>
                
                 <br>

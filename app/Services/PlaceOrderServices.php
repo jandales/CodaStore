@@ -16,6 +16,12 @@ use App\Models\ShippingMethod;
 
 class PlaceOrderServices {
     
+
+    private function orderNumber()
+    {      
+        return date('Y')."".now()->timestamp;         
+    }
+
     public function storeOrder(Request $request)
     {
         $cart = Cart::ByUser()->first(); 
@@ -26,13 +32,14 @@ class PlaceOrderServices {
         $tax = tax($gross_total);
         $gross_total += $tax; 
           
-        $order = Order::create([
+        $order = Order::create([    
+            'order_number' => Self::orderNumber(),
             'user_id' => auth()->user()->id,
             'shipping_method_id' => $shipping_method->id,
             'gross_total' => $gross_total, 
             'net_total' => $cart->total,
             'shipping_charge' => $shipping_charge,               
-            'status' => 'pending',
+            'status' => 'to-ship',
             'num_items_sold' => $cart->items->count(),
             'tax_total' => $tax,
             'coupon_id' => $cart->coupon_id,

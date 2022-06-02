@@ -422,7 +422,7 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){
     // Route inventory
     Route::get('/products/inventory', [StockController::class, 'inventory'])->name('admin.inventory');
     Route::get('/products/inventory/filter/{filter}', [StockController::class, 'filter'])->name('admin.inventory.filter');
-    Route::get('/products/inventory/search', [StockController::class, 'search'])->name('admin.inventory.search');
+    Route::get('/products/inventory/adjust/search', [StockController::class, 'search'])->name('admin.inventory.search');
     Route::put('/products/inventory/update/stock/{stock:id}', [StockController::class, 'updateQuantity'])->name('admin.inventory.update.quantity');
     // RouteP
     Route::get('/setting/general',[SettingController::class, 'general'])->name('admin.setting.general');

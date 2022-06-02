@@ -17,8 +17,8 @@ class CreateCouponUsedsTable extends Migration
             $table->id();
             $table->integer("order_id");
             $table->integer("coupon_id");
-            $table->string("discount_type");
-            $table->double("amount");
+            $table->string("discount_type")->nullable();
+            $table->double("amount")->default(0)->nullable();
             $table->timestamps();
         });
     }
