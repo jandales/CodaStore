@@ -28,8 +28,7 @@ class CartController extends Controller
 
     public function index()
     {      
-        // $result = $this->services->index(); 
-        $cart = Cart::ByUser()->first();           
+        $result = $this->services->index();
         return view('cart')->with('cart',$cart);
     }
 
@@ -38,8 +37,6 @@ class CartController extends Controller
        return $this->services->store($request, $product);       
     }
 
-
-  
     public function count()
     {       
         return $this->services->count();
@@ -49,7 +46,6 @@ class CartController extends Controller
     {       
         return $this->services->update($request, $cartitem);
     }
-
  
     public function destroy(CartItem $item)
     {     

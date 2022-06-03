@@ -30,6 +30,15 @@ export function spinCompleted(redirect = false, url){
     }
 }  
 
+export function spinError(url){
+    stop();
+    redirectTo = url;
+    successElement.classList.add(FLEX);
+    if(!redirect){
+        spinnerWrapper.classList.add(FLEX);    
+    }
+}  
+
 function stop(){      
     spinner.classList.remove('start');
     spinner.classList.add('hidden');

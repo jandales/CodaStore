@@ -50,9 +50,12 @@ if (payNow) {
             processData: false,
             contentType: false,
             cache: false,
-            error : function(res){
-                errorReponse(res);
-                stopSpin();
+            error : function(res){             
+                errorReponse(res);  
+                stopSpin()
+                if(res.status === 500){
+                    window.location.href = '/server-error';
+                }             
             },
 
             success : function(res){                      
@@ -60,6 +63,7 @@ if (payNow) {
                 if (res.status === 200){  
                     spinCompleted(true,  res.route);
                 }
+               
                   
             }
         })

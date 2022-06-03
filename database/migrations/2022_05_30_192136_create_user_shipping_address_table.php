@@ -24,6 +24,7 @@ class CreateUserShippingAddressTable extends Migration
             $table->string('country')->nullable();
             $table->string('region')->nullable();
             $table->string('zipcode')->nullable();
+            $table->integer('status')->default(0);
             $table->timestamps();
         });
     }

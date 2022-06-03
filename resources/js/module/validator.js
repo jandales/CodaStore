@@ -11,6 +11,7 @@ function showErrors(errors) {
 function setErrors(selector, message) {
     validatorInput(selector);
     validatorMessage(selector, message)
+    formInlineValidator();
 }
 
 function validatorMessage(selector, message) {
@@ -21,13 +22,19 @@ function validatorMessage(selector, message) {
 }
 
 function validatorInput(selector) {
-    const input = document.querySelector(`[validator-input="${selector}"]`);
-    if(!input) return;    
+    const input = document.querySelector(`[validator-input="${selector}"]`);    
+    if(!input) return;  
     input.classList.add('border-danger')
 }
 
-export function errorReponse(xhr){
-    console.log(xhr)
+function formInlineValidator()
+{
+    const input = document.querySelector(`[validator-input="form-inline-error"]`);    
+    if(!input) return;  
+    input.classList.add('border-danger')
+}
+
+export function errorReponse(xhr){  
     const errors = [];
     const resErrors = xhr.responseJSON.errors;  
     for(const key in resErrors) errors.push({name : key, message : resErrors[key][0] }) 

@@ -135,8 +135,14 @@ class Order extends Model
         return $query->where('status', 'cancelled')->count();
     }
 
-    public function isDelivered(){
+    public function isDelivered()
+    {
         return $this->status == $this->COMPLETED ? true : false;
+    }
+
+    public function isToRecieved()
+    {
+      return $this->status == $this->TORECIEVE ? true : false;
     }
 
     public function scopeSearch($query, $keyword)

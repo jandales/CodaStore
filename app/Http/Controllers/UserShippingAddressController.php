@@ -4,14 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\UserShippingAddress;
+use App\Services\UserShippingServices;
 use App\Http\Requests\ShippingAddressRequest;
 
 
 class UserShippingAddressController extends Controller
 {
+    private $services;
+
+    public function __construct(UserShippingServices $services)
+    {
+        $this->services = $services;
+    }
     public function index()
-    {        
-    
+    {    
         return view('account.shippingaddress.index')->with('shippingaddress', auth()->user()->shippingAddress);
     }
 
@@ -22,20 +28,7 @@ class UserShippingAddressController extends Controller
 
     public function store(ShippingAddressRequest $request)
     {      
-        $status = auth()->user()->shippingAddress->count() == 0 ? 1 : 0;
-        UserShippingAddress::create([ 
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
-            'street' => $request->street,
-            'city' => $request->city,
-            'phone' => $request->phone,
-            'country' => $request->country,
-            'region' => $request->region,
-            'zipcode' => $request->zipcode,
-            'user_id' => auth()->user()->id,
-            'status' => $status,
-        ]);      
-        
+        $this->services->store($request);  
         return redirect()->route('account.shippingaddress')->with('success', 'Address successfully created');
     }
 
@@ -45,19 +38,9 @@ class UserShippingAddressController extends Controller
     }
 
     public function update(ShippingAddressRequest  $request, UserShippingAddress $address)
-    {
-        $address->firstname = $request->firstname;
-        $address->lastname = $request->lastname;
-        $address->street = $request->street;
-        $address->city = $request->city;
-        $address->phone = $request->phone;
-        $address->country = $request->country;
-        $address->region = $request->region;
-        $address->zipcode = $request->zipcode;
-        $address->save();
-
-        return redirect()->route('account.shippingaddress')->with('success', 'Address successfully updated');
-       
+    {       
+        $this->services->update($request, $address);
+        return redirect()->route('account.shippingaddress')->with('success', 'Address successfully updated');       
     }
 
     public function destroy(UserShippingAddress $address)
@@ -67,27 +50,11 @@ class UserShippingAddressController extends Controller
     }
 
     public function set_default_address(UserShippingAddress $address)
-    {
-       
-        $currentAddress = auth()->user()->shippingDefaultAddress();
-
-        if(empty($currentAddress)) {
-            $this->updateStatus($address, 1);
-            return back()->with('success', 'Address successfully updated');  
-        }  
-
-        $this->updateStatus($currentAddress, 0);
-        $this->updateStatus($address, 1);
-      
-        return back()->with('success', 'Address successfully updated');  
-        
+    {   
+        $this->services->set_default_address($address);
+        return back()->with('success', 'Address successfully updated'); 
     }
 
-    public function updateStatus(UserShippingAddress $address, $status)
-    {
-        $address->status = (int)$status;
-        $address->save();
-        return $address;     
-    }
+
 
 }

@@ -141,7 +141,7 @@
             </div>
                 <div class="panel-body">
                    <div class="flex flex-end mt-2">
-                       @if(!$order->isDelivered())                       
+                       @if(!$order->isDelivered() && !$order->isToRecieved())                       
                             <form action="{{ route('admin.orders.shipped',[ $order->encryptedId() ])}}" method="post">
                                 @csrf
                                 @method('put')

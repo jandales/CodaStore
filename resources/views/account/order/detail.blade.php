@@ -19,7 +19,7 @@
                                 <div class="order">
                                     <div class="order-header">
                                       <div class="align-items-content-center">
-                                          <span>OR#: </span> <a href="{{ route('orders.details',[$order])}}" for="order">{{ $order->ordernumber() }}</a></div>
+                                          <span>OR#: </span> <a href="{{ route('orders.details',[$order->encryptedId()])}}" for="order">{{ $order->order_number }}</a></div>
                                        <label class="order-status capitalize" for="status">{{$order->status }}</label>
                                     </div>
                                     <div class="order-body">
@@ -27,7 +27,7 @@
                                           <div class="order-wrapper">
                                                <div class="order-item">
                                                    <div class="order-item-image">
-                                                       <img src="/{{ $item->product->imagePath }}" alt="">
+                                                       <img src="{{ $item->product->imagePath }}" alt="">
                                                    </div>                                                      
                                                    <div class="order-item-name ml-1">
                                                        <label for="name">{{ $item->product->name }}</label>
@@ -42,7 +42,7 @@
                                                        </div>
                                                     </div> 
                                                     <div class="order-item-write-review">
-                                                        <a href="{{ route('orders.review', [ $item->product ])}}" class="link-primary">Write a review</a>
+                                                        <a href="{{ route('orders.review', [ $item->product->encryptedId() ])}}" class="link-primary">Write a review</a>
                                                      </div>                                                      
                                            </div>
                                           </div>                                           
@@ -99,12 +99,12 @@
     
                            </div>
                            <div class="mt-2">                            
-                                <button class="w-2 right btn-danger m-l-10 uppercase"><a class="cwhite" href="{{ url()->previous() }}">Back</a></button>
+                                <button class="w-2 right btn btn-dark m-l-10 uppercase"><a href="{{ url()->previous() }}">Back</a></button>
                                 @if($order->status == "pending")
                                     <form action="{{ route('orders.cancel',[$order])}}" method="post">
                                         @csrf
                                         @method('Put')
-                                        <button class="w-2 right uppercase">Cancel Order</button>
+                                        <button class="btn btn-dark right uppercase">Cancel Order</button>
                                     </form>
                                 @endif
                               

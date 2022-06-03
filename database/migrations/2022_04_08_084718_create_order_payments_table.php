@@ -15,12 +15,12 @@ class CreateOrderPaymentsTable extends Migration
     {
         Schema::create('order_payments', function (Blueprint $table) {
             $table->id();
-            $table->string('card_name');
-            $table->text('card_number');
-            $table->text('card_expire_date');
-            $table->string('card_cvc');
             $table->unsignedBigInteger('order_id'); 
-            $table->foreign('order_id')->references('id')->on('orders');
+            $table->foreign('order_id')->references('id')->on('orders');             
+            $table->string('provider');
+            $table->text('reference_number');
+            $table->text('amount')->default(0);
+            $table->string('status');                    
             $table->timestamps();
         });
     }

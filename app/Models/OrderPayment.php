@@ -10,11 +10,12 @@ class OrderPayment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'card_name',
-        'card_number',
-        'card_expire_date',
+        'order_id',
+        'amount',
+        'provider',
         'card_cvc',
-        'order_id'       
+        'reference_number',
+        'status'       
     ];
 
 }

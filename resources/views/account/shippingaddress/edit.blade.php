@@ -13,7 +13,7 @@
                         </div>
                         
                         <div class="form mt-1 w-6 sm-w-12">
-                            <form action="{{ route('account.shippingaddress.update', [$address] ) }}" method="post">
+                            <form action="{{ route('account.shippingaddress.update', [ $address->encryptedId() ] ) }}" method="post">
                                 @csrf    
                                 @method('put')
                                 <div class="form-block">

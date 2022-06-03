@@ -6595,6 +6595,10 @@ if (payNow) {
       error: function error(res) {
         (0,_module_validator__WEBPACK_IMPORTED_MODULE_1__.errorReponse)(res);
         (0,_module_spinner__WEBPACK_IMPORTED_MODULE_3__.stopSpin)();
+
+        if (res.status === 500) {
+          window.location.href = '/server-error';
+        }
       },
       success: function success(res) {
         (0,_module_validator__WEBPACK_IMPORTED_MODULE_1__.errorRemove)();
@@ -7335,6 +7339,7 @@ function setCartCookie() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "spinCompleted": () => (/* binding */ spinCompleted),
+/* harmony export */   "spinError": () => (/* binding */ spinError),
 /* harmony export */   "startSpin": () => (/* binding */ startSpin),
 /* harmony export */   "stopSpin": () => (/* binding */ stopSpin)
 /* harmony export */ });
@@ -7363,6 +7368,15 @@ function stopSpin() {
 function spinCompleted() {
   var redirect = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   var url = arguments.length > 1 ? arguments[1] : undefined;
+  stop();
+  redirectTo = url;
+  successElement.classList.add(FLEX);
+
+  if (!redirect) {
+    spinnerWrapper.classList.add(FLEX);
+  }
+}
+function spinError(url) {
   stop();
   redirectTo = url;
   successElement.classList.add(FLEX);
@@ -7779,6 +7793,7 @@ function showErrors(errors) {
 function setErrors(selector, message) {
   validatorInput(selector);
   validatorMessage(selector, message);
+  formInlineValidator();
 }
 
 function validatorMessage(selector, message) {
@@ -7794,8 +7809,13 @@ function validatorInput(selector) {
   input.classList.add('border-danger');
 }
 
+function formInlineValidator() {
+  var input = document.querySelector("[validator-input=\"form-inline-error\"]");
+  if (!input) return;
+  input.classList.add('border-danger');
+}
+
 function errorReponse(xhr) {
-  console.log(xhr);
   var errors = [];
   var resErrors = xhr.responseJSON.errors;
 

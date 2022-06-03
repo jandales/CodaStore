@@ -16,13 +16,13 @@
                                 <a href="{{ route('account.orders',['all'])}}">All</a>
                             </li>                   
                             <li class="{{(request()->is('account/orders/confirm')) ? 'active' : ''}}">
-                                <a  href="{{ route('account.orders',['confirm'])}}">To Ship</a>
+                                <a  href="{{ route('account.orders',['to-ship'])}}">To Ship</a>
                             </li>
                             <li class="{{(request()->is('account/orders/shipped')) ? 'active' : ''}}">
-                                <a  href="{{ route('account.orders',['shipped'])}}">To Recieve</a>
+                                <a  href="{{ route('account.orders',['to-recieve'])}}">To Recieve</a>
                             </li>
                             <li class="{{(request()->is('account/orders/delivered')) ? 'active' : ''}}" >
-                                <a href="{{ route('account.orders',['delivered'])}}">Delivered</a>
+                                <a href="{{ route('account.orders',['completed'])}}">Delivered</a>
                             </li>
                             <li class="{{(request()->is('account/orders/cancelled')) ? 'active' : ''}}">
                                 <a  href="{{ route('account.orders',['cancelled'])}}">Cancelled</a>
@@ -34,7 +34,7 @@
                                 <div class="order">
                                     <div class="order-header">
                                         <div class="align-items-content-center">
-                                            <span>OR#:</span><a href="{{ route('orders.details',[$order->encryptedId()])}}" for="order">{{ $order->ordernumber() }}</a>
+                                            <span>OR#:</span><a href="{{ route('orders.details',[$order->encryptedId()])}}" for="order">{{ $order->order_number }}</a>
                                         </div>
                                             <label class="capitalize order-status" for="status">{{$order->status }}</label>
                                     </div>                              
@@ -43,7 +43,7 @@
                                             <div class="order-wrapper">
                                                 <div class="order-item">
                                                     <div class="order-item-image">
-                                                        <img src="/{{ $item->product->imagePath }}" alt="">
+                                                        <img src="{{ $item->product->imagePath }}" alt="">
                                                     </div>                                                      
                                                     <div class="order-item-name ml-1">
                                                         <label for="name">{{ $item->product->name }}</label>

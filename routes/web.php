@@ -58,6 +58,10 @@ use App\Http\Controllers\Auth\User\ForgotPasswordController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+// exception error
+Route::get('/server-error', function() {
+    return view('server-error');
+})->name('server.error');
 
 Route::get('/',[AppController::class, 'index'])->name('home'); 
 Route::get('/search',[AppController::class, 'search'])->name('search');
@@ -166,7 +170,7 @@ Route::get( '/product/hasvariant/{product:id}', [ ShopController::class, 'hasVar
 
 Route::group(['middleware' => 'auth'], function(){
 
-    Route::post('/shop/review/{product:id}',[ReviewController::class, 'store'])->name('review.store');
+    Route::post('/shop/review/store/{product:id}',[ReviewController::class, 'store'])->name('review.store');
 
     Route::put('/shop/review/{review:id}/edit/{rate}',[ReviewController::class, 'update'])->name('review.update');
 

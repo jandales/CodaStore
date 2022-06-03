@@ -14,11 +14,8 @@ class CartServices
     
 
     public function index()
-    {
-        $shipping_methods = ShippingMethod::where('status', 1)->get(); 
-        session(['shipping_charge' => $shipping_methods[0]->amount]);        
-        $cart = Cart::ByUser()->first(); 
-        return (object)['cart' =>  $cart, 'shipping_methods' => $shipping_methods];
+    {              
+        return Cart::ByUser()->first();
     }
 
     public function store($request, Product $product)
@@ -52,8 +49,8 @@ class CartServices
             return response()->json(['count' => Cart::TotalItems()]);           
                  
             
-        };  
- 
+        };   
+
        // stored new cart and item
        $cart = Cart::create([             
              'total' => $total,
@@ -61,8 +58,7 @@ class CartServices
              'expired_at' => Carbon::now()->addDays(5),
        ]);       
               
-       self::storeCartItem($cart->id, $product->id, $newQuantity, $attributes);  
-       
+       self::storeCartItem($cart->id, $product->id, $newQuantity, $attributes);    
        return response()->json(['count' => Cart::TotalItems()]);   
     }
 

@@ -20,23 +20,18 @@
 
         <div class="form-block">
             <label for="contact" class="text-sm">Card Data</label>
-            <div class="input-custom">
+            <div class="input-custom" validator-input="form-inline-error">
                 <div class="inline-form-group">
                     <input type="text" class="card-number w-6" validator-input="card_number" name="card_number" placeholder="xxxx-xxxx-xxxx-xxxx" value="{{ $card->card_number ?? '' }}">
                     <input type="text" class="expired-date w-3" name="card_expire_date"  validator-input="card_expire_date" placeholder="MM/YY" value="{{ $card->card_expire_date ?? '' }}"/>
-                    <input type="text" id="card_cvc" class="w-3" name="card_cvc"  validator-input="card_cvc" value="{{ $card->card_cvc ?? '' }}"/>
+                    <input type="text" id="card_cvc" class="w-3" name="card_cvc"  validator-input="card_cvc" value="{{ $card->card_cvc ?? '' }}" placeholder="cvc"/>
                  </div>
                
             </div>
             @error('card_number')
-                <small class="validator-text" validator-for="card_number">Please Enter Card Number</small>
+                <small class="validator-text" validator-for="form-inline-error">Please Enter Card Number</small>
             @enderror
-            @error('card_expire_date')
-                <small class="validator-text" validator-for="card_expire_date">Please Enter Card Number</small>
-            @enderror
-            @error('card_cvc')
-                <small class="validator-text" validator-for="card_cvc">Please Enter security Number</small>
-            @enderror
+          
 
 
         </div>

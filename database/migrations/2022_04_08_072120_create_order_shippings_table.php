@@ -16,6 +16,7 @@ class CreateOrderShippingsTable extends Migration
         Schema::create('order_shippings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id');
+            $table->foreign('order_id')->references('id')->on('orders');
             $table->string('firstname')->nullable();
             $table->string('lastname')->nullable();
             $table->string('street')->nullable();
@@ -23,8 +24,7 @@ class CreateOrderShippingsTable extends Migration
             $table->string('phone')->nullable();
             $table->string('country')->nullable();
             $table->string('region')->nullable();
-            $table->string('zipcode')->nullable();              
-            $table->foreign('order_id')->references('id')->on('orders');
+            $table->string('zipcode')->nullable(); 
             $table->timestamps();
         });
     }

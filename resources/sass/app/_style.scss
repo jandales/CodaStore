@@ -2502,6 +2502,7 @@ a.delete{
 }
 
 .variant  .attribute{
+    
     padding: .5rem;
    color: #666;
    background-color: #fff; 
@@ -3495,6 +3496,10 @@ span .fa-toggle-on{
     background-color: #fff;
     background-clip: padding-box;
     border: 1px solid #ced4da;
+}
+
+input.card::placeholder{
+    color: var(--bs-red);
 }
  
 

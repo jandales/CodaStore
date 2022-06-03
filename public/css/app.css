@@ -3198,6 +3198,18 @@ span .fa-toggle-on {
   border: 1px solid #ced4da;
 }
 
+input.card::-moz-placeholder {
+  color: var(--bs-red);
+}
+
+input.card:-ms-input-placeholder {
+  color: var(--bs-red);
+}
+
+input.card::placeholder {
+  color: var(--bs-red);
+}
+
 .header-container {
   width: 100%;
   background: rgb(243, 241, 241);

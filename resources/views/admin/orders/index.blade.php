@@ -82,7 +82,7 @@
                                      </div>
                                 </a>
                             </td>
-                            <td> <a class="link-primary" href="{{ route('admin.orders.show',[$order->encryptedId()])}}">{{$order->order_number}}</a></td>
+                            <td><a class="link-primary" href="{{ route('admin.orders.show',[$order->encryptedId()])}}">{{$order->order_number}}</a></td>
                             <td>{{ $order->totalItems() . " items" }}</td>
                             <td>@money($order->gross_total)</td>
                             <td>{{  $order->createdAtDate() }}</td>

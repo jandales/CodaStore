@@ -116,6 +116,10 @@
                <span><i class="fa fa-check"></i></span>
                <a href="#" id="btn-payment-completed">OK</a>
            </div>
+           {{-- <div class="loading-failed">
+               <span>Server Error</span>
+               <a>Ok</a>
+           </div> --}}
         </div>            
    </div>
 

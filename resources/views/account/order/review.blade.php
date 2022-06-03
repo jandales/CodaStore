@@ -26,7 +26,7 @@
                                 </div>
                                 <div class="item-main">
                                     <div class="item-image">                                          
-                                        <img src="/{{ $product->imagePath }}" alt="">                                   
+                                        <img src="{{ $product->imagePath }}" alt="">                                   
                                     </div>
                                     <div class="item-name ml-1">
                                         <p>{{ $product->name }}</p>
@@ -49,7 +49,7 @@
                                         </div>
                                         <div class="mt-1">                    
                 
-                                                 <form action = "{{route('review.store',[$product])}}" method="POST">
+                                                 <form action = "{{route('review.store',[encrypt($product->id)])}}" method="POST">
                                                      @csrf
                                                          <input type="hidden" id="input-rate"  name="rate" value="0">
                                                          <div class="form-block">
@@ -59,7 +59,7 @@
                                                          @error('comments')
                                                          <div class="alert alert-danger mb-2">{{ $message }}</div>
                                                          @enderror
-                                                     <button  class="button w-2 dark right">SUBMIT</button>    
+                                                     <button  class="btn btn-dark w-2 right">SUBMIT</button>    
                                                  <form> 
                                                   
                 

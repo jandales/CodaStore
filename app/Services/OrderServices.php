@@ -11,12 +11,18 @@ use Illuminate\Http\Request;
 
 class OrderServices
 {
-   
+    public $COMPLETED = 'completed';
+    public $TOSHIP = 'to-ship';
+    public $TORECIEVE = 'to-receive';
+    private $CANCELLED = 'cancelled';
+
     public function listOrders($status)
     {
        return Order::with('items', 'items.product')->where('user_id', auth()->user()->id)->when($status, function ($query) use ($status) {
             if ($status != 'all') $query->where('status', $status);                                                    
         })->paginate(config('setting.app.perpage')); 
+
+    
 
         // return Order::ByAuthUser()->when($status, function ($query) use ($status) {
         //     if ($status != 'all') $query->where('status', $status);                                                    
