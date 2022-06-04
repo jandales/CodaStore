@@ -1,9 +1,12 @@
 import { progressBarStart, progressBarStop} from '../module/progressbar'
 import { arrContains, arrFindIndex, arrRemove} from '../module/array'
 import { errorMessage, successMessage } from '../module/message'
+import { create } from 'lodash';
+require('../admin/variants');
 
 let imagesToUpload = []
 let errors = []
+let attributesList = [];
 const product = {
     name : '',
     categories : '',
@@ -43,9 +46,6 @@ if(btnfilter) {
     }
 }
 
-
-
-
 document.addEventListener("DOMContentLoaded", () => { 
         if(hasVariantElement){
             if(hasVariantElement.checked){
@@ -55,10 +55,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         loadEditOnEditForm();
         loadGalleryImages();
-     
-
-        
 })
+
+
 
 function loadEditOnEditForm(){
     const inputVariant = document.querySelector('input[name="variants"]');
@@ -69,18 +68,29 @@ function loadEditOnEditForm(){
     if(inputAttribute) attributes = JSON.parse(inputAttribute.value);
     
     attributes.forEach(attribute => {      
-        product.attributes.push({ id : attribute.attribute_id, variants : [] })  
+        product.attributes.push({ id : attribute.attribute_id, variants : [] })      
     });
 
-    product.attributes.forEach(item => {      
+    product.attributes.forEach(attribute => {      
         variants.forEach(variant => {            
-            if(item.id == variant.attribute_id) item.variants.push(variant.variant)
+            if(attribute.id == variant.attribute_id) attribute.variants.push(variant.name)            
         })           
     })  
 
     images.forEach(image => {
         product.images.push({id : image.id, path : image.path, deleted : 0 })
     });
+    const productImage = document.querySelector('.product-image');
+    if(productImage){
+        const src = productImage.getAttribute('src');
+        product.image = {id : 0, path : src }
+    }
+       
+ 
+
+
+
+  
 
 
     
@@ -97,26 +107,33 @@ function getAttributes(){
             selectAttributes.innerHTML = ''
             response.attributes.forEach(attribute => {               
                 selectAttributes.innerHTML += `<option value = ${attribute.id}>${attribute.name}</option>`
+                attributesList.push(attribute)
             })
         }
     })
+
     return res
 }
-function createOption(){
+function createOption(attribute = null, varaint = null){
     const text = selectAttributes.options[selectAttributes.selectedIndex].text
     const value = selectAttributes.value
+
+    if(attribute == null) attribute = text;
+    if(varaint == null) varaint = value
+
+
     const html = `<div class="options">                       
                     <div class="options-selector m-t-1" >
                         <div class="option-attribute">
-                            ${text}
+                            ${attribute}
                         </div> 
                         <div class="variants-wrapper">
                             <div class="variants-list-wrapper">                                   
                             </div>                
-                            <input data-id ="${value}"  class="inputVariant no-border"  placeholder="Enter varaint name and hit enter" type="text" name="variant_name[]" value=""> 
+                            <input data-id ="${varaint}"  class="inputVariant no-border"  placeholder="Enter varaint name and hit enter" type="text" name="variant_name[]" value=""> 
                         </div>                                 
                     </div>
-                    <span class="option-remove" id="${value}">remove</span>
+                    <span class="option-remove" id="${varaint}">remove</span>
                 </div>`
     
     return elementFromHtml(html);
@@ -140,14 +157,14 @@ function addVariantItem(id,value){
     product.attributes[i].variants.push(value)  
 }
 function deleteVariantItem(id,value){  
-    let i = arrFindIndex(product.attributes,'id',id) 
-    arrRemove(product.attributes[i].variants, value)
+    let i = arrFindIndex(product.attributes,'id', id) 
+    arrRemove(product.attributes[i].variants, value)  
 }
 function existVariantItem(id,value){ 
     let i = arrFindIndex(product.attributes,'id',id)   
     return arrContains(product.attributes[i].variants, value)
 }
-function storeProduct(){ 
+function storeProduct(){
    errors = []
    errorMessage([]) 
    const form = document.getElementById('form')
@@ -171,6 +188,7 @@ function storeProduct(){
         cache: false,
         success:function(res){  
             if(res.status == 200) successMessage(res.message) 
+            window.location.href = res.route;
         },
         error:function(XMLHttpRequest){
             let resErrors =  XMLHttpRequest.responseJSON.errors      
@@ -181,7 +199,8 @@ function storeProduct(){
         }
     })   
 }
-function updateProduct(){  
+function updateProduct(e){ 
+    e.preventDefault();
     errors = []
     errorMessage([])  
     const form = document.getElementById('form')
@@ -232,10 +251,6 @@ if(hasVariantElement) {
     }
 }
 
-
-
-
-
 function removeVariantItem(elem){
     let value  = elem.getAttribute('name')
     let variant_id = parseInt(elem.getAttribute('data-id'))     
@@ -258,21 +273,21 @@ removeVariantItems.forEach(item => {
 
 
 if (btnaddvariant) {
-    btnaddvariant.addEventListener('click', function(e) {
-        e.preventDefault();
-        let selected =  parseInt(selectAttributes.value)
-        if(arrContains(product.attributes, 'id', selected)) return alert('varaint already selected')        
-        product.attributes.push({ id : selected, variants : [] })    
-        optionsWrapper.appendChild(createOption());
-        variantInput();
-        variantRemove();       
-    });
+        btnaddvariant.addEventListener('click', function(e) {
+            e.preventDefault();
+            let selected =  parseInt(selectAttributes.value)     
+            if(arrContains(product.attributes, 'id', selected)) return alert('varaint already selected')            
+            product.attributes.push({ id : selected, variants : [] })    
+            optionsWrapper.appendChild(createOption());
+            variantInput();
+            variantRemove();       
+        });
 }
 
 /// add event 
-function addVariantEvent(event){ 
+function addVariantEvent(event){    
     if (event.keyCode === 13) {     
-        event.preventDefault(); 
+        event.preventDefault();         
         let value = event.target.value
         let id = parseInt(event.target.getAttribute('data-id')) 
         if(value == "" ) return   
@@ -318,6 +333,20 @@ if(optionsWrapper){
 }
 
 
+// document.querySelectorAll('input').forEach(input => {
+//     input.addEventListener('keypress', function(e) {
+    
+//         if(e.keyCode == 13){
+//             if(!input.classList.contains('inputVariant')){
+//                 e.preventDefault();
+//             }
+          
+//             console.log(e);
+//             console.log('cancel submit');
+//         }
+//     })
+// });
+
 
 
 
@@ -357,7 +386,7 @@ function loadGalleryImages(){
         if(image.deleted == 0){
             imagegallery.innerHTML += `
             <div class="image">
-                <img src="${image.path}" alt="">                                   
+                <img src="${image.path}"  alt="">                                   
                 <span data-id="${image.id}" class="remove remove-gallery-image"><i class="fas fa-times"></i></span>
             </div>
             `
@@ -367,7 +396,10 @@ function loadGalleryImages(){
 } 
 function loadImage(image){    
     const imageElement = document.querySelector('.image-product .image')
-    imageElement.innerHTML = `<img src="${image.path}" alt=""><span class="remove remove-product-image"><i class="fas fa-times"></i></span>`
+    imageElement.innerHTML = `<img src="${image.path}" class="product-image" alt="">
+    <span class="remove remove-product-image">
+    <i class="fas fa-times"></i></span>`
+
     SetRemoveProductImageEvent();
 }
 
@@ -472,10 +504,16 @@ if (fileImageGallery) {
 
 if (btnsave) {
     btnsave.onclick =  function(e){
-        e.preventDefault();
-        const type = this.getAttribute('type');
-        if (type == 'create') return storeProduct();
-        updateProduct(); 
+        e.preventDefault();    
+        storeProduct();
+    
+    }
+}
+
+const btnupdate = document.getElementById('btn-update');
+if(btnupdate){
+    btnupdate.onclick = function(e){      
+        updateProduct(e); 
     }
 }
 

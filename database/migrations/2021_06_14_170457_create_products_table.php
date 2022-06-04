@@ -21,14 +21,14 @@ class CreateProductsTable extends Migration
             $table->string('sku')->nullable();
             $table->string('barcode')->nullable();
             $table->longText('short_description')->nullable();
-            $table->longText('long_description');
+            $table->longText('long_description')->nullable();
             $table->integer('sale_price')->default(0);
             $table->integer('regular_price')->default(0);
-            $table->integer('is_taxeble')->default(0);
+            $table->integer('is_taxable')->default(0);
             $table->integer('featured')->default(0); 
             $table->string('imagePath');
             $table->string('tags')->nullable();
-            $table->string('status');
+            $table->string('status')->default(0);
             $table->timestamps();
         });
     }

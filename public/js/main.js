@@ -3009,11 +3009,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _module_progressbar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../module/progressbar */ "./resources/js/module/progressbar.js");
 /* harmony import */ var _module_array__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../module/array */ "./resources/js/module/array.js");
 /* harmony import */ var _module_message__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../module/message */ "./resources/js/module/message.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
 
 
+
+
+
+__webpack_require__(/*! ../admin/variants */ "./resources/js/admin/variants.js");
 
 var imagesToUpload = [];
 var errors = [];
+var attributesList = [];
 var product = {
   name: '',
   categories: '',
@@ -3075,9 +3082,9 @@ function loadEditOnEditForm() {
       variants: []
     });
   });
-  product.attributes.forEach(function (item) {
+  product.attributes.forEach(function (attribute) {
     variants.forEach(function (variant) {
-      if (item.id == variant.attribute_id) item.variants.push(variant.variant);
+      if (attribute.id == variant.attribute_id) attribute.variants.push(variant.name);
     });
   });
   images.forEach(function (image) {
@@ -3087,6 +3094,15 @@ function loadEditOnEditForm() {
       deleted: 0
     });
   });
+  var productImage = document.querySelector('.product-image');
+
+  if (productImage) {
+    var src = productImage.getAttribute('src');
+    product.image = {
+      id: 0,
+      path: src
+    };
+  }
 }
 
 function getAttributes() {
@@ -3100,6 +3116,7 @@ function getAttributes() {
       selectAttributes.innerHTML = '';
       response.attributes.forEach(function (attribute) {
         selectAttributes.innerHTML += "<option value = ".concat(attribute.id, ">").concat(attribute.name, "</option>");
+        attributesList.push(attribute);
       });
     }
   });
@@ -3107,9 +3124,13 @@ function getAttributes() {
 }
 
 function createOption() {
+  var attribute = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+  var varaint = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
   var text = selectAttributes.options[selectAttributes.selectedIndex].text;
   var value = selectAttributes.value;
-  var html = "<div class=\"options\">                       \n                    <div class=\"options-selector m-t-1\" >\n                        <div class=\"option-attribute\">\n                            ".concat(text, "\n                        </div> \n                        <div class=\"variants-wrapper\">\n                            <div class=\"variants-list-wrapper\">                                   \n                            </div>                \n                            <input data-id =\"").concat(value, "\"  class=\"inputVariant no-border\"  placeholder=\"Enter varaint name and hit enter\" type=\"text\" name=\"variant_name[]\" value=\"\"> \n                        </div>                                 \n                    </div>\n                    <span class=\"option-remove\" id=\"").concat(value, "\">remove</span>\n                </div>");
+  if (attribute == null) attribute = text;
+  if (varaint == null) varaint = value;
+  var html = "<div class=\"options\">                       \n                    <div class=\"options-selector m-t-1\" >\n                        <div class=\"option-attribute\">\n                            ".concat(attribute, "\n                        </div> \n                        <div class=\"variants-wrapper\">\n                            <div class=\"variants-list-wrapper\">                                   \n                            </div>                \n                            <input data-id =\"").concat(varaint, "\"  class=\"inputVariant no-border\"  placeholder=\"Enter varaint name and hit enter\" type=\"text\" name=\"variant_name[]\" value=\"\"> \n                        </div>                                 \n                    </div>\n                    <span class=\"option-remove\" id=\"").concat(varaint, "\">remove</span>\n                </div>");
   return elementFromHtml(html);
 }
 
@@ -3161,6 +3182,7 @@ function storeProduct() {
     cache: false,
     success: function success(res) {
       if (res.status == 200) (0,_module_message__WEBPACK_IMPORTED_MODULE_2__.successMessage)(res.message);
+      window.location.href = res.route;
     },
     error: function error(XMLHttpRequest) {
       var resErrors = XMLHttpRequest.responseJSON.errors;
@@ -3179,7 +3201,8 @@ function storeProduct() {
   });
 }
 
-function updateProduct() {
+function updateProduct(e) {
+  e.preventDefault();
   errors = [];
   (0,_module_message__WEBPACK_IMPORTED_MODULE_2__.errorMessage)([]);
   var form = document.getElementById('form');
@@ -3320,7 +3343,18 @@ if (optionsWrapper) {
   removes.forEach(function (remove) {
     remove.onclick = removeOption;
   });
-} /// file uploader
+} // document.querySelectorAll('input').forEach(input => {
+//     input.addEventListener('keypress', function(e) {
+//         if(e.keyCode == 13){
+//             if(!input.classList.contains('inputVariant')){
+//                 e.preventDefault();
+//             }
+//             console.log(e);
+//             console.log('cancel submit');
+//         }
+//     })
+// });
+/// file uploader
 
 
 var fileProductImage = document.getElementById('file-product-image');
@@ -3333,7 +3367,7 @@ function loadGalleryImages() {
   imagegallery.innerHTML = '';
   product.images.forEach(function (image) {
     if (image.deleted == 0) {
-      imagegallery.innerHTML += "\n            <div class=\"image\">\n                <img src=\"".concat(image.path, "\" alt=\"\">                                   \n                <span data-id=\"").concat(image.id, "\" class=\"remove remove-gallery-image\"><i class=\"fas fa-times\"></i></span>\n            </div>\n            ");
+      imagegallery.innerHTML += "\n            <div class=\"image\">\n                <img src=\"".concat(image.path, "\"  alt=\"\">                                   \n                <span data-id=\"").concat(image.id, "\" class=\"remove remove-gallery-image\"><i class=\"fas fa-times\"></i></span>\n            </div>\n            ");
     }
   });
   setRemoveGalleryImageEvent();
@@ -3341,7 +3375,7 @@ function loadGalleryImages() {
 
 function loadImage(image) {
   var imageElement = document.querySelector('.image-product .image');
-  imageElement.innerHTML = "<img src=\"".concat(image.path, "\" alt=\"\"><span class=\"remove remove-product-image\"><i class=\"fas fa-times\"></i></span>");
+  imageElement.innerHTML = "<img src=\"".concat(image.path, "\" class=\"product-image\" alt=\"\">\n    <span class=\"remove remove-product-image\">\n    <i class=\"fas fa-times\"></i></span>");
   SetRemoveProductImageEvent();
 }
 
@@ -3457,9 +3491,15 @@ if (fileImageGallery) {
 if (btnsave) {
   btnsave.onclick = function (e) {
     e.preventDefault();
-    var type = this.getAttribute('type');
-    if (type == 'create') return storeProduct();
-    updateProduct();
+    storeProduct();
+  };
+}
+
+var btnupdate = document.getElementById('btn-update');
+
+if (btnupdate) {
+  btnupdate.onclick = function (e) {
+    updateProduct(e);
   };
 }
 
@@ -3609,6 +3649,16 @@ if (btnsendPasswordReset) {
     form.submit();
   };
 }
+
+/***/ }),
+
+/***/ "./resources/js/admin/variants.js":
+/*!****************************************!*\
+  !*** ./resources/js/admin/variants.js ***!
+  \****************************************/
+/***/ (() => {
+
+
 
 /***/ }),
 
@@ -4046,7 +4096,9 @@ function arrContains(arr, key, value) {
 }
 function arrRemove(arr, key, value) {
   for (var i = 0; i < arr.length; i++) {
-    if (arguments.length === 2) if (arr[i] == key) return arr.splice(i, 1);
+    if (arguments.length === 2) if (arr[i] == key) {
+      return arr.splice(i, 1);
+    }
     if (arguments.length === 3) if (arr[i][key] == value) return arr.splice(i, 1);
   }
 
@@ -4072,12 +4124,22 @@ function errorMessage(errors) {
   notifyMessageElement.innerHTML = '';
   if (errors.length == 0) return notifyMessageElement.innerHTML = '';
   errors.forEach(function (error) {
-    notifyMessageElement.innerHTML += "<div class=\"alert alert-danger\">\n                    <div class=\"flex justify-content-space-between\">\n                            <label class=\"message\">".concat(error.message, "</label>\n                            <span class=\"closebtn\" onclick=\"errorClose(this)\"><i class=\"fas fa-times\"></i></span>\n                    </div> \n                </div>");
+    notifyMessageElement.innerHTML += "<div class=\"alert alert-danger\">\n                    <div class=\"flex justify-content-space-between\">\n                            <label class=\"message\">".concat(error.message, "</label>\n                            <span class=\"closebtn\"><i class=\"fas fa-times\"></i></span>\n                    </div> \n                </div>");
   });
+  closeMessage();
 }
 function successMessage(message) {
   notifyMessageElement.innerHTML = '';
-  notifyMessageElement.innerHTML += "<div class=\"alert alert-success\">\n                                            <div class=\"flex justify-content-space-between\">\n                                                <label class=\"message\">".concat(message, "</label>\n                                                <span class=\"closebtn\" onclick=\"errorClose(this)\"><i class=\"fas fa-times\"></i></span>\n                                            </div> \n                                        </div>");
+  notifyMessageElement.innerHTML += "<div class=\"alert alert-success\">\n                                            <div class=\"flex justify-content-space-between\">\n                                                <label class=\"message\">".concat(message, "</label>\n                                                <span class=\"closebtn\"><i class=\"fas fa-times\"></i></span>\n                                            </div> \n                                        </div>");
+  closeMessage();
+}
+
+function closeMessage() {
+  document.querySelectorAll('.closebtn').forEach(function (btnclose) {
+    btnclose.onclick = function () {
+      btnclose.closest('.alert').remove();
+    };
+  });
 }
 
 /***/ }),
@@ -21595,6 +21657,18 @@ module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBun
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports

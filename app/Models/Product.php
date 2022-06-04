@@ -36,13 +36,13 @@ class Product extends Model
         'sale_price',
         'regular_price',
         'status',
-        'is_taxeble',
+        'is_taxable',
         'featured',
     ];
 
-    protected $attributes = [    
-        'is_taxeble' => 0,
-    ];
+    // protected $attributes = [    
+    //     'is_taxable' => 0,
+    // ];
 
     public function category()
     {      

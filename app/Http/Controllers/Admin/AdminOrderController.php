@@ -49,6 +49,6 @@ class AdminOrderController extends Controller
 
     public function deliver()
     {
-       $this->service->deliver();
+       $this->services->deliver();
     }
 }

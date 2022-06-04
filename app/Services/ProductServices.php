@@ -3,10 +3,12 @@
 namespace  App\Services;
 
 use App\Models\Photo;
+use App\Models\Stock;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\ProductVariant;
 use App\Models\ProductAttribute;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
 
@@ -19,83 +21,123 @@ class ProductServices
         return Product::with('category','stock')->paginate(10);
     }
     
-    public function store($request)
-    {       
-        $image = json_decode($request->image, true);
-        $product =  Product::create([
-            'name' => $request->name,
-            'category_id' =>  $request->categories,            
-            'slug' => productSlug($request->name),           
-            'short_description' =>  $request->short_description,
-            'long_description' =>  $request->long_description,
-            'imagePath' =>   $image['path'] ?? $this->defaultImage,
-            'sku' =>  $request->sku,
-            'barcode' => $request->barcode,
-            'sale_price' =>  $request->sale_price,
-            'regular_price' =>  $request->regular_price,
-            'tags' => $request->tags, 
-            'status' => $request->status,
-            'istaxeble' => $request->istaxable,
-            'featured' => $request->featured ?? 0,
-        ]);
+    // public function store($request)
+    // {       
+    //     $image = json_decode($request->image, true);
 
-        $product->stock()->create([
-            'product_id' => $product->id,
-            'qty' => $request->qty,
-        ]);
+    //     $product =  Product::create([
+    //         'name' => $request->name,
+    //         'category_id' =>  $request->categories,            
+    //         'slug' => productSlug($request->name),           
+    //         'short_description' =>  $request->short_description,
+    //         'long_description' =>  $request->long_description,
+    //         'imagePath' =>   $image['path'] ?? $this->defaultImage,
+    //         'sku' =>  $request->sku,
+    //         'barcode' => $request->barcode,
+    //         'sale_price' =>  $request->sale_price,
+    //         'regular_price' =>  $request->regular_price,
+    //         'tags' => $request->tags, 
+    //         'status' => $request->status,
+    //         'istaxeble' => $request->istaxable,
+    //         'featured' => $request->featured ?? 0,
+    //     ]);
+
+    //     $product->stock()->create([
+    //         'product_id' => $product->id,
+    //         'qty' => $request->qty,
+    //     ]);
         
-        Self::imageGalleryUpdate($request->input('images'), $product->id);    
-        Self::createAttributes($request->input('attributes'), $request->hasVariant, $product->id);       
-        return $product;
+    //     Self::imageGalleryUpdate($request->input('images'), $product->id);    
+    //     Self::createAttributes($request->input('attributes'), $request->hasVariant, $product->id);       
+    //     return $product;
+    // }
+
+    public function store(Request $request)
+    {     
+     
+       $image = json_decode($request->image, true);
+
+       return  DB::transaction(function ()  use ($request, $image){
+                    $validated = $request->validated();
+                    $validated['slug'] = productSlug($request->name);
+                    $validated['imagePath'] = $image['path'] ?? $this->defaultImage;
+                    $validated['featured'] = $request->featured ?? 0;
+                    $product = Product::create($validated);  
+
+                    Stock::create([
+                        'product_id' => $product->id,
+                        'qty' => $request->qty,
+                    ]);         
+
+                    Self::imageGalleryUpdate($request->input('images'), $product->id);    
+                    Self::createAttributes($request->input('attributes'), $request->hasVariant, $product->id);    
+
+                    return $product;
+                });
+       
+
+      
+        
+          
+       
     }
 
-    public function update($request, Product $product) 
-    {
+    public function update(Request $request, Product $product) 
+    {     
+     
         $image = json_decode($request->image, true);
-      
-        $product->name = $request->name;
-        $product->slug = productSlug($request->name);
-        $product->category_id = $request->categories;    
-        $product->short_description = $request->short_description;
-        $product->long_description = $request->long_description;
-        $product->sku = $request->sku;
-        $product->barcode = $request->barcode;
-        $product->sale_price = $request->sale_price;
-        $product->regular_price = $request->regular_price;
-        $product->status = $request->status;
-        $product->tags = $request->tags;
-        $product->featured = $request->featured ?? 0;
-        $product->imagePath = $image['path'] ?? $product->imagePath;
-        $product->save();
-
-        $stock = $product->stock;
-        $stock->qty = $request->qty;
-        $stock->save();     
-        
-        Self::updateProductImage($image, $product->imageDetail());
-       
-        Self::imageGalleryUpdate($request->input('images'), $product->id);
-
-        Self::createAttributes($request->input('attributes'),$request->hasVariant, $product->id);
-
-        return $product;
+        return DB::transaction(function () use($request, $product, $image) {
+            $product->name = $request->name;
+            $product->slug = productSlug($request->name);
+            $product->category_id = $request->category_id;    
+            $product->short_description = $request->short_description;
+            $product->long_description = $request->long_description;
+            $product->sku = $request->sku;
+            $product->barcode = $request->barcode;
+            $product->sale_price = $request->sale_price;
+            $product->regular_price = $request->regular_price;
+            $product->status = $request->status;
+            $product->tags = $request->tags;
+            $product->featured = $request->featured ?? 0;
+            $product->imagePath = $image['path'] ?? $product->imagePath;
+            $product->save();
+    
+            $stock = $product->stock;
+            $stock->qty = $request->qty;
+            $stock->save();     
+            
+            Self::updateProductImage($image, $product->imageDetail() );
+           
+            Self::imageGalleryUpdate($request->input('images'), $product->id);
+    
+            Self::createAttributes($request->input('attributes'), $request->hasVariant, $product->id);
+    
+            return $product;
+        });
+  
+            
+             
        
     }
 
     public function destroy(Product $product)
     {    
-        ProductAttribute::where('product_id', $product->id)->delete();
-        ProductVariant::where('product_id', $product->id)->delete();      
-        if($product->stock != null) $product->stock->delete(); 
-
-        foreach($product->photos as $photo)
-        {
-            $path = public_path($photo->path);
-            File::delete($path);
-            $photo->delete();
-        }
-
-        return $product->delete(); 
+        return DB::transaction(function () {
+            ProductAttribute::where('product_id', $product->id)->delete();
+            ProductVariant::where('product_id', $product->id)->delete();   
+               
+            if($product->stock != null) $product->stock->delete(); 
+    
+            foreach($product->photos as $photo)
+            {
+                $path = public_path($photo->path);
+                File::delete($path);
+                $photo->delete();
+            }
+    
+            return $product->delete();
+        });
+        
        
     }
 
@@ -159,9 +201,7 @@ class ProductServices
             if ($photo->product_id != $product_id) Self::updatePhotoOwner($photo, $product_id);           
         }
         
-    }
-
-  
+    }  
 
     private function createAttributes($attributes, $hasVariant, $product_id)
     {      
@@ -169,33 +209,39 @@ class ProductServices
 
         if ($attributes == null) return;
 
-        Self::destroyAttributes($product_id);
+        DB::transaction(function () use ($hasVariant, $attributes, $product_id) {
+            
+            Self::destroyAttributes($product_id);
 
-        foreach($attributes as $attribute)
-        {  
-            $attribute = json_decode($attribute,true);
-            ProductAttribute::create([
-                'product_id' => $product_id,
-                'attribute_id' => $attribute['id']
-            ]);   
-
-            $variants = $attribute['variants'];  
-
-            foreach($variants as $variant)
-            {
-                ProductVariant::create([
+            foreach($attributes as $attribute) {  
+                $attribute = json_decode($attribute,true);
+                ProductAttribute::create([
                     'product_id' => $product_id,
-                    'attribute_id' => $attribute['id'],
-                    'name' => $variant,                   
-                ]);
-            }            
-        }
-        
+                    'attribute_id' => $attribute['id']
+                ]);   
+    
+                $variants = $attribute['variants'];  
+    
+                foreach($variants as $variant) {
+                    ProductVariant::create([
+                        'product_id' => $product_id,
+                        'attribute_id' => $attribute['id'],
+                        'name' => $variant,                   
+                    ]);
+                }            
+            }
+            
+        });
+
+       
     }
     private function destroyAttributes($product_id)
     {
-        ProductAttribute::where('product_id', $product_id)->delete();
-        ProductVariant::where('product_id', $product_id)->delete();
+        DB::transaction(function ()  use ($product_id){
+            ProductAttribute::where('product_id', $product_id)->delete();
+            ProductVariant::where('product_id', $product_id)->delete();
+        });
+       
     }
     private function updatePhotoOwner(Photo $photo ,$product_id)
     {        
@@ -204,11 +250,14 @@ class ProductServices
     }
     private function unlink(Photo $photo)
     {  
-        $deleted = $photo->delete();  
-        if(!$deleted) return back()->with('error','Image cant delete');  
-        $path = public_path($photo->path);
-        File::delete($path);           
-        return response()->json(['deleted' => $deleted]); 
+        return DB::transaction(function () use($photo) {
+            $deleted = $photo->delete();  
+            if(!$deleted) return back()->with('error','Image cant delete');  
+            $path = public_path($photo->path);
+            File::delete($path);           
+            return response()->json(['deleted' => $deleted]); 
+        });
+      
     }
 
     public function search(Request $request)

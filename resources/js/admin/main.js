@@ -206,6 +206,8 @@ inputNumber.forEach(input => {
 });
 
 
+
+
 // run automatically when the page run
 document.addEventListener("DOMContentLoaded", () => {   
     deliver();

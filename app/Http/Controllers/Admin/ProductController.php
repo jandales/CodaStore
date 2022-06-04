@@ -45,8 +45,8 @@ class ProductController extends Controller
 
     public function store(ProductRequest $request)
     {      
-       $this->services->store($request);  
-       return response()->json(['status' => 200, 'message' =>  'Product succesfully create']);
+       $product = $this->services->store($request);  
+       return response()->json(['status' => 200, 'message' =>  'Product succesfully create', 'route' => route('admin.products.edit',[$product->encryptedId()])]);
     }
     
     public function edit(Product $product)

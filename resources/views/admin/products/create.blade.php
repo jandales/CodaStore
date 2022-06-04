@@ -38,7 +38,7 @@
                     <div class="panel-body">
                         <div class="form-inline gap30">
                             <div class="form-block col-6">
-                                <label for="name">Price</label>
+                                <label for="name">Sale Price</label>
                                 <input type="number"  name="sale_price" value="">                 
                             </div> 
                             <div class="form-block col-6">
@@ -78,7 +78,7 @@
                     </div>
                     <div class="panel-body">
                         <div class="form-checkbox">
-                            <input type="checkbox" class="has-variant" name="" id=""><label for="">This product has multiple options.</label>
+                            <input type="checkbox" class="has-variant" name="hasVariant" id=""><label for="">This product has multiple options.</label>
                         </div>
                     </div>
                     <div class="options-container">
@@ -129,7 +129,7 @@
                     <div class="panel-body">                
                     <div class="form-inline">
                             <div class="form-block w-12">                     
-                                <select id="categories" class="capitalized" name="categories" > 
+                                <select id="categories" class="capitalized" name="category_id" > 
                                         <option value="0">Uncategories</option> 
                                     @foreach ($categories as $category)
                                         <option value="{{ $category->id }}">{{ $category->name }}</option> 
@@ -233,6 +233,6 @@
         
 </div>
 
-{{-- <script  src="/js/admin/productAddupdate.js"></script> --}}
+
 
 @endsection

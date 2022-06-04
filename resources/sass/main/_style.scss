@@ -2924,9 +2924,11 @@ details  ul li:last-child {
 
 .option-remove{
     display: flex;
+    width: max-content;
     justify-content: flex-end;
     margin-top: 10px;
-    color: #3498DB;
+    margin-left: auto;
+    color: var(--bs-danger);
     cursor: pointer;
 }
 

@@ -26,7 +26,19 @@ class ProductRequest extends FormRequest
     {
         return [        
                 'name' => 'required',                
-                'categories' => ['required', new SelectValue], 
+                'category_id' => ['required', new SelectValue],  
+                'slug' => 'string',        
+                'short_description' => 'string',
+                'imagePath' => 'string',
+                'long_description' => 'string',
+                'sku' => 'string',   
+                'barcode' => 'string',     
+                'tags' => 'string',
+                'sale_price' => 'numeric',
+                'regular_price' => 'numeric',
+                'status' => 'numeric',
+                'is_taxable' => 'numeric',
+                'featured' => 'numeric',
              
         ];
     }

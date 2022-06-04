@@ -7697,7 +7697,9 @@ function arrContains(arr, key, value) {
 }
 function arrRemove(arr, key, value) {
   for (var i = 0; i < arr.length; i++) {
-    if (arguments.length === 2) if (arr[i] == key) return arr.splice(i, 1);
+    if (arguments.length === 2) if (arr[i] == key) {
+      return arr.splice(i, 1);
+    }
     if (arguments.length === 3) if (arr[i][key] == value) return arr.splice(i, 1);
   }
 

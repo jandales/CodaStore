@@ -8,7 +8,7 @@
     <div id="notify-message" class="m-t-2">
         
     </div>
-    <form id="form" method="post" action="{{route('admin.products.update',[$product->encryptedId()])}}" enctype="multipart/form-data">
+    <form id="form" method="post" onsubmit="return false" action="{{route('admin.products.update',[ $product->encryptedId() ])}}" enctype="multipart/form-data">
         @csrf   
         <input type="hidden" name="attributes" value="{{$product->attributes}}">
         <input type="hidden" name="variants" value="{{$product->variants}}">  
@@ -94,31 +94,30 @@
                             </div>   
                             <div class="options-wrapper">
                                 @foreach ($product->attributes as $item)
-                                <div class="options">                       
-                                    <div class="options-selector m-t-1" >
-                                        <div class="option-attribute">
-                                            {{$item->attributes->name}}                                     
-                                        </div> 
-                                     
-                                        <div class="variants-wrapper">
-                                            <div class="variants-list-wrapper">                                           
-                                                @foreach ($product->variants as  $variant)  
-                                                    @if( $item->attribute_id ==  $variant->attribute_id)            
-                                                        <div class="variant">  
-                                                            {{  $variant->name}}         
-                                                            <span name="{{  $variant->name }} " data-id="{{ $item->attribute_id }}" class="remove-variant-item"><i class="fas fa-times"></i></span>
-                                                            <span name="red" data-id="1" class="remove-variant-item"><i class="fas fa-times"></i></span>
-                                                        </div>
-                                                    @endif
-                                                @endforeach                                  
-                                            </div>                
-                                            <input data-id="{{ $item->attribute_id }}" class="inputVariant no-border"  placeholder="Enter varaint name and hit enter" name="variant_name[]" type="text" value=""> 
-                                        </div>                                 
+                                    <div class="options">                       
+                                        <div class="options-selector m-t-1" >
+                                            <div class="option-attribute">
+                                                {{$item->attributes->name}}                                     
+                                            </div> 
+                                        
+                                            <div class="variants-wrapper">
+                                                <div class="variants-list-wrapper">                                           
+                                                    @foreach ($product->variants as  $variant)  
+                                                        @if( $item->attribute_id ==  $variant->attribute_id)            
+                                                            <div class="variant">  
+                                                                {{  $variant->name}}         
+                                                                <span name="{{  $variant->name }} " data-id="{{ $item->attribute_id }}" class="remove-variant-item"><i class="fas fa-times"></i></span>
+                                                            
+                                                            </div>
+                                                        @endif
+                                                    @endforeach                                  
+                                                </div>                
+                                                <input data-id="{{ $item->attribute_id }}" class="inputVariant no-border"  placeholder="Enter varaint name and hit enter" name="variant_name[]" type="text" value=""> 
+                                            </div>                                 
+                                        </div>
+                                        <span class="option-remove" data-id="{{ $item->attribute_id }}">remove</span>
                                     </div>
-                                    <span class="option-remove" data-id="{{ $item->attribute_id }}">remove</span>
-                                </div>
-                                @endforeach
-                            
+                                @endforeach                            
                             </div> 
                         </div>
                     </div>
@@ -142,7 +141,7 @@
                             <label for="" class="ml10">Featured Product</label>
                         </div>
                         <div class="form-block w-12">
-                            <button id="btnsave" class="btn btn-primary align-self-end">Save</button>
+                            <button id="btn-update" class="btn btn-primary align-self-end">Save</button>
                         </div>                  
                     </div>
                 </div>
@@ -154,7 +153,7 @@
                     <div class="panel-body">                
                     <div class="form-inline">
                             <div class="form-block w-12">                     
-                                <select id="categories" class="capitalized" name="categories"> 
+                                <select id="categories" class="capitalized" name="category_id"> 
                                     <option value="0">Uncategories</option> 
                                     @foreach ($categories as $category)                              
                                         <option {{ $product->category_id == $category->id ? 'selected' : ''}} value="{{ $category->id }}" >{{ $category->name }}</option> 
@@ -188,7 +187,7 @@
                         <div class="form-block">
                             <div class="image-product">
                                 <div class="image">
-                                        <img src="{{ $product->imagePath }}" alt=""> 
+                                        <img src="{{ $product->imagePath }}" class="product-image" alt=""> 
                                         <span onclick="removeProductImage(this, 1 )" class="remove"><i class="fas fa-times"></i></span>                                   
                                 </div>
                                 <div class="progress-bar-wrapper progress-image">  

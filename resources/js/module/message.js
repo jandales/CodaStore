@@ -7,11 +7,12 @@ export function errorMessage(errors){
         notifyMessageElement.innerHTML +=  `<div class="alert alert-danger">
                     <div class="flex justify-content-space-between">
                             <label class="message">${error.message}</label>
-                            <span class="closebtn" onclick="errorClose(this)"><i class="fas fa-times"></i></span>
+                            <span class="closebtn"><i class="fas fa-times"></i></span>
                     </div> 
                 </div>`
              
-    })    
+    })   
+    closeMessage(); 
 }
 
 
@@ -21,7 +22,18 @@ export function successMessage(message) {
     notifyMessageElement.innerHTML += `<div class="alert alert-success">
                                             <div class="flex justify-content-space-between">
                                                 <label class="message">${message}</label>
-                                                <span class="closebtn" onclick="errorClose(this)"><i class="fas fa-times"></i></span>
+                                                <span class="closebtn"><i class="fas fa-times"></i></span>
                                             </div> 
                                         </div>`
+    closeMessage();
 }
+
+
+function closeMessage(){
+    document.querySelectorAll('.closebtn').forEach(btnclose => {
+        btnclose.onclick = function(){         
+           btnclose.closest('.alert').remove();
+        }
+    })
+}
+
