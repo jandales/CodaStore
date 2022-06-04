@@ -27,24 +27,6 @@ Products :
 
 ## Orders
     - See an overview of your orders in admin and user profile
-    - Detailed view of the order comes with: list of items purchased, delivery address, order status , payment status.
-    - Users can track order with tracking code
+    - Detailed view of the order comes with: list of items purchased, delivery address, order status.   
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-=======
-# CodaStore
->>>>>>> 6bff156b4dcde0750be5544f992376f271f0166f
