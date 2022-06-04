@@ -1,5 +1,5 @@
-
-## LARAVEL CodaStore E-COMMERCE APPLICATION
+## Laravel
+## CodaStore E-COMMERCE APPLICATION 
 
 ## SETUP
 - composer update
