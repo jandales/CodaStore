@@ -13,7 +13,8 @@
      - Customizable product, sku ,Multiple photos, cover image, quantity, price more
 
 ## Feature
-Products :
+
+## Products
     - Multiple product images with cover
     - Configure SKU, name, description, price and quantity,
     - Size and colors for products like Clothes
