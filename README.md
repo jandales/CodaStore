@@ -2,13 +2,13 @@
 
 ## SETUP
     - composer update
+    - install npm
+    - create the .env file by duplicating the .env.example file
     - php artisan migrate
-    - php artisan db:seed
-
+    - php artisan db:seed 
 
 ## OverView
   CodaStore is a Free E-Commerce Application with Laravel that come with:
-  
      - Modern ,Fast ,Responsive design
      - Customizable product, sku ,Multiple photos, cover image, quantity, price more
 
