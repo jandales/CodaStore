@@ -1,5 +1,4 @@
-## Laravel
-## CodaStore E-COMMERCE APPLICATION 
+## E-COMMERCE APPLICATION built with Laravel framework
 
 ## SETUP
     - composer update
