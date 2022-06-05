@@ -4,8 +4,12 @@
     - composer update
     - install npm
     - create the .env file by duplicating the .env.example file
-    - php artisan migrate
-    - php artisan db:seed 
+    - php artisan key:generate 
+    - php artisan migrate:fresh --seed
+
+
+
+    
 
  
     
