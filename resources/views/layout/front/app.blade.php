@@ -7,8 +7,9 @@
     <title>Apprael Store</title>  
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">  
     <meta name="csrf-token" content="{{ csrf_token() }}"> 
+  
 
-   
+    
 </head>
 
 <body>
@@ -84,6 +85,7 @@
 
     <script src="/js/jquery.min.js"></script>
     <script src="{{ asset('js/app.js')}}"></script>
+
 
 
 

@@ -8,7 +8,7 @@
     <div id="notify-message" class="m-t-2">
         
     </div>
-    <form id="form" method="post" onsubmit="return false" action="{{route('admin.products.update',[ $product->encryptedId() ])}}" enctype="multipart/form-data">
+    <form id="form" method="post"  action="{{route('admin.products.update',[ $product->encryptedId() ])}}" enctype="multipart/form-data">
         @csrf   
         <input type="hidden" name="attributes" value="{{$product->attributes}}">
         <input type="hidden" name="variants" value="{{$product->variants}}">  
@@ -24,11 +24,11 @@
                         </div>
                         <div class="form-block">
                             <label for="email">Short Description</label>
-                        <textarea id="short_description" name="short_description"  cols="30" rows="3">{{$product->short_description}}</textarea>                
+                        <textarea id="short_description" name="short_description"  class="ckeditor" cols="30" rows="3">{{$product->short_description}}</textarea>                
                         </div>
                         <div class="form-block">
                             <label for="email">Long Description</label>
-                            <textarea id="long_description" name="long_description"  cols="30" rows="10">{{$product->long_description}}</textarea>                
+                            <textarea id="long_description" name="long_description"  class="ckeditor" cols="30" rows="10">{{$product->long_description}}</textarea>                
                         </div>
                 </div>
                 </div>
@@ -106,7 +106,7 @@
                                                         @if( $item->attribute_id ==  $variant->attribute_id)            
                                                             <div class="variant">  
                                                                 {{  $variant->name}}         
-                                                                <span name="{{  $variant->name }} " data-id="{{ $item->attribute_id }}" class="remove-variant-item"><i class="fas fa-times"></i></span>
+                                                                <span name="{{  $variant->name }}" data-id="{{ $item->attribute_id }}" class="remove-variant-item"><i class="fas fa-times"></i></span>
                                                             
                                                             </div>
                                                         @endif

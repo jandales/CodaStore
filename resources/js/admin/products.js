@@ -156,7 +156,7 @@ function addVariantItem(id,value){
     let i = arrFindIndex(product.attributes,'id',id)    
     product.attributes[i].variants.push(value)  
 }
-function deleteVariantItem(id,value){  
+function deleteVariantItem(id,value){    
     let i = arrFindIndex(product.attributes,'id', id) 
     arrRemove(product.attributes[i].variants, value)  
 }
@@ -255,7 +255,7 @@ function removeVariantItem(elem){
     let value  = elem.getAttribute('name')
     let variant_id = parseInt(elem.getAttribute('data-id'))     
     deleteVariantItem(variant_id,value)
-    elem.parentElement.remove();  
+    elem.parentElement.remove();    
 }
 
 function removeVariantItemEvent(){ 
@@ -265,6 +265,7 @@ function removeVariantItemEvent(){
   
 }
 const removeVariantItems = document.querySelectorAll('.remove-variant-item');
+
 removeVariantItems.forEach(item => {
     item.onclick =  () => { removeVariantItem(item) };        
 })
@@ -309,6 +310,13 @@ function variantInput(){
         });
     })
 }
+
+const inputVariants =  optionsWrapper.querySelectorAll('.inputVariant')      
+inputVariants.forEach(input => {
+    input.addEventListener('keypress', function(event){   
+        addVariantEvent(event)
+    });
+})
 
 
 

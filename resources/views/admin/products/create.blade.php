@@ -23,11 +23,11 @@
                         </div>
                         <div class="form-block">
                             <label for="email">Short Description</label>
-                            <textarea id="short_description" name="short_description"  cols="30" rows="3"></textarea>                
+                            <textarea id="short_description" class="ckeditor" name="short_description"  cols="30" rows="3"></textarea>                
                         </div>
                         <div class="form-block">
                             <label for="email">Long Description</label>
-                            <textarea id="long_description" name="long_description"  cols="30" rows="10"></textarea>                
+                            <textarea id="long_description" class="ckeditor" name="long_description"  cols="30" rows="10"></textarea>                
                         </div>
                 </div>
                 </div>

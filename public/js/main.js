@@ -3324,6 +3324,13 @@ function variantInput() {
   });
 }
 
+var inputVariants = optionsWrapper.querySelectorAll('.inputVariant');
+inputVariants.forEach(function (input) {
+  input.addEventListener('keypress', function (event) {
+    addVariantEvent(event);
+  });
+});
+
 function removeOption(e) {
   var elem = e.target;
   var id = elem.getAttribute('id');

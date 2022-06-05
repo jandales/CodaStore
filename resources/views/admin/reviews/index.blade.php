@@ -72,7 +72,7 @@
                                 <td>
                                     <div class="flex justify-content-start align-items-flex-start">
                                         <div class="image-50">
-                                            <img src="/{{ $review->product->imagePath}}" alt="" srcset="">
+                                            <img src="{{ $review->product->imagePath}}" alt="" srcset="">
                                             </div>
                                             <p class="ml-1">{{ $review->product->name }}</p>
                                         </div>

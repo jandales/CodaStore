@@ -31,7 +31,7 @@
                 <ul class="order-navigation">
                     <li class="{{ (request()->is('admin/orders')) ? 'selected' : '' }}"><a href="{{ route('admin.orders')}}">All</a></li>
                     <li class="{{ (request()->is('admin/orders/to-ship')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['to-ship'])}}">To Ship</a></li>              
-                    <li class="{{ (request()->is('admin/orders/to-recieve')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['to-recieve'])}}">To Recieve</a></li>
+                    <li class="{{ (request()->is('admin/orders/to-receive')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['to-receive'])}}">To Recieve</a></li>
                     <li class="{{ (request()->is('admin/orders/completed')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['completed'])}}">Completed</a></li>
                     <li class="{{ (request()->is('admin/orders/cancelled')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['cancelled'])}}">Cancelled</a></li>
                 </ul> 
