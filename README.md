@@ -16,12 +16,10 @@
 
 ## Products
     - Multiple product images with cover
-    - Configure SKU, name, description, price and quantity,
-    - Size and colors for products like Clothes
+    - Configure SKU, name, description, price and quantity, attributes like color and size
     - Product list ordering and sorting , with price in admin and Front
     - Searchable of products in admin and front store,
-    - Show related products in Front
-    - Show Featured Products
+    - Show Featured Products in Front
     - Disabled and Enabled products;
 
 ## Orders
