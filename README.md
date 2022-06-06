@@ -7,6 +7,9 @@
     - php artisan key:generate 
     - php artisan migrate:fresh --seed
 
+    - user : admin@gmail.com
+    - password : password
+
 
 
     
