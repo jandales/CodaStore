@@ -1,5 +1,4 @@
 
-
 import { errorReponse, errorRemove } from '../../../module/validator';
 
 const btncheckoutInfo = document.getElementById('btn-continue');

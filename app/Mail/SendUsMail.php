@@ -33,7 +33,7 @@ class SendUsMail extends Mailable
     public function build()
     {
         return $this->from($this->from_email)
-        ->markdown('emails.sendUsMail')
-        ->with(['content' => $this->content]);
+                    ->markdown('emails.sendUsMail')
+                    ->with(['content' => $this->content]);
     }
 }

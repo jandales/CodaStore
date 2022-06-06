@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Auth\User;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\ForgotPassword;
-use App\Mail\forgorPasswordMail;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
+use App\Services\App\PasswordServices;
+use App\Jobs\ProcessUserForgotPasswordMail;
+use App\Http\Requests\UserForgotPasswordRequest;
+
 
 class ForgotPasswordController extends Controller
 {
@@ -22,33 +25,11 @@ class ForgotPasswordController extends Controller
         return view('forgotpassword');
     }
 
-    public function request(UserForgotPasswordRequest $request)
+    public function request(UserForgotPasswordRequest $request, PasswordServices $services)
     {              
-     
-        $email = $request->email;
-        $token = $request->_token;
-
-        $expiry = date('Y-m-d H:i:s', strtotime("+1 day"));
-        
-        // check email if  registered
-        $register = User::where('email', $email)->first();
-
-        if($register == null) return back()->with('error',"Email not yet Register");
-
-        //// create request
-        ForgotPassword::create([
-            'email' => $email,
-            'token' => $token,
-            'created_at' =>  $expiry,
-        ]);       
-        
-
-        /// create url to reset password
-        $url = url("/reset_password/{$token}");  
-        //// mail the url into a user
-        Mail::to("to@example.com")->send(new forgorPasswordMail($url));
-
-        return back()->with('success','Please check your Email to reset your password');
+        $result = $services->request($request);  
+        return back()->with($request);
     }
 
+  
 }

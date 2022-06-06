@@ -120,20 +120,10 @@ class Order extends Model
         }      
     }
 
-    public function scopeCompletedCount($query)
+    public function scopeCountByStatus($query, $status)
     {
-        return $query->where('status', 'delivered')->count();
-    }
-
-    public function scopeReturnedCount($query)
-    {
-        return $query->where('status', 'returned')->count();
-    }
-
-    public function scopeCancelledCount($query)
-    {
-        return $query->where('status', 'cancelled')->count();
-    }
+        return $query->where('status', $status)->count();
+    } 
 
     public function isDelivered()
     {

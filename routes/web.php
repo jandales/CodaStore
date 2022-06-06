@@ -20,7 +20,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\CheckOutController;
 use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\PlaceOrderController;
 use App\Http\Controllers\SocialSiteController;
 use App\Http\Controllers\Admin\AdminController;
@@ -351,13 +351,13 @@ Route::group(['middleware' => 'guest:admin', 'prefix' => 'admin'], function(){
 
     Route::post('/login',[AdminLoginController::class, 'store'])->name('admin.login.store');
 
-    Route::get('/forget-password', [AdminResetPasswordController::class, 'index'])->name('admin-forget-password');
+    Route::get('/forget-password', [AdminResetPasswordController::class, 'index'])->name('admin.forget.password');
 
-    Route::post('/forget-password-request', [AdminResetPasswordController::class, 'request'])->name('admin-request-password');
+    Route::post('/forget-password-request', [AdminResetPasswordController::class, 'request'])->name('admin.request.password');
 
     Route::get('/reset_password/{token}', [AdminResetPasswordController::class, 'reset']);
 
-    Route::post('/reset_store', [AdminResetPasswordController::class, 'store'])->name('admin-reset-password');
+    Route::post('/reset_store', [AdminResetPasswordController::class, 'store'])->name('admin.reset.password');
 
   
 
@@ -398,6 +398,10 @@ Route::post('/upload/avatar',[UserController::class, 'avatar'])->name('upload.av
 
 
 Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){ 
+
+    Route::get('/dashboard',[DashboardController::class,'dashboard'])->name('admin.dashboard');
+
+
     Route::get('/products', [ProductController::class,  'index'])->name('admin.products');
     Route::get('/products/add',[ProductController::class, 'create'])->name('admin.products.create');
     Route::post('/products/store',[ProductController::class, 'store'])->name('admin.products.store');
@@ -446,7 +450,7 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){
     | Coupon Routes
     |--------------------------------------------------------------------------
     */
-    Route::get('/dashboard',[DashboardController::class,'dashboard'])->name('admin.dashboard');
+
     Route::get('/coupons', [CouponController::class, 'index'])->name('admin.coupons');
     route::get('/coupons/create', [CouponController::class, 'create'])->name('admin.coupon.create');
     Route::get('/coupons/edit/{coupon:id}', [CouponController::class, 'edit'])->name('admin.coupon.edit');

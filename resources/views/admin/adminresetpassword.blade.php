@@ -6,23 +6,23 @@
             <div class="panel">
                 <div class="panel-body">
                     <h4 class="panel-title">Reset Password</h4>
+                    
+                    @if (session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                    <br>
+                    @endif                 
+                    @if (session('error'))                     
+                        <div class="alert alert-danger">{{ session('error') }}</div>
+                        <br>
+                    @endif 
+
                     <p>Enter your new password</p>
 
-                    <form class="form"  method="post" action="{{ route('admin-reset-password') }}">
+                    <form class="form"  method="post" action="{{ route('admin.reset.password') }}">
                         
                         @csrf
 
-                        @if (session('success'))
-                            <p>{{ session('success') }}</p>
-                            <br>
-                        @endif 
-
-                    
-                        @if (session('error'))
-                            <p>{{ session('error') }}</p>
-                            <br>
-                        @endif 
-
+                      
                         @error('password')
                             <label>{{ $message }}</label>
                             <br>
@@ -30,7 +30,7 @@
 
                         @error('password_confirmation')
                             <label>{{ $message }}</label>
-                            <br>
+                                                        <br>
                         @enderror
                         
                         <div class="form-block">
@@ -48,7 +48,7 @@
                         <input type="submit" class="btn-w-12"  value="Submit"> 
                     </form>
 
-                    <a  href="{{ route('admin-login') }}" class="link">Login to dashbaord?</a>
+                    <a  href="{{ route('admin.login') }}" class="link">Login to dashbaord?</a>
                 </div>
             </div>
         </div>

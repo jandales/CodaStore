@@ -1,4 +1,4 @@
-@extends('layout.front.app1')
+@extends('layout.front.app')
 
 @section('content')
     
@@ -18,7 +18,7 @@
                         <form class="form" action="{{ route('password.store')}}" method="POST">
                            
                             @csrf  
-                            <input type="text" name="token" value="{{$token}}" hidden>                  
+                            <input type="hidden" name="token" value="{{$token}}" hidden>                  
         
                             <div class="form-block">
                                 <label>New Password</label>                     

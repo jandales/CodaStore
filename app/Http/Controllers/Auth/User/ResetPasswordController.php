@@ -2,54 +2,30 @@
 
 namespace App\Http\Controllers\Auth\User;
 
-use App\Models\User;
-use Illuminate\Http\Request;
-use App\Models\ForgotPassword;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
+use App\Services\App\PasswordServices;
 use App\Http\Requests\UserResetPasswordRequest;
 
 class ResetPasswordController extends Controller
 {
-    public function __construct(){
-        $this->middleware(['guest']);
+  
+    public function __construct()
+    {
+        $this->middleware(['guest']);       
     }
 
-    public function index($token){       
+    public function index($token)
+    {       
         return view('resetpassword')->with('token',$token);
     }
 
-    public function reset(UserResetPasswordRequest $request)
+    public function reset(UserResetPasswordRequest $request, PasswordServices $services)
     {         
-        $token = $request->token;  
-        $password = $request->password; 
-
-        $current_date = date('Y-m-d H:i:s');
+        $result = $services->reset($request);
         
-        // find if a request exist
-        $reset = ForgotPassword::where('token',$token)->first(); 
-        
-        if($reset == null) return redirect('/forgot-password');
-        
-        $email = $reset->email;
-
-         // check if a token already expire
-        $expiry_date = $reset->created_at; 
-
-        if($current_date >= $expiry_date)  return redirect('/forgot-password')->with('error', 'Request already expires');
-           
-              
-   
-        // change password
-        $user = User::where('email', $email)->first();
-        $user->password = Hash::make($password);
-        $user->save();
-
-        // delete the token
-        $deleted = DB::delete('delete from password_resets where email = ?', [$email]);
+        if(!$result[0]) 
+            return redirect()->route('password.forgot')->with($result[1]);
 
         return redirect()->route('users.login');
-
     }
 }

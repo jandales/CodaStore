@@ -56,7 +56,7 @@
                         
                         <input class="btn-w-12" type="submit"  value="Login">
 
-                        <a href="{{ route('admin-forget-password') }}" class="link">Forgot Password ?</a>
+                        <a href="{{ route('admin.forget.password') }}" class="link">Forgot Password ?</a>
 
                         <a href="/" class="link">Visit Store ?</a>
 

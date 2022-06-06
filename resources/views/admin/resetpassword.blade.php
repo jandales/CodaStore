@@ -6,18 +6,19 @@
             <div class="panel">
                 <div class="panel-body">
                     <h4 class="panel-title">Reset Password</h4>
+                    @if (session('error'))
+                    <div class="alert alert-danger">{{ session('error') }}</div>
+                    @endif
+
+                    @if (session('success'))
+                        <div class="alert alert-success">{{ session('success') }}</div>
+                    @endif
+
                     <p>Enter your Email address to Reset your password</p>
 
-                    <form class="form" method="post" action="{{ route('admin-request-password') }}">
+                    <form class="form" method="post" action="{{ route('admin.request.password') }}">
                         
-                        @if (session('error'))
-                            <div class="alert alert-danger">{{ session('error') }}</div>
-                        @endif
-
-                        @if (session('success'))
-                            <div class="alert alert-success">{{ session('success') }}</div>
-                       @endif
-
+                      
                        @error('email')
                              <div class="alert alert-error">{{ $message }}</div>
                        @enderror
@@ -32,7 +33,7 @@
                         <input type="submit" class="btn-w-12"  value="Submit"> 
                     </form>
 
-                    <a  href="{{ route('admin-login') }}" class="link">Login to dashbaord?</a>
+                    <a  href="{{ route('admin.login') }}" class="link">Login to dashbaord?</a>
                 </div>
             </div>
         </div>
