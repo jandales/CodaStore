@@ -9,29 +9,40 @@ use App\Services\CustomerServices;
 
 class UserController extends Controller
 {
+   private $services;
+
+   public function __construct(CustomerServices $services)
+   {
+      $this->services = $services;
+   }
+   
    public function index()
    {
-      $users = User::where('delete_at', 0)->paginate(10);
+      $users = $this->services->list();
       return view('admin.customers.index')->with('users', $users);
    }
 
    public function search(Request $request)
    {     
-      $users = User::Search($request->keyword)->paginate(10);
+      $this->services->search($request);
       return view('admin.customers.index')->with(['users' =>  $users, 'keyword' => $request->keyword]);
    }
 
    public function destroy(User $user)
    {         
-      $user->delete_at = 1;
-      $user->save();
+      $this->$services->destroy($user);  
       return back()->with('success', 'User successfully deleted');
    }
 
-   public function selectedDestroy(Request $request, CustomerServices $service)
+   public function selectedDestroy(Request $request)
    {   
-      $service->deleteSelectedItem($request->selected);
+      $this->services ->deleteSelectedItem($request->selected);
       return back()->with('success', 'User successfully deleted');
+   }
+
+   public function show(User $user)
+   {           
+      return view('admin.customers.show')->with('user', $user);
    }
 
    public function edit()
@@ -39,47 +50,37 @@ class UserController extends Controller
       return view('account.edit');
    }
 
-   public function account(){
-       
+   public function account()
+   {       
       return view('account.profile');
    }
 
-   public function password(){
+   public function password()
+   {
       return view('account.password');
    }
 
-   public function upload(){
+   public function upload()
+   {
       return view('account.upload');
    }
 
-   public function update(Request $request, CustomerServices $service)
+   public function update(Request $request)
    { 
-      $service->update($request); 
+      $this->services->update($request); 
       return redirect()->route('account')->with('status','Profile updated successfully');
-   }
+   }  
 
-   public function show(User $user)
-   {   
-      // $user = User::where('id',$id)->with('orders')->first();      
-      return view('admin.customers.show')->with('user', $user);
-   }
-
-   public function changePassword(UserRequest $request, CustomerServices $service)
+   public function changePassword(UserRequest $request)
    { 
-      $service->changePassword($request);   
+      $this->services->changePassword($request);   
       return back()->with('success','Password Successfully Changed');
-   }
-
-   public function requestResetPassword(Request $request)
-   {
-      $tokens = [$request->_token, session()->token()];  
    }
 
    public function avatar(Request $request, CustomerServices $service)
    {     
-     $result = $service->updateAvatar($request);
-     if(!$result) return back()->with(['error' => 'Please select image to upload']);
-     return  back()->with(['success' => 'Image Successfully upload']);
+      $result = $service->updateAvatar($request);
+      return  back()->with($result);
    }
    
 }

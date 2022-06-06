@@ -57,20 +57,26 @@
                 <p>Shipping Address</p>
             </div>
             <div class="sidebar-body">
-                <form id="form-shipping-address" method="post">
-                    @csrf          
-                    @method('PUT')    
-                    @foreach (shippingAddress() as $item)        
-                            <div class="address-item {{$item->status == 1 ? 'active' : ''}}">
-                                <input type="radio" name="selected"  class="shipping-address-input"  value="{{route('account.shippingaddress.update-status',[ $item->id ])}}" {{$item->status == 1 ? 'checked' : ''}}>
-                                <ul>
-                                    <li>{{ $item->fullName() }}</li>
-                                    <li>{{ $item->fullAddress() }}</li>
-                                </ul>
-                            </div>                 
-                    @endforeach
-               <button id="confirm-shipping-address" class="btn btn-success w-12" >CONFIRM</button>
-            </form>
+                @if (shippingAddress()->count() != 0)
+                    <form id="form-shipping-address" method="post">
+                        @csrf          
+                        @method('PUT')    
+                        @foreach (shippingAddress() as $item)        
+                                <div class="address-item {{$item->status == 1 ? 'active' : ''}}">
+                                    <input type="radio" name="selected"  class="shipping-address-input"  value="{{route('account.shippingaddress.update-status',[ $item->id ])}}" {{$item->status == 1 ? 'checked' : ''}}>
+                                    <ul>
+                                        <li>{{ $item->fullName() }}</li>
+                                        <li>{{ $item->fullAddress() }}</li>
+                                    </ul>
+                                </div>                 
+                        @endforeach
+                        <button id="confirm-shipping-address" class="btn btn-success w-12" >CONFIRM</button>
+                    </form> 
+                @else
+                        <label class="block text-center">No Address found</label>
+                @endif
+               
+                
             </div>
            
             <div class="sidebar-footer">
@@ -87,20 +93,25 @@
                 <p>Shipping Address</p>
             </div>
             <div class="sidebar-body">
-                <form id="form-payment-option" method="post">
-                    @csrf          
-                    @method('PUT')    
-                    @foreach (paymentOptions() as $item)        
-                            <div class="payment-option-item {{$item->status == 1 ? 'active' : ''}}">
-                                <input type="radio" name="selected"  class="payment-option-input"  value="{{route('account.payment-option.update.status',[ $item->id ])}}" {{$item->status == 1 ? 'checked' : ''}}>
-                                <ul>
-                                    <li>{{ $item->card_name }}</li>
-                                    <li>{{ $item->card_number }}</li>
-                                </ul>
-                            </div>                 
-                    @endforeach
-                    <button id="confirm-payment-option" class="btn btn-success w-12" >CONFIRM</button>
-                </form>
+                @if (paymentOptions()->count() != 0)
+                    <form id="form-payment-option" method="post">
+                        @csrf          
+                        @method('PUT')    
+                        @foreach (paymentOptions() as $item)        
+                                <div class="payment-option-item {{$item->status == 1 ? 'active' : ''}}">
+                                    <input type="radio" name="selected"  class="payment-option-input"  value="{{route('account.payment-option.update.status',[ $item->id ])}}" {{$item->status == 1 ? 'checked' : ''}}>
+                                    <ul>
+                                        <li>{{ $item->card_name }}</li>
+                                        <li>{{ $item->card_number }}</li>
+                                    </ul>
+                                </div>                 
+                        @endforeach
+                        <button id="confirm-payment-option" class="btn btn-success w-12" >CONFIRM</button>
+                    </form>
+                @else
+                    <label class="block text-center">No Address found</label>
+                @endif
+               
             </div>
            
             <div class="sidebar-footer">

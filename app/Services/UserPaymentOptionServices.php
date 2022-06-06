@@ -31,7 +31,7 @@ class UserPaymentOptionServices {
     public function updateStatus(UserPaymentOption $option)
     {         
        
-        if ($option->status == 1) return false;
+        if ($option->status == 1) return ['success' => 'Card Already set default payment method'];
          // update default option to false
        
         $default_option = auth()->user()->defaultPayment()->first();
@@ -41,7 +41,7 @@ class UserPaymentOptionServices {
         //set new default option
         self::optionStatus($option, 1);
 
-        return $option;
+        return ['success' => 'Card Successfully updated'];
     }
 
     public function optionStatus(UserPaymentOption $option, $status)

@@ -1,3 +1,4 @@
+
 @extends('layout.front.app')
 
 @section('content')
@@ -14,7 +15,7 @@
                         <div class="card-heading">
                             <h2>Change Password</h2>
                         </div>
-                        <div class="form w-3 sm-width-full mt-1">
+                        <div class="form w-6 sm-width-full mt-1">
                             
                              @if (session('success'))
                                 <div class="alert alert-success alert-bordered mt-1 mb-1">{{ session('success')}}</div>
@@ -53,12 +54,9 @@
                              
                                 
                                 <div class="flex sm-flex-column gap10">
-                                    <button id="submit" class="btn btn-dark">SAVE</button> 
-                                    <a href="{{ url()->previous() }}">
-                                        <button class="btn btn-danger sm-width-full">CANCEL</button>
-                                    </a>  
-                                </div>
-                            
+                                    <button id="submit" class="btn btn-dark full-width">SAVE</button>                                        
+                                     
+                                </div>                          
                                                        
                             </form> 
                         </div>

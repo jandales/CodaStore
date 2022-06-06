@@ -28,7 +28,7 @@ class CartController extends Controller
 
     public function index()
     {      
-        $result = $this->services->index();
+        $cart = $this->services->index();
         return view('cart')->with('cart',$cart);
     }
 

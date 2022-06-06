@@ -8,7 +8,14 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Traits\ImageUploadTrait;
 
 class CustomerServices {
+
     use ImageUploadTrait ;
+        
+    public function list()
+    {
+        return User::where('delete_at', 0)->paginate(10);
+    }
+    
     public function update($request)
     {
          $user = auth()->user();
@@ -17,6 +24,12 @@ class CustomerServices {
          $user->dateofbirth = $request->dateofbirth;
          $user->age = $request->age;
          $user->save();
+    }
+
+    public function destroy(User $user)
+    {         
+        $user->delete_at = 1;
+        $user->save();    
     }
 
     public function changePassword($request)
@@ -29,18 +42,25 @@ class CustomerServices {
 
     public function updateAvatar($request)
     {
-        $location = "/img/avatar/";   
+        $location = "/img/avatar/"; 
+
+        $default_image_path = '/img/avatar/default-avatar.jpg';
     
-        if(!$request->hasFile('avatar'))  return false; 
+        if (!$request->hasFile('avatar'))  return ['error' => 'Please select image to upload'];
 
         $user = auth()->user(); 
         $oldpath = $user->imagePath;
-  
+      
+   
         $path = $this->upload($request, $location, 'avatar');      
         $user->imagePath = $path;
         $user->save();
-        File::delete(public_path() .  $oldpath);
-        return true;
+        
+        if (!$default_image_path == $oldpath) {
+            File::delete(public_path() .  $oldpath);
+        }   
+       
+        return ['success' => 'Image Successfully upload'];
     }
 
     public function deleteSelectedItem($users)
@@ -51,6 +71,11 @@ class CustomerServices {
             $user->delete_at = 1;
             $user->save();   
         }   
+    }
+
+    public function search(Request $request)
+    {
+        return User::Search($request->keyword)->paginate(10);
     }
 
 

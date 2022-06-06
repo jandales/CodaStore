@@ -22,13 +22,13 @@ class ShopController extends Controller
 
     public function index()
     {  
-        $products = Product::paginate($this->perpage);
+        $products = $this->services->list();
         return view('shop')->with(['products' => $products, 'category' => 'All Collection']);
     }
 
     public function category(Category $category)
     {    
-        $products = Product::where('category_id', $category->id)->paginate($this->perpage);       
+        $products = $this->services->category($category);     
         return view('shop')->with(['products' => $products, 'category' => $category->name]);
     }
 

@@ -51,12 +51,9 @@ class UserPaymentOptionController extends Controller
     }
 
     public function updateStatus(UserPaymentOption $option)
-    {         
-        
-        if (!$this->services->updateStatus($option)) 
-            return back()->with('success', 'Card Already set default payment method');    
-
-        return back()->with('success', 'Card Successfully updated');
+    {  
+        $result = $this->services->updateStatus($option);
+        return back()->with($result);
     }
    
 }

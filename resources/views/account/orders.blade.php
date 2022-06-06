@@ -15,21 +15,25 @@
                             <li class="{{(request()->is('account/orders/all')) ? 'active' : ''}}">
                                 <a href="{{ route('account.orders',['all'])}}">All</a>
                             </li>                   
-                            <li class="{{(request()->is('account/orders/confirm')) ? 'active' : ''}}">
+                            <li class="{{(request()->is('account/orders/to-ship')) ? 'active' : ''}}">
                                 <a  href="{{ route('account.orders',['to-ship'])}}">To Ship</a>
                             </li>
-                            <li class="{{(request()->is('account/orders/shipped')) ? 'active' : ''}}">
+                            <li class="{{(request()->is('account/orders/to-recieve')) ? 'active' : ''}}">
                                 <a  href="{{ route('account.orders',['to-recieve'])}}">To Recieve</a>
                             </li>
-                            <li class="{{(request()->is('account/orders/delivered')) ? 'active' : ''}}" >
+                            <li class="{{(request()->is('account/orders/completed')) ? 'active' : ''}}" >
                                 <a href="{{ route('account.orders',['completed'])}}">Delivered</a>
                             </li>
                             <li class="{{(request()->is('account/orders/cancelled')) ? 'active' : ''}}">
                                 <a  href="{{ route('account.orders',['cancelled'])}}">Cancelled</a>
                             </li>
                         </ul> 
-
                         <div class="orders">
+                            @if($orders->count() == 0)
+                               <div class="block mt-2">
+                                   <h1 for="" class="block text-center">No Record Found</h1> 
+                               </div>
+                            @endif
                             @foreach ($orders as $order)
                                 <div class="order">
                                     <div class="order-header">

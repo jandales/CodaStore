@@ -14,7 +14,8 @@ class CouponFrontController extends Controller
 {
     private $services;
 
-    public function __construct(FrontCouponServices $services){
+    public function __construct(FrontCouponServices $services)
+    {
         $this->services = $services;
     }
 

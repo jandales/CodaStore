@@ -4,10 +4,23 @@ namespace App\Services;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Services\BaseServices;
 
 
-class ShopServices
+class ShopServices extends BaseServices
 {   
+    public function list()
+    {  
+        return Product::paginate($this->shop_perpage);
+       
+    }
+
+    public function category(Category $category)
+    {    
+        return Product::where('category_id', $category->id)->paginate($this->shop_perpage);       
+       
+    }
+
     public function sortBy($value)
     {
         $column = '';

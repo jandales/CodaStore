@@ -28,10 +28,10 @@ class DashboardController extends Controller
         $startData = '2022-02-11 11:50:52'; 
         $orders = Order::whereBetween('created_at', [$startData , Carbon::now()->endOfWeek()])->get();         
         return view('admin.index')->with([ 'orders' => $orders, 
-         'completed_count' =>  Order::CompletedCount(),
-         'returned_count' => Order::Returnedcount(),
-         'cancelled_count' =>  Order::CancelledCount(),
-         'customer_count' =>  User::get()->count(),
+            'completed_count' =>  Order::CompletedCount(),
+            'returned_count' => Order::Returnedcount(),
+            'cancelled_count' =>  Order::CancelledCount(),
+            'customer_count' =>  User::get()->count(),
         ]);
     }
 }

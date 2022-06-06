@@ -6379,11 +6379,8 @@ var expiredDate = new cleave_js__WEBPACK_IMPORTED_MODULE_0__["default"]('.expire
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _module_validator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../module/validator */ "./resources/js/module/validator.js");
-/* harmony import */ var _module_modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../module/modal */ "./resources/js/module/modal.js");
-
+/* harmony import */ var _module_validator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../module/validator */ "./resources/js/module/validator.js");
+/* harmony import */ var _module_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../module/modal */ "./resources/js/module/modal.js");
 
 var btncheckoutInfo = document.getElementById('btn-continue');
 
@@ -6402,7 +6399,7 @@ function submit(e) {
     processData: false,
     contentType: false,
     cache: false,
-    error: _module_validator__WEBPACK_IMPORTED_MODULE_1__.errorReponse,
+    error: _module_validator__WEBPACK_IMPORTED_MODULE_0__.errorReponse,
     success: redirectResponse
   });
 }
@@ -6477,7 +6474,7 @@ var shippingAddressList = document.querySelectorAll('.shipping-address-input');
 
 if (openModalShipping) {
   openModalShipping.onclick = function () {
-    (0,_module_modal__WEBPACK_IMPORTED_MODULE_2__.openSidebarModal)('shipping-address-modal');
+    (0,_module_modal__WEBPACK_IMPORTED_MODULE_1__.openSidebarModal)('shipping-address-modal');
   };
 }
 

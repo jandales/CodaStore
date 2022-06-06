@@ -2,44 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Models\Cart;
-use App\Models\Category;
-use App\Models\Product;     
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cookie;
+use App\Services\App\AppServices;
 
 class AppController extends Controller
 {
+    private $services;
+
+    public function __construct(AppServices $services)
+    {
+        $this->services = $services;
+    }
+
     public function index()
     {       
         return view('index');
     }
 
     public function setCartCookie()
-    {        
-      
-        if(Cookie::has('cart-id')) return;
-
-        $minutes = (60 * 24) * 7;  
-        $timestamp = Carbon::now()->timestamp;  
-        $value = $timestamp;        
-        $response = new Response('Hello World');
-        $response->withCookie(cookie('cart-id', $value, $minutes));    
-
-        Cart::create([    
-            'cart_id' => $value,
-            'expired_at' =>  Carbon::parse($timestamp)->addDays(5),
-        ]); 
-
-        return $response;
+    {   
+        return $this->services->setCartCookie();
     }
 
     
     public function search(Request $request)
     {        
-        $products = Product::PublishedSearch($request->keyword)->paginate(16);
+        $products = $this->services->search($request);
         return view('search')->with(['products' => $products, 'keyword' => $request->keyword]);
     }
 
