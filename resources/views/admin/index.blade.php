@@ -102,7 +102,7 @@
                             <a class="link link-primary" href="{{ route('admin.orders.show',[$order->encryptedId()])}}">
                                 <div class="flex items-center gap10">
                                     <div class="avatar-sm">
-                                        <img src="{{ $order->user->avatar() }}" alt="" srcset="">
+                                        <img src="{{ $order->user->imagePath }}" alt="" srcset="">
                                     </div>
                                     <span>{{ $order->user->name }}</span>
                                  </div>
