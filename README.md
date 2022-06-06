@@ -14,10 +14,12 @@
         npm i --save @fortawesome/fontawesome-free              
         npm i --save @fortawesome/fontawesome-free-regular  
         npm i --save @fortawesome/fontawesome-free-solid
-        npm i --save @fortawesome/fontawesome-free-brands
+        npm i --save @fortawesome/fontawesome-free-brands   
         
     - user : admin@gmail.com
-    - password : password
+    - password : password   
+    
+    - run php artisan queue:work 
 
 
 
