@@ -38,12 +38,11 @@
               
             </div> 
             <div class="toolbar justify-content-space-between  default-toolbar"> 
-                    <form id="formSearch" action="{{ route('admin.users.search') }}" method="post">
-                        @csrf
+                    <form id="formSearch" action="{{ route('admin.shipping.method.search') }}" method="get">                   
                         <div class="search-input"> 
-                            <span class="icon-left"></span>                           
-                            <input type="text" placeholder="Search" name="search">
-                            <span class="icon-right" onclick="document.getElementById('formSearch').submit()"><i class="fas fa-search"></i></span>
+                            <span class="icon-left" onclick="document.getElementById('formSearch').submit()"><i class="fas fa-search"></i></span>                           
+                            <input type="text" placeholder="Search" name="keyword" value="{{ $keyword ?? '' }}">
+                            <a href="{{ route('admin.shipping.method') }}"><span class="icon-right" {{$keyword ?? 'hidden'}}><i class="fa fa-times"></i></span></a>
                         </div>                     
                     </form>
                    
@@ -68,7 +67,11 @@
                         </tr>
                     </thead>
                     <tbody id="tbody">
-                      
+                            @if($shipping_methods->count() == 0)
+                            <tr>
+                                <td colspan="6"><h3 class="block text-center">No Record Found</h3></td>
+                            </tr>
+                            @endif
                             @foreach ($shipping_methods as $method)
                                 <tr>
                                     <td class="column-1">
@@ -99,25 +102,25 @@
                                                             @method('put')
                                                             <button href="#" class="span">
                                                                 <span>
-                                                                    <i class="fas fa-upload"></i>  
+                                                                    <i class="fa-solid fa-toggle-off"></i>
                                                                 </span>                                                                           
                                                             </button>
                                                         </form>
                                                     
                                                     </li>     
                                                 @else
-                                                <li>
-                                                    <form  action="{{route('admin.shipping.method.update.status', [$method->encryptedId(), 0])}}" method="post">
-                                                        @csrf
-                                                        @method('put')
-                                                        <button href="#" class="span">
-                                                            <span>
-                                                                <i class="fas fa-download"></i>  
-                                                            </span>                                                                           
-                                                        </button>
-                                                    </form>
-                                                
-                                                </li>   
+                                                    <li>
+                                                        <form  action="{{route('admin.shipping.method.update.status', [$method->encryptedId(), 0])}}" method="post">
+                                                            @csrf
+                                                            @method('put')
+                                                            <button href="#" class="span">
+                                                                <span>
+                                                                    <i class="fa-solid fa-toggle-on"></i>
+                                                                </span>                                                                           
+                                                            </button>
+                                                        </form>
+                                                    
+                                                    </li>   
                                                 @endif
                                                                                           
                                                 <li>

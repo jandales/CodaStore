@@ -217,7 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-
+require('../admin/profile');
 require('../admin/users');
 require('../admin/categories');
 require('../admin/customers');

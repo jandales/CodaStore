@@ -2949,6 +2949,8 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+__webpack_require__(/*! ../admin/profile */ "./resources/js/admin/profile.js");
+
 __webpack_require__(/*! ../admin/users */ "./resources/js/admin/users.js");
 
 __webpack_require__(/*! ../admin/categories */ "./resources/js/admin/categories.js");
@@ -3324,12 +3326,14 @@ function variantInput() {
   });
 }
 
-var inputVariants = optionsWrapper.querySelectorAll('.inputVariant');
-inputVariants.forEach(function (input) {
-  input.addEventListener('keypress', function (event) {
-    addVariantEvent(event);
+if (optionsWrapper) {
+  var inputVariants = optionsWrapper.querySelectorAll('.inputVariant');
+  inputVariants.forEach(function (input) {
+    input.addEventListener('keypress', function (event) {
+      addVariantEvent(event);
+    });
   });
-});
+}
 
 function removeOption(e) {
   var elem = e.target;
@@ -3508,6 +3512,98 @@ if (btnupdate) {
   btnupdate.onclick = function (e) {
     updateProduct(e);
   };
+}
+
+/***/ }),
+
+/***/ "./resources/js/admin/profile.js":
+/*!***************************************!*\
+  !*** ./resources/js/admin/profile.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _module_modal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../module/modal */ "./resources/js/module/modal.js");
+/* harmony import */ var _module_message__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../module/message */ "./resources/js/module/message.js");
+
+
+var errors = [];
+
+function loadImage(e) {
+  var image = document.getElementById('avater-image');
+  image.src = e.target.result;
+}
+
+function readURL(input) {
+  var imageContainer = document.getElementById('avater-image');
+
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+      imageContainer.setAttribute('src', e.target.result);
+    };
+
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+var profileImageFileChange = document.getElementById('file-upload');
+
+if (profileImageFileChange) {
+  profileImageFileChange.addEventListener('change', function (e) {
+    readURL(this);
+  });
+}
+
+var changePassword = document.getElementById('change-password');
+
+if (changePassword) {
+  changePassword.addEventListener('click', function (e) {
+    e.preventDefault();
+    (0,_module_modal__WEBPACK_IMPORTED_MODULE_0__.openModal)('modal-change-password');
+  });
+}
+
+function updatePassword(e) {
+  e.preventDefault();
+  var form = document.getElementById('form-update-password');
+  var url = form.getAttribute('action');
+  var formData = new FormData(form);
+  $.ajax({
+    url: url,
+    type: 'POST',
+    data: formData,
+    cache: false,
+    contentType: false,
+    processData: false,
+    success: function success(res) {
+      (0,_module_message__WEBPACK_IMPORTED_MODULE_1__.successMessage)(res.message);
+    },
+    error: function error(XMLHttpRequest) {
+      var resErrors = XMLHttpRequest.responseJSON.errors;
+
+      if (XMLHttpRequest.status === 422) {
+        var _errors = [];
+
+        for (var key in resErrors) {
+          _errors.push({
+            name: key,
+            message: resErrors[key]
+          });
+        }
+
+        (0,_module_message__WEBPACK_IMPORTED_MODULE_1__.errorMessage)(_errors);
+      }
+    }
+  });
+}
+
+var btnUpdatePassword = document.getElementById('update-password');
+
+if (btnUpdatePassword) {
+  btnUpdatePassword.addEventListener('click', updatePassword);
 }
 
 /***/ }),

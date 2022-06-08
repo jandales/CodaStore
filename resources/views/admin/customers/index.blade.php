@@ -67,7 +67,7 @@
                         <td>
                             <div class="flex items-center gap10">
                                 <div class="avatar-sm">
-                                    <img src="{{ $user->avatar() }}" alt="" srcset="">
+                                    <img src="{{ $user->imagePath }}" alt="" srcset="">
                                 </div>
                                <a href="{{ route('admin.customers.show',[$user->encryptedId()]) }}"><span>{{ $user->name }}</span></a>
                                 </div>

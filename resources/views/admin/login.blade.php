@@ -47,18 +47,22 @@
                            
                         </div>
 
-                        <div class="checkbox">
+                        {{-- <div class="checkbox">
                             <input type="checkbox" name="remember" id="">
                             <label>Remember me<label>
+                        </div> --}}
+                        <div class="flex">
+                            <a href="{{ route('admin.forget.password') }}" class="link ml-auto">Forgot Password ?</a>
                         </div>
+                    
 
                         <br>
                         
                         <input class="btn-w-12" type="submit"  value="Login">
 
-                        <a href="{{ route('admin.forget.password') }}" class="link">Forgot Password ?</a>
+                      
 
-                        <a href="/" class="link">Visit Store ?</a>
+                        <a href="/" class="link block m-t-1">Visit Store ?</a>
 
 
                     </form>

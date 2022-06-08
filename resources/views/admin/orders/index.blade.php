@@ -30,8 +30,8 @@
         <div class="toolbar default-toolbar space-between">
                 <ul class="order-navigation">
                     <li class="{{ (request()->is('admin/orders')) ? 'selected' : '' }}"><a href="{{ route('admin.orders')}}">All</a></li>
-                    <li class="{{ (request()->is('admin/orders/to-ship')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['to-ship'])}}">To Ship</a></li>              
-                    <li class="{{ (request()->is('admin/orders/to-receive')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['to-receive'])}}">To Recieve</a></li>
+                    <li class="{{ (request()->is('admin/orders/confirmed')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['confirmed'])}}">To Ship</a></li>              
+                    <li class="{{ (request()->is('admin/orders/shipped')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['shipped'])}}">To Recieve</a></li>
                     <li class="{{ (request()->is('admin/orders/completed')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['completed'])}}">Completed</a></li>
                     <li class="{{ (request()->is('admin/orders/cancelled')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['cancelled'])}}">Cancelled</a></li>
                 </ul> 
@@ -76,7 +76,7 @@
                                 <a href="{{ route('admin.orders.show',[$order->encryptedId()])}}">
                                     <div class="flex items-center gap10">
                                         <div class="avatar-sm">
-                                            <img src="{{ $order->user->avatar() }}" alt="" srcset="">
+                                            <img src="{{ $order->user->imagePath }}" alt="" srcset="">
                                         </div>
                                         <span class="link-primary">{{ $order->user->name }}</span>
                                      </div>

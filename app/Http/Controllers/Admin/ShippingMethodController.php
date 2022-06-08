@@ -20,7 +20,7 @@ class ShippingMethodController extends Controller
     public function index()
     {
         $shipping_methods = ShippingMethod::all();
-        return view('admin.setting.shipping.index')->with('shipping_methods', $shipping_methods);
+        return view('admin.setting.shipping.index')->with(['shipping_methods' =>  $shipping_methods, 'keyword' => null]);
     }
 
     public function create()
@@ -50,6 +50,12 @@ class ShippingMethodController extends Controller
     {        
         $method->delete();
         return redirect()->route('admin.shipping.method');  
+    }
+
+    public function search(Request $request)
+    {
+        $shipping_methods = $this->services->search($request->keyword);
+        return view('admin.setting.shipping.index')->with(['shipping_methods' => $shipping_methods, 'keyword' => $request->keyword]);
     }
 
     public function selected_destroy(Request $request)

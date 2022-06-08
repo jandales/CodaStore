@@ -57,5 +57,13 @@ class ShippingMethodServices
         
     }
 
+    public function search($keyword)
+    {
+        return  ShippingMethod::query()->where('name', 'like', '%'  . $keyword .  '%')
+                                       ->orWhere('amount', 'like', '%'  . $keyword .  '%')
+                                       ->orWhere('description', 'like', '%'  . $keyword .  '%')
+                                       ->get();
+    }
+
     
 }

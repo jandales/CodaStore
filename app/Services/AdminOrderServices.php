@@ -31,13 +31,39 @@ class AdminOrderServices
         return $orders;
     }
 
+
     public function updateStatus(Order $order)
     {
-        $order->status = $this->TORECIEVE;  
-        $order->shipped_at = now();    
+        $status = request()->status;
+       
+        if ($status == 'shipped')
+        {
+            $order->shipped_at = now(); 
+        }           
+        
+        if($status == 'completed')
+        {
+            $order->delivered_at = now();
+        }
+
+        if ($status == 'completed') 
+        {
+            $order->cancelled_at = now();
+        }
+        
+        // if ($status == 'returned')            
+        // {
+        //     $order->returned_at = now();
+        // }
+
+        $order->status = $status;         
         $order->save();
+
         return $order;
     }
+
+    
+    
     
     public function deliver()
     {

@@ -1168,9 +1168,7 @@ button:disabled {
 
 .admin-login-form .panel-body .link {
   color: #3498DB;
-  display: block;
   text-align: center;
-  margin-top: 20px;
 }
 
 .admin-login-form .panel-body .link:hover {
@@ -1186,6 +1184,14 @@ button:disabled {
 
 .btn-w-12 {
   width: 100% !important;
+}
+
+.block {
+  display: block;
+}
+
+.ml-auto {
+  margin-left: auto;
 }
 
 .m-10 {
@@ -3269,6 +3275,10 @@ td span.inactive {
 .text-center {
   display: block;
   text-align: center;
+}
+
+.fa-toggle-on {
+  color: var(--bs-success);
 }
 
 /*!

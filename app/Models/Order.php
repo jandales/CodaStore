@@ -32,8 +32,8 @@ class Order extends Model
     ];
 
     private $COMPLETED = 'completed';
-    private $TOSHIP = 'to-ship';
-    private $TORECIEVE = 'to-receive';
+    private $TOSHIP = 'confirmed';
+    private $TORECIEVE = 'shipped';
     private $CANCELLED = 'cancelled';
 
     public function user()

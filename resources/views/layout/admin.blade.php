@@ -33,7 +33,7 @@
                             <li>
                                 <div class="navbar-user">
                                     <div class="user-image">
-                                        <img src="/img/user.png" alt="">
+                                        <img src="{{auth()->guard('admin')->user()->imagePath}}" alt="">
                                     </div>
                                 </div>
 

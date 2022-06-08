@@ -6,14 +6,7 @@
 <div class="page-title">
     <h1>Shipping Methods</h1>
 </div>
-
-
-
-
-
-    <div class="setting-content  m-t-2">
-    
-        
+    <div class="setting-content  m-t-2">  
         <div class="panel">
             <div class="panel-heading">           
                 <label class="panel-title">Create Shipping Method</label>          
@@ -57,15 +50,11 @@
                 </div>
 
                 <div class="flex justify-content-end gap10">
-                    <button id="btnsave" type="create" class="btn btn-primary">Save</button>                  
-                </div>
-                
+                    <button class="btn btn-primary">Save</button>                  
+                </div>                
             </form>
             </div>
         </div>
-
- 
-
     </div>
 
 

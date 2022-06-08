@@ -9,7 +9,7 @@ use App\Http\Traits\ImageUploadTrait;
 class UsersServices
 {
     use ImageUploadTrait;
-    
+    private $location = '/img/avatar/admin/';
     public function users()
     {
         return Admin::all()->except(auth()->guard('admin')->user()->id);
@@ -25,13 +25,12 @@ class UsersServices
     {
         $path = null;   
 
-        if(isset($request->image)) $path = $this->upload($request);
+        if(isset($request->image)) $path = $this->upload($request, $this->location);
 
         if($request->isSetNewPassword) $admin->password = Hash::make($request->password);   
 
         $admin->firstname = $request->firstname;
-        $admin->lastname = $request->lastname;       
-        $admin->role = $request->role;
+        $admin->lastname = $request->lastname; 
         $admin->imagePath  = $path ?? $admin->imagePath;
         $admin->contact_number = $request->contact_number;
         $admin->street = $request->street;

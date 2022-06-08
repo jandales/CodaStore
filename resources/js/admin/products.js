@@ -311,12 +311,14 @@ function variantInput(){
     })
 }
 
-const inputVariants =  optionsWrapper.querySelectorAll('.inputVariant')      
-inputVariants.forEach(input => {
-    input.addEventListener('keypress', function(event){   
-        addVariantEvent(event)
-    });
-})
+if (optionsWrapper) {
+    const inputVariants =  optionsWrapper.querySelectorAll('.inputVariant')      
+    inputVariants.forEach(input => {
+        input.addEventListener('keypress', function(event){   
+            addVariantEvent(event)
+        });
+    })
+}
 
 
 

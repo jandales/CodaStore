@@ -22,20 +22,20 @@
                         <div class="flex gap50 m-t-2">
                             <div>                             
                                 <div class="circle centered bor-success">
-                                    {{ $user->completed() }}
+                                    {{ $user->orderStatus('completed') }}
                                 </div>
                                 <label class="txt-center mt10">Completed</label>
                             </div>
                             <div>
                                 <div class="circle centered bor-warning">
-                                    {{ $user->returned() }}
+                                    {{ $user->orderStatus('returned')}}
                                 </div>
                                 <label class="txt-center mt10">Return</label>
                             </div>
                            
                             <div>
                                 <div class="circle centered bor-danger">
-                                    {{ $user->cancelled() }}
+                                    {{ $user->orderStatus('cancelled') }}
                                 </div>
                                 <label class="txt-center mt10">Cancelled</label>
                             </div>
@@ -87,7 +87,7 @@
                 <tbody>
                     @foreach ($user->orders as $order)
                     <tr>                      
-                        <td class="pad-left-20">{{ $order->ordernumber() }}</td>                     
+                        <td class="pad-left-20">{{ $order->order_number }}</td>                     
                         <td>{{ $order->totalItems() }}</td>
                         <td>@money($order->total())</td>                  
                         <td><p class="status capitalized">{{ $order->status }}</p></td>
@@ -95,7 +95,7 @@
                             <div class="table-action">
                                 <ul>  
                                     <li>                          
-                                        <a href="{{ route('admin.orders.show',[$order])}}">
+                                        <a href="{{ route('admin.orders.show',[$order->encryptedId()])}}">
                                             <span class="span">
                                                 <i class="fas fa-eye"></i>  
                                             </span>                                                                           

@@ -54,7 +54,7 @@
                 </div>
 
                 <div class="flex justify-content-end gap10">
-                    <button id="btnsave" type="create" class="btn btn-primary">Save Changes</button>                  
+                    <button class="btn btn-primary">Save Changes</button>                  
                 </div>
                 
             </form>

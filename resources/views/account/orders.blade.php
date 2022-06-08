@@ -15,11 +15,11 @@
                             <li class="{{(request()->is('account/orders/all')) ? 'active' : ''}}">
                                 <a href="{{ route('account.orders',['all'])}}">All</a>
                             </li>                   
-                            <li class="{{(request()->is('account/orders/to-ship')) ? 'active' : ''}}">
-                                <a  href="{{ route('account.orders',['to-ship'])}}">To Ship</a>
+                            <li class="{{(request()->is('account/orders/confirmed')) ? 'active' : ''}}">
+                                <a  href="{{ route('account.orders',['confirmed'])}}">To Ship</a>
                             </li>
-                            <li class="{{(request()->is('account/orders/to-recieve')) ? 'active' : ''}}">
-                                <a  href="{{ route('account.orders',['to-recieve'])}}">To Recieve</a>
+                            <li class="{{(request()->is('account/orders/shipped')) ? 'active' : ''}}">
+                                <a  href="{{ route('account.orders',['shipped'])}}">To Recieve</a>
                             </li>
                             <li class="{{(request()->is('account/orders/completed')) ? 'active' : ''}}" >
                                 <a href="{{ route('account.orders',['completed'])}}">Delivered</a>

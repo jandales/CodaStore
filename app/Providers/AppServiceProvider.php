@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
         if(Schema::hasTable('categories')) {
             View::share('categories', Category::All());
         }       
-        if(Schema::hasTable('categories')){
+        if(Schema::hasTable('attributes')){
             View::share('attributes', Attribute::All());
         }          
         Blade::directive('money', function ($amount) {

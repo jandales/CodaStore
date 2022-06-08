@@ -140,15 +140,36 @@
                 </div>             
             </div>
                 <div class="panel-body">
-                   <div class="flex flex-end mt-2">
-                       @if(!$order->isDelivered() && !$order->isToRecieved())                       
+                   {{-- <div class="flex flex-end mt-2"> --}}
+                       {{-- @if(!$order->isDelivered() && !$order->isToRecieved())                       
                             <form action="{{ route('admin.orders.shipped',[ $order->encryptedId() ])}}" method="post">
                                 @csrf
                                 @method('put')
                                 <button class="btn btn-primary">Ship</button>
                             </form>
-                       @endif                                              
-                   </div>                   
+                       @endif   --}}
+                       <h4>Update Order Status</h4>
+                       <form class="w-12 mt-1" action="{{route('admin.orders.shipped1', [ $order->encryptedId() ])}}" method="post">
+                         @csrf
+                         @method('put')
+                            <div class="form-inline  gap10">
+                                <select name="status">
+                                    @if($order->status == 'confirmed')
+                                        <option value="shipped" {{ $order->status == 'shipped' ? 'selected' : ''}}>Ship</option>
+                                    @endif
+                                    @if($order->status == 'completed')
+                                        <option value="completed" {{ $order->status == 'completed' ? 'selected' : ''}} >Delivered</option>  
+                                    @endif  
+                                    @if($order->status == 'confirmed')  
+                                        <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : ''}}>Cancel</option>
+                                    @endif                              
+                                   
+                                    {{-- <option value="returned">Return</option> --}}
+                                </select>
+                                <button class="btn btn-primary">Update</button>
+                        </div>  
+                       </form>                                          
+                   {{-- </div>                    --}}
                 </div>
         </div>
       

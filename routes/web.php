@@ -423,6 +423,7 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){
     Route::get('/orders',[AdminOrderController::Class, 'index'])->name('admin.orders');
     Route::get('/orders/{order:id}/show',[AdminOrderController::Class, 'show'])->name('admin.orders.show');
     Route::put('/orders/ship/{order:id}',[AdminOrderController::Class, 'toShip'])->name('admin.orders.shipped');
+    Route::put('/orders/update-status/{order:id}',[AdminOrderController::Class, 'updateStatus'])->name('admin.orders.shipped1');
     Route::put('/orders/deliver',[AdminOrderController::Class, 'deliver'])->name('admin.orders.deliver');
     Route::get('/orders/search',[AdminOrderController::Class, 'search'])->name('admin.orders.search');
     Route::get('/orders/{status}',[AdminOrderController::Class, 'listbyStatus'])->name('admin.orders.list');
@@ -514,6 +515,8 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){
     Route::get('/setting/shipping-method/index',[ShippingMethodController::class, 'index'])->name('admin.shipping.method');
     Route::get('/setting/shipping-method/create',[ShippingMethodController::class, 'create'])->name('admin.shipping.method.create');
     Route::post('/setting/shipping-method/store',[ShippingMethodController::class, 'store'])->name('admin.shipping.method.store');
+    Route::get('/setting/shipping-method/search',[ShippingMethodController::class, 'search'])->name('admin.shipping.method.search');
+
     Route::get('/setting/shipping-method/{method:id}/edit',[ShippingMethodController::class, 'edit'])->name('admin.shipping.method.edit');
     Route::put('/setting/shipping-method/{method:id}/update',[ShippingMethodController::class, 'update'])->name('admin.shipping.method.update');
     Route::delete('/setting/shipping-method/{method:id}/destroy',[ShippingMethodController::class, 'destroy'])->name('admin.shipping.method.destroy');

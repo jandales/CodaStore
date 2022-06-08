@@ -2,7 +2,7 @@
 
 @section('content') 
     <div class="container homepage">
-        <div class="row">
+        <div class="row space-between">
             <div class="col-1">
                 <p>Men Collection 2021</p>
                 <h1>New Arrivals</h1>

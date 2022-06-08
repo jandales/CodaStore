@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCouponRestrictionProductTable extends Migration
+class CreateCouponRestrictionProductsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateCouponRestrictionProductTable extends Migration
      */
     public function up()
     {
-        Schema::create('coupon_restriction_product', function (Blueprint $table) {
+        Schema::create('coupon_restriction_products', function (Blueprint $table) {
             $table->id();
             $table->integer('coupon_id')->unsigned();
             $table->integer('product_id')->unsigned();
@@ -29,6 +29,6 @@ class CreateCouponRestrictionProductTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('coupon_restriction_product');
+        Schema::dropIfExists('coupon_restriction_products');
     }
 }

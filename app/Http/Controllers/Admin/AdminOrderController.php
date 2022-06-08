@@ -33,12 +33,12 @@ class AdminOrderController extends Controller
     public function show(Order $order)
     {    
         return view('admin.orders.show')->with('order' , $order);
-    }
+    } 
 
-    public function toShip(Order $order)
-    {       
+    public function updateStatus(Order $order)
+    {
         $this->services->updateStatus($order);
-        return redirect()->route("admin.orders.show",[$order->encryptedId()]);
+        return back()->with('success','Order status successfully updated');
     }
 
     public function search(Request $request)
