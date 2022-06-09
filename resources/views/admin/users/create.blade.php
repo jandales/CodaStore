@@ -59,7 +59,7 @@
                     <div class="form-block">
                         <label for="name">Role</label>
                         <select  class="capitalized" name="role" > 
-                            <option value="0" {{ old('role')  == 0 ? 'selected' : '' }}>Employee</option>  
+                            <option value="2" {{ old('role')  == 0 ? 'selected' : '' }}>Employee</option>  
                             <option value="1" {{ old('role') == 1 ? 'selected' : '' }}>Adminstrator</option>                                                                              
                         </select>                  
                     </div>

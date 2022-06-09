@@ -48,8 +48,6 @@ class Admin extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-
-
     public function fullName()
     {
         $fullname =  $this->firstname . " " . $this->lastname;        
@@ -60,9 +58,14 @@ class Admin extends Authenticatable
         return $this->role == 1 ? 'Administrator' : 'Employee';
     }
 
+    public function is_admin()
+    {
+        return $this->role == 1 ? true : false;
+    }
+
     public function avatar()
     {
-        return $this->imagePath ?? 'img/avatar.png';
+        return $this->imagePath ?? '/img/avatar/admin/default-avatar.jpg';
     }
     public function scopeSearch($query, $input)
     {

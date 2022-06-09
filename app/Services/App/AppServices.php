@@ -3,6 +3,7 @@
 namespace App\Services\App;
 
 use Carbon\Carbon;
+use App\Models\Cart;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;

@@ -18,6 +18,7 @@ class UsersServices
     public function store(Request $request)
     {
         $validated = $request->validated();  
+        $validated['password'] = Hash::make($validated['password']);
         return Admin::create($validated);
     }
 

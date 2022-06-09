@@ -13,10 +13,16 @@
     <div class="panel-table m-t-2 w-12">
         <div class="panel-header">             
             @if(session('success'))
-                <br><div class="alert alert-success">{{ session('success') }}</div>    
+                <br><div class="alert alert-success">
+                  <label for="">  {{ session('success') }}</label>
+                  <span class="remove-alert"><i class="fa fa-times"></i></span>
+                </div>    
             @endif
             @if(session('error'))
-                <br><div class="alert alert-success">{{ session('error') }}</div>
+                <br><div class="alert alert-success">             
+                    <label for="">  {{ session('error') }}</label>
+                    <span class="remove-alert"><i class="fa fa-times"></i></span>
+                </div>
             @endif 
         </div>
  
@@ -62,6 +68,9 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <form id="form"  method="post">
+                        @csrf   
+                        <input name="_method" type="hidden" value="post"> 
                     @if ( $orders->count() == 0 )
                         <tr> <td colspan="7" ><label class="text-center">No found Record</label></td> </tr>
                     @endif 
@@ -97,20 +106,22 @@
                                                 </span>                                                                           
                                             </a>
                                         </li>  
-                                            <li>
+                                        @can('delete', $order)
+                                            <li>                                              
                                                 <a href="#" id="delete">
-                                                    <span link ="#" class="span delete">
+                                                    <span data-url = "{{ route('admin.orders.destroy',[$order->encryptedId()])}}"  class="span delete">
                                                         <i class="fas fa-trash"></i>  
                                                     </span>                                                                           
                                                 </a>
                                             </li>
+                                        @endcan
                                     </ul>
                                 </div>
                             </td>
 
                         </tr>
                     @endforeach  
-                  
+                    </form>
                 </tbody>
             </table>
          

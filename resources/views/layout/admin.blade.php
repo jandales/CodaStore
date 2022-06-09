@@ -33,7 +33,7 @@
                             <li>
                                 <div class="navbar-user">
                                     <div class="user-image">
-                                        <img src="{{auth()->guard('admin')->user()->imagePath}}" alt="">
+                                        <img src="{{auth()->guard('admin')->user()->avatar()}}" alt="">
                                     </div>
                                 </div>
 
@@ -81,20 +81,23 @@
                         <li><a class="{{ (request()->is('admin/coupons*')) ? 'active' : '' }}" nav-item href="{{ route('admin.coupons') }}"><i class="fas fa-money-check-alt"></i><span class="hide-menu">Coupons</span></a></li>
                         <li><a class="{{ (request()->is('admin/reviews*')) ? 'active' : '' }}" nav-item href="/admin/reviews"><i class="far fa-comments"></i><span class="hide-menu">Reviews</span></a></li>
                         <li><a class="{{ (request()->is('admin/customers*')) ? 'active' : '' }}" nav-item href="{{route('admin.customers')}}"><i class="fas fa-users"></i><span class="hide-menu">Customers</span></a></li>
-                        <li><a class="{{ (request()->is('admin/users*')) ? 'active' : '' }}" nav-item href="{{ route('admin.users') }}"><i class="fas fa-users"></i><span class="hide-menu">Users</span></a></li>
-                        <li  class="nav-dropdown {{ (request()->is('admin/setting*')) ? 'active' : '' }} " >
-                            <div class="nav-dropdown-btn">
-                                <a><i class="fa-solid fa-gear"></i><span class="hide-menu">Settings</span></a>
-                                <i class="fas fa-angle-down arrow"></i>
-                            </div>
-                            <ul class="sub-menu {{ (request()->is('admin/setting*')) ? 'show' : '' }} ">
-                                <li class="{{ (request()->is('admin/setting/general')) ? 'active' : ''}}"><a href="{{ route('admin.setting.general')}}">General</a></li>
-                                <li class="{{ (request()->is('admin/setting/campany')) ? 'active' : ''}}"><a href="{{route('admin.setting.campany')}}">Campany</a></li>
-                                <li class="{{ (request()->is('admin/setting/shipping-method*')) ? 'active' : ''}}"><a href="{{ route('admin.shipping.method') }}">Shipping</a></li>
-                                {{-- <li class="{{ (request()->is('admin/setting/emailer')) ? 'active' : ''}}"><a href="{{route('admin.setting.emailer')}}">Email</a></li>   --}}
-                                <li class="{{ (request()->is('admin/setting/social')) ? 'active' : ''}}"><a href="{{route('admin.setting.social')}}">Social</a></li>                                                                 
-                            </ul>
-                        </li>
+                        @if(auth()->guard('admin')->user()->is_admin())
+                             <li><a class="{{ (request()->is('admin/users*')) ? 'active' : '' }}" nav-item href="{{ route('admin.users') }}"><i class="fas fa-users"></i><span class="hide-menu">Users</span></a></li>
+                             <li  class="nav-dropdown {{ (request()->is('admin/setting*')) ? 'active' : '' }} " >
+                                <div class="nav-dropdown-btn">
+                                    <a><i class="fa-solid fa-gear"></i><span class="hide-menu">Settings</span></a>
+                                    <i class="fas fa-angle-down arrow"></i>
+                                </div>
+                                <ul class="sub-menu {{ (request()->is('admin/setting*')) ? 'show' : '' }} ">
+                                    <li class="{{ (request()->is('admin/setting/general')) ? 'active' : ''}}"><a href="{{ route('admin.setting.general')}}">General</a></li>
+                                    <li class="{{ (request()->is('admin/setting/campany')) ? 'active' : ''}}"><a href="{{route('admin.setting.campany')}}">Campany</a></li>
+                                    <li class="{{ (request()->is('admin/setting/shipping-method*')) ? 'active' : ''}}"><a href="{{ route('admin.shipping.method') }}">Shipping</a></li>
+                                    {{-- <li class="{{ (request()->is('admin/setting/emailer')) ? 'active' : ''}}"><a href="{{route('admin.setting.emailer')}}">Email</a></li>   --}}
+                                    <li class="{{ (request()->is('admin/setting/social')) ? 'active' : ''}}"><a href="{{route('admin.setting.social')}}">Social</a></li>                                                                 
+                                </ul>
+                            </li>
+                        @endif
+                      
                 
                         
 

@@ -99,7 +99,7 @@ class Order extends Model
     { 
       $coupon = 0;
       if($this->couponUsed) $coupon = $this->couponUsed->amount;    
-      return shippingFee() + $this->subtotal() - $coupon;
+      return 0 + $this->subtotal() - $coupon;
     }
 
 

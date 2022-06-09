@@ -20,13 +20,15 @@ class AdminOrderController extends Controller
 
     public function index()
     {
-        $orders = $this->services->list();     
+        $orders = $this->services->list(); 
+
         return view('admin.orders.index')->with('orders', $orders);
     }  
 
     public function listbyStatus($status)
     {        
         $orders = $this->services->list($status);
+
         return view('admin.orders.index')->with('orders', $orders);
     }
 
@@ -38,13 +40,24 @@ class AdminOrderController extends Controller
     public function updateStatus(Order $order)
     {
         $this->services->updateStatus($order);
+
         return back()->with('success','Order status successfully updated');
     }
 
     public function search(Request $request)
     {
         $data = $this->services->search($request);
+
         return view('admin.orders.index')->with(['orders' => $data['orders'], 'keyword' => $data['keyword']]);        
+    }
+
+    public function destroy(Order $order)
+    {
+        $this->authorize('delete', $order);
+
+        $this->services->destroy($order);
+
+        return back()->with('success','Order status successfully deleted');
     }
 
     public function deliver()

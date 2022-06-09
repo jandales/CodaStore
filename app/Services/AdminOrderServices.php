@@ -88,5 +88,20 @@ class AdminOrderServices
         $orders =  Order::Search($keyword)->paginate($this->perpage);
         return ['orders' => $orders, 'keyword' => $keyword];
     }
+
+    public function destroy(Order $order)
+    {     
+        $order->billing->delete();
+        $order->shipping->delete();
+        $order->payment->delete();
+
+        foreach($order->items as $item)
+        {
+            $item->delete();
+        }
+
+        $order->delete();
+    }
+
        
 }

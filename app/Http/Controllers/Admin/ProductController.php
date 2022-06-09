@@ -40,12 +40,14 @@ class ProductController extends Controller
 
     public function create()
     { 
+        
         return view('admin.products.create');
     }   
 
     public function store(ProductRequest $request)
     {      
        $product = $this->services->store($request);  
+       
        return response()->json(['status' => 200, 'message' =>  'Product succesfully create', 'route' => route('admin.products.edit',[$product->encryptedId()])]);
     }
     

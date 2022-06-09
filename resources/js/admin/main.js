@@ -205,7 +205,11 @@ inputNumber.forEach(input => {
     });
 });
 
-
+document.querySelectorAll('.remove-alert').forEach(alert => {
+    alert.onclick = function() {
+        this.parentElement.remove();
+    }
+})
 
 
 // run automatically when the page run

@@ -427,6 +427,7 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){
     Route::put('/orders/deliver',[AdminOrderController::Class, 'deliver'])->name('admin.orders.deliver');
     Route::get('/orders/search',[AdminOrderController::Class, 'search'])->name('admin.orders.search');
     Route::get('/orders/{status}',[AdminOrderController::Class, 'listbyStatus'])->name('admin.orders.list');
+    Route::delete('/orders/destroy/{order:id}',[AdminOrderController::Class, 'destroy'])->name('admin.orders.destroy');
     
     // Route inventory
     Route::get('/products/inventory', [StockController::class, 'inventory'])->name('admin.inventory');

@@ -109,7 +109,7 @@
                             </a>
                         </td>                       
                         <td>{{ $order->totalItems() }}</td>
-                        <td>@money($order->total())</td>
+                        <td>@money($order->gross_total)</td>
                         <td>{{ $order->created_at->format('M-d-Y')}}</td>
                         <td><span class="status capitalized {{ $order->statusColor() }}">{{ $order->status }}</span></td>                       
                     </tr>

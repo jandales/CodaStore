@@ -36,6 +36,7 @@ class ProductFactory extends Factory
             'sale_price' => 399,
             'regular_price' => 500,
             'status' => 1,
+            'admin_id' => 1,
             'featured' => rand(0,1),
         ];
 

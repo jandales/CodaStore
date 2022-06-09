@@ -18,34 +18,38 @@ class AdminController extends Controller
 
     public function  __construct(UsersServices $services)
     {
+        $this->authorizeResource(Admin::class, 'admin');
+
         $this->services = $services;
     }
 
     public function index()
-    {        
+    { 
         return view('admin.users.index')->with('users', $this->services->users());
     }
 
     public function create()
-    {
+    {      
         return view('admin.users.create');
     }
 
     public function store(AdminRequest $request)
     {   
         $this->services->store($request);
+
         return redirect()->route('admin.users')->with('success', 'User successfully create');
     }
 
     public function edit(Admin $admin)
-    {
-         return view('admin.users.edit')->with('user', $admin);
+    {       
+        return view('admin.users.edit')->with('user', $admin);
     }
 
     public function update(Request $request, Admin $admin)
-    { 
-        
-        $this->services->update($request, $admin);   
+    {               
+
+        $this->services->update($request, $admin); 
+
         return back()->with('success', 'User successfully updated'); 
     }
 
@@ -57,18 +61,21 @@ class AdminController extends Controller
     public function destroy(Admin $admin)
     {
         $admin->delete();
+
         return back()->with('success', 'User successfully Deleted'); 
     }
 
     public function destroySelectedItem(Request $request)
     {        
         $this->services->destroy($request);
+
         return back()->with('success', 'User successfully Deleted'); 
     }
 
     public function updateSelectItemRoleTo(Request $request)
     {
-        $res = $this->services->updateRoleTo($request);           
+        $res = $this->services->updateRoleTo($request); 
+
         return back()->with($res['status'], $res['message']); 
     }
 

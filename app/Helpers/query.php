@@ -6,30 +6,33 @@ use App\Models\SocialSite;
 use App\Models\GeneralSetting;
 use App\Models\UserShippingAddress;
 
-function siteSettings(){
+function siteSettings()
+{
     return GeneralSetting::find(1);
 }
-function socialList() {
+function socialList()
+{
    return SocialSite::get();
 }
-
-function shippingAddress() {
+function shippingAddress()
+{
     return  auth()->user()->shippingAddress;
 }
-
-function paymentOptions() {
+function paymentOptions()
+{
     return auth()->user()->payment_options;
 }
-
-function app_per_page(){
+function app_per_page()
+{
+    return config('setting.app.perpage');
+}
+function shop_per_page()
+{
     return config('setting.app.perpage');
 }
 
-function shop_per_page(){
-    return config('setting.app.perpage');
-}
-
-function timezone_list() {
+function timezone_list()
+{
     $return = array();
     $timezone_identifiers_list = timezone_identifiers_list();
     foreach($timezone_identifiers_list as $timezone_identifier){
@@ -56,7 +59,8 @@ function timezone_list() {
 
 
 
-function list_date_format(){
+function list_date_format()
+{
     $lists = [
         [
             'id' => 0, 
@@ -106,8 +110,6 @@ function list_time_format()
 
     return json_decode(json_encode($lists));
 }
-
-
 function getShippingOptions($id)
 {  
     foreach(shippingOptions() as $option)
@@ -117,19 +119,12 @@ function getShippingOptions($id)
     }
 
 }
-
 function tax($amount)
 {
     $tax = 12 / 100;
     $total = $amount * $tax;
     return $total;    
 }
-
-
-
-
-
-
 function category($id)
 {
     $name = "";
@@ -165,19 +160,12 @@ function cartSubtotal($carts)
     $subtotal = 0;
 
     foreach($carts as $cart)
-    {
-        
+    {        
         $subtotal += $cart->total();
     }
-     return $subtotal;
+
+    return $subtotal;
 }
-
-
-
-function shippingFee(){
-    return 150;
-}
-
 
 function checkoutProgress()
 {

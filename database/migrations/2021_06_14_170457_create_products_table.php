@@ -29,6 +29,7 @@ class CreateProductsTable extends Migration
             $table->string('imagePath');
             $table->string('tags')->nullable();
             $table->string('status')->default(0);
+            $table->integer('admin_id')->unsigned();         
             $table->timestamps();
         });
     }

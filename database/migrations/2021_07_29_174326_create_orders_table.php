@@ -27,6 +27,8 @@ class CreateOrdersTable extends Migration
             $table->double('coupon_amount')->default(0);
             $table->timestamp('shipped_at')->nullable();
             $table->timestamp('delivered_at')->nullable();
+            $table->timestamp('returned_at')->nullable();
+            $table->timestamp('cancelled_at')->nullable();
             $table->string('status')->nullable();           
             $table->timestamps();
         });

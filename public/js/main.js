@@ -2939,6 +2939,11 @@ inputNumber.forEach(function (input) {
     var value = parseInt(input.value);
     if (value == 0) input.value = null;
   });
+});
+document.querySelectorAll('.remove-alert').forEach(function (alert) {
+  alert.onclick = function () {
+    this.parentElement.remove();
+  };
 }); // run automatically when the page run
 
 document.addEventListener("DOMContentLoaded", function () {
