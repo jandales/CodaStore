@@ -9,8 +9,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAttributeRequest;
 use App\Http\Requests\UpdateAttributeRequest;
 
-
-
 class AttributeController extends Controller
 {
     private $services;
@@ -27,7 +25,8 @@ class AttributeController extends Controller
      
     public function store(StoreAttributeRequest $request)
     {       
-        $this->services->store($request);     
+        $this->services->store($request);  
+
         return back()->with(['status' => 'success','message' => 'Attribute Successfully Created']);
     }
     public function edit(Attribute $attribute)
@@ -38,28 +37,40 @@ class AttributeController extends Controller
     public function update(UpdateAttributeRequest $request,Attribute $attribute)
     {    
         $this->services->update($attribute, $request);
+
         return redirect()->route('admin.attributes')->with(['status' => 'success','message' => 'Attribute Successfully update']);
     }
     public function destroy(Attribute $attribute)
     {     
-        $attribute->delete();        
+        $this->authorize('delete', $attribute);
+
+        $attribute->delete();    
+
         return redirect()->route('admin.attributes')->with(['status' => 'success','message' => 'Attribute Successfully Deleted']);
     }
 
     public function destroySelected(Request $request)
     {     
-        $this->services->destroySelected($request->_selected);               
+        $attribute = Attribute::find($request->_selected[0]);
+
+        $this->authorize('delete', $attribute);
+
+        $this->services->destroySelected($request->_selected); 
+
         return route('admin.attributes');
     }
 
     public function search(Request $request)
     {
         $attributes = Attribute::Search($request->keyword)->get();
+
         return view('admin.attribute.index')->with(['attributes' =>  $attributes, 'keyword' => $request->keyword]);
     }
+
     public function getAll()
     {
         $attributes = Attribute::get();
+
         return response()->json(['attributes' => $attributes]);    
     }
 

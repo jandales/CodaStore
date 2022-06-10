@@ -1,7 +1,10 @@
 <div class="toolbar justify-content-space-between action-toolbar hidden"> 
     <label class="title selected-items">0 item Selected</label>
     <div class="btn-action">                   
+      @can('delete', $categories[0])
         <span id="btn-selected-cateory-delete" data-id="{{ route('admin.categories.selected.destroy') }}" class="btn btn-light"><i class="fas fa-trash"></i></span>
+      @endcan
+       
         <span id="clear-selection" class="btn btn-light"><i class="fas fa-times"></i></span> 
     </div>
 </div> 
@@ -55,17 +58,19 @@
                                             </span>                                                                           
                                         </a>
                                     </li> 
-                                    <li> 
-                                        <form action="{{ route('admin.categories.destroy',[$category->slug]) }}" method="post">
-                                            @csrf
-                                            @method('delete')
-                                            <button class="span">
-                                           
-                                                    <i class="fas fa-trash"></i>  
-                                               
-                                            </button>
-                                        </form>                                                                          
-                                    </li>   
+                                    @can('delete', $category)
+                                        <li> 
+                                            <form action="{{ route('admin.categories.destroy',[$category->slug]) }}" method="post">
+                                                @csrf
+                                                @method('delete')
+                                                <button class="span">
+                                            
+                                                        <i class="fas fa-trash"></i>  
+                                                
+                                                </button>
+                                            </form>                                                                          
+                                        </li>  
+                                    @endcan                                     
                                 </ul>
                             </div>
                         </td>

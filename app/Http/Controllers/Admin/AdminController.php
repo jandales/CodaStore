@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\UsersServices;
 use App\Http\Requests\AdminRequest;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\UpdataPasswordRequest;
 
@@ -17,14 +18,16 @@ class AdminController extends Controller
     private $services;
 
     public function  __construct(UsersServices $services)
-    {
+    {   
         $this->authorizeResource(Admin::class, 'admin');
 
         $this->services = $services;
     }
 
     public function index()
-    { 
+    {     
+ 
+
         return view('admin.users.index')->with('users', $this->services->users());
     }
 
@@ -41,8 +44,11 @@ class AdminController extends Controller
     }
 
     public function edit(Admin $admin)
-    {       
+    {      
+        $this->authorize('update', $admin);
+
         return view('admin.users.edit')->with('user', $admin);
+
     }
 
     public function update(Request $request, Admin $admin)

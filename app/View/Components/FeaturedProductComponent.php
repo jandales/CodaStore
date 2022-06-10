@@ -15,7 +15,7 @@ class FeaturedProductComponent extends Component
      */
     public function __construct()
     {
-        $this->products = Product::where('featured', 1)->get();
+        $this->products = Product::where('featured', 1)->take(10)->get();
     }
 
     /**

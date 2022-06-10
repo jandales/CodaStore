@@ -9,13 +9,15 @@
 <div class="row" >
     <div class="panel-table m-t-2 w-12">
         <div class="panel-header">            
-        </div>         
+        </div> 
                 <div class="toolbar justify-content-space-between action-toolbar hidden"> 
                     <label class="title selected-items">2 item Selected</label>
                     <div class="btn-action">
                         <span data-onClick data-url={{route('admin.products.status.updates',[1])}} class="btn btn-light"><i class="fas fa-upload"></i></span>
                         <span data-onClick data-url={{route('admin.products.status.updates',[0])}} class="btn btn-light"><i class="fas fa-download"></i></span>                           
-                        <span  id="deleteSelectedProducts" data-url="{{route('admin.products.destroys')}}" class="btn btn-light"><i class="fas fa-trash"></i></span>
+                        @can('delete', $products[0])
+                            <span  id="deleteSelectedProducts" data-url="{{route('admin.products.destroys')}}" class="btn btn-light"><i class="fas fa-trash"></i></span>
+                        @endcan
                         <span  id="clear-selection" class="btn btn-light"><i class="fas fa-times"></i></span> 
                     </div>
                 </div> 
@@ -47,15 +49,17 @@
                      
                 </div> 
 
-                <form id="form-table" method="post" action="">  
-                    @csrf
+              
                     <table class="table">                          
                         <thead>
                             <tr>
-                                <th class="column-1">                   
-                                    <div class="checkbox">
-                                                <input type="checkbox" id="parentCheckbox" name="checkbox" >
-                                    </div>
+                                <th class="column-1">    
+                                    <form id="form-table" method="post">  
+                                        @csrf               
+                                        <div class="checkbox">
+                                                    <input type="checkbox" id="parentCheckbox" name="checkbox" >
+                                        </div>
+                                    </form>
                                 </th>
                                 <th class="column-image"></th>
                                 <th class="column-product">Product Name</th>                              
@@ -98,40 +102,27 @@
                                                                 <i class="fas fa-pen"></i>  
                                                             </span>                                                                           
                                                         </a>
-                                                    </li>                               
-                                                    <li class="table-dropdown">
-                                                        <span class="span">                                      
-                                                                <i class="fas fa-circle"></i>
-                                                                <i class="fas fa-circle"></i>
-                                                                <i class="fas fa-circle"></i>
-                                                        </span>
-                                                        <ul class="table-dropdown-list">
-                                                            <li>
-                                                                <form action="{{ route('admin.products.status.update',[$product->encryptedId() ]) }}" method="post">
-                                                                    @csrf
-                                                                    {{-- @method('put') --}}
-                                                                    <button>
-                                                                        <i class="fas {{ $product->status == 'published' ? 'fa-download' : 'fa-upload'}}"></i>
-                                                                        <span class="ml-1">@if($product->status == 1) {{ 'Unpublished' }} @else  {{ 'Published' }} @endif</span>
-                                                                    </button>
-                                                                </form>                                                               
-                                                            </li>                                                                             
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="far fa-list-alt"></i>
-                                                                    <span class="ml-1">Inventory</span>
-                                                                </a>
-                                                            </li>
-                                                                                                                   
-                                                            <li>
-                                                                <form action="{{ route('admin.products.destroy',[$product->encryptedId()]) }}" method="post">
-                                                                    @csrf
-                                                                     @method('delete')
-                                                                    <button><i class="far fa-trash-alt"></i> <span class="ml-1">Delete</span></button> 
-                                                                </form>
-                                                            </li>                                    
-                                                        </ul>
-                                                    </li>
+                                                        
+                                                    </li> 
+                                                    <li>
+                                                        <form action="{{ route('admin.products.status.update',[$product->encryptedId() ]) }}" method="post">
+                                                            @csrf
+                                                            @method('put')
+                                                            <button>
+                                                                <i class="fas {{ $product->status == 0 ? 'fa-toggle-off' : 'fa-toggle-on'}}"></i>                                                               
+                                                            </button>
+                                                        </form>  
+                                                    </li> 
+                                                    @can('delete', $product)
+                                                        <li>
+                                                            <form action="{{ route('admin.products.destroy',[$product->encryptedId()]) }}" method="post">
+                                                                        @csrf
+                                                                        @method('delete')
+                                                                        <button><i class="far fa-trash-alt"></i></button> 
+                                                            </form>
+                                                        </li> 
+                                                    @endcan                            
+                                            
                                                 </ul>
                                             </div>
                                         </td>
@@ -142,7 +133,7 @@
                             @endif
                         </tbody>
                     </table>
-                </form>
+
         
             <div class="mt-2 mb-2 right mr10">
                 {{ $products->links() }}

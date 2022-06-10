@@ -18,6 +18,7 @@
             <span style="flex:auto; flex-basis:100px;">Sort By:</span>
             <select name="sortBy" id="sorting">
                 <option value="{{ route('shop.sort',['all']) }}" {{ (request()->is('shop')) ? 'selected' : ''}}>All</option>
+                <option value="{{ route('shop.sort',['featured-product']) }}"{{ (request()->is('shop/sort-by/featured-product')) ? 'selected' : ''}}>Featured Product</option>
                 <option value="{{ route('shop.sort',['a-z']) }}" {{ (request()->is('shop/sort-by/a-z')) ? 'selected' : ''}}>Alphabetical: A to Z</option>
                 <option value="{{ route('shop.sort',['z-a']) }}" {{ (request()->is('shop/sort-by/z-a')) ? 'selected' : ''}}>Alphabetical: Z to A</option>
                 <option value="{{ route('shop.sort',['new-to-old']) }}" {{ (request()->is('shop/sort-by/new-to-old')) ? 'selected' : ''}}>New to Old</option>

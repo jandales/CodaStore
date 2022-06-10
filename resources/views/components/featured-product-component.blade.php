@@ -22,5 +22,8 @@
                 @endforeach                         
             </ul>
         </div>
-    </div>    
+    </div>  
 </section>
+<div class="flex items-center mt-5 mb-5">
+    <a href="{{ route('shop.sort',['featured-product']) }}" class="btn btn-dark">View All</a>  
+   </div>

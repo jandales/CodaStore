@@ -19,6 +19,7 @@ class UserController extends Controller
    public function index()
    {
       $users = $this->services->list();
+      
       return view('admin.customers.index')->with('users', $users);
    }
 
@@ -29,14 +30,22 @@ class UserController extends Controller
    }
 
    public function destroy(User $user)
-   {         
-      $this->$services->destroy($user);  
+   {  
+      $this->authorize('delete', $user); 
+
+      $this->services->destroy($user);  
+
       return back()->with('success', 'User successfully deleted');
    }
 
    public function selectedDestroy(Request $request)
    {   
-      $this->services ->deleteSelectedItem($request->selected);
+      $user = User::find($request->selected[0]);
+      
+      $this->authorize('delete', $user);
+
+      $this->services->deleteSelectedItem($request->selected);
+
       return back()->with('success', 'User successfully deleted');
    }
 

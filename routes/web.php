@@ -105,21 +105,7 @@ Route::get('/get-user-cart', [CartController::class, 'get_user_cart']);
 */
 
 
-/*
-|--------------------------------------------------------------------------
-| Customers Controller  Routes
-|--------------------------------------------------------------------------
-*/
 
-Route::get('/customers', [UserController::class, 'index'])->name('admin.customers');
-
-Route::get('/customers/show/{user:id}', [UserController::class, 'show'])->name('admin.customers.show');
-
-Route::delete('/customers/destroy/{user:id}', [UserController::class, 'destroy'])->name('admin.customers.destroy');
-
-Route::delete('/customers/selected/destroy', [UserController::class, 'selectedDestroy'])->name('admin.customers.selected.destroy');
-
-Route::get('/customers/search',[UserController::class, 'search'])->name('admin.customers.search');
 
 /*
 |--------------------------------------------------------------------------
@@ -127,31 +113,7 @@ Route::get('/customers/search',[UserController::class, 'search'])->name('admin.c
 |--------------------------------------------------------------------------
 */
 
-Route::get('/users', [AdminController::class, 'index'])->name('admin.users');
 
-Route::get('/users/create', [AdminController::class, 'create'])->name('admin.users.create');
-
-Route::post('/users/store', [AdminController::class, 'store'])->name('admin.users.store');
-
-Route::get('/users/edit/{admin:id}', [AdminController::class, 'edit'])->name('admin.users.edit');
-
-Route::put('/users/update/{admin:id}', [AdminController::class, 'update'])->name('admin.users.update');
-
-Route::post('/users/destroy/{admin:id}',[AdminController::class, 'destroy'])->name('admin.users.destroy');
-
-Route::post('/users/selected/destory',[AdminController::class, 'destroySelectedItem'])->name('admin.users.destroySelectedItem');
-
-Route::put('/users/change-selected-item-role-to/',[AdminController::class, 'updateSelectItemRoleTo'])->name('admin.users.updateSelectItemRoleTo');
-
-Route::put('/users/change-selected-item-role-to/',[AdminController::class, 'updateSelectItemRoleTo'])->name('admin.users.updateSelectItemRoleTo');
-
-Route::get('/users/search', [AdminController::class, 'search'])->name('admin.users.search');
-
-Route::get('/users/show/{admin:id}', [AdminController::class, 'show'])->name('admin.users.show');
-
-Route::post('/users/send-reset-password/{admin:id}', [AdminController::class, 'sentResetPassword'])->name('admin.users.sentPasswordResetPassword');
-
-Route::put('/changepassword/{admin:id}',[AdminController::class, 'updatePassword'])->name('users.updatePassword');
 
 // Shop route
 
@@ -410,7 +372,7 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){
     Route::delete('/products/destroy/{product:id}',[ProductController::class, 'destroy'])->name('admin.products.destroy');
     Route::post('/products/selected-destroy', [ProductController::class, 'destroySelectedItem'])->name('admin.products.destroys');      
     Route::get('/products/search', [ProductController::class, 'search'])->name('admin.products.search');
-    Route::post('/products/{product:id}/status',[ProductController::class, 'changeStatus'])->name('admin.products.status.update');
+    Route::put('/products/{product:id}/status',[ProductController::class, 'changeStatus'])->name('admin.products.status.update');
     Route::post('/products/status/{status}',[ProductController::class, 'changeSelectedItemStatus'])->name('admin.products.status.updates');    
     Route::get('/products/find',[ProductController::class, 'find'])->name('admin.products.find'); 
     Route::get('/products/{filterBy}/{value}',[ProductController::class, 'filter'])->name('admin.products.filter');  
@@ -524,6 +486,48 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){
     Route::delete('/setting/shipping-method/selected-destroy',[ShippingMethodController::class, 'selected_destroy'])->name('admin.shipping.method.selected.destroy');
     Route::put('/setting/shipping-method/update-status/{method}/{status}',[ShippingMethodController::class, 'update_status'])->name('admin.shipping.method.update.status');
     Route::put('/setting/shipping-method/selected-update-status',[ShippingMethodController::class, 'selected_update_status'])->name('admin.shipping.method.selected.update.status');
+
+    Route::get('/users', [AdminController::class, 'index'])->name('admin.users');
+
+    Route::get('/users/create', [AdminController::class, 'create'])->name('admin.users.create');
+
+    Route::post('/users/store', [AdminController::class, 'store'])->name('admin.users.store');
+
+    Route::get('/users/edit/{admin:id}', [AdminController::class, 'edit'])->name('admin.users.edit');
+
+    Route::put('/users/update/{admin:id}', [AdminController::class, 'update'])->name('admin.users.update');
+
+    Route::post('/users/destroy/{admin:id}',[AdminController::class, 'destroy'])->name('admin.users.destroy');
+
+    Route::post('/users/selected/destory',[AdminController::class, 'destroySelectedItem'])->name('admin.users.destroySelectedItem');
+
+    Route::put('/users/change-selected-item-role-to/',[AdminController::class, 'updateSelectItemRoleTo'])->name('admin.users.updateSelectItemRoleTo');
+
+    Route::put('/users/change-selected-item-role-to/',[AdminController::class, 'updateSelectItemRoleTo'])->name('admin.users.updateSelectItemRoleTo');
+
+    Route::get('/users/search', [AdminController::class, 'search'])->name('admin.users.search');
+
+    Route::get('/users/show/{admin:id}', [AdminController::class, 'show'])->name('admin.users.show');
+
+    Route::post('/users/send-reset-password/{admin:id}', [AdminController::class, 'sentResetPassword'])->name('admin.users.sentPasswordResetPassword');
+
+    Route::put('/changepassword/{admin:id}',[AdminController::class, 'updatePassword'])->name('users.updatePassword');
+
+    /*
+|--------------------------------------------------------------------------
+| Customers Controller  Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/customers', [UserController::class, 'index'])->name('admin.customers');
+
+Route::get('/customers/show/{user:id}', [UserController::class, 'show'])->name('admin.customers.show');
+
+Route::delete('/customers/destroy/{user:id}', [UserController::class, 'destroy'])->name('admin.customers.destroy');
+
+Route::delete('/customers/selected/destroy', [UserController::class, 'selectedDestroy'])->name('admin.customers.selected.destroy');
+
+Route::get('/customers/search',[UserController::class, 'search'])->name('admin.customers.search');
         
 });
 

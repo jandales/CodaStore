@@ -41,19 +41,28 @@ class CategoryController extends Controller
     }
     public function destroy(Category $category)
     {   
+        $this->authorize('delete', $category);
+
         $this->services->destroy($category);
+
         return redirect()->back()->with(['status' => 'success', 'message' => 'Successfully Deleted']);       
     }
 
     public function destroySelected(Request $request)
     {
+        $category = Category::find($request->selectedId[0]);
+        
+        $this->authorize('delete', $category);
+
         $this->services->selectedDestroy($request->selectedId); 
+
         return route('admin.categories');    
     }
     public function search(Request $request)
     {       
-      
-        $categories = Category::search($request->keyword)->get();      
+              
+        $categories = Category::search($request->keyword)->get(); 
+
         return view('admin.category.index')->with(['categories' => $categories, 'keyword' => $request->keyword]);   
     }   
    

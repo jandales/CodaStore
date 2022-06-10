@@ -2472,6 +2472,11 @@ a.delete {
   align-items: center;
 }
 
+.items-center {
+  justify-content: center;
+  align-items: center;
+}
+
 .sm-product-name {
   font-size: 1rem;
   color: #2e2e2e;

@@ -2,7 +2,9 @@
 
 namespace App\Policies;
 
+use App\Models\Role;
 use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UserPolicy
@@ -12,10 +14,10 @@ class UserPolicy
     /**
      * Determine whether the user can view any models.
      *
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\Admin $user
      * @return mixed
      */
-    public function viewAny(User $user)
+    public function viewAny(Admin $admin)
     {
         //
     }
@@ -24,10 +26,10 @@ class UserPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
+     * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function view(User $user, User $model)
+    public function view(Admin $admin, User $user)
     {
         //
     }
@@ -38,7 +40,7 @@ class UserPolicy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function create(User $user)
+    public function create(Admin $admin)
     {
         //
     }
@@ -46,11 +48,11 @@ class UserPolicy
     /**
      * Determine whether the user can update the model.
      *
+     * @param  \App\Models\Admin  $user
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
      * @return mixed
      */
-    public function update(User $user, User $model)
+    public function update(Admin $admin, User $user)
     {
         //
     }
@@ -58,23 +60,23 @@ class UserPolicy
     /**
      * Determine whether the user can delete the model.
      *
+     * @param  \App\Models\Admin  $user
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
      * @return mixed
      */
-    public function delete(User $user, User $model)
+    public function delete(Admin $admin, User $user)
     {
-        //
+        return $admin->role == Role::IS_ADMIN;
     }
 
     /**
      * Determine whether the user can restore the model.
      *
+     * @param  \App\Models\Admin  $user
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
      * @return mixed
      */
-    public function restore(User $user, User $model)
+    public function restore(Admin $admin, User $user)
     {
         //
     }
@@ -82,11 +84,11 @@ class UserPolicy
     /**
      * Determine whether the user can permanently delete the model.
      *
+     * @param  \App\Models\Admin  $user
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
      * @return mixed
      */
-    public function forceDelete(User $user, User $model)
+    public function forceDelete(Admin $admin, User $user)
     {
         //
     }

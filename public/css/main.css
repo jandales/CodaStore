@@ -810,7 +810,7 @@ nav ul li .sub-menu li.active a {
   margin-right: 10px;
 }
 
-.table-action ul .span {
+.table-action ul .span, .table-action ul button {
   display: flex;
   justify-content: center;
   align-items: center;

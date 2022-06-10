@@ -85,6 +85,7 @@
                                             </span>                                                                           
                                         </a>
                                     </li>  
+                                    @can('delete', $user)
                                         <li>
                                             <a href="#" id="delete">
                                                 <span data-url ="{{ route('admin.customers.destroy', [$user->encryptedId()]) }}" class="span destroy-customer">
@@ -92,6 +93,7 @@
                                                 </span>                                                                           
                                             </a>
                                         </li>
+                                    @endcan
                                 </ul>
                             </div>
                         </td>

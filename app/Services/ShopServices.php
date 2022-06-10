@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Services\BaseServices;
 
@@ -17,6 +18,7 @@ class ShopServices extends BaseServices
 
     public function category(Category $category)
     {    
+  
         return Product::where('category_id', $category->id)->paginate($this->shop_perpage);       
        
     }
@@ -26,9 +28,13 @@ class ShopServices extends BaseServices
         $column = '';
         $columnValue = '';
 
-        if($value == 'all') return [];             
+        if ( $value == 'all' ) return [];    
+        
+        if ( $value == 'featured-product' ) {
+            return  Product::where('featured', 1)->orderBy('created_at', 'asc')->paginate(16);
+        }
       
-        switch($value)
+        switch ( $value )
         {
             case 'a-z':
                 $column = 'name';
@@ -60,7 +66,7 @@ class ShopServices extends BaseServices
                 $columnValue = 'desc';
             break;
           
-        };     
+        };  
 
         return  Product::orderBy($column,$columnValue)->paginate(16);
         
@@ -72,11 +78,11 @@ class ShopServices extends BaseServices
         $attributes = [];
         $hasvariants = false;
 
-        foreach($product->attributes as $item){
-          array_push($attributes, $item->attributes->name);
+        foreach ( $product->attributes as $item ) {
+          array_push( $attributes, $item->attributes->name );
         }  
 
-        if($count > 0) $hasvariants = true;          
+        if ( $count > 0 ) $hasvariants = true;          
         
         return response()->json(['attributes' => $attributes, 'hasvariant' => $hasvariants]);
     }

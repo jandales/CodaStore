@@ -1,7 +1,9 @@
 <div class="toolbar justify-content-space-between action-toolbar hidden"> 
     <label class="title selected-items">0 item Selected</label>
-    <div class="btn-action">                   
-        <span  id="btn-delete-attribute" data-url = {{ route('admin.attributes.destroy.selected') }} class="btn btn-light"><i class="fas fa-trash"></i></span>
+    <div class="btn-action"> 
+        @can('delete', $list[0])                  
+             <span  id="btn-delete-attribute" data-url = {{ route('admin.attributes.destroy.selected') }} class="btn btn-light"><i class="fas fa-trash"></i></span>
+        @endcan
         <span  id="clear-selection" class="btn btn-light"><i class="fas fa-times"></i></span> 
     </div>
 </div> 
@@ -37,14 +39,16 @@
                     <div class="table-action">
                         <ul>   
                             <li><a href="{{ route('admin.attributes.edit',[$item->slug]) }}"><span class="span"><i class="fas fa-pen"></i></span></a></li>
-                            <li>
-                                <form action="{{ route('admin.attributes.destroy', [$item->slug])}}" method="post">
-                                    @csrf
-                                    @method('delete')
-                                    <button class="span"><i class="fas fa-trash"></i></button>
-                                </form>
-                               
-                            </li>   
+                            @can('delete', $item)
+                                <li>
+                                    <form action="{{ route('admin.attributes.destroy', [$item->slug])}}" method="post">
+                                        @csrf
+                                        @method('delete')
+                                        <button class="span"><i class="fas fa-trash"></i></button>
+                                    </form>
+                                
+                                </li>   
+                            @endcan
                         </ul>
                     </div>
                 </td>

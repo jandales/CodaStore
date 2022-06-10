@@ -7,6 +7,7 @@ use App\Models\Stock;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\ProductVariant;
+use App\Services\BaseServices;
 use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -14,43 +15,14 @@ use Illuminate\Support\Facades\File;
 
 class ProductServices 
 {
+
     private $defaultImage = '/img/products/default.jpg';
 
     public function list()
     {
         return Product::with('category','stock')->paginate(10);
-    }
+    }  
     
-    // public function store($request)
-    // {       
-    //     $image = json_decode($request->image, true);
-
-    //     $product =  Product::create([
-    //         'name' => $request->name,
-    //         'category_id' =>  $request->categories,            
-    //         'slug' => productSlug($request->name),           
-    //         'short_description' =>  $request->short_description,
-    //         'long_description' =>  $request->long_description,
-    //         'imagePath' =>   $image['path'] ?? $this->defaultImage,
-    //         'sku' =>  $request->sku,
-    //         'barcode' => $request->barcode,
-    //         'sale_price' =>  $request->sale_price,
-    //         'regular_price' =>  $request->regular_price,
-    //         'tags' => $request->tags, 
-    //         'status' => $request->status,
-    //         'istaxeble' => $request->istaxable,
-    //         'featured' => $request->featured ?? 0,
-    //     ]);
-
-    //     $product->stock()->create([
-    //         'product_id' => $product->id,
-    //         'qty' => $request->qty,
-    //     ]);
-        
-    //     Self::imageGalleryUpdate($request->input('images'), $product->id);    
-    //     Self::createAttributes($request->input('attributes'), $request->hasVariant, $product->id);       
-    //     return $product;
-    // }
 
     public function store(Request $request)
     {     
@@ -122,16 +94,17 @@ class ProductServices
 
     public function destroy(Product $product)
     {    
-        return DB::transaction(function () {
+        return DB::transaction( function () use ( $product ) {
             ProductAttribute::where('product_id', $product->id)->delete();
             ProductVariant::where('product_id', $product->id)->delete();   
                
-            if($product->stock != null) $product->stock->delete(); 
+            if ( $product->stock != null ) {
+                $product->stock->delete(); 
+            }
     
-            foreach($product->photos as $photo)
-            {
-                $path = public_path($photo->path);
-                File::delete($path);
+            foreach ($product->photos as $photo ) {
+                $path = public_path( $photo->path );
+                File::delete( $path );
                 $photo->delete();
             }
     
@@ -143,8 +116,7 @@ class ProductServices
 
     public function destroySelectedItem($selected)
     {
-        foreach($selected as $id)
-        {      
+        foreach ( $selected as $id ) {   
             $id = decrypt($id);
             $product = Product::find($id);
             Self::destroy($product);          
