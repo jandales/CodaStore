@@ -19,13 +19,14 @@ class UserController extends Controller
    public function index()
    {
       $users = $this->services->list();
-      
+
       return view('admin.customers.index')->with('users', $users);
    }
 
    public function search(Request $request)
    {     
       $this->services->search($request);
+      
       return view('admin.customers.index')->with(['users' =>  $users, 'keyword' => $request->keyword]);
    }
 
@@ -56,39 +57,56 @@ class UserController extends Controller
 
    public function edit()
    {
+      $this->authorize('clientUpdate', auth()->user());
+
       return view('account.edit');
    }
 
    public function account()
    {       
+      $this->authorize('clientView', auth()->user());
+      
       return view('account.profile');
    }
 
    public function password()
    {
+      $this->authorize('clientUpdate', auth()->user());
+
       return view('account.password');
    }
 
    public function upload()
    {
+      $this->authorize('clientUpdate', auth()->user());
+
       return view('account.upload');
    }
 
    public function update(Request $request)
    { 
+      $this->authorize('clientUpdate', auth()->user());
+
       $this->services->update($request); 
+
       return redirect()->route('account')->with('status','Profile updated successfully');
    }  
 
    public function changePassword(UserRequest $request)
    { 
-      $this->services->changePassword($request);   
+      $this->authorize('clientUpdate', auth()->user());
+
+      $this->services->changePassword($request);  
+
       return back()->with('success','Password Successfully Changed');
    }
 
    public function avatar(Request $request, CustomerServices $service)
    {     
+      $this->authorize('clientUpdate', auth()->user());
+      
       $result = $service->updateAvatar($request);
+
       return  back()->with($result);
    }
    

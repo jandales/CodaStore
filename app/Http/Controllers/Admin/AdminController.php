@@ -25,9 +25,7 @@ class AdminController extends Controller
     }
 
     public function index()
-    {     
- 
-
+    {   
         return view('admin.users.index')->with('users', $this->services->users());
     }
 

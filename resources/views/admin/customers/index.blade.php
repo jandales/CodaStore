@@ -85,6 +85,7 @@
                                             </span>                                                                           
                                         </a>
                                     </li>  
+                                    @can('delete', $order)
                                     @can('delete', $user)
                                         <li>
                                             <a href="#" id="delete">

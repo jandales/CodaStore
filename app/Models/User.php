@@ -128,5 +128,10 @@ class User extends Authenticatable
     {
         return Carbon::parse($this->dateofbirth)->diffInYears(Carbon::now());
     }
+
+    public function is_current_user()
+    {
+        return $this->id === auth()->user()->id;
+    }
   
 }

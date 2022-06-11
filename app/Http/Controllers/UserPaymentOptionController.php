@@ -18,41 +18,59 @@ class UserPaymentOptionController extends Controller
     }
     
     public function index()
-    {        
+    {   
+        $this->authorize('viewAny', UserPaymentOption::class); 
+
         return view('account.payment.index')->with('payment_options', auth()->user()->payment_options);
     }
 
     public function create()
     {
+        $this->authorize('create', UserPaymentOption::class); 
+
         return view('account.payment.create');
     }
 
     public function edit(UserPaymentOption $option)
     {
+        $this->authorize('update', $option);
+
         return view('account.payment.edit')->with('option', $option);
     }    
     
     public function store(StorePaymentOptionRequest $request)
-    {      
-        $this->services->store($request);
+    {   
+        $this->authorize('create', UserPaymentOption::class); 
+
+        $this->services->store($request);        
+
         return redirect()->route('account.payment-option')->with('success', 'Card Successfully Addedd');
     }
 
     public function update(UpdatePaymentOptionRequest $request,UserPaymentOption $option)
     {          
+        $this->authorize('update', $option);
+
         $this->services->update($request, $option);
+
         return redirect()->route('account.payment-option')->with('success', 'Card Successfully updated');        
     }
 
     public function destroy(UserPaymentOption $option)
     {         
-         $option->delete();  
-         return redirect()->route('account.payment-option')->with('success', 'Card Successfully updated');
+        $this->authorize('delete', $option);
+
+        $option->delete();  
+
+        return redirect()->route('account.payment-option')->with('success', 'Card Successfully updated');
     }
 
     public function updateStatus(UserPaymentOption $option)
     {  
+        $this->authorize('update', $option);
+
         $result = $this->services->updateStatus($option);
+
         return back()->with($result);
     }
    

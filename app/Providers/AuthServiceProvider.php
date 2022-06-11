@@ -20,6 +20,8 @@ class AuthServiceProvider extends ServiceProvider
         Category::class => Category::class,
         User::class => UserPolicy::class,
         Order::class => OrderPolicy::class,
+        UserPaymentOption::class => UserPaymentOptionPolicy::class,
+        UserShippingAddress::class => UserShippingAddressPolicy::class,
     ];
 
     /**

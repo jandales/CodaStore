@@ -160,9 +160,9 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::get('/account',[UserController::class, 'account'])->name('account');
 
-    Route::get('/account/password',[UserController::class, 'password'])->name('account.password');
+    Route::get('/account/profile/password',[UserController::class, 'password'])->name('account.password');
 
-    Route::get('/account/upload/avatar',[UserController::class, 'upload'])->name('account.upload');
+    Route::get('/account/profile/upload/avatar',[UserController::class, 'upload'])->name('account.upload');
 
     Route::get('/account/profile/edit', [UserController::class, 'edit'])->name('account.edit');
     
