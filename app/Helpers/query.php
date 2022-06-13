@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use App\Models\Variant;
 use App\Models\Category;
 use App\Models\SocialSite;
@@ -191,4 +192,9 @@ function checkoutProgressPassed()
 
 }
 
+function diffForHumans($date)
+{
+    $date = Carbon::parse($date);
+    return $date->diffForHumans();
+}
 

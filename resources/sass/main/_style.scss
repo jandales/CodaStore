@@ -3453,6 +3453,31 @@ td span.inactive{
     color: var(--bs-success);
 }
 
+.inbox-list{
+    width: 400px;
+    border-right: 1px solid #eee;
+}
+.inbox-message-item{
+    padding: 1rem; 
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #eee;
+}
+.inbox-message-item label{
+    margin-bottom: 10px;
+}
+.inbox-message-item.notread{ 
+    background-color: #fff;
+    
+}
+
+.inbox-content{
+    padding: 4rem;
+    width: calc(100% - 400px);
+    display: flex; 
+    justify-content: center;
+    align-items: flex-start;
+}
+  
 
 
 

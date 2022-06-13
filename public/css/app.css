@@ -3207,6 +3207,11 @@ input.card::placeholder {
   color: var(--bs-red);
 }
 
+.inbox-message-item {
+  padding: 1rem;
+  background-color: #eee;
+}
+
 .header-container {
   width: 100%;
   background: rgb(243, 241, 241);

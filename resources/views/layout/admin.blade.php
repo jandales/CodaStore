@@ -82,6 +82,7 @@
                         <li><a class="{{ (request()->is('admin/reviews*')) ? 'active' : '' }}" nav-item href="/admin/reviews"><i class="far fa-comments"></i><span class="hide-menu">Reviews</span></a></li>
                         <li><a class="{{ (request()->is('admin/customers*')) ? 'active' : '' }}" nav-item href="{{route('admin.customers')}}"><i class="fas fa-users"></i><span class="hide-menu">Customers</span></a></li>
                         @if(auth()->guard('admin')->user()->is_admin())
+                        <li><a class="{{ (request()->is('admin/inboxes*')) ? 'active' : '' }}" nav-item href="{{route('admin.inbox')}}"><i class="fas fa-inboxes"></i><span class="hide-menu">Inbox</span></a></li>
                              <li><a class="{{ (request()->is('admin/users*')) ? 'active' : '' }}" nav-item href="{{ route('admin.users') }}"><i class="fas fa-users"></i><span class="hide-menu">Users</span></a></li>
                              <li  class="nav-dropdown {{ (request()->is('admin/setting*')) ? 'active' : '' }} " >
                                 <div class="nav-dropdown-btn">

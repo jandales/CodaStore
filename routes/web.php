@@ -16,11 +16,11 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\RateController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\InboxController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\CheckOutController;
 use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\PlaceOrderController;
 use App\Http\Controllers\SocialSiteController;
 use App\Http\Controllers\Admin\AdminController;
@@ -35,6 +35,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\VariantController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\AttributeController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\UserPaymentOptionController;
@@ -530,6 +531,23 @@ Route::delete('/customers/selected/destroy', [UserController::class, 'selectedDe
 Route::get('/customers/search',[UserController::class, 'search'])->name('admin.customers.search');
         
 });
+
+
+Route::get('/admin/inboxes', function() {       
+//    $response = Http::withToken('b73cb8d4a9d1e83fac54016f0545309a')->get('https://mailtrap.io/api/v1/inboxes');
+//    $inbox_id = $response[0]['id'];
+    $response = Http::accept('application/json')
+                    ->withToken('b73cb8d4a9d1e83fac54016f0545309a')
+                    ->get('https://mailtrap.io/api/v1/inboxes/1342219/messages')->collect();
+  
+
+  return view('admin.inbox.index')->with('messages', $response);
+});
+
+Route::get('/admin/inboxes', [InboxController::class, 'index'])->name('admin.inbox');
+Route::get('/admin/inboxes/{id}', [InboxController::class, 'show'])->name('admin.inbox.show');
+Route::delete('/admin/inboxes/{id}', [InboxController::class, 'destroy'])->name('admin.inbox.destroy');
+
 
 
 
