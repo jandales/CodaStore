@@ -7022,13 +7022,13 @@ function cartsToViews() {
   cart.items.forEach(function (item) {
     var cartItemsElement = document.createElement('div');
     cartItemsElement.classList.add('cart-items', 'gap10');
-    var items = "<div class=\"cart-image\">\n                        <img class=\"img\" src=\"".concat(item.product.imagePath, "\" alt=\"\" srcset=\"\">              \n                     </div>\n                    <div class=\"cart-decription\">\n                        <p class=\"cart-item-name\">").concat(item.product.name, "</p>  \n                        <span class=\"cart-item-info\">").concat(item.qty, "  x  ").concat(item.product.regular_price, "</span>  \n                        <ul class=\"cart-item-variant\">    \n                        </ul> \n                    </div>\n                    <span class=\"cart-remove\" data-id=\"").concat(item.id, "\">Remove</span>           \n            ");
+    var items = "<div class=\"cart-image\">\n                        <img class=\"img\" src=\"".concat(item.product.imagePath, "\" alt=\"\" srcset=\"\">              \n                     </div>\n                    <div class=\"cart-decription\">\n                        <p class=\"cart-item-name\">").concat(item.product.name, "</p>  \n                        <span class=\"cart-item-info\">").concat(item.qty, "  x  ").concat(item.product.regular_price, "</span>  \n                        <ul class=\"cart-item-variant\">  \n                          \n                        </ul> \n                    </div>\n                    <span class=\"cart-remove\" data-id=\"").concat(item.id, "\">Remove</span>           \n            ");
     cartItemsElement.innerHTML = items;
     var ul = cartItemsElement.querySelector('.cart-item-variant');
 
-    if (item.properties) {
-      item.properties.forEach(function (element) {
-        ul.innerHTML += "<li><span class=\"capitalize\">".concat(element.name, ": ").concat(element.value, "</span></li>");
+    if (item.attributes) {
+      item.attributes.forEach(function (element) {
+        ul.innerHTML += "<li><span class=\"capitalize\">".concat(element.name, " : ").concat(element.value, "</span></li>");
       });
     }
 

@@ -4925,9 +4925,9 @@ label {
   line-height: 1.5;
 }
 
-.cart-item-variant li {
-  display: inline-block;
-  margin-left: 5px;
+.cart-item-variant {
+  display: flex;
+  flex-direction: column;
 }
 
 .cart-item-variant li:first-child {

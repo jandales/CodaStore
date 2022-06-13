@@ -49,7 +49,8 @@ function cartsToViews(){
                     <div class="cart-decription">
                         <p class="cart-item-name">${item.product.name}</p>  
                         <span class="cart-item-info">${item.qty}  x  ${item.product.regular_price}</span>  
-                        <ul class="cart-item-variant">    
+                        <ul class="cart-item-variant">  
+                          
                         </ul> 
                     </div>
                     <span class="cart-remove" data-id="${item.id}">Remove</span>           
@@ -58,9 +59,9 @@ function cartsToViews(){
         cartItemsElement.innerHTML = items
         let ul = cartItemsElement.querySelector('.cart-item-variant')
 
-        if(item.properties){
-            item.properties.forEach(element => {
-                ul.innerHTML += `<li><span class="capitalize">${element.name}: ${element.value}</span></li>`             
+        if(item.attributes){
+            item.attributes.forEach(element => {
+                ul.innerHTML += `<li><span class="capitalize">${element.name} : ${element.value}</span></li>`             
             });
         }   
         wrapperElement.appendChild(cartItemsElement);

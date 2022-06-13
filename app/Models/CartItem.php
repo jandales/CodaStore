@@ -18,7 +18,7 @@ class CartItem extends Model
     ];
 
     protected $casts = [
-        'properties' => 'array'
+        'attributes' => 'array'
     ];
 
 

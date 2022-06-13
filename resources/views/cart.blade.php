@@ -53,12 +53,12 @@
                                                     <div class="flex flex-column m-l-10 gap10">
                                                         <a class="link"  href="{{ route('shop.product',[ $item->product->encryptedId() ] )}}">{{ $item->product->name }} </a>
                                                         <div class="product-info">@money($item->product->regular_price)</div>   
-                                                        @if ($item->properties != null)
-                                                            @foreach ($item->properties as $variant)  
-                                                                <div class="product-info">{{ $variant['name'] }} :{{ $variant['value'] }} </div> 
+                                                        @if ($item->attributes != null)
+                                                            @foreach ($item->attributes as $variant)  
+                                                                <div class="product-info">{{ $variant['name'] }} : {{ $variant['value'] }} </div> 
                                                             @endforeach
                                                          @endif                      
-                                                    </div>
+                                                    </div>                                                  
                                                 </div>
                                             
                                         </td>                                      
