@@ -529,24 +529,16 @@ Route::delete('/customers/destroy/{user:id}', [UserController::class, 'destroy']
 Route::delete('/customers/selected/destroy', [UserController::class, 'selectedDestroy'])->name('admin.customers.selected.destroy');
 
 Route::get('/customers/search',[UserController::class, 'search'])->name('admin.customers.search');
+
+Route::get('/inboxes', [InboxController::class, 'index'])->name('admin.inbox');
+Route::get('/inboxes/{id}', [InboxController::class, 'view'])->name('admin.inbox.show');
+Route::patch('/inboxes/{id}', [InboxController::class, 'update'])->name('admin.inbox.update');
+Route::delete('/inboxes/{id}', [InboxController::class, 'destroy'])->name('admin.inbox.destroy');
+Route::patch('/inboxes/unread/{id}', [InboxController::class, 'unread'])->name('admin.inbox.unread');
         
 });
 
 
-Route::get('/admin/inboxes', function() {       
-//    $response = Http::withToken('b73cb8d4a9d1e83fac54016f0545309a')->get('https://mailtrap.io/api/v1/inboxes');
-//    $inbox_id = $response[0]['id'];
-    $response = Http::accept('application/json')
-                    ->withToken('b73cb8d4a9d1e83fac54016f0545309a')
-                    ->get('https://mailtrap.io/api/v1/inboxes/1342219/messages')->collect();
-  
-
-  return view('admin.inbox.index')->with('messages', $response);
-});
-
-Route::get('/admin/inboxes', [InboxController::class, 'index'])->name('admin.inbox');
-Route::get('/admin/inboxes/{id}', [InboxController::class, 'show'])->name('admin.inbox.show');
-Route::delete('/admin/inboxes/{id}', [InboxController::class, 'destroy'])->name('admin.inbox.destroy');
 
 
 

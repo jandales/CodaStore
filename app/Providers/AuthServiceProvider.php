@@ -14,14 +14,15 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
-        Product::class => ProductPolicy::class,
-        Admin::class => AdminPolicy::class,
-        Attribute::class => AttributePolicy::class,
-        Category::class => Category::class,
-        User::class => UserPolicy::class,
-        Order::class => OrderPolicy::class,
-        UserPaymentOption::class => UserPaymentOptionPolicy::class,
-        UserShippingAddress::class => UserShippingAddressPolicy::class,
+        Product::class => App\Policies\ProductPolicy::class,
+        Admin::class => App\Policies\AdminPolicy::class,
+        Attribute::class => App\Policies\AttributePolicy::class,
+        Category::class => App\Policies\Category::class,
+        User::class => App\Policies\UserPolicy::class,
+        Order::class => App\Policies\OrderPolicy::class,
+        UserPaymentOption::class => App\Policies\UserPaymentOptionPolicy::class,
+        UserShippingAddress::class => App\Policies\UserShippingAddressPolicy::class,
+        Inbox::class => App\Policies\InboxPolicy::class,
     ];
 
     /**
