@@ -6030,6 +6030,10 @@ if (splideCollectionElement) {
       768: {
         perPage: 2,
         gap: '1em'
+      },
+      640: {
+        perPage: 1,
+        gap: '1rem'
       }
     },
     gap: '2em',
@@ -6052,6 +6056,10 @@ if (splideProductElement) {
       },
       768: {
         perPage: 2,
+        gap: '1rem'
+      },
+      640: {
+        perPage: 1,
         gap: '1rem'
       }
     },
