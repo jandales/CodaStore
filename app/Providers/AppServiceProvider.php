@@ -31,6 +31,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if(config('app.env') != 'local') {
+            \URL::forceScheme('https');
+        }
+
         if(Schema::hasTable('categories')) {
             View::share('categories', Category::All());
         }       
