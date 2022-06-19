@@ -25,7 +25,7 @@
                         <li class="nav-item-md-hidden"><a href="{{ route('login') }}"><i class="fas fa-user"></i></a></li>    
                     @endguest
                     @auth
-                    <li class="nav-item-md-hidden"><a href="{{ route('account') }}"><i class="fas fa-user"></i></a>
+                    <li class="nav-item-md-hidden"><a href="#"><i class="fas fa-user"></i></a>
                         <ul>
                             <li><a href="{{ route('account') }}"><span><i class="fa-solid fa-user"></i></span> My Account</a></li>
                             <li><a href="{{ route('account.orders',["all"]) }}"><span><i class="fas fa-box"></i></span> My Orders</a></li>

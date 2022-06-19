@@ -9,9 +9,9 @@
                 <span><i class="fa-solid fa-times"></i></span>
                 <label for="">Collections</label>
             </div> 
-            <li><a href="{{ route('shop')}}">All Collections</a></li>
+            <li><a href="{{ route('shop')}}" class="capitalize">All Collections</a></li>
             @foreach (categories() as $category)                            
-                <li><a href="{{ route('shop.category',[$category])}}">{{ $category->name }}</a></li>
+                <li><a href="{{ route('shop.category',[$category])}}" class="capitalize">{{ $category->name }}</a></li>
             @endforeach          
         </ul>    
         <div class="filter-search-container align-items-center" style="width: 280px">

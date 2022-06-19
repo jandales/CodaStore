@@ -6,9 +6,9 @@
                 @foreach ($collection as $key => $item)
                     <li class="splide__slide">
                         <div class="item">
-                            <h3 class="title">{{$item->name}}</h3>                      
+                            <h3 class="title capitalize">{{$item->name}}</h3>                      
                             <img src="{{$item->image}}" alt="" srcset=""> 
-                            <a href="/shop" class="link-shop-now">Shop now</a> 
+                            <a href="{{ route('shop.category',[$item])}}" class="link-shop-now">Shop now</a> 
                         </div>
                     </li>
                 @endforeach
