@@ -19,7 +19,7 @@ class DashboardController extends Controller
 
         if(session()->has('adminLogined')) return redirect()->route('dashboard');
 
-        if(count($admin) == 0) return redirect()->route('admin-register');
+        if(count($admin) == 0) return redirect()->route('admin.register');
 
         return redirect()->route('admin.login');
     }
