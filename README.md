@@ -5,10 +5,7 @@
     - install npm
     - create the .env file by duplicating the .env.example file
     - php artisan key:generate 
-    - php artisan migrate --seed
-    
-    - install splide 
-        npm install @splidejs/splide
+    - php artisan migrate --seed   
         
     - install fontAwesome
         npm i --save @fortawesome/fontawesome-free              
@@ -20,7 +17,13 @@
     - password : password   
     
     - run php artisan queue:work 
- 
+ ## Website link
+          https://codastore.herokuapp.com
+          - admin side
+            https://codastore.herokuapp.com/admin/login
+            user : user1@gmail.com 
+            password : user@123
+            role : employee
  ## Screenshot
 <ul style="display:flex; flex-direction:column; gap:2rem; justify-content:center;
            align-items:center">    
