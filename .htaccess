@@ -7,7 +7,7 @@ RewriteEngine On
 # NOT needed unless you're using mod_alias to redirect
 
 RewriteCond %{REQUEST_URI} !/public
-RewriteRule ^(.*)$ public/$1 [L]
+<!--  RewriteRule ^(.*)$ public/$1 [L] -->
 # Direct all requests to /public folder
 
 </IfModule>
