@@ -226,7 +226,11 @@ if(splideCollectionElement){
               perPage: 2,
               gap: '1em',
           
-            },           
+            }, 
+            640 : {
+                perPage: 1, 
+                gap: '1rem',  
+            }          
           },
         gap: '2em',
         pagination: false,
@@ -253,6 +257,10 @@ if (splideProductElement){
               perPage: 2, 
               gap: '1rem',         
             },
+            640 : {
+                perPage: 1, 
+                gap: '1rem',  
+            }
          
           },
         gap: '2em',
