@@ -4,7 +4,7 @@ namespace App\Http\Traits;
 use App\Models\Photo;
 use Illuminate\Http\Request;
 
-trait UpdataPasswordTrait {
+trait UpdatePasswordTrait {
   
    public function update(Admin $admin, $password)
    {  
