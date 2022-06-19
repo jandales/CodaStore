@@ -5,7 +5,7 @@
     - install npm
     - create the .env file by duplicating the .env.example file
     - php artisan key:generate 
-    - php artisan migrate:fresh --seed
+    - php artisan migrate --seed
     
     - install splide 
         npm install @splidejs/splide
