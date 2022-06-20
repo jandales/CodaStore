@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\CartItem;
+use Illuminate\Http\Request;
 use App\Models\ShippingMethod;
 use Illuminate\Support\Facades\Cookie;
 
@@ -18,7 +19,7 @@ class CartServices
         return Cart::ByUser()->first();
     }
 
-    public function store($request, Product $product)
+    public function store(Request  $request, Product $product)
     {
         $productQuantity = $product->stock->qty;   
         $newQuantity = (int)$request->qty;  

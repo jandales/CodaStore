@@ -21,7 +21,7 @@
                 @endif
 
                 @if(empty($cart) || $cart->items->count() == 0)
-                    <div class="align-items-content-center flex-column m-t-100">
+                    <div class="align-items-content-center flex-column m-t-100 mb-3">
                         <h1 class="txt-bg">Your cart is empty</h1>    
                         <div class="continue-shooping mt-2">
                             <a href="{{ route('shop')}}" class="btn btn-dark">Continue shopping</a>                            
