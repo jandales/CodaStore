@@ -20,7 +20,8 @@ class Stock extends Model
         'remarks'     
     ];
 
-    public function product(){
+    public function product()
+    {
         return $this->belongsTo(Product::class);
     }
 

@@ -6776,6 +6776,14 @@ function validateProperties() {
 function store() {
   var qty = document.querySelector('input[name="qty"]').value;
   var url = cartBtn.getAttribute('url');
+  var attributes = []; // properties.forEach(element => {
+  //     let name = element.name;
+  //     let value = element.value;
+  //     attributes.push( { name : value } )
+  //    }
+  // );
+  // return 
+
   $.ajax({
     url: url,
     type: 'POST',
@@ -7033,12 +7041,12 @@ function cartsToViews() {
     var items = "<div class=\"cart-image\">\n                        <img class=\"img\" src=\"".concat(item.product.imagePath, "\" alt=\"\" srcset=\"\">              \n                     </div>\n                    <div class=\"cart-decription\">\n                        <p class=\"cart-item-name\">").concat(item.product.name, "</p>  \n                        <span class=\"cart-item-info\">").concat(item.qty, "  x  ").concat(item.product.regular_price, "</span>  \n                        <ul class=\"cart-item-variant\">  \n                          \n                        </ul> \n                    </div>\n                    <span class=\"cart-remove\" data-id=\"").concat(item.id, "\">Remove</span>           \n            ");
     cartItemsElement.innerHTML = items;
     var ul = cartItemsElement.querySelector('.cart-item-variant');
-    var attributes = JSON.parse(item.attributes);
+    var attributes = item.attributes;
 
     if (attributes) {
-      attributes.forEach(function (element) {
-        ul.innerHTML += "<li><span class=\"capitalize\">".concat(element.name, " : ").concat(element.value, "</span></li>");
-      });
+      for (var key in attributes) {
+        ul.innerHTML += "<li><span class=\"capitalize\">".concat(key, " : ").concat(attributes[key], "</span></li>");
+      }
     }
 
     wrapperElement.appendChild(cartItemsElement);

@@ -24,7 +24,7 @@ class CartServices
         $attributes = $request->properties;
         $newQuantity = (int)$request->qty;  
         $total = 0; 
-   
+
         if($productQuantity == 0)  return response()->json(['status' => 500, 'message' => 'Product is not available' ]);   
 
         $cart = Cart::ByUser()->first();
@@ -72,12 +72,18 @@ class CartServices
 
     private function storeCartItem($cart, $product, $quantity, $attributes)
     {
+        $attributesJson = [];
+
+        foreach ($attributes as $item)
+        {
+            $attributesJson  += array($item['name'] => $item['value']);
+        }    
    
         return CartItem::create([
             'cart_id' => $cart,
             'product_id' => $product,
             'qty' => $quantity,
-            'attributes' => json_encode($attributes),
+            'attributes' => $attributesJson,
         ]);
     }
 

@@ -31,7 +31,8 @@ class ProductVariant extends Model
 
     }
 
-    public function attributes(){ 
+    public function attributes()
+    { 
         return $this->hasMany(ProductAttribute::class);
     }
 

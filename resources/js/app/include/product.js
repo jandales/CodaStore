@@ -108,7 +108,17 @@ function validateProperties()
 function store(){   
     let qty = document.querySelector('input[name="qty"]').value
     let url = cartBtn.getAttribute('url')  
+    let attributes  = [];
+    // properties.forEach(element => {
+    //     let name = element.name;
+    //     let value = element.value;
     
+    //     attributes.push( { name : value } )
+    //    }
+    // );
+
+
+    // return 
     $.ajax({
         url : url,
         type : 'POST',

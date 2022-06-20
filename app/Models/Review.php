@@ -24,7 +24,8 @@ class Review extends Model
         return $this->where('user_id', $user);
     }
 
-    public function product(){
+    public function product()
+    {
         return $this->belongsTo(Product::class);
     }
 

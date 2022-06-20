@@ -28,7 +28,8 @@ class Cart extends Model
         return $this->belongsTo(Product::class);
     }
     
-    public function coupon(){
+    public function coupon()
+    {
         return $this->belongsTo(Coupon::class);
     }
 

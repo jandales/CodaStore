@@ -57,12 +57,14 @@ function cartsToViews(){
             `  
         
         cartItemsElement.innerHTML = items
-        let ul = cartItemsElement.querySelector('.cart-item-variant')
-            let attributes = JSON.parse(item.attributes);
-        if(attributes){
-            attributes.forEach(element => {
-                ul.innerHTML += `<li><span class="capitalize">${element.name} : ${element.value}</span></li>`             
-            });
+        let ul = cartItemsElement.querySelector('.cart-item-variant')       
+        
+        let attributes = item.attributes;
+
+        if (attributes) {    
+            for (const key in attributes) {              
+                ul.innerHTML += `<li><span class="capitalize">${key} : ${attributes[key]}</span></li>`       
+            }
         }  
         wrapperElement.appendChild(cartItemsElement);
     });  

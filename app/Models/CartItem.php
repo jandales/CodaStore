@@ -36,5 +36,14 @@ class CartItem extends Model
     {
         return $this->product->regular_price * $this->qty;
     }
+
+    public function parseAttributes()
+    {
+       return json_decode(stripslashes($this->attributes), true);
+    }
+
+    
+
+ 
     
 }
