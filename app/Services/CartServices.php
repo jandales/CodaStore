@@ -20,10 +20,17 @@ class CartServices
 
     public function store($request, Product $product)
     {
-        $productQuantity = $product->stock->qty;  
-        $attributes = $request->properties;
+        $productQuantity = $product->stock->qty;   
         $newQuantity = (int)$request->qty;  
         $total = 0; 
+
+        $attributes = [];
+
+        foreach ($request->properties as $item)
+        {
+            $attributes  += array($item['name'] => $item['value']);
+        } 
+
 
         if($productQuantity == 0)  return response()->json(['status' => 500, 'message' => 'Product is not available' ]);   
 
@@ -63,7 +70,8 @@ class CartServices
     }
 
     private function updateCartItem(CartItem $cartitem, $qty, $attributes)
-    {
+    {        
+
         $cartitem->qty += $qty;
         $cartitem->attributes = $attributes;
         $cartitem->save(); 
@@ -72,18 +80,11 @@ class CartServices
 
     private function storeCartItem($cart, $product, $quantity, $attributes)
     {
-        $attributesJson = [];
-
-        foreach ($attributes as $item)
-        {
-            $attributesJson  += array($item['name'] => $item['value']);
-        }    
-   
         return CartItem::create([
             'cart_id' => $cart,
             'product_id' => $product,
             'qty' => $quantity,
-            'attributes' => $attributesJson,
+            'attributes' => $attributes,
         ]);
     }
 

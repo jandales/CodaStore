@@ -67,11 +67,15 @@ class Cart extends Model
     public function scopeUpdateTotal()
     {
         $cart = self::scopeByUser()->first();
+        
         $total = 0;
-        foreach($cart->items as $item)
-        {
+
+        foreach($cart->items as $item) {
+
             $total += $item->qty * $item->product->regular_price;
+
         }       
+
         $cart->total = $total;
         $cart->save();
         return $cart;
@@ -80,6 +84,7 @@ class Cart extends Model
     public function scopeTotalItems()
     {
         $cart = self::scopeByUser()->first();  
+
         return $cart->items->sum('qty') ?? 0;
     }
 
@@ -92,6 +97,7 @@ class Cart extends Model
     public function grandTotal()
     {
         $shipping_charge = (double)session()->get('shipping_charge') ?? 0;
+
         return ($this->total + $shipping_charge) - $this->discount;
     }
     
