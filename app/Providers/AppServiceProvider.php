@@ -35,12 +35,12 @@ class AppServiceProvider extends ServiceProvider
             \URL::forceScheme('https');
         }
 
-        if(Schema::hasTable('categories')) {
-            View::share('categories', Category::All());
-        }       
-        if(Schema::hasTable('attributes')){
-            View::share('attributes', Attribute::All());
-        }          
+        // if(Schema::hasTable('categories')) {
+        //     View::share('categories', Category::All());
+        // }       
+        // if(Schema::hasTable('attributes')){
+        //     View::share('attributes', Attribute::All());
+        // }          
         Blade::directive('money', function ($amount) {
             return "<?php echo '₱'.number_format($amount, 2); ?>";
         });
