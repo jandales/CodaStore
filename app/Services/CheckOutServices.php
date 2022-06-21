@@ -12,7 +12,7 @@ class CheckOutServices
     {        
          $cart = Self::validateCart();
  
-         if(!$cart) return redirect()->route('cart'); 
+         if(!$cart) return false;
  
          session(['shipping_charge' => 0]);
         
@@ -30,6 +30,7 @@ class CheckOutServices
                  'zipcode' =>  session()->get('shipping_address')['zipcode'], 
             ];  
          }
+         
          return (object)['cart' => $cart, 'email' => $email ?? auth()->user()->email, 'address' => $address ?? auth()->user()->shippingDefaultAddress()];      
      }
  
@@ -56,7 +57,7 @@ class CheckOutServices
     {  
         $cart = Self::validateCart();
 
-        if(!$cart) return redirect()->route('cart');    
+        if(!$cart) return false;   
 
         $shipping_methods = ShippingMethod::get();  
         session()->get('shipping_method') ?? session(['shipping_method' => $shipping_methods[0]]);
@@ -70,10 +71,13 @@ class CheckOutServices
     public function payment(Request $request)
     {
         $cart = Self::validateCart();
-        if(!$cart) return redirect()->route('cart'); 
+
+        if(!$cart) return false;
+
         $user_payment_option = auth()->user()->defaultPayment()->first();     
         return (object)['cart' => $cart,'user_payment_option' => $user_payment_option];      
     }
+
     public function updateShippingMethod(Request $request)
     {   
         $id = $request->shipping_method;
@@ -85,9 +89,10 @@ class CheckOutServices
 
     private function validateCart()
     {
-        $cart = Cart::ByUser()->first();        
-        if(empty($cart)) return false; 
-        if($cart->items->count() == 0) return false;
+        $cart = Cart::ByUser()->first();   
+
+        if (empty($cart) || $cart->items->count() == 0) return false; 
+
         return $cart;       
     }
 }

@@ -18,18 +18,27 @@ class CheckOutController extends Controller
    public function index()
    {   
         $result = $this->services->information();
+
+        if(!$result) return redirect()->route('cart'); 
+
         return view('checkout.information')->with(['cart' => $result->cart,'email' => $result->email,'address' => $result->address]);
     }
 
     public function shipping(Request $request)
     {  
-       $result = $this->services->shipping($request);    
+       $result = $this->services->shipping($request); 
+
+       if(!$result) return redirect()->route('cart'); 
+
        return view('checkout.shipping')->with(['cart' => $result->cart,'shipping_methods' => $result->shipping_methods]);
     }
 
     public function payment(Request $request)
     {
        $result =  $this->services->payment($request);
+
+       if(!$result) return redirect()->route('cart'); 
+
        return view('checkout.payment')->with(['cart' => $result->cart,'user_payment_option' => $result->user_payment_option ]);
     }
 
@@ -37,6 +46,7 @@ class CheckOutController extends Controller
     public function store(CheckoutStoreRequest $request)
     {  
         $this->services->store($request);
+
         return response()->json(['url' => route('checkout.shipping'), 'status' =>  200]);        
     }
   
@@ -44,6 +54,7 @@ class CheckOutController extends Controller
     public function updateShippingMethod(Request $request)
     {   
         $this->services->updateShippingMethod($request);
+        
         return redirect()->route('checkout.payment');
     }
 
