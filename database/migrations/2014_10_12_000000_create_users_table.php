@@ -24,7 +24,7 @@ class CreateUsersTable extends Migration
             $table->text('imagePath')->nullable();
             $table->rememberToken();
             $table->timestamp('email_verified_at')->nullable();
-            $table->integer('delete_at')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

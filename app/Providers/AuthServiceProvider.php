@@ -23,6 +23,7 @@ class AuthServiceProvider extends ServiceProvider
         UserPaymentOption::class => App\Policies\UserPaymentOptionPolicy::class,
         UserShippingAddress::class => App\Policies\UserShippingAddressPolicy::class,
         Inbox::class => App\Policies\InboxPolicy::class,
+        Coupon::class => App\Polocies\CouponPolicy::class,
     ];
 
     /**

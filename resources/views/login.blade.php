@@ -32,10 +32,10 @@
                                 <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                             <div class="flex space-between">
-                                <div class="checkbox">
+                                {{-- <div class="checkbox">
                                     <input name="rememberToken" type="checkbox">
                                     <label for="Remember me">Remember me </label>
-                                </div>
+                                </div> --}}
                                 <div class="forgor-password">
                                     <a href="/forgot-password" class="login-register-link">Forgot password?</a>
                                 </div>

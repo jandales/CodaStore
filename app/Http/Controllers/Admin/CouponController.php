@@ -17,6 +17,8 @@ class CouponController extends Controller
 
     public function __construct(CouponServices $services)
     {
+        
+
         $this->services = $services;
     }
     /**
@@ -48,6 +50,7 @@ class CouponController extends Controller
     public function store(CouponRequest $request)
     { 
         $this->services->store($request);  
+
         return redirect()->route('admin.coupons')->with('success', 'Coupon successfully Created');
     }
 
@@ -83,7 +86,8 @@ class CouponController extends Controller
     public function update(UpdateCouponRequest $request, Coupon $coupon)
     {
             
-       $this->services->update($request, $coupon); 
+       $this->services->update($request, $coupon);
+
        return redirect()->route('admin.coupons')->with('success', 'Coupon successfully updated');
     } 
 
@@ -95,19 +99,24 @@ class CouponController extends Controller
      */
     public function destroy(Coupon $coupon)
     {   
+        $this->authorize('delete', $coupon);
+        
         $coupon->delete();
+
         return back()->with('success','Coupon successfully deleted');        
     }
 
     public function destroySelectedItem(Request $request)
     {
         $this->services->destroySelectedItem($request);
+
         return back()->with('success', 'Coupon successfully deleted');
     }
 
     public function search(Request $request)
     {        
         $coupons = Coupon::Search($request->keyword)->paginate(10);
+        
         return view('admin.coupons.index')->with(['coupons' => $coupons, 'keyword' => $request->keyword]);
     }
 

@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <label for="view-more" class="link link-primary">View more</label>
+                <a  href="{{route('admin.orders')}}" for="view-more" class="link link-primary">View more</a>
             </div>
         </div>
     
@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <label for="view-more" class="link link-primary">View more</label>
+                <a href="{{ route('admin.orders.list',['confirmed'])}}" for="view-more" class="link link-primary">View more</a>
             </div>
         </div>
     
@@ -55,7 +55,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <label for="view-more" class="link link-primary">View more</label>
+                <a  href="{{route('admin.customers')}}" for="view-more" class="link link-primary">View more</a>
             </div>
         </div>
     
@@ -72,7 +72,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <label for="view-more" class="link link-primary">View more</label>
+                <a href="{{ route('admin.orders.list',['cancelled'])}}" for="view-more" class="link link-primary">View more</a>
             </div>
         </div>
     

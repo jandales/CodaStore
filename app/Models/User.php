@@ -10,13 +10,14 @@ use App\Models\UserPaymentOption;
 use App\Http\Traits\DateTimeFormat;
 use App\Models\UserShippingAddress;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, DateTimeFormat, Crypted;
+    use HasFactory, SoftDeletes ,Notifiable, DateTimeFormat, Crypted;
 
     /**
      * The attributes that are mass assignable.

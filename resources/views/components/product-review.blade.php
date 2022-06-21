@@ -90,7 +90,7 @@
     </div>
 
     <div class="add-review-wrapper">
-       <div>
+       <div class="mt-2">
             <h2>Add Review</h2>
             <p class="mt">Your email address will not be published.</p>
        </div>
@@ -115,7 +115,7 @@
                                     <label for="#">Your Review</label>
                                     <textarea id="text-editor"  name="comments"  cols="30" rows="6"></textarea>
                                 </div> 
-                            <button class="btn btn-dark">SUBMIT</button>    
+                            <button class="btn btn-dark sm-w-12">SUBMIT</button>    
                         <form>  
                             
             </div>

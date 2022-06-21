@@ -10,13 +10,14 @@ use App\Http\Traits\Crypted;
 use App\Models\ProductAttribute;
 use App\Http\Traits\DateTimeFormat;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 class Product extends Model
 {
 
-    use HasFactory, DateTimeFormat, Crypted;
+    use HasFactory, SoftDeletes, DateTimeFormat, Crypted;
     
      /**
      * The attributes that are mass assignable.

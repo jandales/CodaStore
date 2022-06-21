@@ -26,6 +26,7 @@ class CreateCouponsTable extends Migration
             $table->integer('limit_per_user')->nullable()->default(0);  
             $table->integer('usage')->nullable()->default(0);    
             $table->timestamp('expire_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

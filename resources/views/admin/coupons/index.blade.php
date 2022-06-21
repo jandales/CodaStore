@@ -96,13 +96,14 @@
                                                         <i class="fas fa-eye"></i>  
                                                     </span>                                                                           
                                                 </a>
-                                            </li>    
+                                            </li>  
+                                            @can('delete', $coupon)  
                                                 <li>
                                                     <span  data-url={{ route('admin.coupon.destroy',[$coupon->encryptedId()])}} class="span coupon-destroy">
                                                             <i class="fas fa-trash"></i>  
                                                     </span>  
                                                 </li>
-                                            
+                                            @endcan
                                         </ul>
                                     </div>
                                 </td>

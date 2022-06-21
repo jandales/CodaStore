@@ -6,6 +6,12 @@
 <div class="page-title">
     <h1>Products</h1>
 </div>
+
+@if(session('success'))
+<br>
+    <div class="alert alert-success">{{ session('success') }}</div>    
+@endif
+   
 <div class="row" >
     <div class="panel-table m-t-2 w-12">
         <div class="panel-header">            

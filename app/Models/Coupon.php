@@ -7,11 +7,12 @@ use App\Http\Traits\Crypted;
 use App\Models\CouponUsageUser;
 use App\Http\Traits\DateTimeFormat;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Coupon extends Model
 {
-    use HasFactory, Crypted, DateTimeFormat;
+    use HasFactory, SoftDeletes,  Crypted,  DateTimeFormat;
     protected $primaryKey = "id";
     protected $fillable  = [
         'name',

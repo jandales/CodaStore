@@ -11,11 +11,12 @@ use App\Models\PaymentDetail;
 use App\Models\BillingDetails;
 use App\Http\Traits\DateTimeFormat;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Order extends Model
 {
-    use HasFactory, Crypted, DateTimeFormat;
+    use HasFactory, SoftDeletes, Crypted, DateTimeFormat;
 
     protected $fillable = [
         'user_id', 

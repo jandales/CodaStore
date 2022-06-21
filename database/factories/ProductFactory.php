@@ -23,8 +23,9 @@ class ProductFactory extends Factory
     {
         $TYPE = '.webp';
         $name = $this->faker->word();
+        
         return [  
-            'name' => $this->faker->word,
+            'name' => $name,
             'category_id' => rand(1,3),
             'slug' => slug($name),        
             'short_description' => $this->faker->sentence(),            

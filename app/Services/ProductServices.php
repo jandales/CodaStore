@@ -58,6 +58,7 @@ class ProductServices
     {     
      
         $image = json_decode($request->image, true);
+        
         return DB::transaction(function () use($request, $product, $image) {
             $product->name = $request->name;
             $product->slug = productSlug($request->name);
@@ -77,7 +78,7 @@ class ProductServices
             $stock = $product->stock;
             $stock->qty = $request->qty;
             $stock->save();     
-            
+       
             Self::updateProductImage($image, $product->imageDetail() );
            
             Self::imageGalleryUpdate($request->input('images'), $product->id);
@@ -94,6 +95,12 @@ class ProductServices
 
     public function destroy(Product $product)
     {    
+        return $product->delete();       
+    }
+
+    public function forceDestroy(Product $product)
+    {    
+      
         return DB::transaction( function () use ( $product ) {
             ProductAttribute::where('product_id', $product->id)->delete();
             ProductVariant::where('product_id', $product->id)->delete();   
@@ -165,12 +172,20 @@ class ProductServices
     private function ImageGalleryUpdate($images, $product_id)
     {       
         if ($images == null)  return;
+ 
         foreach($images as $image)
         {           
             $image = json_decode($image, true);   
-            $photo = Photo::find($image['id']);  
-            if ($image['deleted']) Self::unlink($photo);
-            if ($photo->product_id != $product_id) Self::updatePhotoOwner($photo, $product_id);           
+            $photo = Photo::find($image['id']);
+
+       
+            if ($image['deleted']  == 1) {         
+                Self::unlink($photo);
+            }
+
+            if ($photo->product_id != $product_id) {           
+                Self::updatePhotoOwner($photo, $product_id);           
+            }
         }
         
     }  
@@ -215,7 +230,7 @@ class ProductServices
         });
        
     }
-    private function updatePhotoOwner(Photo $photo ,$product_id)
+    private function updatePhotoOwner(Photo $photo,$product_id)
     {        
         $photo->product_id = $product_id;
         $photo->save();

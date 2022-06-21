@@ -90,17 +90,18 @@ class AdminOrderServices
     }
 
     public function destroy(Order $order)
-    {     
-        $order->billing->delete();
-        $order->shipping->delete();
-        $order->payment->delete();
+    {    
+       return $order->delete(); 
+        // $order->billing->delete();
+        // $order->shipping->delete();
+        // $order->payment->delete();
 
-        foreach($order->items as $item)
-        {
-            $item->delete();
-        }
+        // foreach($order->items as $item)
+        // {
+        //     $item->delete();
+        // }
 
-        $order->delete();
+        // $order->delete();
     }
 
        

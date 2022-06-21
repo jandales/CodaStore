@@ -4236,6 +4236,10 @@ button:disabled {
   border-color: #2e2e2e;
 }
 
+.btn-dark a, .btn-dark span {
+  color: #fff;
+}
+
 .btn-light {
   color: #2e2e2e;
   background-color: #fff;

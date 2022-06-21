@@ -13,7 +13,7 @@ class CustomerServices {
         
     public function list()
     {
-        return User::where('delete_at', 0)->paginate(10);
+        return User::paginate(10);
     }
     
     public function update($request)
@@ -27,9 +27,8 @@ class CustomerServices {
     }
 
     public function destroy(User $user)
-    {         
-        $user->delete_at = 1;
-        $user->save();    
+    { 
+        $user->delete();   
     }
 
     public function changePassword($request)

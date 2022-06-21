@@ -21,8 +21,6 @@ class CartItem extends Model
         'attributes' => 'array'
     ];
 
-
-
     public function cart()
     {
         return $this->belongsTo(Cart::class);

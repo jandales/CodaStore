@@ -11,8 +11,7 @@ use App\Models\ShippingMethod;
 use Illuminate\Support\Facades\Cookie;
 
 class CartServices
-{
-    
+{   
 
     public function index()
     {              

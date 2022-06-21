@@ -120,10 +120,10 @@ class OrderPolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param  \App\Models\Admin  $user
+     * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function clientCreate(Admin $user)
+    public function clientCreate(User $user)
     {
         return $user->is_current_user();
     }

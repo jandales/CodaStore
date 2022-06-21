@@ -6,6 +6,7 @@ use App\Http\Traits\Crypted;
 use App\Http\Traits\DateTimeFormat;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -13,7 +14,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Admin extends Authenticatable
 {
-    use HasFactory, Notifiable, Crypted, DateTimeFormat;
+    use HasFactory, SoftDeletes, Notifiable, Crypted, DateTimeFormat;
 
     /**
      * The attributes that are mass assignable.

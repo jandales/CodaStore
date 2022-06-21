@@ -12,7 +12,7 @@ use App\Models\Photo;
 
 class ProductSeeder extends Seeder
 {
-   private $sizes = [10, 20, 30, 40, 50];
+   private $sizes = ["S", "M", "L", "XL"];
    private $colors = ['grey', 'black', 'white', 'red'];
    private $TYPE = '.webp';
    private $location = '/img/products/default/';
@@ -57,10 +57,8 @@ class ProductSeeder extends Seeder
     private function createVaraints($user_id)
     {
         
-        for ($i=1; $i < $this->attributesCount + 1; $i++)
-        { 
-                   
-           if($i == 1){
+        for ($i=1; $i < $this->attributesCount + 1; $i++) {                    
+           if ($i == 1) {
                 foreach($this->colors as $color)
                 {
                     ProductVariant::factory()->create([
@@ -69,11 +67,10 @@ class ProductSeeder extends Seeder
                         'name' => $color,
                     ]);
                 }    
-           }         
+           }        
 
-            if($i == $this->attributesCount) {
-                foreach($this->sizes as $size)
-                {            
+           if ($i == $this->attributesCount) {
+                foreach ($this->sizes as $size) {            
                     ProductVariant::factory()->create([
                         'product_id' => $user_id,
                         'attribute_id' => $i,
@@ -91,8 +88,7 @@ class ProductSeeder extends Seeder
     private function createPhotos($user_id)
     {
         $location = '/img/products/default/';
-        for($i = 0; $i < 5; $i++)
-        {
+        for ($i = 0; $i < 5; $i++) {
             Photo::factory()->create([
                 'product_id' => $user_id,
                 'path' => $location . rand(1,20) . $this->TYPE,  

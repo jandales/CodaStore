@@ -14,7 +14,23 @@
 
 <body>
 
-    <div id="flex"> 
+    <div id="flex">
+        @auth('admin')
+            <div style="width:100%; background:#222">
+                <div class="container" style="padding-top: .5rem; padding-bottom: .5rem">
+                    <a href="/admin" style="color:#fff;">Dashbaord</a>
+                </div>
+            </div> 
+        @endauth
+        @if(config('app.env') != 'local') 
+            <div style="width:100%; background-color: #fff3cd;">
+                <div class="container"  style="padding-top: .5rem; padding-bottom: .5rem">
+                    <label for="">This website for demo purpose only</label>
+                </div>
+            </div>
+        @endif
+       
+     
         {{-- @if(!request()->routeIs(['login','register'])) --}}
             <div class="header-container">                 
                 {{-- @include('layout.front.topnav')                  --}}

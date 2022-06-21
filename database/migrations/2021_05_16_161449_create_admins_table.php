@@ -29,6 +29,7 @@ class CreateAdminsTable extends Migration
             $table->string('postalcode_zip')->nullable();
             $table->string('country_region')->nullable();
             $table->text('imagePath')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
