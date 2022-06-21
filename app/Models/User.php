@@ -111,8 +111,7 @@ class User extends Authenticatable
     public function scopeSearch($query,$input)
     {
         return $query->where('name','like','%' . $input . '%')                  
-                     ->orWhere('email','like','%' . $input . '%');                 
-                
+                     ->orWhere('email','like','%' . $input . '%');
     }
 
     public function couponUse($id)

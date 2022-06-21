@@ -19,6 +19,7 @@ class CreateShippingMethodsTable extends Migration
             $table->text('description')->nullable();
             $table->double('amount')->default(0);
             $table->integer('status');
+            $table->softDeletes();  
             $table->timestamps();
         });
     }
