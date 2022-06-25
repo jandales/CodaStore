@@ -7,6 +7,7 @@ use App\Models\Coupon;
 use App\Models\Product;
 use App\Http\Traits\Crypted;
 use App\Models\UserPaymentOption;
+use Laravel\Sanctum\HasApiTokens;
 use App\Http\Traits\DateTimeFormat;
 use App\Models\UserShippingAddress;
 use Illuminate\Notifications\Notifiable;
@@ -17,7 +18,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasFactory, SoftDeletes ,Notifiable, DateTimeFormat, Crypted;
+    use HasFactory, HasApiTokens, SoftDeletes ,Notifiable, DateTimeFormat, Crypted;
 
     /**
      * The attributes that are mass assignable.

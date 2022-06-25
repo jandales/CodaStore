@@ -5,6 +5,16 @@ use App\Models\UserPaymentOption;
 
 class UserPaymentOptionServices {
 
+    public function index($user_id, $id)
+    {
+        return UserPaymentOption::where(['user_id'=> $user_id, 'id' => $id])->get();
+    }
+
+    public function getPaymentOption($user_id, $id)
+    {
+        return UserPaymentOption::where(['user_id'=> $user_id, 'id' => $id])->first();
+    }
+
     public function store($request)
     {      
        return UserPaymentOption::create([

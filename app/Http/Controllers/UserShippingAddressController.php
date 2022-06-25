@@ -34,7 +34,7 @@ class UserShippingAddressController extends Controller
     {      
         $this->authorize('create', UserShippingAddress::class);
 
-        $this->services->store($request); 
+        $this->services->store($request, auth()->user()->id); 
 
         return redirect()->route('account.shippingaddress')->with('success', 'Address successfully created');
     }
@@ -67,8 +67,8 @@ class UserShippingAddressController extends Controller
     public function set_default_address(UserShippingAddress $address)
     {   
         $this->authorize('update', $address);
-        
-        $this->services->set_default_address($address);
+      
+        $this->services->set_default_address($address, auth()->user()->id);
 
         return back()->with('success', 'Address successfully updated'); 
     }

@@ -36,6 +36,8 @@ class ProductVariant extends Model
         return $this->hasMany(ProductAttribute::class);
     }
 
+   
+
     public function scopeExist($query,$product,$variant)
     {   
         return $query->where('product_id', $product)->where('variant_id', $variant);                 

@@ -1,17 +1,22 @@
 <?php
 namespace App\Services;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\UserShippingAddress;
 
 class UserShippingServices
 {
-   
-    public function store(Request $request)
+  
+
+
+    public function store(Request $request, $user_id)
     {
-        $status = auth()->user()->shippingAddress->count() == 0 ? 1 : 0;
+       
+        $user = User::find($user_id);
+        $status = $user->shippingAddress->count() == 0 ? 1 : 0;
         $validated = $request->validated();
-        $validated['user_id'] = auth()->user()->id;
+        $validated['user_id'] = $user_id;
         $validated['status'] = $status;
         return UserShippingAddress::create($validated); 
     }
@@ -30,20 +35,18 @@ class UserShippingServices
         return $address;
     }
 
-    public function set_default_address(UserShippingAddress $address)
+    public function set_default_address(UserShippingAddress $address, $user_id)
     {
-       
-        $currentAddress = auth()->user()->shippingDefaultAddress();
+        
+        $currentAddress = UserShippingAddress::where(['user_id' => $user_id, 'status' => 1])->first();
 
-        if(empty($currentAddress)) {
-            Self::updateStatus($address, 1);
-            return;
+        if(empty($currentAddress)) {            
+            return Self::updateStatus($address, 1);
         }  
 
         Self::updateStatus($currentAddress, 0);
-        Self::updateStatus($address, 1);      
-        return;
-        
+        $address = Self::updateStatus($address, 1);      
+        return $address;        
     }
 
     private function updateStatus(UserShippingAddress $address, $status)
