@@ -42,12 +42,12 @@ class UserPaymentOptionController extends Controller
     {   
         $this->authorize('create', UserPaymentOption::class); 
 
-        $this->services->store($request);        
+        $this->services->store($request, auth()->user()->id);        
 
         return redirect()->route('account.payment-option')->with('success', 'Card Successfully Addedd');
     }
 
-    public function update(UpdatePaymentOptionRequest $request,UserPaymentOption $option)
+    public function update(UpdatePaymentOptionRequest $request, UserPaymentOption $option)
     {          
         $this->authorize('update', $option);
 
@@ -69,7 +69,7 @@ class UserPaymentOptionController extends Controller
     {  
         $this->authorize('update', $option);
 
-        $result = $this->services->updateStatus($option);
+        $result = $this->services->updateStatus($option, auth()->user()->id);
 
         return back()->with($result);
     }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\UserPaymentOptionServices;
+use App\Http\Requests\StorePaymentOptionRequest;
+use App\Http\Requests\UpdatePaymentOptionRequest;
 
 class UserPaymentOptionController extends Controller
 {
@@ -15,22 +17,41 @@ class UserPaymentOptionController extends Controller
         $this->services = $services;
     }
     
-    public function index($user_id, $id)
+    public function index($user_id)
     {  
-        $paymentOption =  $this->services->index($user_id, $id);
+        $paymentOption =  $this->services->getPaymentOptions($user_id);
         return response()->json($paymentOption);
     }
     
-    public function store(StorePaymentOptionRequest $request)
+    public function store(StorePaymentOptionRequest $request, $user_id)
     {  
-        $option = $this->services->store($request);  
+        $option = $this->services->store($request, $user_id);  
         return response()->json($option);
        
     }
 
-    public function update(UpdatePaymentOptionRequest $request, $user_id, $id)
+    public function show($user_id, $id)
+    {
+        return response()->json($this->services->getPaymentOption($user_id, $id));
+    }
+
+    public function findByCardNumber($user_id,$card_number)
+    {
+        $option = $this->services->getPaymentOptionByCardNumber($user_id, $card_number);
+        return response()->json($option);
+    }
+
+    public function update(Request $request, $user_id, $id)
     {    
-        $option = $this->services->update($request, $user_id, $id);
+        $validated = $request->validate([
+            'card_name' => 'required',
+            'card_number'  => "required|min:16|unique:user_payment_options,card_number,". $id,
+            'card_expire_date' => 'required',
+            'card_cvc' => 'required|min:3|max:3',    
+        ]);
+      
+        $option = $this->services->getPaymentOption($user_id, $id);
+        $option = $this->services->update($request, $option);
         return response()->json($option);      
     }
 
@@ -41,9 +62,10 @@ class UserPaymentOptionController extends Controller
         return response()->json($option);
     }
 
-    public function updateStatus()
+    public function setActive($user_id, $id)
     {  
-        $option = $this->services->updateStatus($user_id,$id);
+        $option = $this->services->getPaymentOption($user_id, $id);
+        $option = $this->services->updateStatus($option, $user_id);
         return response()->json($option);
       
     }

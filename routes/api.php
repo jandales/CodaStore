@@ -2,10 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\UserAddressController;
 use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\UserPaymentOptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +23,9 @@ use App\Http\Controllers\Api\Auth\RegisterController;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+
 
 Route::get('/v1/products/collection', [ProductController::class, 'index']);
 
@@ -39,6 +44,10 @@ Route::post('/v1/register', [RegisterController::class, 'register']);
 Route::post('/v1/login', [LoginController::class, 'login']);
 
 
+Route::get('/v1/user/{user_id}', [UserController::class, 'user']);
+
+Route::put('/v1/user/{user_id}', [UserController::class, 'update']);
+
 
 Route::get('/v1/user/{user_id}/address', [UserAddressController::class, 'index']);
 
@@ -54,17 +63,19 @@ Route::delete('/v1/user/{$user_id}/address/{id}', [UserAddressController::class,
 
 
 
-Route::get('/v1/user/{user_id}/paymentOption', [UserAddressController::class, 'index']);
+Route::get('/v1/user/{user_id}/paymentOption', [UserPaymentOptionController::class, 'index']);
 
-Route::get('/v1/user/{user_id}/paymentOption/{id}', [UserAddressController::class, 'show']);
+Route::get('/v1/user/{user_id}/paymentOption/{id}', [UserPaymentOptionController::class, 'show']);
 
-Route::post('/v1/user/{user_id}/paymentOption', [UserAddressController::class, 'store']);
+Route::get('/v1/user/{user_id}/paymentOption/card-number/{card_number}', [UserPaymentOptionController::class, 'findByCardNumber']);
 
-Route::put('/v1/user/{user_id}/paymentOption/{id}', [UserAddressController::class, 'update']);
+Route::post('/v1/user/{user_id}/paymentOption', [UserPaymentOptionController::class, 'store']);
 
-Route::patch('/v1/user/{user_id}/paymentOption/{id}', [UserAddressController::class, 'setActive']);
+Route::put('/v1/user/{user_id}/paymentOption/{id}', [UserPaymentOptionController::class, 'update']);
 
-Route::delete('/v1/user/{user_id}/paymentOption/{id}', [UserAddressController::class, 'destroy']);
+Route::patch('/v1/user/{user_id}/paymentOption/{id}', [UserPaymentOptionController::class, 'setActive']);
+
+Route::delete('/v1/user/{user_id}/paymentOption/{id}', [UserPaymentOptionController::class, 'destroy']);
 
 
 
