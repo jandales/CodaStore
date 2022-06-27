@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\UserAddressController;
@@ -55,11 +56,11 @@ Route::get('/v1/user/{user_id}/address/{id}', [UserAddressController::class, 'sh
 
 Route::post('/v1/user/{user_id}/address', [UserAddressController::class, 'store']);
 
-Route::put('/v1/user/{user_id}address/{id}', [UserAddressController::class, 'update']);
+Route::put('/v1/user/{user_id}/address/{id}', [UserAddressController::class, 'update']);
 
-Route::patch('/v1/user/{user_id}/address/{d}', [UserAddressController::class, 'setActive']);
+Route::patch('/v1/user/{user_id}/address/{id}', [UserAddressController::class, 'setActive']);
 
-Route::delete('/v1/user/{$user_id}/address/{id}', [UserAddressController::class, 'destroy']);
+Route::delete('/v1/user/{user_id}/address/{id}', [UserAddressController::class, 'destroy']);
 
 
 
@@ -76,6 +77,11 @@ Route::put('/v1/user/{user_id}/paymentOption/{id}', [UserPaymentOptionController
 Route::patch('/v1/user/{user_id}/paymentOption/{id}', [UserPaymentOptionController::class, 'setActive']);
 
 Route::delete('/v1/user/{user_id}/paymentOption/{id}', [UserPaymentOptionController::class, 'destroy']);
+
+
+Route::get('/v1/user/{user_id}/orders',[OrderController::class, 'index']);
+
+Route::get('/v1/user/{user_id}/orders/{id}',[OrderController::class, 'show']);
 
 
 

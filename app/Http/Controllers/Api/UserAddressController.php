@@ -19,7 +19,7 @@ class UserAddressController extends Controller
 
     public function index($id)
     {   
-        return response()->json([UserShippingAddress::all()]);
+        return response()->json(UserShippingAddress::where('user_id',$id)->get());
     }
 
     public function show($user_id, $id)
@@ -36,20 +36,20 @@ class UserAddressController extends Controller
 
     public function update(ShippingAddressRequest  $request,$user_id, $id)
     {      
-        $address =  UserShippingAddress::find($address_id);
+        $address =  UserShippingAddress::find($id);
         $this->services->update($request, $address);
         return response()->json([$this->services->update($request, $address)]);     
     }
 
     public function destroy($user_id, $id)
     {  
-        UserShippingAddress::find($address_id)->delete();
+        UserShippingAddress::find($id)->delete();
         return response()->json(['success', 'Address successfully deleted']);          
     }
 
     public function setActive($user_id, $id)
     {          
-        $address = UserShippingAddress::find($address_id); 
+        $address = UserShippingAddress::find($id); 
 
         return response()->json([$this->services->set_default_address($address, $user_id)]); 
     }

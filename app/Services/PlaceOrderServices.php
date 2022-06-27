@@ -127,7 +127,7 @@ class PlaceOrderServices {
                 'product_id' => $item->product_id,
                 'qty' => $item->qty,
                 'price' => $item->product->regular_price,
-                'properties' => $item->properties,
+                'properties' => $item->attributes,
             ]); 
               
             Stock::where('product_id', $item->product_id)->decrement('qty', $item->qty);
