@@ -20,6 +20,11 @@ class UserPaymentOptionServices {
         return UserPaymentOption::where(['user_id'=> $user_id, 'card_number' => $card_number])->first();
     }
 
+    public function getDefault($user_id)
+    {
+        return UserPaymentOption::where(['user_id'=> $user_id, 'status' => 1])->first();
+    }
+
 
 
     public function store($request, $user_id)

@@ -14,12 +14,13 @@ class OrderController extends Controller
         return response()->json(Order::with('items','items.product')->withCount('items')->get());
     }
 
-    public function show($user_id, $id) 
+    public function show($id) 
     {
-        return response()->json(Order::with('items','items.product', 'shipping', 'billing', 'payment', 'shippingMethod')
-                                     ->withCount('items')
-                                     ->where(['user_id' => $user_id, 'id' => $id ])
-                                     ->first());
+        $order = Order::with('items','items.product', 'shipping', 'billing', 'payment', 'shippingMethod')
+                ->withCount('items')
+                ->where('id',$id)
+                ->first();
+        return response()->json($order);
                                   
     }
 }

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\LogoutController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\UserAddressController;
@@ -21,67 +22,73 @@ use App\Http\Controllers\Api\UserPaymentOptionController;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+
+
+
+Route::get('/products/collection', [ProductController::class, 'index']);
+
+Route::get('/products/collection/{name}/sort-by={sort}', [ProductController::class, 'sort']);
+
+Route::get('/products/collection/{filter}', [ProductController::class, 'index']);
+
+Route::get('/products/featured/limit={limit}', [ProductController::class, 'featured']);
+
+Route::get('/collection', [ProductController::class, 'collection']);
+
+Route::get('/products/{slug}', [ProductController::class, 'show']);
+
+Route::post('/register', [RegisterController::class, 'register']);
+
+Route::post('/login', [LoginController::class, 'login']);
+
+Route::group(['middleware' => ['auth:sanctum']], function ()  {
+
+        Route::get('/user', [UserController::class, 'user']);
+
+        Route::put('/user', [UserController::class, 'update']);
+
+        Route::get('/user/address', [UserAddressController::class, 'index']);
+
+        Route::get('/user/address/{id}', [UserAddressController::class, 'show']);
+
+        Route::get('/user/address/default/1', [UserAddressController::class, 'default']);        
+
+        Route::post('/user/address', [UserAddressController::class, 'store']);
+
+        Route::put('/user/address/{id}', [UserAddressController::class, 'update']);
+
+        Route::patch('/user/address/{id}', [UserAddressController::class, 'setActive']);
+
+        Route::delete('/user/address/{id}', [UserAddressController::class, 'destroy']);
+
+        Route::get('/user/paymentOption', [UserPaymentOptionController::class, 'index']);
+
+        Route::get('/user/paymentOption/{id}', [UserPaymentOptionController::class, 'show']);
+
+        Route::get('/user/paymentOption/default/1', [UserPaymentOptionController::class, 'default']);
+
+        Route::get('/user/paymentOption/card-number/{card_number}', [UserPaymentOptionController::class, 'findByCardNumber']);
+
+        Route::post('/user/paymentOption', [UserPaymentOptionController::class, 'store']);
+
+        Route::put('/user/paymentOption/{id}', [UserPaymentOptionController::class, 'update']);
+
+        Route::patch('/user/paymentOption/{id}', [UserPaymentOptionController::class, 'setActive']);
+
+        Route::delete('/user/paymentOption/{id}', [UserPaymentOptionController::class, 'destroy']);
+
+        Route::get('/user/orders',[OrderController::class, 'index']);
+
+        Route::get('/user/orders/{id}',[OrderController::class, 'show']);     
+
+        Route::delete('/user/logout',[LogoutController::class, 'logout']);
 });
 
 
-
-
-Route::get('/v1/products/collection', [ProductController::class, 'index']);
-
-Route::get('/v1/products/collection/{name}/sort-by={sort}', [ProductController::class, 'sort']);
-
-Route::get('/v1/products/collection/{filter}', [ProductController::class, 'index']);
-
-Route::get('/v1/products/featured/limit={limit}', [ProductController::class, 'featured']);
-
-Route::get('/v1/collection', [ProductController::class, 'collection']);
-
-Route::get('/v1/products/{slug}', [ProductController::class, 'show']);
-
-Route::post('/v1/register', [RegisterController::class, 'register']);
-
-Route::post('/v1/login', [LoginController::class, 'login']);
-
-
-Route::get('/v1/user/{user_id}', [UserController::class, 'user']);
-
-Route::put('/v1/user/{user_id}', [UserController::class, 'update']);
-
-
-Route::get('/v1/user/{user_id}/address', [UserAddressController::class, 'index']);
-
-Route::get('/v1/user/{user_id}/address/{id}', [UserAddressController::class, 'show']);
-
-Route::post('/v1/user/{user_id}/address', [UserAddressController::class, 'store']);
-
-Route::put('/v1/user/{user_id}/address/{id}', [UserAddressController::class, 'update']);
-
-Route::patch('/v1/user/{user_id}/address/{id}', [UserAddressController::class, 'setActive']);
-
-Route::delete('/v1/user/{user_id}/address/{id}', [UserAddressController::class, 'destroy']);
-
-
-
-Route::get('/v1/user/{user_id}/paymentOption', [UserPaymentOptionController::class, 'index']);
-
-Route::get('/v1/user/{user_id}/paymentOption/{id}', [UserPaymentOptionController::class, 'show']);
-
-Route::get('/v1/user/{user_id}/paymentOption/card-number/{card_number}', [UserPaymentOptionController::class, 'findByCardNumber']);
-
-Route::post('/v1/user/{user_id}/paymentOption', [UserPaymentOptionController::class, 'store']);
-
-Route::put('/v1/user/{user_id}/paymentOption/{id}', [UserPaymentOptionController::class, 'update']);
-
-Route::patch('/v1/user/{user_id}/paymentOption/{id}', [UserPaymentOptionController::class, 'setActive']);
-
-Route::delete('/v1/user/{user_id}/paymentOption/{id}', [UserPaymentOptionController::class, 'destroy']);
-
-
-Route::get('/v1/user/{user_id}/orders',[OrderController::class, 'index']);
-
-Route::get('/v1/user/{user_id}/orders/{id}',[OrderController::class, 'show']);
 
 
 

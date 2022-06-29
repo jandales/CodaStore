@@ -8,17 +8,14 @@ use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {
-    public function find($id)
+
+
+    public function user()
     {
-        return User::find($id);
+        return auth()->user();
     }
 
-    public function user($id)
-    {
-        return response()->json(Self::find($id));
-    }
-
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $request->validate([
             'name' => 'required',
@@ -27,7 +24,7 @@ class UserController extends Controller
             'age' => 'required',          
         ]);
 
-        $user = Self::find($id);      
+        $user = auth()->user();      
         $user->name = $request->name;
         $user->contact = $request->contact;
         $user->dateofbirth = $request->dateofbirth;
@@ -36,4 +33,6 @@ class UserController extends Controller
         
         return $user;
     }
+
+   
 }

@@ -17,41 +17,50 @@ class UserAddressController extends Controller
         $this->services = $services;
     }
 
-    public function index($id)
+
+
+    public function index()
     {   
-        return response()->json(UserShippingAddress::where('user_id',$id)->get());
+        return response()->json(UserShippingAddress::where('user_id',auth()->user()->id)->get());
     }
 
-    public function show($user_id, $id)
+    public function show($id)
     {
-        $address = UserShippingAddress::where(['user_id' => $user_id, 'id' => $id])->first();
+        $address = UserShippingAddress::where(['user_id' => auth()->user()->id, 'id' => $id])->first();
         return response()->json($address);
     }
 
-    public function store(ShippingAddressRequest $request, $user_id)
+    public function default()
+    {
+        $address = UserShippingAddress::where(['user_id' => auth()->user()->id, 'status' => 1])->first();
+        return response()->json($address);
+    }
+
+    public function store(ShippingAddressRequest $request)
     {  
-        return response()->json([$this->services->store($request,$user_id)]);
+        $address = $this->services->store($request, auth()->user()->id);
+        return response()->json($address);
     }
  
 
-    public function update(ShippingAddressRequest  $request,$user_id, $id)
+    public function update(ShippingAddressRequest  $request, $id)
     {      
         $address =  UserShippingAddress::find($id);
         $this->services->update($request, $address);
-        return response()->json([$this->services->update($request, $address)]);     
+        return response()->json($this->services->update($request, $address));     
     }
 
-    public function destroy($user_id, $id)
+    public function destroy($id)
     {  
         UserShippingAddress::find($id)->delete();
         return response()->json(['success', 'Address successfully deleted']);          
     }
 
-    public function setActive($user_id, $id)
+    public function setActive($id)
     {          
         $address = UserShippingAddress::find($id); 
 
-        return response()->json([$this->services->set_default_address($address, $user_id)]); 
+        return response()->json([$this->services->set_default_address($address,auth()->user()->id)]); 
     }
 
 }

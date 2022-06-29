@@ -36,11 +36,12 @@ class ProductController extends Controller
     public function collection()
     {
         $collection = Category::get();
-        return response()->json(['collection' => $collection]);
+        return response()->json($collection);
     }
 
     public function featured($limit= null)
     {        
+    
         if ($limit != null) {
             return Product::with('category','stock')->where(['status' => 1, 'featured' => 1])->take($limit)->get();
         }

@@ -17,31 +17,36 @@ class UserPaymentOptionController extends Controller
         $this->services = $services;
     }
     
-    public function index($user_id)
+    public function index()
     {  
-        $paymentOption =  $this->services->getPaymentOptions($user_id);
+        $paymentOption =  $this->services->getPaymentOptions(auth()->user()->id);
         return response()->json($paymentOption);
     }
     
-    public function store(StorePaymentOptionRequest $request, $user_id)
+    public function store(StorePaymentOptionRequest $request)
     {  
-        $option = $this->services->store($request, $user_id);  
+        $option = $this->services->store($request, auth()->user()->id);  
         return response()->json($option);
        
     }
 
-    public function show($user_id, $id)
+    public function show($id)
     {
-        return response()->json($this->services->getPaymentOption($user_id, $id));
+        return response()->json($this->services->getPaymentOption(auth()->user()->id, $id));
+    }
+
+    public function default()
+    {
+        return response()->json($this->services->getDefault(auth()->user()->id));
     }
 
     public function findByCardNumber($user_id,$card_number)
     {
-        $option = $this->services->getPaymentOptionByCardNumber($user_id, $card_number);
+        $option = $this->services->getPaymentOptionByCardNumber(auth()->user()->id, $card_number);
         return response()->json($option);
     }
 
-    public function update(Request $request, $user_id, $id)
+    public function update(Request $request, $id)
     {    
         $validated = $request->validate([
             'card_name' => 'required',
@@ -50,22 +55,23 @@ class UserPaymentOptionController extends Controller
             'card_cvc' => 'required|min:3|max:3',    
         ]);
       
-        $option = $this->services->getPaymentOption($user_id, $id);
+        $option = $this->services->getPaymentOption(auth()->user()->id, $id);
         $option = $this->services->update($request, $option);
         return response()->json($option);      
     }
 
-    public function destroy($user_id, $id)
-    {         
-        $option = $this->services->getPaymentOption($user_id,$id);
+    public function destroy($id)
+    {    
+        $option = $this->services->getPaymentOption(auth()->user()->id,$id);
         $option->delete();  
         return response()->json($option);
     }
 
-    public function setActive($user_id, $id)
+    public function setActive($id)
     {  
-        $option = $this->services->getPaymentOption($user_id, $id);
-        $option = $this->services->updateStatus($option, $user_id);
+   
+        $option = $this->services->getPaymentOption(auth()->user()->id, $id);
+        $option = $this->services->updateStatus($option, auth()->user()->id);
         return response()->json($option);
       
     }

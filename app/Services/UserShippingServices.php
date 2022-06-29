@@ -7,9 +7,6 @@ use App\Models\UserShippingAddress;
 
 class UserShippingServices
 {
-  
-
-
     public function store(Request $request, $user_id)
     {
        
