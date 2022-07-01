@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\LogoutController;
@@ -86,6 +87,17 @@ Route::group(['middleware' => ['auth:sanctum']], function ()  {
         Route::get('/user/orders/{id}',[OrderController::class, 'show']);     
 
         Route::delete('/user/logout',[LogoutController::class, 'logout']);
+
+
+        Route::post('/cart/add', [CartController::class, 'store']);
+
+        Route::post('/set-cart-cookie', [CartController::class, 'setCookie']);
+
+        Route::get('/cart', [CartController::class, 'index']);
+        
+        Route::patch('/cart/{id}', [CartController::class, 'update']);
+
+        Route::delete('/cart/item/{id}',[CartController::class, 'destroy']);
 });
 
 

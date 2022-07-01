@@ -12,10 +12,10 @@ use Illuminate\Support\Facades\Cookie;
 
 class AppServices  extends BaseServices
 {
-    public function setCartCookie()
+    public function setCookie()
     {        
       
-        if(Cookie::has('cart-id')) return;
+        if(Cookie::has('cart-id')) return true;
 
         $minutes = (60 * 24) * 7;  
         $timestamp = Carbon::now()->timestamp;  
