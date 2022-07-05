@@ -34,8 +34,9 @@ class CheckOutServices
          return (object)['cart' => $cart, 'email' => $email ?? auth()->user()->email, 'address' => $address ?? auth()->user()->shippingDefaultAddress()];      
      }
  
-    public function store($request)
+    public function store(Request $request)
     {   
+    
         return session([
             'email' => $request->email,
             'shipping_method' => session('shipping_method') ?? null,
@@ -50,6 +51,8 @@ class CheckOutServices
                 'zipcode' => $request->zipcode,
             ] 
         ]);
+
+      
         
     }
 

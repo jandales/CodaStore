@@ -21,7 +21,7 @@ class AppController extends Controller
 
     public function setCartCookie()
     {   
-        return $this->services->setCartCookie();
+        return $this->services->setCookie();
     }
 
     

@@ -31,7 +31,8 @@ class CheckoutStoreRequest extends FormRequest
             'city' => 'required',           
             'country' => 'required',
             'region' => 'required',
-            'zipcode' => 'required',   
+            'zipcode' => 'required', 
+            'phone' => 'required',  
         ];
     }
 }

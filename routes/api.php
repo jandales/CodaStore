@@ -7,9 +7,12 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\LogoutController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\PlaceOrderController;
 use App\Http\Controllers\Api\UserAddressController;
 use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\ShippingMethodController;
 use App\Http\Controllers\Api\UserPaymentOptionController;
 
 /*
@@ -88,27 +91,29 @@ Route::group(['middleware' => ['auth:sanctum']], function ()  {
 
         Route::delete('/user/logout',[LogoutController::class, 'logout']);
 
+        Route::get('/checkout',[CheckOutController::class, 'index']);
 
-        Route::post('/cart/add', [CartController::class, 'store']);
+        Route::post('/checkout',[CheckOutController::class, 'store']);
 
-        Route::post('/set-cart-cookie', [CartController::class, 'setCookie']);
+        Route::get('/checkout/shipping',[CheckOutController::class, 'shipping']);
 
-        Route::get('/cart', [CartController::class, 'index']);
-        
-        Route::patch('/cart/{id}', [CartController::class, 'update']);
+        Route::put('/checkout/shipping/update',[CheckOutController::class, 'updateShippingMethod']);
 
-        Route::delete('/cart/item/{id}',[CartController::class, 'destroy']);
+        Route::post('/checkout/placeorder',[PlaceOrderController::class, 'store']);
 });
 
+Route::post('/cart/add', [CartController::class, 'store']);
 
+Route::post('/set-cart-cookie', [CartController::class, 'setCookie']);
 
+Route::get('/cart', [CartController::class, 'index']);
 
+Route::patch('/cart/{id}', [CartController::class, 'update']);
 
+Route::delete('/cart/item/{id}',[CartController::class, 'destroy']);
 
+Route::get('/cart/count', [CartController::class, 'count']);
 
+Route::get('/shipping-methods', [ShippingMethodController::class, 'index']);
 
-
-
-
-
-
+Route::get('/shipping-methods/{id}', [ShippingMethodController::class, 'show']);

@@ -93,7 +93,7 @@
                                     <a href="{{ route('checkout.information') }}">
                                         <button class="btn btn-dark md-btn">CHECK OUT</button>
                                     </a>
-                            </div>
+                                </div>
                               
                             </div>
 

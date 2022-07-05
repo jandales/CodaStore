@@ -31,7 +31,7 @@ class CartController extends Controller
     public function store(Request $request)
     {       
         
-        $product = Product::where('slug', $request->id)->first();
+        $product = Product::find($request->id);
         $productQuantity = $product->stock->qty; 
         if ($productQuantity == 0)  return response()->json(['status' => 500, 'message' => 'Product is not available' ]); 
           
@@ -82,6 +82,11 @@ class CartController extends Controller
     {
         $item = CartItem::find($id);
         return $this->services->destroyCartItem($item);
+    }
+
+    public function count()
+    {
+        return response()->json(Cart::TotalItems());
     }
 
 
