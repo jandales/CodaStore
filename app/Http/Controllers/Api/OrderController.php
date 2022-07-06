@@ -18,7 +18,8 @@ class OrderController extends Controller
     {
         $order = Order::with('items','items.product', 'shipping', 'billing', 'payment', 'shippingMethod')
                 ->withCount('items')
-                ->where('id',$id)
+                ->orWhere('id',$id)
+                ->orWhere('order_number',$id)
                 ->first();
         return response()->json($order);
                                   

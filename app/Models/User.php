@@ -101,7 +101,7 @@ class User extends Authenticatable
 
     public function activeCoupon()
     {
-        return $this->coupons->where('user_id', $this->id)->first();
+        return $this->coupons->where('deleted' , 0);
     } 
 
     public function review(Product $product)

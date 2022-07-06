@@ -123,7 +123,8 @@ function getShippingOptions($id)
 function tax($amount)
 {
     $tax = 12 / 100;
-    $total = $amount * $tax;
+    //$total = $amount * $tax;
+    $total = 0;
     return $total;    
 }
 function category($id)

@@ -19,6 +19,7 @@ class CheckoutController extends Controller
 
     public function index()
     {
+    
         $result = $this->services->information();     
         return response()->json($result);    
     }

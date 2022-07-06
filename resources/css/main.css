@@ -2728,6 +2728,7 @@ details  ul li:last-child {
 .prod-variant{
     width: 100%;
     display: flex;
+    flex-direction: column;
 
 }
 .prod-variant li{

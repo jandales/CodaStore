@@ -11,6 +11,7 @@ use Illuminate\Http\Response;
 use App\Services\CartServices;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cookie;
+use App\Http\Requests\CouponCodeRequest;
 
 class CartController extends Controller
 {
@@ -87,6 +88,23 @@ class CartController extends Controller
     public function count()
     {
         return response()->json(Cart::TotalItems());
+    }
+
+    public function couponActivate(CouponCodeRequest $request)
+    {
+        return $this->services->couponActivate($request); 
+    }
+
+    public function getCoupon()
+    {
+        $coupon = $this->services->getCoupon();
+        return response()->json(['status' => 200,'coupon' => $coupon]);
+    }
+
+   
+    public function couponRemove()
+    {  
+        return $this->services->couponRemove();       
     }
 
 

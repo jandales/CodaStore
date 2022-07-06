@@ -90,7 +90,7 @@ class Coupon extends Model
 
     public function limitPerUser()
     {
-       $coupon = auth()->user()->activeCoupon();
+       $coupon =  auth()->user()->activeCoupon()->first();
 
        if(empty($coupon)) return true;
          
@@ -103,7 +103,7 @@ class Coupon extends Model
 
     public function userDeleted(){
 
-        $coupon = auth()->user()->activeCoupon();  
+        $coupon = auth()->user()->activeCoupon()->first();  
         if(!empty($coupon)){
           
              if($coupon->deleted == 1)

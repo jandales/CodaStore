@@ -14,13 +14,12 @@ class PlaceOrderController extends Controller
         
         try {
             $order = $service->storeOrder($request);   
-            return response()->json([
-                'status' => 200, 
+            return response()->json([               
                 'message' => 'order successfully create',
-                'route' => route('checkout.completed'),
+                'order' => $order,
             ]);         
         } catch (Exception $e) {
-            return response()->json(['route' => route('server.error'), 500]);  
+            return response()->json(['error' => 'server.error', 500]);  
         } 
     }
 }

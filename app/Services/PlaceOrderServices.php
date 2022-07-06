@@ -65,6 +65,8 @@ class PlaceOrderServices {
             Self::updateCouponUsage($cart->coupon_id);
     
             Self::deleteCheckoutSession();
+
+            $cart->delete();
     
             return $this->order; 
         });

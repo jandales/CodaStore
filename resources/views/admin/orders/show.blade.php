@@ -41,8 +41,8 @@
                                                     <label for="name">{{ $item->product->name }}</label>                                          
                                                      @if ($item->properties != null)
                                                         <ul class="prod-variant mt5">
-                                                            @foreach ($item->properties as $index =>  $variant)  
-                                                                    <li><p class="capitalized">{{ $variant['name'] }}: {{ $variant['value'] }} @if ($index != count($item->properties) -1) , @endif</p></li> 
+                                                            @foreach ($item->properties as $key =>  $variant) 
+                                                                    <li><p class="capitalized">{{ $key }} : {{ $variant}}</p></li> 
                                                             @endforeach
                                                         </ul> 
                                                     @endif

@@ -126,6 +126,7 @@ class CartServices
 
     public function couponActivate(Request $request)
     {      
+      
         $coupon = Coupon::where('name', $request->coupon_code)->first();
         
         if($coupon == null) return response()->json(["status" => 500, "message" => "Coupon not Found"]);        
@@ -154,6 +155,13 @@ class CartServices
         Cart::UpdateTotal();
         return response()->json(['status' => 200, 'count' =>  Cart::TotalItems(), 'total' => Cart::Total() ]);
     } 
+
+    public function getCoupon()
+    {
+        $cart = Cart::ByUser()->first();
+        $coupon = Coupon::find($cart->coupon_id);
+        return $coupon;
+    }
 
 
     public function couponRemove()

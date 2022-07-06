@@ -1,24 +1,13 @@
 <?php 
 namespace App\Services;
 
+use App\Models\Cart;
 use App\Models\Coupon;
 use App\Models\CouponUsageUser;
 
 class FrontCouponServices{
 
-    private function  activateCoupon(Coupon $coupon)
-    {
-        $checkout = auth()->user()->checkout;
-        if(!$checkout)
-        {
-            Checkout::create([
-                    'user_id' => auth()->user()->id,
-                    'coupon_id' => $coupon->id,                       
-            ]);
-        }
-        $checkout->coupon_id = $coupon->id;
-        $checkout->save();
-    }
+   
 
     private function validateCoupon(Coupon $coupon)
     {        
@@ -42,7 +31,7 @@ class FrontCouponServices{
             $message = 'You Already Used this Coupon';
         } 
         
-        return ['status' => $state, 'message' => $message];
+        return ['status' => $state, 'message' => $message, 500];
         
     }
 
@@ -51,30 +40,34 @@ class FrontCouponServices{
         $coupon = Coupon::where('name', $request->coupon_code)->first();
         
         if($coupon == null) return  response()->json(["status" => 500, "message" => "Coupon not Found"]);        
+        
+        $validated = Self::validateCoupon($coupon);
 
-        if(Self::validateCoupon($coupon))
-        {            
-            Self::activateCoupon($coupon);
-            return response()->json(['coupon' => $coupon, 'cartTotal' => Cart::subtotal() ]);
-        }  
+        if(!$validated['status']) return $validated;
+
+        Self::addUserUsage($coupon);     
+
+        return response()->json(['status' => 200, 'coupon' => $coupon, 'cartTotal' => Cart::Total() ]);
     }
 
     public function active()    
     {
         
-        $user_coupon = auth()->user()->activeCoupon();
+        $user_coupon = auth()->user()->activeCoupon()->first();
 
-        if(empty($user_coupon)) return;
+        if(empty($user_coupon)) return response()->json(["status" => 500, "message" => "No active found"]);
 
-        $coupon = Coupon::find($user_coupon->coupon_id)->first();     
+        $coupon = Coupon::find($user_coupon->coupon_id);     
+     
+        if(empty($coupon)) return response()->json(["status" => 500, "message" => "No active found"]);
 
-        if(empty($coupon)) return response()->json(["status" => 400, "Coupon not found"]);
 
-       
-        if(Self::validateCoupon($coupon))
-        {
-            return response()->json(['coupon' => $coupon]);
-        }
+        $validated = Self::validateCoupon($coupon);
+
+        if(!$validated['status']) return $validated;
+      
+        return response()->json(['status' => 200, 'coupon' => $coupon]);
+        
 
     }
 
@@ -92,7 +85,7 @@ class FrontCouponServices{
             $this->resetProductDiscount();
        }
        
-       return response()->json(['status' => 500, 'message' => 'Successfully Remove' ]);
+       return response()->json(['status' => 200, 'message' => 'Successfully Remove' ]);
       
     }
     public function resetProductDiscount(){
@@ -102,6 +95,22 @@ class FrontCouponServices{
         {
             $cart->discount = 0;
             $cart->save();
+        }
+    }
+
+    private function addUserUsage($coupon)
+    {
+        $userCoupon = CouponUsageUser::where('coupon_id', $coupon->id)->first();
+        if($userCoupon){
+            $userCoupon->deleted = 0;
+            $userCoupon->usage += 1;
+            $userCoupon->save();
+        }else{
+            CouponUsageUser::create([
+                'coupon_id' => $coupon->id,
+                'user_id' => auth()->user()->id,
+                'usage' => 1
+            ]);
         }
     }
 
