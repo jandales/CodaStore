@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\LogoutController;
+use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\Auth\LoginController;
@@ -90,6 +91,8 @@ Route::group(['middleware' => ['auth:sanctum']], function ()  {
 
         Route::get('/user/orders/{id}',[OrderController::class, 'show']);  
 
+        Route::patch('/user/orders/cancel/{id}',[OrderController::class, 'cancel']);  
+
         Route::delete('/user/logout',[LogoutController::class, 'logout']);
 
         Route::get('/checkout',[CheckOutController::class, 'index']);
@@ -107,6 +110,8 @@ Route::group(['middleware' => ['auth:sanctum']], function ()  {
         Route::post('/cart/apply-coupon', [CartController::class, 'couponActivate']);
 
         Route::delete('/cart/remove-coupon', [CartController::class, 'couponRemove']);
+
+        Route::post('/contact/send-message', [ContactController::class, 'sendMessage']);
         
 });
 

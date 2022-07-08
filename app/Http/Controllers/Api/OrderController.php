@@ -16,12 +16,35 @@ class OrderController extends Controller
 
     public function show($id) 
     {
-        $order = Order::with('items','items.product', 'shipping', 'billing', 'payment', 'shippingMethod')
+        $order = Self::find($id);
+        return response()->json($order);
+                                  
+    }
+
+
+    private function find($id){
+        return Order::with('items','items.product', 'shipping', 'billing', 'payment', 'shippingMethod')
                 ->withCount('items')
                 ->orWhere('id',$id)
                 ->orWhere('order_number',$id)
                 ->first();
-        return response()->json($order);
-                                  
     }
+
+    public function cancel($id)
+    {
+        $order =  $order = Self::find($id);
+
+        $status = $order->status;
+
+        if($status != 'confirmed') return;
+
+        $order->status = 'cancelled';
+        $order->cancelled_at = now();
+        $order->save();
+
+        return response()->json($order);
+        
+        
+    }
+
 }
