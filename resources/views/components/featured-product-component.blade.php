@@ -1,5 +1,5 @@
 <section class="splide splide-featured-products mb-5" aria-label="Splide ">
-    <h1 class="home-title">Feature Products</h1>
+    <h1 class="home-title text-center">Feature Products</h1>
     <div class="featured-product">                         
         <div class="splide__track">
             <ul class="splide__list splide-feature-product">

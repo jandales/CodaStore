@@ -153,6 +153,10 @@ function uploadAvatar(){
 document.addEventListener("DOMContentLoaded", () => {   
     cartCountToElement(cartCount()) 
     setCartCookie();
+
+    let width = window.innerWidth;
+
+    console.log(width)
 })
 
 // const modalTrigger = document.querySelectorAll("[data-modal-target]");

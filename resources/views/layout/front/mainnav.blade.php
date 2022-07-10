@@ -4,7 +4,7 @@
             <div class="hamburger">
                 <span><i class="fa-solid fa-bars"></i></span>
             </div>                   
-            <div><a href="/" class="logo"><strong>Coda</strong> Store</a></div>
+            <div class="logo"><a href="/" class="logo"><img src="/img/logo.png" alt=""></a></div>
             <nav id="main-navigation"> 
                     <div class="close-navigation">
                         <span><i class="fa-solid fa-times"></i></span>

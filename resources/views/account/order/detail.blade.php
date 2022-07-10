@@ -20,7 +20,7 @@
                                     <div class="order-header">
                                       <div class="align-items-content-center">
                                           <span>OR#: </span> <a href="{{ route('orders.details',[$order->encryptedId()])}}" for="order">{{ $order->order_number }}</a></div>
-                                       <label class="order-status capitalize" for="status">{{$order->status }}</label>
+                                       <label class="order-status capitalize {{$order->status == 'cancelled' ? 'bg-danger' : ''}}" for="status">{{$order->status }}</label>
                                     </div>
                                     <div class="order-body">
                                         @foreach ($order->items as $item)
@@ -98,13 +98,13 @@
                               
     
                            </div>
-                           <div class="mt-2">                            
-                                <button class="w-2 right btn btn-dark m-l-10 uppercase"><a href="{{ url()->previous() }}">Back</a></button>
-                                @if($order->status == "pending")
-                                    <form action="{{ route('orders.cancel',[$order])}}" method="post">
+                           <div class="mt-2">                           
+
+                                @if($order->status == "confirmed")
+                                    <form action="{{ route('orders.cancel',[$order->encryptedId()])}}" method="post">
                                         @csrf
                                         @method('Put')
-                                        <button class="btn btn-dark right uppercase">Cancel Order</button>
+                                        <button class="btn btn-danger right uppercase">Cancel Order</button>
                                     </form>
                                 @endif
                               

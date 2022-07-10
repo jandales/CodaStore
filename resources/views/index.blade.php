@@ -1,8 +1,9 @@
 @extends('layout.front.app')
 
 @section('content') 
-    <div class="container homepage">
-        <div class="row space-between">
+    <div class="homepage">
+        {{-- <img src="/img/hero.jpg" alt=""> --}}
+        {{-- <div class="row space-between">
             <div class="col-1">
                 <p>Men Collection 2021</p>
                 <h1>New Arrivals</h1>
@@ -11,7 +12,8 @@
             <div class="col-2">
                 <img src="/img/front/main.png">
             </div>
-        </div>
+        </div> --}}
+        <a href="/shop" class="shopnow">SHOP NOW</a>
     </div>      
     <!--Featured Product-->
     <div class="container"> 

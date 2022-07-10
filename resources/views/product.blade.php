@@ -28,7 +28,7 @@
                 </div> 
                 <div class="description">                   
                     <h4 class="title">{{ $product->name }}</h4>
-                     <div class="inline mt-1">                          
+                     <div class="inline mt-1 {{ $product->reviews->count() == 0 ? 'hidden' : ''}} ">                          
                          <x-rating :rating="$product->rating()" />                        
                          <p class="ml-1">{{$product->reviews->count()}} Reviews</p>
                      </div>

@@ -44,12 +44,14 @@ ul  li{
    
  
 }
-
+a{
+    letter-spacing: .1rem;
+}
 /* Navigation */
 
-#main-navigation{
-    margin-left: 20px;
-}
+// #main-navigation{
+//     margin-left: 20px;
+// }
 #main-navigation  ul{ 
     list-style-type: none;
    
@@ -63,7 +65,8 @@ ul  li{
     text-decoration: none;
     color:#555;
     font-weight:400;
-    font-size: 1rem;    
+    font-size: 1rem;   
+    letter-spacing: .2rem; 
     cursor: pointer;
   
     
@@ -89,7 +92,7 @@ ul  li{
 
 #navigation-icon ul li {
     position: relative;
-    margin-right: 12px;
+   
 }
 #navigation-icon ul li a{
     padding: 10px;
@@ -102,7 +105,7 @@ ul  li{
     position: absolute;
     display: none;
     background:#fff;
-    margin-top: 25px;  
+    margin-top: 25px; 
     padding: 10px;
     left: 50%;   
     width: 180px;

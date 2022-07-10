@@ -41,8 +41,8 @@ class OrderServices
     public function cancel(Order $order)
     {
         $order->status = "canceled";
-        $order->save();
-        
+        $order->cancelled_at =  now();
+        $order->save();        
     }
 
        

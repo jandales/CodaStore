@@ -1,5 +1,5 @@
 <section class="splide splide-collection" aria-label="Splide Basic HTML Example">
-    <h1 class="home-title">Collections</h1>
+    <h1 class="home-title text-center">Collections</h1>
     <div class="collection">                    
         <div class="splide__track">
             <ul class="splide__list splide-feature-product">

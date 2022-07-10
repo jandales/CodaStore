@@ -57,8 +57,7 @@
                              <div class="checkbox">
                                 <input type="checkbox" id="parentCheckbox" name="checkbox" >
                              </div>
-                         </th>
-                        <th>Person</th> 
+                         </th>                       
                         <th>Order Number</th>                                                   
                         <th>Quantity</th>
                         <th>Amount</th>
@@ -80,17 +79,7 @@
                                 <div class="checkbox">   
                                     <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{ $order->encryptedId() }}">
                                 </div>
-                            </td>                        
-                            <td>
-                                <a href="{{ route('admin.orders.show',[$order->encryptedId()])}}">
-                                    <div class="flex items-center gap10">
-                                        <div class="avatar-sm">
-                                            <img src="{{ $order->user->imagePath }}" alt="" srcset="">
-                                        </div>
-                                        <span class="link-primary">{{ $order->user->name }}</span>
-                                     </div>
-                                </a>
-                            </td>
+                            </td> 
                             <td><a class="link-primary" href="{{ route('admin.orders.show',[$order->encryptedId()])}}">{{$order->order_number}}</a></td>
                             <td>{{ $order->totalItems() . " items" }}</td>
                             <td>@money($order->gross_total)</td>

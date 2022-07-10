@@ -4,11 +4,17 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Services\CustomerServices;
 use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {
+    private $services;
 
+    public function __construct(CustomerServices $services)
+    {   
+        $this->services = $services;
+    }
 
     public function user()
     {
@@ -32,6 +38,13 @@ class UserController extends Controller
         $user->save();
         
         return $user;
+    }
+
+    public function upload(Request $request)
+    {
+        
+        $user = $this->services->updateAvatar($request);
+        return response()->json($user);
     }
 
    

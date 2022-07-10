@@ -45,7 +45,7 @@ class CustomerServices {
 
         $default_image_path = '/img/avatar/default-avatar.jpg';
     
-        if (!$request->hasFile('avatar'))  return ['error' => 'Please select image to upload'];
+        if (!$request->hasFile('avatar'))  return ['error' => 'Please select image to upload', 'status' => 500];
 
         $user = auth()->user(); 
         $oldpath = $user->imagePath;
@@ -58,8 +58,8 @@ class CustomerServices {
         if (!$default_image_path == $oldpath) {
             File::delete(public_path() .  $oldpath);
         }   
-       
-        return ['success' => 'Image Successfully upload'];
+        return $user;
+        // return ['success' => 'Image Successfully upload'];
     }
 
     public function deleteSelectedItem($users)

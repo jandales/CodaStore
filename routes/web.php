@@ -233,7 +233,7 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::post('/order/store', [OrderController::class, 'store'])->name('orders.store');
 
-    Route::put('/order/cancel/{order}',[OrderController::class, 'cancel'])->name('orders.cancel');
+    Route::put('/order/cancel/{order:id}',[OrderController::class, 'cancel'])->name('orders.cancel');
 
     Route::get('/checkout/order-details/{order}', [CheckOutController::class, 'details'])->name('checkout.details');  
 
