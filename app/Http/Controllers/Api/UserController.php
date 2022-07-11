@@ -41,9 +41,14 @@ class UserController extends Controller
     }
 
     public function upload(Request $request)
-    {
-        
+    {        
         $user = $this->services->updateAvatar($request);
+        return response()->json($user);
+    }
+
+    public function removeImage()
+    {
+        $user = $this->services->removeImage();
         return response()->json($user);
     }
 

@@ -43,6 +43,8 @@ Route::get('/products/collection/{filter}', [ProductController::class, 'index'])
 
 Route::get('/products/featured/limit={limit}', [ProductController::class, 'featured']);
 
+Route::post('/products/search', [ProductController::class, 'search']);
+
 Route::get('/collection', [ProductController::class, 'collection']);
 
 Route::get('/products/{slug}', [ProductController::class, 'show']);
@@ -58,6 +60,8 @@ Route::group(['middleware' => ['auth:sanctum']], function ()  {
         Route::put('/user', [UserController::class, 'update']);
 
         Route::post('/user/upload', [UserController::class, 'upload']);
+
+        Route::delete('/user/remove-image', [UserController::class, 'removeImage']);
 
         Route::get('/user/address', [UserAddressController::class, 'index']);
 

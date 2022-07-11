@@ -81,6 +81,13 @@ class ProductController extends Controller
        
     }
 
+    public function search(Request $request)
+    {       
+        $keyword = $request->keyword  ?? 'null';
+        $products = Product::search($keyword)->with('category','stock')->get();
+        return response()->json(['products' => $products]);
+    }
+
 
     public function queryString($sort)
     {    

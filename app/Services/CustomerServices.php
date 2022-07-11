@@ -77,5 +77,18 @@ class CustomerServices {
         return User::Search($request->keyword)->paginate(10);
     }
 
+    public function removeImage()
+    {
+        $user = auth()->user(); 
+        $path = $user->imagePath; 
+
+        File::delete(public_path() .  $path);
+        
+        $user->imagePath = null;
+        $user->save();
+        return $user;
+         
+    }
+
 
 }
