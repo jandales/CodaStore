@@ -5,14 +5,8 @@
     - install npm
     - create the .env file by duplicating the .env.example file
     - php artisan key:generate 
-    - php artisan migrate --seed   
-        
-    - install fontAwesome
-        npm i --save @fortawesome/fontawesome-free              
-        npm i --save @fortawesome/fontawesome-free-regular  
-        npm i --save @fortawesome/fontawesome-free-solid
-        npm i --save @fortawesome/fontawesome-free-brands   
-        
+    - php artisan migrate --seed  
+    
     - user : admin@gmail.com
     - password : password   
     
