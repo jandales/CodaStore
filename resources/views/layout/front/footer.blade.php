@@ -68,7 +68,7 @@
                 <ul class="footer-block-list">
                     <li><a href="/search" class="link link--text list-menu__item list-menu__item--link">SEARCH</a></li>
                     <li><a href="/pages/contact-us" class="link link--text list-menu__item list-menu__item--link">CONTACT US</a></li>
-                    <li><a href="/pages/refund-policy" class="link link--text list-menu__item list-menu__item--link">ABOUT</a></li>
+                    {{-- <li><a href="/pages/refund-policy" class="link link--text list-menu__item list-menu__item--link">ABOUT</a></li> --}}
                 </ul>
             </div>
             <div class="footer-block-menu">

@@ -105,6 +105,7 @@ body {
   padding: 0 !important;
   background-image: url(/images/hero.jpg?4bd07a83b88ef99dffdb80d149658135);
   background-size: 100% 100%;
+  background-clip: border-box;
   background-repeat: no-repeat;
 }
 
@@ -3309,7 +3310,7 @@ a {
   text-decoration: none;
   color: #555;
   font-weight: 400;
-  font-size: 1rem;
+  font-size: 0.875rem;
   letter-spacing: 0.2rem;
   cursor: pointer;
 }
@@ -4119,7 +4120,8 @@ a {
   }
 }
 .container {
-  width: 1300px;
+  width: 1280px;
+  padding: 2rem;
   margin: 0 auto;
 }
 

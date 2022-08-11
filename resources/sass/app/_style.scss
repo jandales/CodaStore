@@ -123,6 +123,7 @@ body{
     padding: 0 !important;  
     background-image: url(../../assets/img/hero.jpg); 
     background-size: 100% 100%;
+    background-clip: border-box;
     background-repeat: no-repeat;
     
 }

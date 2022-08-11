@@ -152,15 +152,15 @@ class CartController extends Controller
 
 
     public function setCookie()
-    {        
-      
+    {       
+        
         if(Cookie::has('cart-id')) return true;
 
         $minutes = (60 * 24) * 7;  
         $timestamp = Carbon::now()->timestamp;  
         $value = $timestamp;        
         $response = new Response('Hello World');
-        $response->withCookie(cookie('cart-id', $value, $minutes));    
+        $cookie = $response->withCookie(cookie('cart-id', $value, $minutes));    
 
         Cart::create([    
             'cart_id' => $value,
@@ -168,5 +168,9 @@ class CartController extends Controller
         ]); 
 
         return $response;
+
+        return response()->json([
+           'cookie create'
+        ])->withCookie($cookie);
     }
 }

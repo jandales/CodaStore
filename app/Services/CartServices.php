@@ -20,6 +20,7 @@ class CartServices
 
     public function store(Request  $request, Product $product)
     {
+       
         $productQuantity = $product->stock->qty;   
         $newQuantity = (int)$request->qty;  
         $total = 0; 

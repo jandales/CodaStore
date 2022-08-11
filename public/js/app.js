@@ -7005,7 +7005,7 @@ var _delete = "DELETE";
 
 function getCarts() {
   $.ajax({
-    url: '/get-user-cart',
+    url: '/cart/get-user-cart',
     method: 'GET',
     async: false,
     success: function success(response) {
