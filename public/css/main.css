@@ -36,10 +36,10 @@
   box-sizing: border-box;
 }
 
-a, span, p,
-label {
+a, span, p, label {
   text-decoration: none;
   color: #555;
+  font-size: 14px;
 }
 
 .html {

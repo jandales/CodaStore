@@ -154,9 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cartCountToElement(cartCount()) 
     setCartCookie();
 
-    let width = window.innerWidth;
-
-    console.log(width)
+    let width = window.innerWidth; 
 })
 
 // const modalTrigger = document.querySelectorAll("[data-modal-target]");

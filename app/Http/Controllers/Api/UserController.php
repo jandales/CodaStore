@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Services\CustomerServices;
 use App\Http\Controllers\Controller;
 
@@ -51,6 +53,8 @@ class UserController extends Controller
         $user = $this->services->removeImage();
         return response()->json($user);
     }
+
+
 
    
 }

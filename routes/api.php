@@ -53,7 +53,11 @@ Route::post('/register', [RegisterController::class, 'register']);
 
 Route::post('/login', [LoginController::class, 'login']);
 
+
+
 Route::group(['middleware' => ['auth:sanctum']], function ()  {
+
+       
 
         Route::get('/user', [UserController::class, 'user']);
 

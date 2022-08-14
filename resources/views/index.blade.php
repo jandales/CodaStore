@@ -17,7 +17,7 @@
     </div>      
     <!--Featured Product-->
     <div class="container"> 
-        <x-collection-component/>   
+        {{-- <x-collection-component/>    --}}
         <x-featured-product-component/>
     </div>         
 @endsection
