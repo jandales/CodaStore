@@ -166,11 +166,12 @@ Route::group(['middleware' => 'auth'], function(){
         Route::get('/shipping', 'shipping')->name('checkout.shipping');    
         Route::put('/shipping/update', 'updateShippingMethod')->name('checkout.shipping.update');    
         Route::get('/payment', 'payment')->name('checkout.payment');        
-        Route::get('/get-shipping-charge/{id}', 'shippingCharge');    
-        Route::post('/pay-now/store', 'store')->name('checkout.paynow');  
+        Route::get('/get-shipping-charge/{id}', 'shippingCharge');  
         Route::get('/completed', 'completed')->name('checkout.completed');          
         Route::get('/order-details/{order}', 'details')->name('checkout.details');  
     });
+
+    Route::post('/pay-now/store',  [PlaceOrderController::class, 'store'])->name('checkout.paynow');  
 
     Route::controller(OrderController::class)->prefix('orders')->group(function () {
         Route::get('/{status}', 'index')->name('account.orders');
@@ -205,22 +206,22 @@ Route::group(['middleware' => 'adminLogined', 'prefix' => 'admin'], function(){
 
 
 
-Route::group(['middleware' => 'guest:admin', 'prefix' => 'admin', 'name' => 'admin.'], function(){   
+Route::group(['middleware' => 'guest:admin', 'prefix' => 'admin',], function(){   
 
     Route::controller(DashboardController::class)->group(function (){
         Route::get('','index')->name('admin');
     });
 
     Route::controller(AdminLoginController::class)->group(function (){
-        Route::get('/login', 'index')->name('login');
-        Route::post('/login', 'store')->name('login.store');
+        Route::get('/login', 'index')->name('admin.login');
+        Route::post('/login', 'store')->name('admin.login.store');
     });
 
     Route::controller(AdminResetPasswordController::class)->group(function (){
-        Route::get('/forget-password','index')->name('forget.password');
-        Route::post('/forget-password-request','request')->name('request.password');    
+        Route::get('/forget-password','index')->name('admin.forget.password');
+        Route::post('/forget-password-request','request')->name('admin.request.password');    
         Route::get('/reset_password/{token}','reset');    
-        Route::post('/reset_store','store')->name('reset.password');
+        Route::post('/reset_store','store')->name('admin.accountreset.password');
     });
   
 
