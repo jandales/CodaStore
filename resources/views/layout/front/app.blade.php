@@ -14,14 +14,7 @@
 
 <body>
 
-    <div id="flex">
-        @auth('admin')
-            <div style="width:100%; background:#222">
-                <div class="container" style="padding-top: .5rem; padding-bottom: .5rem">
-                    <a href="/admin" style="color:#fff;">Dashbaord</a>
-                </div>
-            </div> 
-        @endauth
+    <div id="flex">      
         @if(config('app.env') != 'local') 
             <div style="width:100%; background-color: #fff3cd;">
                 <div class="container"  style="padding-top: .5rem; padding-bottom: .5rem">

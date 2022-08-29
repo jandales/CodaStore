@@ -67,8 +67,8 @@
                 <h2 class="footer-block-heading">Quick links</h2>
                 <ul class="footer-block-list">
                     <li><a href="/search" class="link link--text list-menu__item list-menu__item--link">SEARCH</a></li>
-                    <li><a href="/pages/contact-us" class="link link--text list-menu__item list-menu__item--link">CONTACT US</a></li>
-                    <li><a href="/pages/refund-policy" class="link link--text list-menu__item list-menu__item--link">ABOUT</a></li>
+                    <li><a href="/contact" class="link link--text list-menu__item list-menu__item--link">CONTACT US</a></li>
+                    <li><a href="/about" class="link link--text list-menu__item list-menu__item--link">ABOUT</a></li>
                 </ul>
             </div>
             <div class="footer-block-menu">
