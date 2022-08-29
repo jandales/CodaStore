@@ -19,7 +19,9 @@ class OrderServices
     public function listOrders($status)
     {
        return Order::with('items', 'items.product')->where('user_id', auth()->user()->id)->when($status, function ($query) use ($status) {
-            if ($status != 'all') $query->where('status', $status);                                                    
+
+            if ($status != 'all') $query->where('status', $status);    
+
         })->paginate(config('setting.app.perpage')); 
 
     
@@ -31,18 +33,24 @@ class OrderServices
 
     public function review(Product $product)
     {
-        $review = [];                
-        if($product->reviewby(auth()->user()))         
+        $review = [];       
+
+        if($product->reviewby(auth()->user()))  
+
             $review =  auth()->user()->review($product);
 
         return $review;
+
     }
 
     public function cancel(Order $order)
     {
         $order->status = "canceled";
+
         $order->cancelled_at =  now();
-        $order->save();        
+
+        $order->save();    
+            
     }
 
        

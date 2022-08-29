@@ -31,9 +31,12 @@ class CartController extends Controller
 
     public function store(Request $request)
     {       
-        
+        return  request()->cookie('cart-id');
+
         $product = Product::find($request->id);
+
         $productQuantity = $product->stock->qty; 
+
         if ($productQuantity == 0)  return response()->json(['status' => 500, 'message' => 'Product is not available' ]); 
           
         $newQuantity = (int)$request->qty;  
@@ -152,15 +155,14 @@ class CartController extends Controller
 
 
     public function setCookie()
-    {       
-        
+    {  
         if(Cookie::has('cart-id')) return true;
 
         $minutes = (60 * 24) * 7;  
         $timestamp = Carbon::now()->timestamp;  
         $value = $timestamp;        
         $response = new Response('Hello World');
-        $cookie = $response->withCookie(cookie('cart-id', $value, $minutes));    
+        $response->withCookie(cookie('cart-id', $value, $minutes));    
 
         Cart::create([    
             'cart_id' => $value,
@@ -168,9 +170,5 @@ class CartController extends Controller
         ]); 
 
         return $response;
-
-        return response()->json([
-           'cookie create'
-        ])->withCookie($cookie);
     }
 }

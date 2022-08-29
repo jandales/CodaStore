@@ -125,7 +125,7 @@
            <div class="spinner"></div>
            <div class="loading-success">
                <span><i class="fa fa-check"></i></span>
-               <a href="#" id="btn-payment-completed">OK</a>
+               <a href="#" id="btn-payment-completed">Payment Completed</a>
            </div>
            {{-- <div class="loading-failed">
                <span>Server Error</span>

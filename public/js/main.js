@@ -3016,9 +3016,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _module_progressbar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../module/progressbar */ "./resources/js/module/progressbar.js");
 /* harmony import */ var _module_array__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../module/array */ "./resources/js/module/array.js");
 /* harmony import */ var _module_message__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../module/message */ "./resources/js/module/message.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-
 
 
 
@@ -4232,13 +4229,13 @@ function errorMessage(errors) {
   notifyMessageElement.innerHTML = '';
   if (errors.length == 0) return notifyMessageElement.innerHTML = '';
   errors.forEach(function (error) {
-    notifyMessageElement.innerHTML += "<div class=\"alert alert-danger\">\n                    <div class=\"flex justify-content-space-between\">\n                            <label class=\"message\">".concat(error.message, "</label>\n                            <span class=\"closebtn\"><i class=\"fas fa-times\"></i></span>\n                    </div> \n                </div>");
+    notifyMessageElement.innerHTML += "<div class=\"alert alert-danger\">\n                    <div class=\"w-12 flex justify-content-space-between\">\n                            <label class=\"message\">".concat(error.message, "</label>\n                            <span class=\"closebtn\"><i class=\"fas fa-times\"></i></span>\n                    </div> \n                </div>");
   });
   closeMessage();
 }
 function successMessage(message) {
   notifyMessageElement.innerHTML = '';
-  notifyMessageElement.innerHTML += "<div class=\"alert alert-success\">\n                                            <div class=\"flex justify-content-space-between\">\n                                                <label class=\"message\">".concat(message, "</label>\n                                                <span class=\"closebtn\"><i class=\"fas fa-times\"></i></span>\n                                            </div> \n                                        </div>");
+  notifyMessageElement.innerHTML += "<div class=\"alert alert-success\">\n                                            <div class=\"w-12 flex justify-content-space-between\">\n                                                <label class=\"message\">".concat(message, "</label>\n                                                <span class=\"closebtn\"><i class=\"fas fa-times\"></i></span>\n                                            </div> \n                                        </div>");
   closeMessage();
 }
 
@@ -21765,18 +21762,6 @@ module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBun
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__webpack_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports

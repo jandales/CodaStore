@@ -1,7 +1,7 @@
 import { progressBarStart, progressBarStop} from '../module/progressbar'
 import { arrContains, arrFindIndex, arrRemove} from '../module/array'
 import { errorMessage, successMessage } from '../module/message'
-import { create } from 'lodash';
+
 require('../admin/variants');
 
 let imagesToUpload = []
@@ -152,30 +152,44 @@ function createVariantHTML(name, id){
                 <span name="${name}" data-id="${id}" class="remove-variant-item"><i class="fas fa-times"></i></span>
             </div>`
 }
+
 function addVariantItem(id,value){   
     let i = arrFindIndex(product.attributes,'id',id)    
     product.attributes[i].variants.push(value)  
 }
+
 function deleteVariantItem(id,value){    
     let i = arrFindIndex(product.attributes,'id', id) 
     arrRemove(product.attributes[i].variants, value)  
 }
+
 function existVariantItem(id,value){ 
     let i = arrFindIndex(product.attributes,'id',id)   
     return arrContains(product.attributes[i].variants, value)
 }
+
 function storeProduct(){
+
    errors = []
+
    errorMessage([]) 
+
    const form = document.getElementById('form')
+
    const url = form.getAttribute('action')
+
    const data =  new FormData(form)
+
    product.images.forEach(image => {      
         data.append('images[]', JSON.stringify(image))
    })
+
    product.attributes.forEach(attribute => {
         data.append('attributes[]', JSON.stringify(attribute))
    })
+
+  
+
    data.append('image',JSON.stringify(product.image))
 
      $.ajax({
@@ -199,6 +213,7 @@ function storeProduct(){
         }
     })   
 }
+
 function updateProduct(e){ 
     e.preventDefault();
     errors = []

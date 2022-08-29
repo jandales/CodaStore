@@ -36,8 +36,7 @@
                 <th class="column-0"></th>
                 <th class="column-image"></th>
                 <th class="column-product">Product</th>
-                <th class="column-base">Category</th>
-                <th class="column-base">Sku</th>
+                <th class="column-base">Category</th>              
                 <th class="column-base">Stock</th>
                 <th class="column-base">Action</th>
                 <th class="column-base">Update Quantity</th>   
@@ -66,8 +65,7 @@
                                 </div>                           
                             </div>
                         </td>
-                        <td class="column-base">{{ $product->category->name }}</td>
-                        <td class="column-base">{{ $product->sku }}</td>
+                        <td class="column-base">{{ $product->category->name }}</td>                       
                         <td class="column-base"><span class="stock link-primary">{{ $product->stock->qty }}</span></td>
                         <td class="column-base">
                             <select name="type" class="type">

@@ -26,7 +26,7 @@ class ProductServices
 
     public function store(Request $request)
     {     
-     
+        
        $image = json_decode($request->image, true);
 
        return  DB::transaction(function ()  use ($request, $image){
@@ -34,6 +34,10 @@ class ProductServices
                     $validated['slug'] = productSlug($request->name);
                     $validated['imagePath'] = $image['path'] ?? $this->defaultImage;
                     $validated['featured'] = $request->featured ?? 0;
+                    $validated['admin_id'] = auth()->guard('admin')->user()->id;
+                    $validated['short_description'] = $request->short_description;
+                    $validated['long_description'] = $request->long_description;
+                    $validated['tags'] = $request->tags;            
                     $product = Product::create($validated);  
 
                     Stock::create([
@@ -73,19 +77,22 @@ class ProductServices
             $product->tags = $request->tags;
             $product->featured = $request->featured ?? 0;
             $product->imagePath = $image['path'] ?? $product->imagePath;
-            $product->save();
+            $product->save();        
     
             $stock = $product->stock;
+
             $stock->qty = $request->qty;
+
             $stock->save();     
        
             Self::updateProductImage($image, $product->imageDetail() );
            
-            Self::imageGalleryUpdate($request->input('images'), $product->id);
+            return Self::imageGalleryUpdate($request->input('images'), $product->id);
     
             Self::createAttributes($request->input('attributes'), $request->hasVariant, $product->id);
     
             return $product;
+
         });
   
             
@@ -102,20 +109,29 @@ class ProductServices
     {    
       
         return DB::transaction( function () use ( $product ) {
+
             ProductAttribute::where('product_id', $product->id)->delete();
+
             ProductVariant::where('product_id', $product->id)->delete();   
                
             if ( $product->stock != null ) {
+
                 $product->stock->delete(); 
+
             }
     
             foreach ($product->photos as $photo ) {
+
                 $path = public_path( $photo->path );
+
                 File::delete( $path );
+
                 $photo->delete();
+
             }
     
             return $product->delete();
+
         });
         
        
@@ -123,26 +139,36 @@ class ProductServices
 
     public function destroySelectedItem($selected)
     {
-        foreach ( $selected as $id ) {   
+        foreach ( $selected as $id ) {  
+
             $id = decrypt($id);
+
             $product = Product::find($id);
-            Self::destroy($product);          
+
+            Self::destroy($product);  
+
         }
     }
 
     public function changeStatus(Product $product)
     {    
-        $status = $product->status == 0 ?? 1;       
-        Self::updateStatus($product, $status);        
+        $status = $product->status == 0 ?? 1;  
+
+        Self::updateStatus($product, $status); 
+
     }
 
     public function changeSelectedItemStatus($productIDs, $status)
     {
+
         foreach($productIDs as $id)
         {
             $id = decrypt($id);
+
             $product = Product::find($id);
+
             Self::updateStatus($product, $status);
+
         }  
     }  
 
@@ -151,8 +177,11 @@ class ProductServices
     {   
 
         $products = Product::with(['category', 'stock'])
+
             ->whereHas('category', function ($query) use ($filterBy, $value) {
-                if($filterBy != 'all') $query->where($filterBy, $value);                              
+
+                if($filterBy != 'all') $query->where($filterBy, $value); 
+
         })->paginate(10);       
         
         return ['products' => $products, 'filter' => $value == 0 ? "status=unpublished" : "status=published"];
@@ -161,32 +190,41 @@ class ProductServices
     private function updateStatus(Product $product, $status)
     {   
         $product->status = $status;
+
         $product->save();  
     }
     
     private function updateProductImage($request, $photo)
     {
-        if ($request == null) return;                
+        if ($request == null) return;   
+
         if ($photo != null)  Self::unlink($photo); 
+
     }
-    private function ImageGalleryUpdate($images, $product_id)
+
+    private function imageGalleryUpdate($images, $product_id)
     {       
-        if ($images == null)  return;
- 
-        foreach($images as $image)
-        {           
-            $image = json_decode($image, true);   
+      
+        if ($images == null)  return;  
+    
+        foreach ($images as $image) {  
+
+            $image = json_decode($image, true);  
+         
             $photo = Photo::find($image['id']);
+                      
+            if ($image['deleted']  == 1) {  
 
-       
-            if ($image['deleted']  == 1) {         
                 Self::unlink($photo);
+
             }
 
-            if ($photo->product_id != $product_id) {           
-                Self::updatePhotoOwner($photo, $product_id);           
+            if ($photo->product_id != $product_id) {  
+
+                Self::updatePhotoOwner($photo, $product_id);  
+                         
             }
-        }
+        }        
         
     }  
 
@@ -201,19 +239,29 @@ class ProductServices
             Self::destroyAttributes($product_id);
 
             foreach($attributes as $attribute) {  
+
                 $attribute = json_decode($attribute,true);
+
                 ProductAttribute::create([
+
                     'product_id' => $product_id,
+
                     'attribute_id' => $attribute['id']
+
                 ]);   
     
                 $variants = $attribute['variants'];  
     
                 foreach($variants as $variant) {
+
                     ProductVariant::create([
+
                         'product_id' => $product_id,
+
                         'attribute_id' => $attribute['id'],
-                        'name' => $variant,                   
+
+                        'name' => $variant,   
+
                     ]);
                 }            
             }
@@ -222,27 +270,41 @@ class ProductServices
 
        
     }
+
     private function destroyAttributes($product_id)
     {
         DB::transaction(function ()  use ($product_id){
+
             ProductAttribute::where('product_id', $product_id)->delete();
+
             ProductVariant::where('product_id', $product_id)->delete();
+
         });
        
     }
-    private function updatePhotoOwner(Photo $photo,$product_id)
+
+    private function updatePhotoOwner(Photo $photo, $product_id)
     {        
+
         $photo->product_id = $product_id;
+
         $photo->save();
+
     }
     private function unlink(Photo $photo)
     {  
         return DB::transaction(function () use($photo) {
+
             $deleted = $photo->delete();  
-            if(!$deleted) return back()->with('error','Image cant delete');  
+
+            if(!$deleted) return back()->with('error','Image cant delete'); 
+
             $path = public_path($photo->path);
-            File::delete($path);           
+
+            File::delete($path);      
+
             return response()->json(['deleted' => $deleted]); 
+
         });
       
     }
@@ -250,6 +312,7 @@ class ProductServices
     public function search(Request $request)
     {
         $keyword = $request->keyword  ?? 'null';
+
         return Product::search($keyword)->with('category','stock')->paginate(10); 
     }
 

@@ -23,19 +23,28 @@ class ProductController extends Controller
         $products = $this->services->list();   
          
         return view('admin.products.index')->with(
+
             ['products' => $products, 
+
             'filter' => 'all',
+
             'keyword' => null,
+
         ]);
     }
 
     public function filter($filterBy, $value)
     {          
-        $result  = $this->services->filter($filterBy, $value);    
+        $result  = $this->services->filter($filterBy, $value); 
+
         return view('admin.products.index')->with([
+
             'products' => $result["products"],
+
             'filter' => $result["filter"],
+
              'keyword' => null,
+
         ]);
     }
 
@@ -46,7 +55,7 @@ class ProductController extends Controller
 
     public function store(ProductRequest $request)
     {      
-       $product = $this->services->store($request);  
+      $product = $this->services->store($request);  
        
        return response()->json(['status' => 200, 'message' =>  'Product succesfully create', 'route' => route('admin.products.edit',[$product->encryptedId()])]);
     }
@@ -58,7 +67,8 @@ class ProductController extends Controller
 
     public function update(ProductRequest $request, Product $product)
     {   
-        $this->services->update($request, $product);  
+        
+       $this->services->update($request, $product);  
 
         return response()->json(['status' => 200, 'message' =>  'Product succesfully update']);
     }

@@ -39,7 +39,6 @@
 a, span, p, label {
   text-decoration: none;
   color: #555;
-  font-size: 14px;
 }
 
 .html {
@@ -624,7 +623,7 @@ nav ul li .sub-menu li.active a {
 
 .table {
   width: 100%;
-  table-layout: fixed;
+  /* table-layout: fixed; */
   border-collapse: collapse;
 }
 

@@ -36,8 +36,11 @@ class Admin extends Authenticatable
      * @var array
      */
     protected $hidden = [
+
         'password',
+
         'remember_token',
+
     ];
 
     /**
@@ -46,14 +49,20 @@ class Admin extends Authenticatable
      * @var array
      */
     protected $casts = [
+
         'email_verified_at' => 'datetime',
+
     ];
 
     public function fullName()
     {
-        $fullname =  $this->firstname . " " . $this->lastname;        
+
+        $fullname =  $this->firstname . " " . $this->lastname; 
+
         return empty($fullname) ? '---' : $fullname;
+
     }
+    
     public function userRole()
     {
         return $this->role == 1 ? 'Administrator' : 'Employee';
@@ -66,11 +75,11 @@ class Admin extends Authenticatable
 
     public function avatar()
     {
-        return $this->imagePath ?? '/img/avatar/admin/default-avatar.jpg';
+        return $this->imagePath ?? '/img/avatar/admin/default-avatar.png';
     }
+
     public function scopeSearch($query, $input)
-    {
-    
+    {    
         return $query->where('username', 'like', '%' . $input . '%')
                      ->orWhere('email','like','%' . $input . '%')
                      ->orWhere('firstname','like','%' . $input . '%')

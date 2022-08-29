@@ -134,7 +134,7 @@ Route::group(['middleware' => 'auth'], function(){
                 Route::get('/upload/avatar','upload')->name('account.upload');        
                 Route::get('/edit', 'edit')->name('account.edit');            
                 Route::put('/change-password','changePassword')->name('account.changePassword');
-            }) ;              
+            });              
         }); 
 
         Route::controller(UserShippingAddressController::class)->prefix('shipping-address')->group(function () {                
@@ -234,14 +234,17 @@ Route::group(['middleware' => 'guest:admin', 'prefix' => 'admin',], function(){
    
 });
 
-Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){  
+Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {  
+
     Route::post('/logout',[LogoutController::class, 'logout'])->name('admin.logout');
+
     Route::controller(AdminController::class)->group(function (){       
         Route::get('/profile', 'profile')->name('admin.account');
-        Route::post('/update/profle/{id}',  'update')->name('update.profile');
+        Route::put('/update/profile/{admin:id}',  'updateProfile')->name('admin.update.profile');
         Route::post('/update/password/{id}', 'updatePassword')->name('update.password');
         Route::post('/update/avatar/{id}',  'updateAvatar')->name('update.avatar');
     });
+
     Route::prefix('products')->group(function (){
         Route::controller(ProductController::class)->group(function (){
             Route::get('/','index')->name('admin.products');
@@ -258,12 +261,14 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){
             Route::get('/{filterBy}/{value}', 'filter')->name('admin.products.filter');  
             Route::get('/get','getProduct');     
         }); 
+
         Route::controller(StockController::class)->prefix('inventory')->group(function (){
             Route::get('/', 'inventory')->name('admin.inventory');
             Route::get('/filter/{filter}','filter')->name('admin.inventory.filter');
             Route::get('/adjust/search', 'search')->name('admin.inventory.search');
             Route::put('/update/stock/{stock:id}', 'updateQuantity')->name('admin.inventory.update.quantity');
         });
+
         Route::controller(CategoryController::class)->prefix('categories')->group(function (){
             Route::get('/', 'index')->name('admin.categories');       
             Route::post('/store', 'store')->name('categories.store');
@@ -282,17 +287,18 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){
             Route::delete('/{attribute:slug}/destroy', 'destroy')->name('admin.attributes.destroy');
             Route::delete('/selected-destroy','destroySelected')->name('admin.attributes.destroy.selected');
             Route::get('/p/search',  'search')->name('admin.attributes.search');
-        });
-
-         
+        });        
 
    
     });
+
+
     Route::get('/dashboard',[DashboardController::class,'dashboard'])->name('admin.dashboard');
     Route::controller(ImageController::class)->group(function (){
         Route::post('/image/uploads', 'uploads');
         Route::delete('/image/{photo:id}/delete', 'unlink');
     });
+    
     Route::controller(AdminOrderController::Class)->prefix('orders')->group(function (){
         Route::get('/','index')->name('admin.orders');
         Route::get('/{order:id}/show', 'show')->name('admin.orders.show');
@@ -303,6 +309,7 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function(){
         Route::get('/{status}', 'listbyStatus')->name('admin.orders.list');
         Route::delete('/destroy/{order:id}', 'destroy')->name('admin.orders.destroy');
     });
+
     
     Route::controller(CouponController::class)->prefix('coupons')->group(function (){
         Route::get('/', 'index')->name('admin.coupons');

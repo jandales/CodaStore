@@ -19,7 +19,7 @@ class AdminController extends Controller
 
     public function  __construct(UsersServices $services)
     {   
-        $this->authorizeResource(Admin::class, 'admin');
+        // $this->authorizeResource(Admin::class, 'admin');
 
         $this->services = $services;
     }
@@ -51,9 +51,16 @@ class AdminController extends Controller
 
     public function update(Request $request, Admin $admin)
     {               
-
+  
         $this->services->update($request, $admin); 
 
+        return back()->with('success', 'User successfully updated'); 
+
+    }
+
+    public function updateProfile(Request $request, Admin $admin)
+    {
+        $this->services->update($request, $admin); 
         return back()->with('success', 'User successfully updated'); 
     }
 

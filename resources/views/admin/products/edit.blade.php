@@ -24,11 +24,11 @@
                         </div>
                         <div class="form-block">
                             <label for="email">Short Description</label>
-                        <textarea id="short_description" name="short_description"  class="ckeditor" cols="30" rows="3">{{$product->short_description}}</textarea>                
+                        <textarea  name="short_description"   cols="30" rows="3">{{$product->short_description}}</textarea>                
                         </div>
                         <div class="form-block">
                             <label for="email">Long Description</label>
-                            <textarea id="long_description" name="long_description"  class="ckeditor" cols="30" rows="10">{{$product->long_description}}</textarea>                
+                            <textarea  name="long_description"   cols="30" rows="10">{{$product->long_description}}</textarea>                
                         </div>
                 </div>
                 </div>

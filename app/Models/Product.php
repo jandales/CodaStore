@@ -39,6 +39,7 @@ class Product extends Model
         'status',
         'is_taxable',
         'featured',
+        'admin_id'
     ];
 
     // protected $attributes = [    

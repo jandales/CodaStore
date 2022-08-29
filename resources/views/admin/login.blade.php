@@ -37,13 +37,13 @@
                         
                         <div class="form-block">
                             <label for="email">Username</label>
-                            <input type="email" name="email" value="{{ old('email') }}">
+                            <input type="email" name="email" value="admin@gmail.com">
                            
                         </div>
 
                         <div class="form-block">
                             <label for="username">Password</label>
-                            <input type="password" name="password">
+                            <input type="password" name="password" value="password">
                            
                         </div>
 

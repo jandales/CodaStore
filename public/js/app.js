@@ -5964,7 +5964,6 @@ document.addEventListener("DOMContentLoaded", function () {
   (0,_module_Cart__WEBPACK_IMPORTED_MODULE_0__.cartCountToElement)((0,_module_Cart__WEBPACK_IMPORTED_MODULE_0__.cartCount)());
   (0,_module_Cart__WEBPACK_IMPORTED_MODULE_0__.setCartCookie)();
   var width = window.innerWidth;
-  console.log(width);
 }); // const modalTrigger = document.querySelectorAll("[data-modal-target]");
 
 var modalClose = document.querySelectorAll(".modal-close");

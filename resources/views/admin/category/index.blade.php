@@ -4,7 +4,7 @@
 
 <h1>Categories</h1>
 
-    <div class="flex justify-content-space-between m-t-2">
+    <div class="flex gap30 justify-content-space-between m-t-2">
         <div class="forms-category">
             <form action="{{ route('categories.store') }}" method="post" enctype="multipart/form-data"> 
                 @csrf           
@@ -41,9 +41,6 @@
                 </div>
             </form>
         </div>
-
-
-
 
         <div class="panel-table w-9"> 
             <x-category-table-component :categories="$categories" :keyword="$keyword"/>

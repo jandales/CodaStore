@@ -123,7 +123,7 @@
                 </div>
                 <div class="panel-body">                  
                     <div class="avatar-big center">
-                       <img src="/{{ $user->avatar() }}" alt="" srcset="">
+                       <img src="{{ $user->avatar() }}" alt="" srcset="">
                     </div>                  
                 </div>
     

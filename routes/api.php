@@ -34,110 +34,143 @@ use App\Http\Controllers\Api\UserPaymentOptionController;
 
 
 
-
-Route::get('/products/collection', [ProductController::class, 'index']);
-
-Route::get('/products/collection/{name}/sort-by={sort}', [ProductController::class, 'sort']);
-
-Route::get('/products/collection/{filter}', [ProductController::class, 'index']);
-
-Route::get('/products/featured/limit={limit}', [ProductController::class, 'featured']);
-
-Route::post('/products/search', [ProductController::class, 'search']);
-
-Route::get('/collection', [ProductController::class, 'collection']);
-
-Route::get('/products/{slug}', [ProductController::class, 'show']);
-
 Route::post('/register', [RegisterController::class, 'register']);
 
 Route::post('/login', [LoginController::class, 'login']);
 
+Route::controller(CartController::class)->group(function () { 
 
+        Route::post('/cart/add','store');
+
+        Route::post('/set-cart-cookie','setCookie');
+
+        Route::get('/cart','index');
+
+        Route::patch('/cart/{id}','update');
+
+        Route::delete('/cart/item/{id}', 'destroy');
+
+        Route::get('/cart/count','count');
+
+});
+
+Route::controller(ShippingMethodController::class)->group(function () {        
+
+     Route::get('/shipping-methods', 'index');
+
+     Route::get('/shipping-methods/{id}',  'show');
+
+});
+
+
+Route::controller(ProductController::class)->group(function () {
+
+        Route::get('/products/collection', 'index');
+
+        Route::get('/products/collection/{name}/sort-by={sort}','sort');
+
+        Route::get('/products/collection/{filter}','index');
+
+        Route::get('/products/featured/limit={limit}',  'featured');
+
+        Route::post('/products/search',  'search');
+
+        Route::get('/collection', 'collection');
+
+        Route::get('/products/{slug}',  'show');
+});
 
 Route::group(['middleware' => ['auth:sanctum']], function ()  {
-
        
+        Route::controller(UserController::class)->group(function (){
 
-        Route::get('/user', [UserController::class, 'user']);
+                Route::get('/user',  'user');
 
-        Route::put('/user', [UserController::class, 'update']);
+                Route::put('/user',  'update');
+        
+                Route::post('/user/upload',  'upload');
+        
+                Route::delete('/user/remove-image',  'removeImage');
+        });
 
-        Route::post('/user/upload', [UserController::class, 'upload']);
+        Route::controller(UserAddressController::class)->group(function (){
 
-        Route::delete('/user/remove-image', [UserController::class, 'removeImage']);
+                Route::get('/user/address',  'index');
 
-        Route::get('/user/address', [UserAddressController::class, 'index']);
+                Route::get('/user/address/{id}', 'show');
 
-        Route::get('/user/address/{id}', [UserAddressController::class, 'show']);
+                Route::get('/user/address/default/1', 'default');        
 
-        Route::get('/user/address/default/1', [UserAddressController::class, 'default']);        
+                Route::post('/user/address',  'store');
 
-        Route::post('/user/address', [UserAddressController::class, 'store']);
+                Route::put('/user/address/{id}', 'update');
 
-        Route::put('/user/address/{id}', [UserAddressController::class, 'update']);
+                Route::patch('/user/address/{id}', 'setActive');
 
-        Route::patch('/user/address/{id}', [UserAddressController::class, 'setActive']);
+                Route::delete('/user/address/{id}',  'destroy');
 
-        Route::delete('/user/address/{id}', [UserAddressController::class, 'destroy']);
+        });
 
-        Route::get('/user/paymentOption', [UserPaymentOptionController::class, 'index']);
+        Route::controller(UserPaymentOptionController::class)->group(function () {
+                
+                Route::get('/user/paymentOption', 'index');
 
-        Route::get('/user/paymentOption/{id}', [UserPaymentOptionController::class, 'show']);
+                Route::get('/user/paymentOption/{id}',  'show');
 
-        Route::get('/user/paymentOption/default/1', [UserPaymentOptionController::class, 'default']);
+                Route::get('/user/paymentOption/default/1',  'default');
 
-        Route::get('/user/paymentOption/card-number/{card_number}', [UserPaymentOptionController::class, 'findByCardNumber']);
+                Route::get('/user/paymentOption/card-number/{card_number}',  'findByCardNumber');
 
-        Route::post('/user/paymentOption', [UserPaymentOptionController::class, 'store']);
+                Route::post('/user/paymentOption',  'store');
 
-        Route::put('/user/paymentOption/{id}', [UserPaymentOptionController::class, 'update']);
+                Route::put('/user/paymentOption/{id}',  'update');
 
-        Route::patch('/user/paymentOption/{id}', [UserPaymentOptionController::class, 'setActive']);
+                Route::patch('/user/paymentOption/{id}',  'setActive');
 
-        Route::delete('/user/paymentOption/{id}', [UserPaymentOptionController::class, 'destroy']);
+                Route::delete('/user/paymentOption/{id}',  'destroy');
 
-        Route::get('/user/orders',[OrderController::class, 'index']);
+        });
 
-        Route::get('/user/orders/{id}',[OrderController::class, 'show']);  
+        Route::controller(OrderController::class)->group(function () {
+                
+                Route::get('/user/orders','index');
 
-        Route::patch('/user/orders/cancel/{id}',[OrderController::class, 'cancel']);  
+                Route::get('/user/orders/{id}', 'show');  
 
-        Route::delete('/user/logout',[LogoutController::class, 'logout']);
+                Route::patch('/user/orders/cancel/{id}', 'cancel');  
 
-        Route::get('/checkout',[CheckOutController::class, 'index']);
+        });
 
-        Route::post('/checkout',[CheckOutController::class, 'store']);
+        Route::controller(CheckOutController::class)->group(function () {              
 
-        Route::get('/checkout/shipping',[CheckOutController::class, 'shipping']);
+                Route::get('/checkout', 'index');
+        
+                Route::post('/checkout', 'store');
+        
+                Route::get('/checkout/shipping', 'shipping');
+        
+                Route::put('/checkout/shipping/update', 'updateShippingMethod');
 
-        Route::put('/checkout/shipping/update',[CheckOutController::class, 'updateShippingMethod']);
+        });
 
-        Route::post('/checkout/placeorder',[PlaceOrderController::class, 'store']);
+        Route::controller(CartController::class)->group(function () { 
 
-        Route::get('/cart/coupon', [CartController::class, 'getCoupon']);
+                Route::get('/cart/coupon',  'getCoupon');
 
-        Route::post('/cart/apply-coupon', [CartController::class, 'couponActivate']);
+                Route::post('/cart/apply-coupon', 'couponActivate');
+        
+                Route::delete('/cart/remove-coupon',  'couponRemove');
+        
+                Route::post('/contact/send-message',  'sendMessage');
 
-        Route::delete('/cart/remove-coupon', [CartController::class, 'couponRemove']);
+        });
 
-        Route::post('/contact/send-message', [ContactController::class, 'sendMessage']);
+        Route::delete('/user/logout',[LogoutController::class, 'logout']);       
+
+        Route::post('/checkout/placeorder',[PlaceOrderController::class, 'store']);     
         
 });
 
-Route::post('/cart/add', [CartController::class, 'store']);
 
-Route::post('/set-cart-cookie', [CartController::class, 'setCookie']);
 
-Route::get('/cart', [CartController::class, 'index']);
-
-Route::patch('/cart/{id}', [CartController::class, 'update']);
-
-Route::delete('/cart/item/{id}',[CartController::class, 'destroy']);
-
-Route::get('/cart/count', [CartController::class, 'count']);
-
-Route::get('/shipping-methods', [ShippingMethodController::class, 'index']);
-
-Route::get('/shipping-methods/{id}', [ShippingMethodController::class, 'show']);
 

@@ -8,7 +8,7 @@
     <a href="{{ url()->previous() }}" class="btn btn-danger">Back</a>
 </div>
 
-<form id="form" method="POST"  action="{{route('admin.users.update',[$user->encryptedId()])}}"  enctype="multipart/form-data">
+<form  method="POST"  action="{{route('admin.update.profile',[$user->encryptedId()])}}"  enctype="multipart/form-data">
     @csrf
     @method('put')
     
@@ -27,7 +27,11 @@
             <div class="panel">                
                 <div class="panel-body">                  
                     <div class="avatar-big relative center">
-                       <img id="avater-image" class="round" src="{{ $user->imagePath }}" alt="" srcset="">                       
+                       @if ($user->imagePath != null)                    
+                          <img id="avater-image" class="round" src="{{ $user->imagePath }}" alt="" srcset="">    
+                        @else     
+                          <img id="avater-image" class="round" src="/img/avatar/admin/default-avatar.png" alt="" srcset="">               
+                       @endif
                         <label class="span-camera around">
                             <i class="fas fa-camera"></i>
                             <input  type="file" id="file-upload" name="image" style="display:none;">
@@ -36,16 +40,10 @@
                     <div class="m-t-1 centered flex-column">
                         <h4>{{ empty($user->fullName()) ? $user->fullName() : $user->username  }}</h4>
                         <label for="" class="m-t-1">is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</label>
-                        <button id="change-password"  class="btn btn-primary m-t-2">Change Password</button>
+                        {{-- <button id="change-password"  class="btn btn-primary m-t-2">Change Password</button> --}}
                     </div>                
                 </div>    
             </div>
-           
-       
-
-           
-                  
-              
         </div>
       
     <div class="left-column"> 
@@ -116,7 +114,7 @@
             </div>
         </div>
         <div class="flex justify-content-end gap10">
-            <button id="btnsave" type="create" class="btn btn-primary">Save Changes</button>              
+            <button  class="btn btn-primary">Save Changes</button>              
         </div> 
 
    

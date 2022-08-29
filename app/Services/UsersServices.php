@@ -9,10 +9,14 @@ use App\Http\Traits\ImageUploadTrait;
 class UsersServices
 {
     use ImageUploadTrait;
+
     private $location = '/img/avatar/admin/';
+
     public function users()
     {
+
         return Admin::all()->except(auth()->guard('admin')->user()->id);
+        
     }
 
     public function store(Request $request)

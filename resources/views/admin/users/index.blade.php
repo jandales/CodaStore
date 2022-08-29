@@ -90,7 +90,7 @@
                                 <td>
                                     <div class="flex items-center gap10">
                                         <div class="avatar-sm">
-                                            <img src="/{{ $user->avatar() }}" alt="" srcset="">
+                                            <img src="{{ $user->avatar() }}" alt="" srcset="">
                                         </div>
                                         <span>{{ $user->username }}</span>
                                     </div>                                   
