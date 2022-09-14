@@ -7,7 +7,7 @@
                     <div class="login-register-header">
                         <h1>Login</h1>                   
                     </div>
-        
+                   
                     <div class="login-register-body"> 
                 
                         @if (Session('error'))
@@ -45,6 +45,14 @@
                         </form>  
                         <br>  
                         <a href="/register" class="login-register-link">Create account</a>
+                        <br>
+                        <label for="" class="block text-center">Or</label>
+                        <br>
+                        <a class="w-12 btn btn-border-dark mb-1" href="{{route('authGoogle')}}">
+                            <i class="fa-brands fa-google"></i>
+                            Login with Google</a>
+                        <br>
+                        {{-- <a class="w-12 btn btn-dark" href="{{route('authGoogle')}}">Facebook</a> --}}
                     </div>
             
             </div>

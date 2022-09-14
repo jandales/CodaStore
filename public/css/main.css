@@ -623,7 +623,7 @@ nav ul li .sub-menu li.active a {
 
 .table {
   width: 100%;
-  /* table-layout: fixed; */
+  table-layout: fixed;
   border-collapse: collapse;
 }
 

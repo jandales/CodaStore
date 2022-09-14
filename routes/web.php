@@ -35,6 +35,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\VariantController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Auth\AdminLoginController;
@@ -70,6 +71,8 @@ Route::post('/login',[UserLoginController::class, 'login'])->name('login.store')
 Route::post('/register',[RegisterController::class, 'store'])->name('register.store');
 Route::get('/register', [RegisterController::class, 'index'])->name('register');
 
+Route::get('/auth/google/login', [UserLoginController::class, 'loginGoogle'])->name('authGoogle');
+Route::get('/auth/google/callback-url', [UserLoginController::class, 'handleProviderCallback'])->name('handleProviderCallback');
 
 Route::controller(AppController::class)->group(function () {
     Route::get('/', 'index')->name('home'); 

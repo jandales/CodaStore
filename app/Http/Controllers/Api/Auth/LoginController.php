@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\UserLoginRequest;
 
+
 class LoginController extends Controller
 {
     public function login(UserLoginRequest $request)
@@ -32,4 +33,5 @@ class LoginController extends Controller
         ]);          
 
     }
+   
 }

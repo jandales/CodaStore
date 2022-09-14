@@ -34,6 +34,12 @@
                         <button class="btn btn-dark" name="submit">Create</button>
                     </form>
                     <br>  
+                    <label for="" class="block text-center">Or</label>
+                    <br>
+                    <a class="w-12 btn btn-border-dark mb-1" href="{{route('authGoogle')}}">
+                        <i class="fa-brands fa-google"></i>
+                        Register with Google</a>
+                    <br>
                     <a href="/login" class="login-register-link">Login</a>
                 </div>   
             </div>
