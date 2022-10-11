@@ -8,13 +8,13 @@
                 <h1 class="">Contact</h1>
             </div>  
         </div>
-    
+    {{session('success')}}
         
         <div class="container">              
           <div class="contact-wrapper mt-2 mb-2">
             <div class="contact-form">
-              @if (Session('success'))
-                <div class="alert alert-success">{{ Session('success') }}</div>
+              @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
               @endif              
                 <h3 class="text-center">Send us Message</h3>
                 <form action="{{ route('sendMessage') }}" method="POST">

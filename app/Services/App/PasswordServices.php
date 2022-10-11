@@ -11,7 +11,7 @@ use App\Jobs\ProcessUserForgotPasswordMail;
 
 class PasswordServices
 {
-    public function request(UserForgotPasswordRequest $request)
+    public function request($request)
     {            
      
         $email = $request->email;
@@ -34,10 +34,10 @@ class PasswordServices
 
         /// create url to reset password
         $url = url("/reset_password/{$token}");  
-        //// mail the url into a user
+    
 
-        dispatch(new ProcessUserForgotPasswordMail($url));
-        // Mail::to("to@example.com")->send(new forgorPasswordMail($url));
+        dispatch(new ProcessUserForgotPasswordMail($email,$url));
+      
 
         return ['success' => 'Please check your Email to reset your password'];
     }

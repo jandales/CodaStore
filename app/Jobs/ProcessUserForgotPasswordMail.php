@@ -16,15 +16,17 @@ class ProcessUserForgotPasswordMail implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private $url;
+    private $email;
     
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($url)
+    public function __construct($email, $url)
     {
         $this->url = $url;
+        $this->email= $email;
     }
 
     /**
@@ -34,7 +36,7 @@ class ProcessUserForgotPasswordMail implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to("to@example.com")->send(new ForgotPasswordMail($this->url));
+        Mail::to($this->email)->send(new ForgotPasswordMail($this->url));
     }
     
 }

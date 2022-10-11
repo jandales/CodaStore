@@ -10,8 +10,7 @@ use Illuminate\Queue\SerializesModels;
 class SendUsMail extends Mailable
 {
     use Queueable, SerializesModels;
-
-    public $from_email;
+      
     public $content;
 
     /**
@@ -19,9 +18,9 @@ class SendUsMail extends Mailable
      *
      * @return void
      */
-    public function __construct($from_email, $content)
+    public function __construct($content)
     {
-        $this->from_email = $from_email;
+  
         $this->content = $content;
     }
 
@@ -32,7 +31,8 @@ class SendUsMail extends Mailable
      */
     public function build()
     {
-        return $this->from($this->from_email)
+        $from = config('mail.from.address');
+        return $this->from($from)
                     ->markdown('emails.sendUsMail')
                     ->with(['content' => $this->content]);
     }

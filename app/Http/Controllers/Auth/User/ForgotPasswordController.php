@@ -26,9 +26,9 @@ class ForgotPasswordController extends Controller
     }
 
     public function request(UserForgotPasswordRequest $request, PasswordServices $services)
-    {              
+    {       
         $result = $services->request($request);  
-        return back()->with($request);
+        return back()->with($result);
     }
 
   

@@ -15,13 +15,13 @@
 <body>
 
     <div id="flex">      
-        @if(config('app.env') != 'local') 
+        {{-- @if(config('app.env') != 'local') 
             <div style="width:100%; background-color: #fff3cd;">
                 <div class="container"  style="padding-top: .5rem; padding-bottom: .5rem">
                     <label for="">This website for demo purpose only</label>
                 </div>
             </div>
-        @endif
+        @endif --}}
        
      
         {{-- @if(!request()->routeIs(['login','register'])) --}}

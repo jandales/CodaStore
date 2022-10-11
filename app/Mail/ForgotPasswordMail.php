@@ -30,7 +30,8 @@ class ForgotPasswordMail extends Mailable
      */
     public function build()
     {
-        return $this->from('example@example.com')
+        $from = config('mail.from.address');
+        return $this->from($from)
                     ->markdown('emails.forgotpassword')
                     ->with(['token' => $this->url]);
     }

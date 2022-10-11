@@ -15,8 +15,8 @@ class ProccessSendMessage implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $to_email;
-    private $from_email;
+
+    private $email;
     private $content;
 
     /**
@@ -24,10 +24,9 @@ class ProccessSendMessage implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($from_email, $content)
-    {
-        $this->to_email = siteSettings()->site_email;
-        $this->from_email = $from_email;
+    public function __construct($email, $content)
+    {      
+        $this->email = $email;
         $this->content = $content;
     }
 
@@ -38,7 +37,8 @@ class ProccessSendMessage implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to($this->to_email)->send(new SendUsMail($this->from_email, $this->content));
+      
+        Mail::to($this->email)->send(new SendUsMail($this->content));
     }
 
   
