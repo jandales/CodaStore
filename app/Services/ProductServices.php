@@ -87,7 +87,7 @@ class ProductServices
        
             Self::updateProductImage($image, $product->imageDetail() );
            
-            return Self::imageGalleryUpdate($request->input('images'), $product->id);
+            Self::imageGalleryUpdate($request->input('images'), $product->id);
     
             Self::createAttributes($request->input('attributes'), $request->hasVariant, $product->id);
     
