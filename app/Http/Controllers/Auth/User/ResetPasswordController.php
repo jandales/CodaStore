@@ -8,24 +8,26 @@ use App\Http\Requests\UserResetPasswordRequest;
 
 class ResetPasswordController extends Controller
 {
-  
-    public function __construct()
+    private PasswordServices $services;
+
+    public function __construct(PasswordServices $services)
     {
         $this->middleware(['guest']);       
+        $this->services = $services;
     }
 
     public function index($token)
-    {       
+    {
+        $isValid = $this->services->validateToken($token);
+
+        if (!$isValid) return view('resetpassword')->with(['token' => $token, 'error' => 'Request already expires']);
+        
         return view('resetpassword')->with('token',$token);
     }
 
-    public function reset(UserResetPasswordRequest $request, PasswordServices $services)
+    public function reset(UserResetPasswordRequest $request)
     {         
-        $result = $services->reset($request);
-        
-        if(!$result[0]) 
-            return redirect()->route('password.forgot')->with($result[1]);
-
-        return redirect()->route('users.login');
+        $result = $this->services->reset($request);        
+        return back()->with($result);        
     }
 }

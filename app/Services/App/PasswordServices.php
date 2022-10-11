@@ -44,35 +44,37 @@ class PasswordServices
 
 
     public function reset(Request $request)
-    {         
+    {     
         $token = $request->token;  
         $password = $request->password; 
+        $isValid = $this->validateToken($token); 
+        if ( ! $isValid ) return ['error' => 'request token is expired'];
 
-        $current_date = date('Y-m-d H:i:s');
-        
-        // find if a request exist
-        $reset = ForgotPassword::where('token',$token)->first(); 
-        
-        if($reset == null) return [false];  
-        
-        $email = $reset->email;
-
-         // check if a token already expire
-        $expiry_date = $reset->created_at; 
-
-        if($current_date >= $expiry_date)  return [false, 'error' => 'Request already expires'];        
-              
-   
+        $result = ForgotPassword::where('token',$token)->first(); 
+        $email = $result->email;
         // change password
         $user = User::where('email', $email)->first();
         $user->password = Hash::make($password);
         $user->save();
-
         // delete the token
-        $deleted = DB::delete('delete from password_resets where email = ?', [$email]);
+        $deleted = DB::delete('delete from password_resets where email = ?', [$email]);  
+        return ['success' => 'Successfully password updated'];
+
+    }
+
+    public function validateToken($token) {     
+
+        $current_date = date('Y-m-d H:i:s');        
+        // find if a request exist
+        $reset = ForgotPassword::where('token',$token)->first(); 
+
+        if ( $reset == null ) return false;       
+      
+        $expiry_date = $reset->created_at; 
+
+        if ( $current_date >= $expiry_date ) return false;
 
         return true;
-
     }
 
 }

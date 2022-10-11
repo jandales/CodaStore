@@ -5,16 +5,17 @@
 <div class="container">
     <div class="login-register-wrapper">
         <div class="login-register">
-
+            @if (session('error'))
+                <div class="alert alert-danger">{{ session('error') }}</div>
+            @endif
+            @if (session('success'))
+             <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
             <div class="login-register-header">
                 <h1>Reset your password</h1>           
             </div>
             
-            <div class="login-register-body">       
-                        @if (Session('error'))
-                            <div class="alert alert-danger">{{ Session('error') }}</div>
-                        @endif
-              
+            <div class="login-register-body">  
                         <form class="form" action="{{ route('password.store')}}" method="POST">
                            
                             @csrf  
@@ -42,6 +43,8 @@
                                 <button class="button">Submit</button>
                                 <br>
                         </form>
+                        <br>
+                        <a href="/login" class="login-register-link">Back to login</a>
             </div>
             
            

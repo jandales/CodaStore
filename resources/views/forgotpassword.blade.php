@@ -34,6 +34,9 @@
                                 <button class="button">Submit</button>
                                 <br>
                         </form>
+
+                        <br>
+                        <a href="/login" class="login-register-link">Back to login</a>
     
             
                     
