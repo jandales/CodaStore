@@ -5,6 +5,10 @@
 <div class="container">
     <div class="login-register-wrapper">
         <div class="login-register">
+      
+            @if ($error)
+            <div class="alert alert-danger">{{ $error }}</div>
+            @endif
             @if (session('error'))
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
@@ -24,7 +28,7 @@
                             <div class="form-block">
                                 <label>New Password</label>                     
                                 <input name="password" type="password">
-        
+                                <br>
                                 @error('password')
                                     <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror
@@ -34,13 +38,17 @@
                             <div class="form-block">
                                 <label>Confirm Password</label>
                                 <input name="password_confirmation" type="password">
-        
+                                <br>
                                 @error('confirm_password')
                                     <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror
                               
                             </div>
-                                <button class="button">Submit</button>
+                            @if($error)
+                                <button class="button" disabled>Submit</button>                                
+                            @else
+                                <button class="button">Submit</button>   
+                            @endif
                                 <br>
                         </form>
                         <br>

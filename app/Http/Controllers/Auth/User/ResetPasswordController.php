@@ -18,16 +18,18 @@ class ResetPasswordController extends Controller
 
     public function index($token)
     {
+       
         $isValid = $this->services->validateToken($token);
-
-        if (!$isValid) return view('resetpassword')->with(['token' => $token, 'error' => 'Request already expires']);
         
-        return view('resetpassword')->with('token',$token);
+        if ( ! $isValid ) return view('resetpassword')->with(['token' => $token, 'error' => 'Request already expires']);
+  
+        return view('resetpassword')->with(['token' => $token, 'error' => null]);
     }
 
     public function reset(UserResetPasswordRequest $request)
     {         
-        $result = $this->services->reset($request);        
-        return back()->with($result);        
+        $result = $this->services->reset($request); 
+        if ($result['status'] === false) return back()->with('error',$result['message']);  
+        return redirect()->route('login')->with('success', $result['message']);      
     }
 }

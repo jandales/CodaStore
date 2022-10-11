@@ -16,21 +16,20 @@ class PasswordServices
      
         $email = $request->email;
         $token = $request->_token;
-
-        $expiry = date('Y-m-d H:i:s', strtotime("+1 day"));
         
         // check email if  registered
         $register = User::where('email', $email)->first();
 
         if($register == null) return ["error" => "Email not yet Register"];
 
+        $expiry = date('Y-m-d H:i:s', strtotime("+1 day"));
+
         //// create request
         ForgotPassword::create([
             'email' => $email,
             'token' => $token,
             'created_at' =>  $expiry,
-        ]);       
-        
+        ]); 
 
         /// create url to reset password
         $url = url("/reset_password/{$token}");  
@@ -47,8 +46,9 @@ class PasswordServices
     {     
         $token = $request->token;  
         $password = $request->password; 
+
         $isValid = $this->validateToken($token); 
-        if ( ! $isValid ) return ['error' => 'request token is expired'];
+        if ( ! $isValid ) return ['status' => false, 'message' => 'request token is expired'];
 
         $result = ForgotPassword::where('token',$token)->first(); 
         $email = $result->email;
@@ -58,7 +58,8 @@ class PasswordServices
         $user->save();
         // delete the token
         $deleted = DB::delete('delete from password_resets where email = ?', [$email]);  
-        return ['success' => 'Successfully password updated'];
+
+        return ['status' => true, 'message' => 'Successfully password updated'];
 
     }
 

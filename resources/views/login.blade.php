@@ -4,15 +4,19 @@
         <div class="login-register-wrapper">
             <div class="login-register">
         
+                    @if (session('error'))
+                        <div class="alert alert-danger">{{ Session('error') }}</div>
+                    @endif
+                    @if (session('success'))
+                        <div class="alert alert-success">{{ session('success') }}</div>
+                    @endif
                     <div class="login-register-header">
                         <h1>Login</h1>                   
                     </div>
                    
                     <div class="login-register-body"> 
                 
-                        @if (Session('error'))
-                            <div class="alert alert-danger">{{ Session('error') }}</div>
-                        @endif
+                     
             
                         <form class="form" action="{{ route('login')}}" method="POST">
                             @csrf
