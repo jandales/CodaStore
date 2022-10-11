@@ -5,18 +5,20 @@
 
 <div class="container">
     <div class="login-register-wrapper">
-        @if (Session('error'))
-        <div class="alert alert-danger m-10">{{ Session('error') }}</div>
-    @endif
+       
         <div class="login-register">
+             @if (session('error'))
+                 <div class="alert alert-danger m-10">{{ session('error') }}</div>
+             @endif
+             @if (Session('success'))
+                <div class="alert alert-success .m-10">{{ Session('success') }}</div>
+             @endif
             <div class="login-register-header">
                 <h1>Recover your Account</h1>      
                 <br>     
             </div>
-            <div class="login-register-body"> 
-                @if (Session('success'))
-                    <div class="alert alert-success .m-10">{{ Session('success') }}</div>
-                @endif
+            <div class="login-register-body">
+               
                 <div class="p"><p>Please Enter your email address to recover your account</p></div>
             
                         <form class="form" action="{{ route('password.request')}}" method="POST">                   
