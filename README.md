@@ -6,11 +6,14 @@
     - create the .env file
     - php artisan key:generate 
     - php artisan migrate --seed  
+    - npm run dev
+    - php artisan serve
     
     - user : admin@gmail.com
     - password : password  
     
     - run php artisan queue:work 
+
     
  ## Website link
           https://codastore.herokuapp.com
