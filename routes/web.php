@@ -40,6 +40,7 @@ use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Admin\AdminOrderController;
+use App\Http\Controllers\Admin\AdminPaymentController;
 use App\Http\Controllers\UserPaymentOptionController;
 use App\Http\Controllers\Auth\AdminRegisterController;
 use App\Http\Controllers\Auth\User\RegisterController;
@@ -311,6 +312,10 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
         Route::get('/search', 'search')->name('admin.orders.search');
         Route::get('/{status}', 'listbyStatus')->name('admin.orders.list');
         Route::delete('/destroy/{order:id}', 'destroy')->name('admin.orders.destroy');
+    });
+
+    Route::controller(AdminPaymentController::class)->prefix('payments')->group(function () {
+        Route::get('/', 'index')->name('admin.payments');
     });
 
     

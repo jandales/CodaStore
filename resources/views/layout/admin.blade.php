@@ -79,6 +79,7 @@
                               </ul>
                         </li>
                         <li><a class="{{ (request()->is('admin/orders*')) ? 'active' : '' }}" nav-item href="{{route('admin.orders')}}"><i class="fas fa-box"></i><span class="hide-menu">Orders</span></a></li>
+                        <li><a class="{{ (request()->is('admin/payments*')) ? 'active' : '' }}" nav-item href="{{ route('admin.payments') }}"><i class="fas fa-credit-card"></i><span class="hide-menu">Payments</span></a></li>
                         <li><a class="{{ (request()->is('admin/coupons*')) ? 'active' : '' }}" nav-item href="{{ route('admin.coupons') }}"><i class="fas fa-money-check-alt"></i><span class="hide-menu">Coupons</span></a></li>
                         <li><a class="{{ (request()->is('admin/reviews*')) ? 'active' : '' }}" nav-item href="{{ route("admin.reviews") }}"><i class="far fa-comments"></i><span class="hide-menu">Reviews</span></a></li>
                         <li><a class="{{ (request()->is('admin/customers*')) ? 'active' : '' }}" nav-item href="{{route('admin.customers')}}"><i class="fas fa-users"></i><span class="hide-menu">Customers</span></a></li>
