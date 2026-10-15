@@ -105,7 +105,8 @@ body {
   height: calc(100vh - 90px);
   padding: 0 !important;
   background-image: url(/images/hero.jpg?4bd07a83b88ef99dffdb80d149658135);
-  background-size: 100% 100%;
+  background-size: cover;
+  background-position: center;
   background-clip: border-box;
   background-repeat: no-repeat;
 }
@@ -113,6 +114,7 @@ body {
 .homepage img {
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
 @media screen and (max-width: 500px) {
@@ -578,8 +580,9 @@ body {
 .content-image-about {
   display: flex;
   background-image: url("/img/front/about.jpg");
-  background-position: left;
-  background-size: 100% 100%;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   height: 220px;
   align-items: center;
   justify-content: center;
@@ -588,8 +591,9 @@ body {
 .content-image-contact {
   display: flex;
   background-image: url("/img/front/contact.jpg");
-  background-position: left;
-  background-size: 100% 100%;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   height: 220px;
   align-items: center;
   justify-content: center;

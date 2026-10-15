@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apprael Store</title>  
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">  
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}?v=3">  
     <meta name="csrf-token" content="{{ csrf_token() }}"> 
     <link rel="shortcut icon" href="{{ asset('favicon.png') }}">
 
