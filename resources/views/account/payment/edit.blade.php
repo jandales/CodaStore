@@ -17,7 +17,7 @@
                             @csrf
                             @method('put')
                             <div class="form-block">
-                                <label>Card Name</label>
+                                <label>Name on card</label>
                                 <input type="text"   name="card_name" value="{{ $option->card_name }}">
                                 @error('card_name')
                                     <small class="alert-text link-danger">{{ $message }}</small>
@@ -25,7 +25,7 @@
                             </div>                
                                   
                             <div class="form-block">
-                                <label>Card Data</label>
+                                <label>Card details</label>
                                 <div class="input-custom">
                                     <div class="inline-form-group">
                                         <input type="text" class="card-number w-6" class=""  name="card_number" value="{{ $option->card_number }}" placeholder="Card Number">

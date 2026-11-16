@@ -1,5 +1,5 @@
 <div class="footer">
-    <h5>All Rights Reserved by store admin. Designed and Developed by Jesus Andales.</h5>
+    <h5>All rights reserved. Designed and Developed by Jesus Andales.</h5>
 </div>
 </div>
 </div>

@@ -1,8 +1,8 @@
 <div class="cart-container bg-grey p-20">
         <div class="sm-visible">
             <div class="cart-heading">
-                <span id="close-cart-summary"><i class="fa fa-times"></i></span>
-                <h2 class="cart-title sm-text-center">Cart</h2>
+                <button type="button" id="close-cart-summary" class="icon-btn" aria-label="Close order summary"><i class="fa fa-times" aria-hidden="true"></i></button>
+                <h2 class="cart-title sm-text-center">Order summary</h2>
             </div>          
         </div>
     <div class="flex flex-column gap20">
@@ -28,11 +28,12 @@
     </div>
 
     <div id="coupon-form" class="form-inline gap10 mt-2 {{ $cart->coupon_id != null ? 'hidden' : ''}}">
-        <input type="text" id="coupon_code" validator-input="coupon_code" name="coupon_code" placeholder="Coupon Code">
+        <label for="coupon_code" class="sr-only">Discount code</label>
+        <input type="text" id="coupon_code" validator-input="coupon_code" name="coupon_code" placeholder="Discount code">
         <button id="btn-coupon-apply" class="btn btn-dark w-3">Apply</button>   
     </div>
 
-    <small class="validator-text" validator-for="coupon_code">Please Enter Card Name</small>
+    <small class="validator-text" validator-for="coupon_code">Enter a discount code</small>
     <div class=" mt-2">
         <div class="flex space-between py-1 bor12">
             <span>Items</span>
@@ -47,14 +48,14 @@
 
         <div class="flex space-between py-1 bor12">
             <span>Shipping</span>
-            <span class="span-shipping-fee">@if ($shipping_charge != 0) @money($shipping_charge) @else {{ 'Shipping charge caclulated Next step' }} @endif</span>
+            <span class="span-shipping-fee">@if ($shipping_charge != 0) @money($shipping_charge) @else {{ 'Calculated at next step' }} @endif</span>
         </div>
 
         
         <div id="has-coupon" class="flex flex-column bor12 py-1 {{ $cart->coupon_id == null ? 'hidden' : ''}}">   
 
             <div class="flex gap10">
-                <span>Coupon :</span>
+                <span>Discount</span>
                 <div class="flex flex-column flex-auto">
                     <div class="flex space-between">
                         <span id="coupon-code">{{ $cart->couponName('name') }}</span>

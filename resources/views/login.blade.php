@@ -1,4 +1,5 @@
 @extends('layout.front.app')
+@section('title', 'Sign in | Coda')
 @section('content')    
     <div class="container">
         <div class="login-register-wrapper">
@@ -11,7 +12,8 @@
                         <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
                     <div class="login-register-header">
-                        <h1>Login</h1>                   
+                        <h1>Sign in</h1>
+                        <p class="login-register-sub">Welcome back. Sign in to check out faster and track your orders.</p>                   
                     </div>
                    
                     <div class="login-register-body"> 
@@ -22,15 +24,15 @@
                             @csrf
                             <input type="hidden" name="url" value="{{ url()->previous() }}">
                             <div class="form-block">
-                                <label for="username">Email</label>
-                                <input name="email" type="username" placeholder="Email Address"  value="{{ old('email') }}">                                                                 
+                                <label for="login-email">Email</label>
+                                <input id="login-email" name="email" type="email" autocomplete="email" placeholder="you@example.com"  value="{{ old('email') }}">                                                                 
                             </div>
                             @error('email')
                                 <div class="alert alert-danger">{{ $message }}</div>
                             @enderror  
                             <div class="form-block">
-                                <label for="password">Password</label>     
-                                <input name="password" type="password" placeholder="Password">  
+                                <label for="login-password">Password</label>
+                                <input id="login-password" name="password" type="password" autocomplete="current-password">  
                             </div>
                             @error('password')
                                 <div class="alert alert-danger">{{ $message }}</div>
@@ -45,16 +47,16 @@
                                 </div>
                             </div>                            
                             <br>
-                            <button class="btn btn-dark">Login</button>
+                            <button class="btn btn-dark w-12">Sign in</button>
                         </form>  
                         <br>  
-                        <a href="/register" class="login-register-link">Create account</a>
+                        <p class="login-register-alt">New to Coda? <a href="/register" class="link-underline">Create an account</a></p>
                         <br>
-                        <label for="" class="block text-center">Or</label>
+                        <div class="login-register-divider"><span>or</span></div>
                         <br>
                         <a class="w-12 btn btn-border-dark mb-1" href="{{route('authGoogle')}}">
-                            <i class="fa-brands fa-google"></i>
-                            Login with Google</a>
+                            <i class="fa-brands fa-google" aria-hidden="true"></i>
+                            Continue with Google</a>
                         <br>
                         {{-- <a class="w-12 btn btn-dark" href="{{route('authGoogle')}}">Facebook</a> --}}
                     </div>

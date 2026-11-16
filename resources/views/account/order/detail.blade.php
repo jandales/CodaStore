@@ -19,7 +19,7 @@
                                 <div class="order">
                                     <div class="order-header">
                                       <div class="align-items-content-center">
-                                          <span>OR#: </span> <a href="{{ route('orders.details',[$order->encryptedId()])}}" for="order">{{ $order->order_number }}</a></div>
+                                          <span>Order </span> <a href="{{ route('orders.details',[$order->encryptedId()])}}" for="order">{{ $order->order_number }}</a></div>
                                        <label class="order-status capitalize {{$order->status == 'cancelled' ? 'bg-danger' : ''}}" for="status">{{$order->status }}</label>
                                     </div>
                                     <div class="order-body">
@@ -66,7 +66,7 @@
     
                                 <div class="order-detail-wrapper align-self-strech ml-1">   
                                     <div class="order-title">
-                                        <p>Order Summary</p>
+                                        <p>Order summary</p>
                                     </div>  
                                     <div class="separator mt-1 mb-1"></div>                          
                                    <div class="order-summary mt-1">
@@ -79,7 +79,7 @@
                                             <span>{{ $order->totalItems() }}</span>
                                         </div>
                                         <div class="flex space-between">
-                                            <span>Shipping Fee</span>
+                                            <span>Shipping fee</span>
                                             <span>@money($order->shipping_charge)</span>
                                         </div>
                                         <div class="flex space-between">
@@ -88,7 +88,7 @@
                                         </div>
                                         <div class="separator mt-1 mb-1"></div>
                                         <div class="flex space-between">
-                                            <span>Total ( VAT Incl. )</span>
+                                            <span>Total (VAT incl.)</span>
                                             <span>@money($order->gross_total)</span>
                                         </div>
                                       

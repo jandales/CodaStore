@@ -1,4 +1,38 @@
 :root {
+  --bg: #FAF8F5;
+  --surface: #FFFFFF;
+  --surface-alt: #F1EDE6;
+  --ink: #1A1A1A;
+  --ink-soft: #333333;
+  --ink-muted: #6B6760;
+  --line: #E6E1DA;
+  --accent: #8C7A68;
+  --success: #3F6B4F;
+  --danger: #A63D2F;
+  --focus: #1A1A1A;
+  --font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --fs-xs: .75rem;
+  --fs-sm: .8125rem;
+  --fs-base: .9375rem;
+  --fs-lg: 1.125rem;
+  --fs-h3: 1.75rem;
+  --fs-h2: 2.25rem;
+  --fs-h1: clamp(2.5rem, 5vw, 3.75rem);
+  --s1: .5rem;
+  --s2: 1rem;
+  --s3: 1.5rem;
+  --s4: 2rem;
+  --s6: 3rem;
+  --s8: 5rem;
+  --radius: 0;
+  --container: 1200px;
+  --shadow-pop: 0 8px 24px rgba(0, 0, 0, .08);
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  --dur: .18s;
+}
+
+:root {
   --bs-orange: #ff523b;
   --bs-blue: #0d6efd;
   --bs-indigo: #6610f2;
@@ -374,8 +408,7 @@ nav ul li .sub-menu li.active a {
   left: 0;
   height: 64px;
   background: #fff;
-  -webkit-animation: slidedown 0.6s;
-          animation: slidedown 0.6s;
+  animation: slidedown 0.6s;
 }
 
 .searchbar.show {
@@ -388,8 +421,7 @@ nav ul li .sub-menu li.active a {
   align-items: center;
   padding: 0px 30px;
   height: 64px;
-  -webkit-animation: slidedown 0.6s;
-          animation: slidedown 0.6s;
+  animation: slidedown 0.6s;
 }
 
 .form-search input {
@@ -404,15 +436,6 @@ nav ul li .sub-menu li.active a {
 .form-search span {
   cursor: pointer;
   margin-left: 10px;
-}
-
-@-webkit-keyframes slidedown {
-  0% {
-    height: 0;
-  }
-  100% {
-    height: 64px;
-  }
 }
 
 @keyframes slidedown {
@@ -473,8 +496,7 @@ nav ul li .sub-menu li.active a {
     width: 250px;
     position: absolute;
     height: 100vh;
-    -webkit-animation: slidetoleft 1s;
-            animation: slidetoleft 1s;
+    animation: slidetoleft 1s;
   }
 
   .side-bar.show {
@@ -483,15 +505,6 @@ nav ul li .sub-menu li.active a {
 
   .side-bar .hide-menu {
     display: inline;
-  }
-
-  @-webkit-keyframes slidetoleft {
-    0% {
-      margin-left: -250px;
-    }
-    100% {
-      margin-left: 0;
-    }
   }
 
   @keyframes slidetoleft {
@@ -876,8 +889,7 @@ table ul.ul {
   background: #fff;
   border-bottom: 0;
   transform: translateX(50%);
-  -webkit-clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-          clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
 
@@ -1765,13 +1777,20 @@ button:disabled {
 }
 
 .btn-toolbar {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
 }
 
 .btn-group, .btn-group-vertical {
   position: relative;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   vertical-align: middle;
 }
@@ -1781,15 +1800,23 @@ button:disabled {
 }
 
 .justify-content-between {
+  -webkit-box-pack: justify !important;
+  -ms-flex-pack: justify !important;
   justify-content: space-between !important;
 }
 
 .input-group-append, .input-group-prepend {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
 }
 
 .input-group-text {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   padding: 0.375rem 0.75rem;
   margin-bottom: 0;
@@ -1803,6 +1830,8 @@ button:disabled {
 
 .input-group {
   position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   flex-direction: row;
   border: 1px solid #eee;
@@ -1814,7 +1843,11 @@ button:disabled {
 }
 
 .input-group-label {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   padding: 0.3rem 0.7rem;
   margin-bottom: 0;
@@ -1917,25 +1950,14 @@ button:disabled {
 
 .tabs-content-active {
   display: block;
-  -webkit-animation: fadeIn 1s;
-          animation: fadeIn 1s;
+  animation: fadeIn 1s;
 }
 
 .tab-button-active {
   background-color: #fff !important;
   color: #489ee7;
   font-weight: bold;
-  -webkit-animation: fadeIn 1s;
-          animation: fadeIn 1s;
-}
-
-@-webkit-keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+  animation: fadeIn 1s;
 }
 
 @keyframes fadeIn {
@@ -2050,8 +2072,7 @@ button:disabled {
   height: 50px;
   width: 50px;
   border-radius: 50%;
-  -webkit-animation: fadein;
-          animation: fadein;
+  animation: fadein;
 }
 
 .action {
@@ -2128,8 +2149,7 @@ button:disabled {
   background-color: #fff !important;
   color: #489ee7;
   font-weight: bold;
-  -webkit-animation: fadeIn 1s;
-          animation: fadeIn 1s;
+  animation: fadeIn 1s;
 }
 
 @keyframes fadeIn {
@@ -2700,8 +2720,6 @@ details ul li:last-child {
   background: #eee;
   border: 1px solid #ddd;
   padding: 5px 10px;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   border-radius: 3px;
   box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px;
@@ -2788,8 +2806,6 @@ details ul li:last-child {
 
 .option-remove {
   display: flex;
-  width: -webkit-max-content;
-  width: -moz-max-content;
   width: max-content;
   justify-content: flex-end;
   margin-top: 10px;
@@ -3345,6 +3361,849 @@ td span.inactive {
   justify-content: space-between;
 }
 
+.admin-body,
+.admin-auth {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+.admin-body :focus-visible,
+.admin-auth :focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.admin-body .side-bar :focus-visible,
+.admin-body .navbar-brand :focus-visible {
+  outline-color: var(--bg);
+}
+
+.admin-wordmark {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  line-height: 1;
+}
+
+.admin-wordmark span {
+  margin-left: 6px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  vertical-align: middle;
+}
+
+.admin-body #topbar {
+  height: 64px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.admin-body .navbar-brand {
+  width: 248px;
+  gap: var(--s2);
+  padding: 0 var(--s3);
+  background: var(--ink);
+}
+
+.admin-body .navbar-brand > .logo {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.admin-body .navbar-brand > .logo > .brandname {
+  margin: 0;
+  padding: 0;
+  color: var(--bg);
+  font-size: 1.3rem;
+}
+
+.admin-body .navbar-brand .menubar a {
+  color: var(--bg);
+  font-size: 16px;
+}
+
+.admin-body .navbar {
+  width: calc(100% - 248px);
+  height: 64px;
+  padding: 0 var(--s3);
+  background: var(--surface);
+}
+
+.admin-body .navbar-search a,
+.admin-body .navbar nav ul li a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 var(--s2);
+  height: 64px;
+  color: var(--ink-muted);
+  font-size: var(--fs-sm);
+}
+
+.admin-body .navbar-search a span,
+.admin-body .navbar nav ul li a span {
+  color: inherit;
+}
+
+.admin-body .navbar nav ul li:hover,
+.admin-body .navbar nav ul li a:hover {
+  background: transparent;
+  color: var(--ink);
+}
+
+.admin-body .navbar-user .user-image img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--line);
+}
+
+.admin-body .navbar-dropdownlist {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: var(--shadow-pop);
+  border-radius: 0 !important;
+  padding: var(--s1) 0 !important;
+}
+
+.admin-body .navbar-dropdownlist li a {
+  height: auto !important;
+  padding: 10px var(--s2) !important;
+  color: var(--ink) !important;
+}
+
+.admin-body .navbar-dropdownlist li a:hover {
+  background: var(--surface-alt) !important;
+}
+
+.admin-body .side-bar {
+  width: 248px;
+  background: var(--ink);
+  padding: var(--s2) 0;
+}
+
+.admin-body .side-bar nav ul li {
+  margin: 0;
+  background: transparent;
+}
+
+.admin-body .side-bar nav ul li:hover {
+  background: transparent;
+}
+
+.admin-body .side-bar nav ul li a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  margin: 2px var(--s1);
+  padding: 0 var(--s2);
+  border-radius: 2px;
+  color: #CFC8BE;
+  font-size: var(--fs-sm);
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.admin-body .side-bar nav ul li a i {
+  width: 16px;
+  text-align: center;
+  font-size: 14px;
+  color: inherit;
+}
+
+.admin-body .side-bar nav ul li a span,
+.admin-body .side-bar nav ul li a span.hide-menu {
+  margin: 0;
+  color: inherit;
+}
+
+.admin-body .side-bar nav ul li a:hover {
+  background: rgba(250, 248, 245, 0.07);
+  color: var(--bg);
+}
+
+.admin-body .side-bar nav ul li a.active {
+  background: rgba(250, 248, 245, 0.12);
+  color: var(--bg);
+}
+
+.admin-body .side-bar nav ul li.active {
+  background: transparent;
+}
+
+.admin-body .side-bar nav ul li .nav-dropdown-btn {
+  padding-right: var(--s2);
+}
+
+.admin-body .side-bar nav ul li .nav-dropdown-btn a {
+  flex: 1;
+  margin-right: 0;
+}
+
+.admin-body .side-bar nav ul li .nav-dropdown-btn .arrow {
+  margin: 0;
+  color: #8C857C;
+  font-size: 12px;
+}
+
+.admin-body .side-bar nav ul li.nav-dropdown.active > .nav-dropdown-btn a {
+  color: var(--bg);
+}
+
+.admin-body .side-bar nav ul li .sub-menu > li > a {
+  min-height: 36px;
+  padding: 0 var(--s2) 0 48px;
+  color: #A8A29A;
+}
+
+.admin-body .side-bar nav ul li .sub-menu li.active a {
+  color: var(--bg) !important;
+  background: transparent;
+}
+
+.admin-body .side-bar nav ul li .sub-menu li.active a::before {
+  content: "";
+  position: absolute;
+  left: 32px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--bg);
+}
+
+.admin-body .page-wrapper {
+  width: calc(100% - 248px);
+  background: var(--bg);
+}
+
+.admin-body .page {
+  padding: var(--s4) var(--s4) var(--s6);
+}
+
+.admin-body .page-title {
+  margin: 0 0 var(--s3);
+  padding: 0;
+}
+
+.admin-body .page-title h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.admin-section-title {
+  margin: var(--s2) 0 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 500;
+}
+
+.admin-body .footer {
+  padding: var(--s3) var(--s4);
+  border-top: 1px solid var(--line);
+  background: transparent;
+  text-align: left;
+}
+
+.admin-body .footer h5 {
+  font-size: var(--fs-xs);
+  font-weight: 400;
+  color: var(--ink-muted);
+}
+
+.admin-body .card {
+  border: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--surface);
+}
+
+.admin-body .card .card-body {
+  padding: var(--s3);
+}
+
+.admin-body .card .title,
+.admin-body .card label.title {
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.admin-body .card .number {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+.admin-body .card .icon {
+  font-size: 18px;
+  color: var(--accent);
+}
+
+.admin-body .card .card-footer {
+  padding: 12px var(--s3);
+  background: transparent;
+  border-top: 1px solid var(--line);
+}
+
+.admin-body .card .card-footer a {
+  font-size: var(--fs-sm);
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.admin-body .panel,
+.admin-body .panel-table {
+  border: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--surface);
+}
+
+.admin-body .panel-title {
+  font-size: var(--fs-base);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.admin-body .toolbar {
+  padding: var(--s2) var(--s3);
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.admin-body .toolbar label {
+  font-size: var(--fs-sm);
+  color: var(--ink-muted);
+}
+
+.admin-body .toolbar select {
+  min-height: 40px;
+  min-width: 180px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background-color: var(--surface);
+}
+
+.admin-body .search-input {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--surface);
+}
+
+.admin-body .search-input:focus-within {
+  border-color: var(--ink);
+}
+
+.admin-body .search-input input {
+  border: 0 !important;
+  background: transparent;
+  box-shadow: none;
+}
+
+.admin-body .search-input input:focus-visible {
+  outline: none;
+}
+
+.admin-body .search-input .icon-left,
+.admin-body .search-input .icon-right {
+  color: var(--ink-muted);
+}
+
+.admin-body .table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+}
+
+.admin-body .table thead,
+.admin-body .table thead.bg-default {
+  background: var(--surface) !important;
+}
+
+.admin-body .table thead th {
+  padding: 14px var(--s2);
+  border-bottom: 1px solid var(--line);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.admin-body .table tbody td {
+  padding: 12px var(--s2);
+  border-bottom: 1px solid var(--line);
+  font-size: var(--fs-sm);
+  color: var(--ink);
+  vertical-align: middle;
+  background: transparent !important;
+}
+
+.admin-body .table tbody tr {
+  background: transparent !important;
+}
+
+.admin-body .table tbody tr:hover td {
+  background: var(--bg) !important;
+}
+
+.admin-body .table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.admin-body .table a,
+.admin-body .link-primary {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.admin-body .table a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.admin-body .table .py-30,
+.admin-body .table th.py-30 {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.admin-body .image-50 img,
+.admin-body .avatar-sm img {
+  border-radius: 0;
+  object-fit: cover;
+}
+
+.admin-body .avatar-sm img {
+  border-radius: 50%;
+}
+
+.admin-body .status {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 0;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--surface-alt);
+  color: var(--ink);
+}
+
+.admin-body .status.bg-primary {
+  background: #E6ECF2;
+  color: #2F4A63;
+}
+
+.admin-body .status.bg-success {
+  background: #E3EDE6;
+  color: var(--success);
+}
+
+.admin-body .status.bg-danger {
+  background: #F6E3DF;
+  color: var(--danger);
+}
+
+.admin-body .status.bg-warning {
+  background: #F4ECDC;
+  color: #7A5A12;
+}
+
+.admin-body .btn,
+.admin-body input[type=submit],
+.admin-body .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 var(--s3);
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.admin-body .btn:hover,
+.admin-body input[type=submit]:hover {
+  background: var(--ink-soft);
+}
+
+.admin-body .btn span,
+.admin-body .btn i {
+  color: inherit;
+}
+
+.admin-body .btn-primary {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
+
+.admin-body .btn-light,
+.admin-body .btn-default {
+  background: var(--surface);
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+.admin-body .btn-light:hover,
+.admin-body .btn-default:hover {
+  border-color: var(--ink);
+  background: var(--surface);
+}
+
+.admin-body .btn-danger {
+  background: transparent;
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.admin-body .btn-danger:hover {
+  background: var(--danger);
+  color: var(--bg);
+}
+
+.admin-body .btn-success {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
+
+.admin-body .form-block label,
+.admin-body .form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.admin-body input[type=text],
+.admin-body input[type=email],
+.admin-body input[type=password],
+.admin-body input[type=number],
+.admin-body input[type=date],
+.admin-body select,
+.admin-body textarea {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background-color: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  box-shadow: none;
+}
+
+.admin-body input:focus,
+.admin-body select:focus,
+.admin-body textarea:focus {
+  border-color: var(--ink);
+  box-shadow: none;
+  outline: none;
+}
+
+.admin-body input[type=checkbox],
+.admin-body input[type=radio] {
+  accent-color: var(--ink);
+}
+
+.admin-body .alert {
+  border-radius: 0;
+}
+
+.admin-body .pagination li a,
+.admin-body .pagination li span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.admin-body .pagination li.active a,
+.admin-body .pagination li.active span {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
+
+.admin-body .order-navigation {
+  gap: var(--s3);
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+}
+
+.admin-body .order-navigation li a {
+  color: var(--ink-muted);
+  padding: var(--s1) 0 var(--s2);
+}
+
+.admin-body .order-navigation li.active a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.admin-auth .admin-login-form {
+  justify-content: center;
+  gap: var(--s3);
+  height: auto;
+  min-height: 100vh;
+  padding: var(--s4) var(--s2);
+  background: var(--bg);
+}
+
+.admin-auth .admin-wordmark {
+  font-size: 1.75rem;
+}
+
+.admin-auth .admin-login-form .panel {
+  width: 100%;
+  max-width: 420px;
+  margin: 0;
+  padding: var(--s3) var(--s2);
+  border: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--surface);
+}
+
+.admin-auth .admin-login-form .panel-title {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 500;
+  text-align: left;
+  color: var(--ink);
+}
+
+.admin-auth__sub {
+  margin-bottom: var(--s3) !important;
+  font-size: var(--fs-sm) !important;
+  color: var(--ink-muted) !important;
+}
+
+.admin-auth .form-block {
+  margin-bottom: var(--s2);
+}
+
+.admin-auth .form-block label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.admin-auth .form-block input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 var(--s2);
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--surface);
+  font-size: var(--fs-base);
+}
+
+.admin-auth .form-block input:focus {
+  border-color: var(--ink);
+  outline: none;
+}
+
+.admin-auth__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.admin-auth__row label {
+  margin-bottom: 6px;
+}
+
+.admin-auth .admin-login-form .panel-body .link {
+  font-size: var(--fs-xs);
+  color: var(--ink-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.admin-auth .admin-login-form .panel-body .link:hover {
+  color: var(--ink);
+}
+
+.admin-auth input[type=submit] {
+  width: 100%;
+  min-height: 52px;
+  margin-top: var(--s2);
+  border: 0;
+  border-radius: 0;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.admin-auth input[type=submit]:hover {
+  background: var(--ink-soft);
+}
+
+.admin-auth__back {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 8px;
+  margin-top: var(--s3);
+}
+
+.admin-auth__back i {
+  font-size: 10px;
+}
+
+@media screen and (max-width: 768px) {
+  .admin-body .navbar-brand {
+    width: auto;
+    flex: 1;
+  }
+
+  .admin-body .navbar {
+    width: auto;
+    padding: 0 var(--s1);
+  }
+
+  .admin-body .page-wrapper {
+    width: 100%;
+  }
+
+  .admin-body .page {
+    padding: var(--s3) var(--s2) var(--s4);
+  }
+
+  .admin-body .page-title h1 {
+    font-size: var(--fs-h3);
+  }
+
+  .admin-body .panel-table {
+    overflow-x: auto;
+  }
+
+  .admin-body .toolbar {
+    flex-wrap: wrap;
+    gap: var(--s1);
+  }
+}
+.admin-body .panel-table {
+  overflow-x: auto;
+}
+
+.admin-body .table {
+  table-layout: auto;
+}
+
+.admin-body .table thead th,
+.admin-body .table tbody td {
+  width: auto !important;
+  min-width: 0 !important;
+}
+
+.admin-body .table thead th:first-child,
+.admin-body .table tbody td:first-child {
+  width: 44px !important;
+}
+
+.admin-body .order-navigation li a {
+  border-radius: 0;
+  background: transparent !important;
+  text-align: left;
+  padding: var(--s1) 0 var(--s2) !important;
+  margin-bottom: -1px;
+  border-bottom: 1px solid transparent;
+}
+
+.admin-body .order-navigation li a:hover {
+  color: var(--ink) !important;
+}
+
+.admin-body .order-navigation li.selected a {
+  color: var(--ink) !important;
+  border-bottom-color: var(--ink);
+  font-weight: 500;
+}
+
+.admin-wordmark {
+  white-space: nowrap;
+}
+
+.admin-body .order-navigation li a {
+  white-space: nowrap;
+}
+
+@media screen and (max-width: 768px) {
+  .admin-body .navbar-brand {
+    padding: 0 var(--s2);
+  }
+
+  .admin-body .navbar nav .hide-menu,
+.admin-body .navbar-search span {
+    display: none;
+  }
+
+  .admin-body .order-navigation {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+}
+.admin-auth input.btn-w-12 {
+  background: var(--ink) !important;
+  color: var(--bg) !important;
+}
+
+.admin-auth input.btn-w-12:hover {
+  background: var(--ink-soft) !important;
+}
+
 /*!
  * Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
@@ -3494,108 +4353,66 @@ td span.inactive {
 }
 
 .fa-beat {
-  -webkit-animation-name: fa-beat;
-          animation-name: fa-beat;
-  -webkit-animation-delay: var(--fa-animation-delay, 0);
-          animation-delay: var(--fa-animation-delay, 0);
-  -webkit-animation-direction: var(--fa-animation-direction, normal);
-          animation-direction: var(--fa-animation-direction, normal);
-  -webkit-animation-duration: var(--fa-animation-duration, 1s);
-          animation-duration: var(--fa-animation-duration, 1s);
-  -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);
-          animation-iteration-count: var(--fa-animation-iteration-count, infinite);
-  -webkit-animation-timing-function: var(--fa-animation-timing, ease-in-out);
-          animation-timing-function: var(--fa-animation-timing, ease-in-out);
+  animation-name: fa-beat;
+  animation-delay: var(--fa-animation-delay, 0);
+  animation-direction: var(--fa-animation-direction, normal);
+  animation-duration: var(--fa-animation-duration, 1s);
+  animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+  animation-timing-function: var(--fa-animation-timing, ease-in-out);
 }
 
 .fa-bounce {
-  -webkit-animation-name: fa-bounce;
-          animation-name: fa-bounce;
-  -webkit-animation-delay: var(--fa-animation-delay, 0);
-          animation-delay: var(--fa-animation-delay, 0);
-  -webkit-animation-direction: var(--fa-animation-direction, normal);
-          animation-direction: var(--fa-animation-direction, normal);
-  -webkit-animation-duration: var(--fa-animation-duration, 1s);
-          animation-duration: var(--fa-animation-duration, 1s);
-  -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);
-          animation-iteration-count: var(--fa-animation-iteration-count, infinite);
-  -webkit-animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.28, 0.84, 0.42, 1));
-          animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.28, 0.84, 0.42, 1));
+  animation-name: fa-bounce;
+  animation-delay: var(--fa-animation-delay, 0);
+  animation-direction: var(--fa-animation-direction, normal);
+  animation-duration: var(--fa-animation-duration, 1s);
+  animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+  animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.28, 0.84, 0.42, 1));
 }
 
 .fa-fade {
-  -webkit-animation-name: fa-fade;
-          animation-name: fa-fade;
-  -webkit-animation-delay: var(--fa-animation-delay, 0);
-          animation-delay: var(--fa-animation-delay, 0);
-  -webkit-animation-direction: var(--fa-animation-direction, normal);
-          animation-direction: var(--fa-animation-direction, normal);
-  -webkit-animation-duration: var(--fa-animation-duration, 1s);
-          animation-duration: var(--fa-animation-duration, 1s);
-  -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);
-          animation-iteration-count: var(--fa-animation-iteration-count, infinite);
-  -webkit-animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.4, 0, 0.6, 1));
-          animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.4, 0, 0.6, 1));
+  animation-name: fa-fade;
+  animation-delay: var(--fa-animation-delay, 0);
+  animation-direction: var(--fa-animation-direction, normal);
+  animation-duration: var(--fa-animation-duration, 1s);
+  animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+  animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.4, 0, 0.6, 1));
 }
 
 .fa-beat-fade {
-  -webkit-animation-name: fa-beat-fade;
-          animation-name: fa-beat-fade;
-  -webkit-animation-delay: var(--fa-animation-delay, 0);
-          animation-delay: var(--fa-animation-delay, 0);
-  -webkit-animation-direction: var(--fa-animation-direction, normal);
-          animation-direction: var(--fa-animation-direction, normal);
-  -webkit-animation-duration: var(--fa-animation-duration, 1s);
-          animation-duration: var(--fa-animation-duration, 1s);
-  -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);
-          animation-iteration-count: var(--fa-animation-iteration-count, infinite);
-  -webkit-animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.4, 0, 0.6, 1));
-          animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.4, 0, 0.6, 1));
+  animation-name: fa-beat-fade;
+  animation-delay: var(--fa-animation-delay, 0);
+  animation-direction: var(--fa-animation-direction, normal);
+  animation-duration: var(--fa-animation-duration, 1s);
+  animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+  animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.4, 0, 0.6, 1));
 }
 
 .fa-flip {
-  -webkit-animation-name: fa-flip;
-          animation-name: fa-flip;
-  -webkit-animation-delay: var(--fa-animation-delay, 0);
-          animation-delay: var(--fa-animation-delay, 0);
-  -webkit-animation-direction: var(--fa-animation-direction, normal);
-          animation-direction: var(--fa-animation-direction, normal);
-  -webkit-animation-duration: var(--fa-animation-duration, 1s);
-          animation-duration: var(--fa-animation-duration, 1s);
-  -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);
-          animation-iteration-count: var(--fa-animation-iteration-count, infinite);
-  -webkit-animation-timing-function: var(--fa-animation-timing, ease-in-out);
-          animation-timing-function: var(--fa-animation-timing, ease-in-out);
+  animation-name: fa-flip;
+  animation-delay: var(--fa-animation-delay, 0);
+  animation-direction: var(--fa-animation-direction, normal);
+  animation-duration: var(--fa-animation-duration, 1s);
+  animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+  animation-timing-function: var(--fa-animation-timing, ease-in-out);
 }
 
 .fa-shake {
-  -webkit-animation-name: fa-shake;
-          animation-name: fa-shake;
-  -webkit-animation-delay: var(--fa-animation-delay, 0);
-          animation-delay: var(--fa-animation-delay, 0);
-  -webkit-animation-direction: var(--fa-animation-direction, normal);
-          animation-direction: var(--fa-animation-direction, normal);
-  -webkit-animation-duration: var(--fa-animation-duration, 1s);
-          animation-duration: var(--fa-animation-duration, 1s);
-  -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);
-          animation-iteration-count: var(--fa-animation-iteration-count, infinite);
-  -webkit-animation-timing-function: var(--fa-animation-timing, linear);
-          animation-timing-function: var(--fa-animation-timing, linear);
+  animation-name: fa-shake;
+  animation-delay: var(--fa-animation-delay, 0);
+  animation-direction: var(--fa-animation-direction, normal);
+  animation-duration: var(--fa-animation-duration, 1s);
+  animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+  animation-timing-function: var(--fa-animation-timing, linear);
 }
 
 .fa-spin {
-  -webkit-animation-name: fa-spin;
-          animation-name: fa-spin;
-  -webkit-animation-delay: var(--fa-animation-delay, 0);
-          animation-delay: var(--fa-animation-delay, 0);
-  -webkit-animation-direction: var(--fa-animation-direction, normal);
-          animation-direction: var(--fa-animation-direction, normal);
-  -webkit-animation-duration: var(--fa-animation-duration, 2s);
-          animation-duration: var(--fa-animation-duration, 2s);
-  -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);
-          animation-iteration-count: var(--fa-animation-iteration-count, infinite);
-  -webkit-animation-timing-function: var(--fa-animation-timing, linear);
-          animation-timing-function: var(--fa-animation-timing, linear);
+  animation-name: fa-spin;
+  animation-delay: var(--fa-animation-delay, 0);
+  animation-direction: var(--fa-animation-direction, normal);
+  animation-duration: var(--fa-animation-duration, 2s);
+  animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+  animation-timing-function: var(--fa-animation-timing, linear);
 }
 
 .fa-spin-reverse {
@@ -3604,16 +4421,11 @@ td span.inactive {
 
 .fa-pulse,
 .fa-spin-pulse {
-  -webkit-animation-name: fa-spin;
-          animation-name: fa-spin;
-  -webkit-animation-direction: var(--fa-animation-direction, normal);
-          animation-direction: var(--fa-animation-direction, normal);
-  -webkit-animation-duration: var(--fa-animation-duration, 1s);
-          animation-duration: var(--fa-animation-duration, 1s);
-  -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);
-          animation-iteration-count: var(--fa-animation-iteration-count, infinite);
-  -webkit-animation-timing-function: var(--fa-animation-timing, steps(8));
-          animation-timing-function: var(--fa-animation-timing, steps(8));
+  animation-name: fa-spin;
+  animation-direction: var(--fa-animation-direction, normal);
+  animation-duration: var(--fa-animation-duration, 1s);
+  animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+  animation-timing-function: var(--fa-animation-timing, steps(8));
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3626,22 +4438,11 @@ td span.inactive {
 .fa-shake,
 .fa-spin,
 .fa-spin-pulse {
-    -webkit-animation-delay: -1ms;
-            animation-delay: -1ms;
-    -webkit-animation-duration: 1ms;
-            animation-duration: 1ms;
-    -webkit-animation-iteration-count: 1;
-            animation-iteration-count: 1;
+    animation-delay: -1ms;
+    animation-duration: 1ms;
+    animation-iteration-count: 1;
     transition-delay: 0s;
     transition-duration: 0s;
-  }
-}
-@-webkit-keyframes fa-beat {
-  0%, 90% {
-    transform: scale(1);
-  }
-  45% {
-    transform: scale(var(--fa-beat-scale, 1.25));
   }
 }
 @keyframes fa-beat {
@@ -3650,29 +4451,6 @@ td span.inactive {
   }
   45% {
     transform: scale(var(--fa-beat-scale, 1.25));
-  }
-}
-@-webkit-keyframes fa-bounce {
-  0% {
-    transform: scale(1, 1) translateY(0);
-  }
-  10% {
-    transform: scale(var(--fa-bounce-start-scale-x, 1.1), var(--fa-bounce-start-scale-y, 0.9)) translateY(0);
-  }
-  30% {
-    transform: scale(var(--fa-bounce-jump-scale-x, 0.9), var(--fa-bounce-jump-scale-y, 1.1)) translateY(var(--fa-bounce-height, -0.5em));
-  }
-  50% {
-    transform: scale(var(--fa-bounce-land-scale-x, 1.05), var(--fa-bounce-land-scale-y, 0.95)) translateY(0);
-  }
-  57% {
-    transform: scale(1, 1) translateY(var(--fa-bounce-rebound, -0.125em));
-  }
-  64% {
-    transform: scale(1, 1) translateY(0);
-  }
-  100% {
-    transform: scale(1, 1) translateY(0);
   }
 }
 @keyframes fa-bounce {
@@ -3698,24 +4476,9 @@ td span.inactive {
     transform: scale(1, 1) translateY(0);
   }
 }
-@-webkit-keyframes fa-fade {
-  50% {
-    opacity: var(--fa-fade-opacity, 0.4);
-  }
-}
 @keyframes fa-fade {
   50% {
     opacity: var(--fa-fade-opacity, 0.4);
-  }
-}
-@-webkit-keyframes fa-beat-fade {
-  0%, 100% {
-    opacity: var(--fa-beat-fade-opacity, 0.4);
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(var(--fa-beat-fade-scale, 1.125));
   }
 }
 @keyframes fa-beat-fade {
@@ -3728,43 +4491,9 @@ td span.inactive {
     transform: scale(var(--fa-beat-fade-scale, 1.125));
   }
 }
-@-webkit-keyframes fa-flip {
-  50% {
-    transform: rotate3d(var(--fa-flip-x, 0), var(--fa-flip-y, 1), var(--fa-flip-z, 0), var(--fa-flip-angle, -180deg));
-  }
-}
 @keyframes fa-flip {
   50% {
     transform: rotate3d(var(--fa-flip-x, 0), var(--fa-flip-y, 1), var(--fa-flip-z, 0), var(--fa-flip-angle, -180deg));
-  }
-}
-@-webkit-keyframes fa-shake {
-  0% {
-    transform: rotate(-15deg);
-  }
-  4% {
-    transform: rotate(15deg);
-  }
-  8%, 24% {
-    transform: rotate(-18deg);
-  }
-  12%, 28% {
-    transform: rotate(18deg);
-  }
-  16% {
-    transform: rotate(-22deg);
-  }
-  20% {
-    transform: rotate(22deg);
-  }
-  32% {
-    transform: rotate(-12deg);
-  }
-  36% {
-    transform: rotate(12deg);
-  }
-  40%, 100% {
-    transform: rotate(0deg);
   }
 }
 @keyframes fa-shake {
@@ -3794,14 +4523,6 @@ td span.inactive {
   }
   40%, 100% {
     transform: rotate(0deg);
-  }
-}
-@-webkit-keyframes fa-spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
   }
 }
 @keyframes fa-spin {
@@ -11685,7 +12406,7 @@ readers do not read off random characters that represent icons */
   font-style: normal;
   font-weight: 400;
   font-display: block;
-  src: url(/fonts/vendor/@fortawesome/fontawesome-free/webfa-regular-400.woff2?0caf4c6cf244a90efcc5bf6d4e5578c1) format("woff2"), url(/fonts/vendor/@fortawesome/fontawesome-free/webfa-regular-400.ttf?0d03b1bbd1d62c1e128489eb2d4fb85d) format("truetype");
+  src: url("/fonts/vendor/@fortawesome/fontawesome-free/webfa-regular-400.woff2") format("woff2"), url("/fonts/vendor/@fortawesome/fontawesome-free/webfa-regular-400.ttf") format("truetype");
 }
 .far,
 .fa-regular {
@@ -11707,7 +12428,7 @@ readers do not read off random characters that represent icons */
   font-style: normal;
   font-weight: 900;
   font-display: block;
-  src: url(/fonts/vendor/@fortawesome/fontawesome-free/webfa-solid-900.woff2?59edf72a325ac2048d6077f64773674f) format("woff2"), url(/fonts/vendor/@fortawesome/fontawesome-free/webfa-solid-900.ttf?e615bbcb258550973c165dfc0d871c96) format("truetype");
+  src: url("/fonts/vendor/@fortawesome/fontawesome-free/webfa-solid-900.woff2") format("woff2"), url("/fonts/vendor/@fortawesome/fontawesome-free/webfa-solid-900.ttf") format("truetype");
 }
 .fas,
 .fa-solid {
@@ -11729,7 +12450,7 @@ readers do not read off random characters that represent icons */
   font-style: normal;
   font-weight: 400;
   font-display: block;
-  src: url(/fonts/vendor/@fortawesome/fontawesome-free/webfa-brands-400.woff2?ebb7a127d2d8ee6f183274b7557718ab) format("woff2"), url(/fonts/vendor/@fortawesome/fontawesome-free/webfa-brands-400.ttf?b823fc0dbb5a5f0c21bbcc2a268f92aa) format("truetype");
+  src: url("/fonts/vendor/@fortawesome/fontawesome-free/webfa-brands-400.woff2") format("woff2"), url("/fonts/vendor/@fortawesome/fontawesome-free/webfa-brands-400.ttf") format("truetype");
 }
 .fab,
 .fa-brands {

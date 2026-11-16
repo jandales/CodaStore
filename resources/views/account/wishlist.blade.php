@@ -46,8 +46,8 @@
                                    </tr>
                                     <tr>
                                         <th class="tblCheckbox"><input type="checkbox" name="" id="parentCheckbox"></th>
-                                        <th class="padding-left-0">PRODUCT</th> 
-                                        <th class="text-centered">QTY</th>                                   
+                                        <th class="padding-left-0">Product</th> 
+                                        <th class="text-centered">Qty</th>                                   
                                         <th class="text-centered">Price</th>                                        
                                         <th class="text-centered">ACTION</th>
                                     </tr>
@@ -111,7 +111,7 @@
    <div id="modal-update-product" class="modal">                                                        
         <div class="modal-content">
             <div class="modal-heading">
-                <h1>Product Overview</h1>
+                <h1>Product overview</h1>
                 <span  class="modal-close">&times</span>                   
             </div>
             <div class="modal-body">

@@ -24,10 +24,10 @@
                             <thead>
                                     <tr>
                                         <th>Type</th>
-                                        <th>Reciept Name</th>
+                                        <th>Recipient name</th>
                                         <th>Email</th>
                                         <th>Address</th>
-                                        <th>Phone Number</th>                                      
+                                        <th>Phone number</th>                                      
                                         <th>Action</th>
                                     </tr>
                             </thead>
@@ -53,7 +53,7 @@
                                                     </span>
                                                 </li>
                                                 <li>
-                                                    <a href="{{ route('addressbook.edit',[$address]) }}">
+                                                    <a href="{{ route('addressbook.edit',[$address]) }}" aria-label="Edit">
                                                         <span class="tbl-action">
                                                             <i class="fas fa-pen"></i>
                                                         </span>

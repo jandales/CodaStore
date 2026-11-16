@@ -1,12 +1,23 @@
 @extends('layout.front.app')
 
-@section('content') 
-    <div class="container">    
-        <div class="pagetitle">
-            <h1 class="capitalize">{{$category}}</h1>
-        </div>
-        <div class="productPage mt-2">                            
+@section('title', ($category === 'All Collection' ? 'All products' : ucfirst($category)) . ' | Coda')
+
+@section('content')
+    <div class="container shop-page">
+        <header class="shop-head">
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <ol>
+                    <li><a href="{{ route('home') }}">Home</a></li>
+                    <li aria-current="page">Shop</li>
+                </ol>
+            </nav>
+            <h1 class="shop-title capitalize">{{ $category === 'All Collection' ? 'All products' : $category }}</h1>
+            @if (method_exists($products, 'total'))
+                <p class="shop-count">{{ $products->total() }} {{ Str::plural('product', $products->total()) }}</p>
+            @endif
+        </header>
+        <div class="productPage">
             <x-product-list-component :products="$products"/>
         </div>
-    </div> 
+    </div>
 @endsection

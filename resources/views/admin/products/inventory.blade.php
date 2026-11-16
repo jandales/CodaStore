@@ -54,7 +54,7 @@
                     <td class="column-0"></td>      
                     <td class="column-image">
                         <div class="image-50">                     
-                            <img src="{{$product->imagePath}}">                                
+                            <img src="{{ $product->imagePath }}" alt="{{ $product->name }}" loading="lazy">                                
                         </div>
                     </td>               
                         <td class="column-product">

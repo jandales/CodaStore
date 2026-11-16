@@ -9,7 +9,7 @@
             <div class="col2">
                 <div class="card no-border pad-2 bg-grey">
                         <div class="card-heading">
-                            <h2>Create address book</h2>                        
+                            <h2>Create address</h2>                        
                         </div>
                         <div class="form mt-2 w-3">
                             <form action="{{ route('addressbook.store')}}" method="post">
@@ -18,12 +18,12 @@
                                 <div class="flex mb-1">
                                     <div class="flex align-items-center justify-content-flex-start">
                                         <input type="radio" name="type" value="0"> 
-                                        <label for=""  class="m-l-5">Home Address</label>
+                                        <label for=""  class="m-l-5">Home address</label>
                                     </div>
 
                                     <div class="flex align-items-center justify-content-flex-start ml-1">
                                         <input type="radio" name="type" value="1"> 
-                                        <label for=""  class="m-l-5">Bussiness Address</label>
+                                        <label for=""  class="m-l-5">Business address</label>
                                     </div>
                             </div>
 
@@ -32,7 +32,7 @@
                             @enderror
 
                                 <div class="form-block">
-                                    <label>Reciept Name</label>
+                                    <label>Recipient name</label>
                                     <input type="text" class="user-name"  name="reciept_name" value="{{ old('reciept_name')}}">
                                 </div>
 
@@ -41,7 +41,7 @@
                                 @enderror
 
                                 <div class="form-block">
-                                    <label>Reciept email</label>
+                                    <label>Recipient email</label>
                                     <input type="text" class="user-name"  name="reciept_email" value="{{ old('reciept_email')}}">
                                 </div>
 
@@ -50,7 +50,7 @@
                                 @enderror
                             
                                 <div class="form-block">
-                                    <label>Phone Number</label>
+                                    <label>Phone number</label>
                                     <input type="number" name="reciept_number" value="{{ old('reciept_number')}}">
                                 </div>
 
@@ -74,7 +74,7 @@
 
 
                                 <div class="form-block">
-                                    <label>City / Municipality</label>
+                                    <label>City / municipality</label>
                                     <input type="text" name="city_municipality" value="{{ old('city_municipality') }}">
                                 </div> 
 

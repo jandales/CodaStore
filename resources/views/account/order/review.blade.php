@@ -22,7 +22,7 @@
     
                               
                                 <div class="w-12 p-10">
-                                    <label for="">Rate and review purchased product</label>
+                                    <label for="">Rate and review your purchase</label>
                                 </div>
                                 <div class="item-main">
                                     <div class="item-image">                                          
@@ -37,7 +37,7 @@
 
                                     <div class="mt-2">
                                         <div class="inline">
-                                             <h4>Your Rating</h4>
+                                             <h4>Your rating</h4>
                                            
                                              <ul id="rating" class="rate-stars ml-1" value="{{$review->rating ?? 0}}">
                                                  <li class="rate" rate="1"><i class="far fa-star" aria-hidden="true"></i></li>
@@ -53,13 +53,13 @@
                                                      @csrf
                                                          <input type="hidden" id="input-rate"  name="rate" value="0">
                                                          <div class="form-block">
-                                                             <label for="#">Your Review</label>
+                                                             <label for="#">Your review</label>
                                                              <textarea  name="comments" cols="30" rows="6">{{ $review->comments ?? '' }}</textarea>
                                                          </div> 
                                                          @error('comments')
                                                          <div class="alert alert-danger mb-2">{{ $message }}</div>
                                                          @enderror
-                                                     <button  class="btn btn-dark w-2 right">SUBMIT</button>    
+                                                     <button  class="btn btn-dark w-2 right">Submit</button>    
                                                  <form> 
                                                   
                 

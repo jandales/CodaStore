@@ -1,115 +1,99 @@
 @extends('layout.front.app')
 
-@section('content')    
-    
-        <div class="container">
-    
-            <div class="pagetitle">
-                <h3>Shopping Cart</h3>
+@section('title', 'Your bag | Coda')
+
+@section('content')
+    <div class="container cart-page">
+        <header class="cart-head">
+            <h1 class="cart-head__title">Your bag</h1>
+            @if (!empty($cart) && $cart->items->count() > 0)
+                <p class="cart-head__count">{{ $cart->totalItems() }} {{ Str::plural('item', $cart->totalItems()) }}</p>
+            @endif
+        </header>
+
+        @if (session('success'))
+            <div class="alert alert-success" role="status">{{ session('success') }}</div>
+        @endif
+        @if (session('message'))
+            <div class="alert alert-warning" role="status">{{ session('message') }}</div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger" role="alert">{{ session('error') }}</div>
+        @endif
+
+        @if (empty($cart) || $cart->items->count() == 0)
+            <div class="empty-state cart-empty">
+                <i class="fas fa-shopping-bag" aria-hidden="true"></i>
+                <h2>Your bag is empty</h2>
+                <p>Find something you'll wear often.</p>
+                <a href="{{ route('shop') }}" class="btn btn-dark">Shop new in</a>
             </div>
-           
-                @if (session('success'))
-                <div class="alert alert-success mt-1">{{ session('success')}}</div>
-                @endif
+        @else
+            <div class="cart-layout">
+                <div class="cart-lines">
+                    <table class="cart-table-1 cart-lines__table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Product</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col" class="text-align-right">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($cart->items as $item)
+                                @php $itemUrl = route('shop.product', [$item->product->encryptedId()]); @endphp
+                                <tr>
+                                    <td>
+                                        <div class="cart-line">
+                                            <a href="{{ $itemUrl }}" class="cart-line__image" tabindex="-1" aria-hidden="true">
+                                                <img src="{{ $item->product->imagePath }}" alt="">
+                                            </a>
+                                            <div class="cart-line__info">
+                                                <a class="cart-line__name capitalize" href="{{ $itemUrl }}">{{ $item->product->name }}</a>
+                                                <span class="cart-line__meta">@money($item->product->regular_price)</span>
+                                                @if ($item->attributes != null)
+                                                    @foreach ($item->attributes as $key => $variant)
+                                                        <span class="cart-line__meta capitalize">{{ $key }}: {{ $variant }}</span>
+                                                    @endforeach
+                                                @endif
+                                                <button type="button" class="cart-item-remove cart-line__remove" data-id="{{ $item->id }}">Remove</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="cart-form-group cart-line__qty">
+                                            <div class="btn-num-product-down flex-vert-center add-less-quantity" type="less" role="button" aria-label="Decrease quantity"><i class="fas fa-minus" aria-hidden="true"></i></div>
+                                            <input class="cart-qty num-product" item="{{ $item->id }}" type="number" min="1" value="{{ $item->qty }}" aria-label="Quantity for {{ $item->product->name }}" {!! $item->product->stock->qty == 0 ? 'disabled' : '' !!}>
+                                            <div class="btn-num-product-up flex-vert-center add-less-quantity" type="add" role="button" aria-label="Increase quantity"><i class="fas fa-plus" aria-hidden="true"></i></div>
+                                        </div>
+                                    </td>
+                                    <td class="text-align-right">
+                                        <span class="cart-total cart-line__total">@money($item->subtotal())</span>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <a href="{{ route('shop') }}" class="link-underline cart-continue"><i class="fas fa-arrow-left" aria-hidden="true"></i> Continue shopping</a>
+                </div>
 
-                @if (session('message'))
-                    <div class="alert alert-warning mt-1">{{ session('message')}}</div>
-                @endif
-
-                @if (session('error'))
-                    <div class="alert alert-danger mt-1">{{ session('error')}}</div>
-                @endif
-
-                @if(empty($cart) || $cart->items->count() == 0)
-                    <div class="align-items-content-center flex-column m-t-100 mb-3">
-                        <h1 class="txt-bg">Your cart is empty</h1>    
-                        <div class="continue-shooping mt-2">
-                            <a href="{{ route('shop')}}" class="btn btn-dark">Continue shopping</a>                            
-                        </div>              
-                    </div>   
-                @else 
-                           
-                    <div class="cart-1 mb-5">   
-                      
-                            <table class="cart-table-1">
-                                <thead>  
-                                    <tr>                                       
-                                        <th class="column-1">PRODUCT</th>                                       
-                                        <th>QUANTITY</th>
-                                        <th class="text-align-right">TOTAL</th>                                       
-                                    </tr>
-                                </thead> 
-                                <tbody>                                                                  
-                                    @foreach ($cart->items as $item)
-                                    <tr>                                       
-                                        <td>                                           
-                                                <div class="cart-item">
-                                                    <div class="pr-image-wrapper">                                                   
-                                                         <img src="{{ $item->product->imagePath }}" alt="">
-                                                         <div class="pr-image-overlay flex-vert-center">
-                                                             <span class="cart-item-remove text-danger" data-id="{{ $item->id }}"><i class="fas fa-times"></i></span>
-                                                         </div>
-                                                    </div>
-                                                    <div class="flex flex-column m-l-10 gap10">
-                                                        <a class="link"  href="{{ route('shop.product',[ $item->product->encryptedId() ] )}}">{{ $item->product->name }} </a>
-                                                        <div class="product-info">@money($item->product->regular_price)</div>                                              
-                                                     
-                                                       @if ($item->attributes != null)
-                                                            @foreach ($item->attributes as $key => $variant)                                                       
-                                                                 <div class="product-info">{{ $key }} : {{ $variant }} </div>
-                                                            @endforeach
-                                                         @endif                   
-                                                    </div>                                                  
-                                                </div>
-                                            
-                                        </td>                                      
-                                        <td>  
-                                                <div class="cart-form-group">
-                                                    <div class="btn-num-product-down flex-vert-center add-less-quantity" type="less"><i class="fas fa-minus"></i></div>
-                                                    <input class="cart-qty num-product bg-grey"  item="{{ $item->id }}"  type="number" value="{{ $item->qty }}"  {!! $item->product->stock->qty == 0 ? "disabled" : "" !!} >
-                                                    <div   class="btn-num-product-up flex-vert-center add-less-quantity" type="add"><i class="fas fa-plus"></i></div>
-                                                </div>                                                
-                                        </td>
-                                        <td class="text-align-right">
-                                            <span class="cart-total block m-t-15">@money($item->subtotal())</span>
-                                        </td>
-                                      
-                                       
-                                        
-                                    </tr>                                    
-                                    @endforeach
-                             
-                                </tbody>                                 
-                            </table>
-                    
-                            <div class="cart-summary">
-                                <a href="{{ route('shop')}}" class="link continue-shopping"> Continue shopping </a>
-                               <div class="flex flex-column sm-justify-center gap30">
-                                    <div class="flex justify-content-flex-end sm-justify-center gap20">
-                                        <span class="bold">Subtotal</span>
-                                        <span>@money($cart->total)</span>
-                                    </div>
-                                    <span>Taxes and shipping calculated at checkout</span>
-                                    <a href="{{ route('checkout.information') }}">
-                                        <button class="btn btn-dark md-btn">CHECK OUT</button>
-                                    </a>
-                                </div>
-                              
-                            </div>
-
-                           
-                   
-    
-              
-               
+                <aside class="cart-summary-card" aria-labelledby="summary-title">
+                    <h2 id="summary-title" class="cart-summary-card__title">Order summary</h2>
+                    <dl class="cart-summary-card__rows">
+                        <div><dt>Subtotal</dt><dd>@money($cart->total)</dd></div>
+                        <div><dt>Shipping</dt><dd class="pdp-muted">Calculated at checkout</dd></div>
+                    </dl>
+                    <div class="cart-summary-card__total">
+                        <span>Estimated total</span>
+                        <span>@money($cart->total)</span>
                     </div>
-                @endif
-            
-               
-        </div>
-        @endsection
-
-
-   
-    
-     
+                    <a href="{{ route('checkout.information') }}" class="btn btn-dark cart-summary-card__cta">Checkout</a>
+                    <ul class="pdp-perks" role="list">
+                        <li><i class="fas fa-rotate-left" aria-hidden="true"></i> Free returns within 30 days</li>
+                        <li><i class="fas fa-lock" aria-hidden="true"></i> Secure checkout</li>
+                    </ul>
+                </aside>
+            </div>
+        @endif
+    </div>
+@endsection

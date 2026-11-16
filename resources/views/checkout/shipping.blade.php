@@ -13,8 +13,8 @@
             <x-shipping-method-component :shippingmethods="$shipping_methods" :active="session('shipping_method')['id']"/>
 
             <div class="form-block mt-2">
-                <button id="btn-to-payment" class="btn btn-dark mr-1 md-mr-0">Continue Payment</button>
-                <a href="{{route('checkout.information')}}" class="change  sm-text-center">Return to Information</a>
+                <button id="btn-to-payment" class="btn btn-dark mr-1 md-mr-0">Continue to payment</button>
+                <a href="{{route('checkout.information')}}" class="change sm-text-center"><i class="fas fa-arrow-left" aria-hidden="true"></i> Return to information</a>
             </div> 
         </form>
     </div>            

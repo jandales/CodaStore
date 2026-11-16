@@ -12,7 +12,7 @@
                 <div class="col2">
                     <div class="card no-border pad-2 bg-grey">
                         <div class="card-heading">
-                            <h2>Edit Profile</h2>
+                            <h2>Edit profile</h2>
                         </div>
     
                         <div class="flex">   
@@ -35,7 +35,7 @@
                                             </div>
                             
                                             <div class="form-block">
-                                                <label>Phone Number</label>
+                                                <label>Phone number</label>
                                                 <input type="text" class="user-contact" name="contact" value="{{ auth()->user()->contact }}">
                                             </div> 
                                             <div class="form-block">
@@ -52,10 +52,8 @@
                                        <br>                                 
                                        
                                        <div class="flex gap10 sm-flex-column">
-                                        <button id="submit" class="btn btn-dark">SAVE</button> 
-                                        <a href="{{ url()->previous() }}">
-                                            <button class="btn btn-danger sm-width-full">CANCEL </button>
-                                        </a>   
+                                        <button id="submit" class="btn btn-dark">Save</button> 
+                                        <a href="{{ url()->previous() }}" class="btn btn-default">Cancel</a>   
                                        </div>
                                                         
                                        

@@ -1,86 +1,52 @@
-<div class="footer">
+<footer class="footer site-footer">
     <div class="container">
-        {{-- <div class="footer-row">
-            <div class="column">
-                <div class="footer-menu">
-                    <div class="footer-categories">
-                        <h2>CATEGORIES</h2>
-                        <ul>
-                        <li><a href="#">Shoes</a></li>
-                        <li><a href="#">Jacket</a></li>
-                        <li><a href="#">T-shirt</a></li>
-                        <li><a href="#">Pants</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="column">
-                <div class="footer-menu">
-                    <div class="footer-categories">
-                        <h2>HELP</h2>
-                        <ul>
-                        <li><a href="#">Track Order</a></li>
-                        <li><a href="#">Return</a></li>
-                        <li><a href="#">Shipping</a></li>
-                        <li><a href="#">FAQs</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-
-            <div class="column-2">
-                <div class="footer-menu">
-                    <div class="footer-categories">
-                        <h2>GET IN TOUCH</h2>
-                        <p>Any Question?</p> 
-                        
-                        <p>let us known in store at 8th Floor 4356 hudson
-                            St. New York or call us (+) 96 716 5869</p>
-                    
-                        <ul class="social-icon">
-                            <li><a href="https://web.facebook.com/"><i class="fab fa-facebook"></i></a></li>
-                            <li><a href="https://web.facebook.com/"><i class="fab fa-instagram"></i></a></li>
-                            <li><a href="https://web.facebook.com/"><i class="fab fa-twitter"></i></a></li>
-                        </ul>    
-                    </div>
-                </div>
-            </div>
-
-            <div class="column">
-                <div class="footer-menu">
-                    <div class="footer-categories">
-                        <h2>NEWSLETTER</h2>
-                        <p class="newsletter">codehev.example.com</p>
-                        <div class="line"></div>
-                        <a class="subcribe" href="$">SUBCRIBE</a>
-                    </div>
-                </div>
-                </div>
-
-                
-
-
-        </div> --}}
-        <div class="footer-block">
-            <div class="footer-block-menu">
-                <h2 class="footer-block-heading">Quick links</h2>
-                <ul class="footer-block-list">
-                    <li><a href="/search" class="link link--text list-menu__item list-menu__item--link">SEARCH</a></li>
-                    <li><a href="/contact" class="link link--text list-menu__item list-menu__item--link">CONTACT US</a></li>
-                    <li><a href="/about" class="link link--text list-menu__item list-menu__item--link">ABOUT</a></li>
-                </ul>
-            </div>
-            <div class="footer-block-menu">
-                <ul class="footer-block-list" role="list">
+        <div class="footer-grid">
+            <div class="footer-col footer-brand">
+                <a href="{{ route('home') }}" class="wordmark" aria-label="Coda home">Coda</a>
+                <p>Considered essentials in natural fabrics. Cut simply, worn often.</p>
+                <ul class="footer-social" role="list">
                     @foreach (socialList() as $site)
-                        <li class="list-social-item">
-                            <a href="{{ $site->url}}"><i class="{{ $site->code }}"></i></a>
+                        <li>
+                            <a href="{{ $site->url }}" aria-label="{{ $site->name ?? 'Social link' }}" rel="noopener" target="_blank"><i class="{{ $site->code }}" aria-hidden="true"></i></a>
                         </li>
-                    @endforeach              
+                    @endforeach
                 </ul>
-            </div> 
+            </div>
+
+            <nav class="footer-col" aria-label="Shop">
+                <h2 class="footer-heading">Shop</h2>
+                <ul role="list">
+                    <li><a href="{{ route('shop') }}">All products</a></li>
+                    <li><a href="{{ route('search') }}">Search</a></li>
+                    <li><a href="{{ route('cart') }}">Your bag</a></li>
+                </ul>
+            </nav>
+
+            <nav class="footer-col" aria-label="Help">
+                <h2 class="footer-heading">Help</h2>
+                <ul role="list">
+                    <li><a href="{{ route('contact') }}">Contact us</a></li>
+                    <li><a href="{{ route('account') }}">Your account</a></li>
+                    <li><a href="{{ route('account.orders', ['all']) }}">Track an order</a></li>
+                </ul>
+            </nav>
+
+            <nav class="footer-col" aria-label="Company">
+                <h2 class="footer-heading">Company</h2>
+                <ul role="list">
+                    <li><a href="{{ route('about') }}">About</a></li>
+                    <li><a href="{{ route('contact') }}">Visit us</a></li>
+                </ul>
+            </nav>
         </div>
-              
-    </div> 
-</div>
+
+        <div class="footer-bottom">
+            <span>&copy; {{ date('Y') }} Coda. All rights reserved.</span>
+            <span class="footer-pay" aria-label="Accepted payments">
+                <i class="fab fa-cc-visa" aria-hidden="true"></i>
+                <i class="fab fa-cc-mastercard" aria-hidden="true"></i>
+                <i class="fab fa-cc-paypal" aria-hidden="true"></i>
+            </span>
+        </div>
+    </div>
+</footer>

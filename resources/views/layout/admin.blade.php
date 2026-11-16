@@ -4,44 +4,45 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('css/main.css')}}">   
+    <link rel="stylesheet" href="{{ asset('css/main.css')}}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}"> 
     <link rel="shortcut icon" href="{{ asset('favicon.png') }}">
-    <title>Admin</title>
+    <title>@yield('title', 'Admin | Coda')</title>
 </head>
-<body>
+<body class="admin-body">
     <div id="main">
         <div id="topbar">
             <div class="header">
                 <div class="navbar-brand">
                     <div class="menubar">
-                        <a href="#"><i class="fa fa-bars menubaricon"></i></a>
+                        <a href="#" aria-label="Toggle menu"><i class="fa fa-bars menubaricon" aria-hidden="true"></i></a>
                     </div>
                     <div class="logo">
-                        <img src="/img/logo-light-icon.png" alt="">
-                        <a class="brandname" href="#">Store Admin</a>
+                        <a class="brandname admin-wordmark" href="{{ route('admin.dashboard') }}">Coda <span>Admin</span></a>
                     </div>
 
                 </div>
                 <div class="navbar">
                     <div class="flex navbar-search">
-                        <a class="open-close-toggle-search-bar" href="#"><i
-                                class="fa fa-search"></i><span>Search</span></a>
+                        <a class="open-close-toggle-search-bar" href="#"><i class="fa fa-search" aria-hidden="true"></i><span>Search</span></a>
                     </div>
                     <nav>
                         <ul class="inline">   
-                            <li class="visit-store"><a href="/" class="visit-store"><i class="fas fa-store"></i><span class="hide-menu">Visit Store</span></a></li>                        
+                            <li class="visit-store"><a href="/" class="visit-store"><i class="fas fa-store" aria-hidden="true"></i><span class="hide-menu">View store</span></a></li>                        
                             <li>
                                 <div class="navbar-user">
                                     <div class="user-image">
-                                        <img src="{{auth()->guard('admin')->user()->avatar()}}" alt="">
+                                        <img src="{{auth()->guard('admin')->user()->avatar()}}" alt="Your profile">
                                     </div>
                                 </div>
 
                                 <ul class="navbar-dropdownlist">
-                                    <li><a href="{{ route('admin.account') }}"><span><i class="fa fa-user"></i></span>My Profile</a></li>
+                                    <li><a href="{{ route('admin.account') }}"><span><i class="fa fa-user" aria-hidden="true"></i></span>My profile</a></li>
                                     {{-- <li><a href="#"><span><i class="fa fa-user"></i></span>Inbox</a></li> --}}
-                                    <li><a  onclick="document.getElementById('form-logout').submit();"><span><i class="fa fa-user"></i></span>Sign out</a></li>
+                                    <li><a href="#" onclick="event.preventDefault(); document.getElementById('form-logout').submit();"><span><i class="fas fa-arrow-right-from-bracket" aria-hidden="true"></i></span>Sign out</a></li>
                                    
                                 </ul>
                                 <form id="form-logout" action="{{ route('admin.logout') }}" method="post">@csrf</form>
@@ -54,15 +55,15 @@
         </div>
         <div class="searchbar">
             <div class="form-search">
-                <input type="text" name="search" placeholder="Search Here">
-                <span class="open-close-toggle-search-bar"><i class="fa fa-times"></i></span>
+                <input type="text" name="search" placeholder="Search" aria-label="Search">
+                <span class="open-close-toggle-search-bar" role="button" aria-label="Close search"><i class="fa fa-times" aria-hidden="true"></i></span>
             </div>
         </div>
         <div id="wrapper">
             <div class="side-bar">
-                <nav>
+                <nav aria-label="Admin">
                     <ul>
-                        <li><a class="{{ (request()->is('admin/dashboard')) ? 'active' : ''}} " nav-item href="/admin/dashboard"><i class="fas fa-tachometer-alt"></i><span class="hide-menu">Dashbaord</span></a></li>
+                        <li><a class="{{ (request()->is('admin/dashboard')) ? 'active' : ''}} " nav-item href="/admin/dashboard"><i class="fas fa-tachometer-alt"></i><span class="hide-menu">Dashboard</span></a></li>
                         <li class="nav-dropdown {{ (request()->is('admin/products*')) ? 'active' : '' }} ">                            
                             <div class="nav-dropdown-btn">
                                 <a>

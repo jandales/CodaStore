@@ -4,7 +4,7 @@
 
 
     <div class="page-title">
-        <h1>Dashbaord</h1>   
+        <h1>Dashboard</h1>   
     </div>
     
     <div class="flex space-between m-t-2 gap30">
@@ -81,7 +81,7 @@
     </div>
 
     <br>
-    <h4>Recent Order</h4>
+    <h2 class="admin-section-title">Recent orders</h2>
     <br>
     <div class="panel-table">       
         <table class="table">

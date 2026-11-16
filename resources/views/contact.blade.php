@@ -1,73 +1,51 @@
 @extends('layout.front.app')
 
+@section('title', 'Contact | Coda')
+
 @section('content')
-
-    
-        <div class="content-page">
-            <div class="content-image-contact">
-                <h1 class="">Contact</h1>
-            </div>  
+    <section class="page-hero">
+        <div class="container page-hero__inner">
+            <span class="eyebrow">Contact</span>
+            <h1 class="page-hero__title">We're here to help.</h1>
+            <p class="page-hero__sub">Questions about an order, sizing or returns? Send us a message and we'll reply within one business day.</p>
         </div>
-    {{session('success')}}
-        
-        <div class="container">              
-          <div class="contact-wrapper mt-2 mb-2">
-            <div class="contact-form">
-              @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-              @endif              
-                <h3 class="text-center">Send us Message</h3>
-                <form action="{{ route('sendMessage') }}" method="POST">
-                  @csrf
-                    <div class="form-block">
-                        <label>Email</label>
-                        <input type="email" name="email">
-                        @error('email')
-                          <small class="error-message">{{ $message }}</small>    
-                        @enderror
-                    </div>             
-    
-                    <div class="form-block">                       
-                        <textarea name="content"  cols="30" rows="8" placeholder="How can we Help you!"></textarea>
-                        @error('content')
-                          <small class="error-message">{{ $message }}</small>    
-                        @enderror
-                    </div>
-    
-                    <div class="form-block">
-                      <button class="btn btn-dark">Send</button>
-                    </div>                   
-    
-                </form>
-            </div> 
-            {{-- <div class="contactinfo">
-               
-              <div class="mt-2">
-                <div class="info">
-                  <h3>Visit us</h3>
-                  <p>St. Lourence Street New York</p>
-                 </div>
-      
-                 <div class="info">
-                  <h3>Call us</h3>
-                  <p># 098-2323-323</p>
-                 </div>
-      
-                 <div class="info">
-                  <h3>Email us</h3>
-                  <p>Codastore.saleStore.com</p>
-                 </div>
-              </div>
-    
-            </div> --}}
-          </div>
-    
-         
+    </section>
+
+    <div class="container contact-layout">
+        <div class="contact-card">
+            @if (session('success'))
+                <div class="alert alert-success" role="status">{{ session('success') }}</div>
+            @endif
+            <h2 class="contact-card__title">Send us a message</h2>
+            <form action="{{ route('sendMessage') }}" method="POST" novalidate>
+                @csrf
+                <div class="form-block">
+                    <label for="contact-email">Email</label>
+                    <input id="contact-email" type="email" name="email" autocomplete="email" value="{{ old('email') }}" placeholder="you@example.com">
+                    @error('email')
+                        <small class="error-message">{{ $message }}</small>
+                    @enderror
+                </div>
+                <div class="form-block">
+                    <label for="contact-message">Message</label>
+                    <textarea id="contact-message" name="content" rows="7" placeholder="How can we help?">{{ old('content') }}</textarea>
+                    @error('content')
+                        <small class="error-message">{{ $message }}</small>
+                    @enderror
+                </div>
+                <button class="btn btn-dark">Send message</button>
+            </form>
         </div>
 
-        @endsection
-    
-       
-        
-    
-    
+        <aside class="contact-info" aria-label="Other ways to reach us">
+            <div>
+                <h2>Orders and returns</h2>
+                <p>Track your order or start a return from <a href="{{ route('account.orders', ['all']) }}" class="link-underline">your account</a>.</p>
+            </div>
+            <div>
+                <h2>Response time</h2>
+                <p>Monday to Friday, 9am to 6pm. We usually reply within a day.</p>
+            </div>
+        </aside>
+    </div>
+@endsection

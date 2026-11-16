@@ -34,7 +34,7 @@
                                 <select name="filter" id="filter">
                                     <option  data-url="{{ route('admin.products.filter',['all', 'all'])}}"  value="all" {{ $filter == 'all' ? 'selected' : ''}}>All</option>
                                     <option  data-url="{{ route('admin.products.filter',['status',1])}}"  value="published" {{ $filter == 'status=published' ? 'selected' : ''}}>Published</option>
-                                    <option  data-url="{{ route('admin.products.filter',['featured', 1])}}"  value="featured" {{ $filter == 'featured' ? 'selected' : ''}}>Feautured Product</option>
+                                    <option  data-url="{{ route('admin.products.filter',['featured', 1])}}"  value="featured" {{ $filter == 'featured' ? 'selected' : ''}}>Featured</option>
                                     <option  data-url="{{ route('admin.products.filter',['status', 0])}}" value="unpublished" {{ $filter == 'status=unpublished' ? 'selected' : ''}}>Unpublished</option>
                                 </select>
                            </div>
@@ -86,7 +86,7 @@
                                             </div>
                                         </td>                                
                                         <td class="column-image">
-                                            <div class="image-50"> <img src="{{$product->imagePath}}"></div>
+                                            <div class="image-50"> <img src="{{ $product->imagePath }}" alt="{{ $product->name }}" loading="lazy"></div>
                                         </td>   
                                         <td class="column-product">
                                             <div class="product-image-container">                                               
@@ -135,7 +135,7 @@
                                     </tr>
                                 @endforeach
                             @else
-                                <td colspan="8" ><label class="text-center">No found Record</label></td> 
+                                <td colspan="8" ><label class="text-center">No records found</label></td> 
                             @endif
                         </tbody>
                     </table>

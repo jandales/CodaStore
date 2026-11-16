@@ -19,7 +19,7 @@
                                 </div>
                                 <div class="card-title bg-teal">
                                     <span class="cwhite"><i class="fas fa-box"></i></span>
-                                    <label class="cwhite" for="Orders">Total Cost</label>                                    
+                                    <label class="cwhite" for="Orders">Total cost</label>                                    
                                 </div>
                             </div>
                             <div class="card">
@@ -42,7 +42,7 @@
                             </div>
                         </div>
                         <div class="card">
-                            <h4>Your Default Address</h4>
+                            <h4>Your default address</h4>
                         </div>
                     </div>
                 </div>    

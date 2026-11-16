@@ -9,7 +9,7 @@
             <div class="col2">
                 <div class="card no-border pad-2 bg-grey">
                         <div class="card-heading">
-                            <h2>Create address book</h2>                        
+                            <h2>Create address</h2>                        
                         </div>
                      
                         <div class="form mt-2 w-6 sm-w-12">
@@ -27,7 +27,7 @@
                                 @enderror
 
                                 <div class="form-block">
-                                    <label>Lastname</label>
+                                    <label>Last name</label>
                                     <input type="text" class="user-name"  name="lastname" value="{{ old('lastname')}}">
                                 </div>
 
@@ -36,7 +36,7 @@
                                 @enderror
                             
                                 <div class="form-block">
-                                    <label>Phone Number</label>
+                                    <label>Phone number</label>
                                     <input type="number" name="phone" value="{{ old('phone')}}">
                                 </div>
 
@@ -78,7 +78,7 @@
                                 @enderror
                                 
                                 <div class="form-block">
-                                    <label>Zip Code</label>
+                                    <label>ZIP code</label>
                                     <input type="text" name="zipcode" value="{{ old('zipcode') }}">
                                 </div>
 
