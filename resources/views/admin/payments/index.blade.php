@@ -43,7 +43,7 @@
                 </thead>
                 <tbody>
                         @if ( $payments->count() == 0 )
-                            <tr> <td colspan="7" ><label class="text-center">No found Record</label></td> </tr>
+                            <tr> <td colspan="7" ><label class="text-center">No records found</label></td> </tr>
                         @endif
                         @foreach ($payments as $payment)
                             <tr>

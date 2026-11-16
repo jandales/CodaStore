@@ -1,3 +1,4 @@
+@import 'tokens';
 @import 'app/style';
 @import 'app/header';
 @import 'app/footer';
@@ -14,6 +15,13 @@
 @import 'app/address';
 @import 'app/margin';
 @import 'app/spinner';
+@import 'app/base';
+@import 'app/chrome';
+@import 'app/home';
+@import 'app/shop';
+@import 'app/checkout';
+@import 'app/account-shell';
+@import 'app/pages';
 // fonts
 
 @import '@splidejs/splide/css';

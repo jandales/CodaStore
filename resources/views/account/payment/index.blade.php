@@ -8,8 +8,8 @@
             <div class="col2">
                 <div class="card no-border pad-2 bg-grey min-height-400">
                     <div class="card-heading">
-                        <h2>Payment Option</h2>
-                        <a href="{{ route('account.payment-option.create') }}"  class="btn btn-dark">Add new Card</a>
+                        <h2>Payment methods</h2>
+                        <a href="{{ route('account.payment-option.create') }}"  class="btn btn-dark">Add card</a>
                     </div>
                     <div class="address-wrapper">
                         @if(session('success'))
@@ -18,10 +18,16 @@
                         @if(session('danger'))
                         <div class="alert alert-warning mt-1 w-12">{{ session('danger') }}</div>
                     @endif 
+                    @if ($payment_options->count() == 0)
+                        <div class="empty-state account-empty">
+                            <h2>No saved cards</h2>
+                            <p>Save a card to check out faster next time.</p>
+                        </div>
+                    @else
                     <table class="table table-address bordered bg-white p-20">
                         <thead>
                                 <tr>                                   
-                                    <th>Card Name</th>
+                                    <th>Name on card</th>
                                     <th>Card Number</th>
                                     <th>Expired Date</th>
                                     <th>CVC</th>                                      
@@ -41,11 +47,11 @@
                                                 <form action="{{ route('account.payment-option.update.status', [$option->encryptedId()] )}}" method="post">
                                                     @csrf
                                                     @method('put')
-                                                    <button class="borderless"><i class="fa-solid {{ $option->status == 1 ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i></button>
+                                                    <button class="borderless" aria-label="Set as default"><i class="fa-solid {{ $option->status == 1 ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i></button>
                                                 </form>                                              
                                             </li>
                                             <li>
-                                                <a href="{{ route('account.payment-option.edit',[ $option->encryptedId() ]) }}">
+                                                <a href="{{ route('account.payment-option.edit',[ $option->encryptedId() ]) }}" aria-label="Edit">
                                                     <span class="tbl-action"><i class="fas fa-pen"></i></span>
                                                 </a>                                                    
                                             </li>
@@ -53,7 +59,7 @@
                                                 <form action="{{ route('account.payment-option.destroy', [$option->encryptedId()]) }}"  method="post">
                                                     @csrf
                                                     @method('delete')
-                                                    <button  class="tbl-action"><i class="far fa-trash-alt"></i></button>
+                                                    <button class="tbl-action" aria-label="Delete"><i class="far fa-trash-alt"></i></button>
                                                 </form>                                               
                                             </li>
                                         </ul>      
@@ -62,6 +68,7 @@
                             @endforeach                                            
                         </tbody>
                     </table>
+                    @endif
                     </div>
                 </div>
             </div> 

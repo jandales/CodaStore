@@ -13,7 +13,7 @@
 
                     <div class="card no-border pad-2  bg-grey">
                         <div class="card-heading">
-                            <h2>Change Password</h2>
+                            <h2>Change password</h2>
                         </div>
                         <div class="form w-6 sm-width-full mt-1">
                             
@@ -54,7 +54,7 @@
                              
                                 
                                 <div class="flex sm-flex-column gap10">
-                                    <button id="submit" class="btn btn-dark full-width">SAVE</button>                                        
+                                    <button id="submit" class="btn btn-dark full-width">Save</button>                                        
                                      
                                 </div>                          
                                                        

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apprael Store</title>  
+    <title>@yield('title', 'Coda | Modern clothing store')</title>  
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/include/sidebar.css">
     <link rel="stylesheet" href="/css/include/profile.css">

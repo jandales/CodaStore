@@ -1,46 +1,43 @@
 @extends('layout.front.app')
-@section('content')
-    
 
-    
-    
-        <div class="content-page">
-            <div class="content-image-about">
-                <h1 class="">About</h1>
-            </div>  
+@section('title', 'About | Coda')
+
+@section('content')
+    <section class="page-hero">
+        <div class="container page-hero__inner">
+            <span class="eyebrow">About Coda</span>
+            <h1 class="page-hero__title">Fewer, better clothes.</h1>
+            <p class="page-hero__sub">We make everyday essentials in natural fabrics, designed to be worn for years rather than seasons.</p>
         </div>
-    
-        
-        <div class="container">            
-            <div class="about-column">       
-                <div class="about-description">
-                    <h2>Our Story</h2>
-                    <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.</p>                        
-                    <p>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</p>
-                </div>
-                <div class="about-image">
-                    <div class="image-container">
-                    <img class="image" src="/img/front/category-4.jpg" alt="">
-                    </div>  
-                </div>   
+    </section>
+
+    <div class="container story">
+        <section class="story-row">
+            <div class="story-row__text">
+                <span class="eyebrow">Our story</span>
+                <h2>Started with one good shirt</h2>
+                <p>Coda began with a simple frustration: it was hard to find well-made basics that didn't cost a fortune or fall apart after a few washes. So we started small, with a single cotton shirt we wanted to wear every day.</p>
+                <p>Today the collection has grown, but the idea hasn't changed. Every piece starts with the fabric, a clean cut and the question of whether we'd still reach for it in five years.</p>
             </div>
-    
-            <div class="about-column">    
-                <div class="about-description mission">                        
-                    <h2>Our Misson</h2>
-                    <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.</p>                         
-                    <p>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</p>
-                </div>
-                <div class="about-image">
-                    <div class="image-container">
-                        <img class="image" src="/img/front/category-5.jpg" alt="">
-                    </div>
-                </div>  
+            <div class="story-row__media">
+                <img src="/img/front/category-4.jpg" alt="Model in a light grey hoodie" loading="lazy">
             </div>
-    
-    
-         
-        </div>
-            
-        
-        @endsection
+        </section>
+
+        <section class="story-row story-row--reverse">
+            <div class="story-row__text">
+                <span class="eyebrow">What we care about</span>
+                <h2>Made to last, made to wear</h2>
+                <ul class="story-list" role="list">
+                    <li><strong>Natural fabrics.</strong> Cotton, linen and wool that breathe and soften with time.</li>
+                    <li><strong>Simple design.</strong> Quiet colours and clean lines that work with everything you own.</li>
+                    <li><strong>Fair pricing.</strong> No seasonal mark-ups, so the price is honest all year round.</li>
+                </ul>
+                <a href="{{ route('shop') }}" class="btn btn-dark">Shop the collection</a>
+            </div>
+            <div class="story-row__media">
+                <img src="/img/front/category-5.jpg" alt="Close-up of white sneakers and striped track pants" loading="lazy">
+            </div>
+        </section>
+    </div>
+@endsection

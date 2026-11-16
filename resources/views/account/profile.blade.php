@@ -18,8 +18,8 @@
                                     <a href="{{ route('account.upload') }}"><span><i class="fa fa-camera" aria-hidden="true"></i></span></a>                     
                             </div>    
                             <div class="profile-menu">
-                                    <a class="button p-15 dark" href="{{ route('account.edit') }}">Edit Profile</span></a>
-                                    <a class="button p-15 dark" href="{{ route('account.password') }}">Change Password</a>
+                                    <a class="button p-15 dark" href="{{ route('account.edit') }}">Edit profile</a>
+                                    <a class="button p-15 dark" href="{{ route('account.password') }}">Change password</a>
                             </div> 
                         </div> 
                         <div class="profile-info-wrapper">

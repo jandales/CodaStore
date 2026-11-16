@@ -19,12 +19,12 @@
                             <div class="flex mb-1">
                                 <div class="flex align-items-center justify-content-flex-start">
                                     <input type="radio" name="type" value="0" {!! $addressbook->type == 0 ? "checked" : "" !!} > 
-                                    <label for=""  class="m-l-5">Home Address</label>
+                                    <label for=""  class="m-l-5">Home address</label>
                                 </div>
 
                                 <div class="flex align-items-center justify-content-flex-start ml-1">
                                     <input type="radio" name="type" value="1" {!! $addressbook->type == 1 ? "checked" : "" !!}> 
-                                    <label for=""  class="m-l-5">Bussiness Address</label>
+                                    <label for=""  class="m-l-5">Business address</label>
                                 </div>
                            </div>
                             @error('type')
@@ -32,7 +32,7 @@
                             @enderror
 
                             <div class="form-block">
-                                <label>Reciept Name</label>
+                                <label>Recipient name</label>
                                 <input type="text" class="user-name"  name="reciept_name" value="{{ $addressbook->reciept_name }}">
                             </div>
 
@@ -41,7 +41,7 @@
                             @enderror
                            
                             <div class="form-block">
-                                <label>Phone Number</label>
+                                <label>Phone number</label>
                                 <input type="number" name="reciept_number" value="{{ $addressbook->reciept_number }}">
                             </div>
 
@@ -66,7 +66,7 @@
 
 
                             <div class="form-block">
-                                <label>City / Municipality</label>
+                                <label>City / municipality</label>
                                 <input type="text" name="city_municipality" value="{{ $addressbook->city_municipality }}">
                             </div> 
 

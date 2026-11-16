@@ -33,7 +33,7 @@
                         <input type="submit" class="btn-w-12"  value="Submit"> 
                     </form>
 
-                    <a  href="{{ route('admin.login') }}" class="link">Login to dashbaord?</a>
+                    <a  href="{{ route('admin.login') }}" class="link">Login to dashboard?</a>
                 </div>
             </div>
         </div>

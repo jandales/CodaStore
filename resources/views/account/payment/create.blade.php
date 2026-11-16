@@ -10,7 +10,7 @@
 
                 <div class="card no-border pad-2 bg-grey">
                     <div class="card-heading">
-                        <h2>Add new Card</h2>                        
+                        <h2>Add card</h2>                        
                     </div>
                     <div class="w-6 sm-w-12">                                   
                         <form action="{{ route('account.payment-option.store') }}" method="post" class="mt-1">
@@ -24,7 +24,7 @@
                             </div>
                             
                             <div class="form-block">
-                                <label>Card Data</label>
+                                <label>Card details</label>
                                 <div class="input-custom">
                                     <div class="inline-form-group">
                                         <input type="text" class="card-number w-6" class=""  name="card_number" value="{{ old('card_number')}}" placeholder="Card Number">

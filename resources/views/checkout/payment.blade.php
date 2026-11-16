@@ -17,33 +17,33 @@
                 </div>
              
                     <div class="checkout-shipping-method mt-2">
-                        <h2 class="uppercase">Billing Address</h2>
-                        <span class="block mt10">Select the address that mactch your card or payment method</span>
+                        <h2 class="checkout-section-title">Billing address</h2>
+                        <span class="block mt10">Select the address that matches your card or payment method.</span>
                         <div class="panel border-b-0 mt-1">
                             <div class="flex gap10">
                                 <input type="radio" id="use-same" name="same_as_shipping" checked  style="margin-top: 5px" value="0">   
-                                <label for="">Same as Shipping Address</label>  
+                                <label for="use-same">Same as shipping address</label>  
                             </div>
                         </div>                    
                         <div class="panel">
                             <div class="flex gap10">
                             <input type="radio" id="use-differ" name="is_new_billing" style="margin-top: 5px" value="1">   
-                                <label for="">Use a different Address</label>  
+                                <label for="use-differ">Use a different address</label>  
                             </div>
                             <x-form-billing-component/>
                         </div> 
                     </div>
                     @guest
                         <div class="flex align-items-center gap10 mt-2">
-                            <input type="checkbox" names="save-details" id="">
-                            <label for="">Save my Information for fastest checkout</label>
+                            <input type="checkbox" name="save-details" id="save-details">
+                            <label for="save-details">Save my information for a faster checkout</label>
                         </div>             
                     @endguest
 
 
                         <div class="form-block mt-2">
-                            <button id="paynow" class="btn btn-dark mr-1 md-mr-0">Pay Now</button> 
-                            <a href="{{route('checkout.shipping')}}" class="change sm-text-center">Return to Shipping</a>
+                            <button id="paynow" class="btn btn-dark mr-1 md-mr-0">Pay now</button> 
+                            <a href="{{route('checkout.shipping')}}" class="change sm-text-center"><i class="fas fa-arrow-left" aria-hidden="true"></i> Return to shipping</a>
                         </div> 
                 </form>
               

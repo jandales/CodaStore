@@ -78,7 +78,7 @@
                         @csrf   
                         <input name="_method" type="hidden" value="post"> 
                         @if ($users->count() == 0)
-                            <tr> <td colspan="6" ><label class="text-center">No found Record</label></td> </tr>
+                            <tr> <td colspan="6" ><label class="text-center">No records found</label></td> </tr>
                         @endif             
                         @foreach ($users as $user) 
                             <tr>

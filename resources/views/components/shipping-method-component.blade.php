@@ -1,5 +1,5 @@
 <div class="checkout-shipping-method mt-4">
-    <h2 class="uppercase  mb-1">Shipping Method</h2>
+    <h2 class="checkout-section-title mb-1">Shipping method</h2>
   
     @foreach ($shippingmethods as $key => $method)   
         <div class="panel {{ $key != $shippingmethods->count() - 1 ? 'border-b-0' : ''}}">
@@ -9,13 +9,13 @@
                     @else
                         {{ $method->id == $active ? 'checked' : '' }}
                     @endif
-                      shippingmethod="{{$method->id}}"  style="margin-top: 5px" name="shipping_method" value="{{ $method->id }}">
-                    <div class="flex flex-column">
+                      shippingmethod="{{$method->id}}"  id="shipping-method-{{ $method->id }}" name="shipping_method" value="{{ $method->id }}">
+                    <label for="shipping-method-{{ $method->id }}" class="flex flex-column">
                         <span class="method">{{ $method->name }}</span> 
-                        <span>{{ $method->description }}</span>  
-                    </div>                             
+                        <span class="checkout-hint">{{ $method->description }}</span>
+                    </label>                             
                 </div>
-                <a href="">@money($method->amount)</a>
+                <span class="checkout-price">@money($method->amount)</span>
             </div>
         </div>
     @endforeach

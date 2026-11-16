@@ -1,0 +1,90 @@
+// Phase 8: content pages (about, contact, search, 404).
+
+.page-hero { padding: var(--s8) 0 var(--s6); border-bottom: 1px solid var(--line); }
+.page-hero__inner { max-width: var(--container); padding: 0 var(--s3); }
+.page-hero__title {
+    margin: var(--s2) 0 var(--s2);
+    font-family: var(--font-display);
+    font-size: var(--fs-h1);
+    font-weight: 400;
+    line-height: 1.05;
+}
+.page-hero__sub { max-width: 52ch; font-size: var(--fs-lg); line-height: 1.6; color: var(--ink-muted); }
+
+// About
+.container.story { max-width: var(--container); padding: 0 var(--s3) var(--s8); }
+.story-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--s8);
+    align-items: center;
+    padding-top: var(--s8);
+}
+.story-row--reverse .story-row__media { order: -1; }
+.story-row__text { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s2); }
+.story-row__text h2 { margin: 0; font-size: var(--fs-h2); font-weight: 400; }
+.story-row__text p { line-height: 1.8; color: var(--ink-muted); }
+.story-row__text .btn { margin-top: var(--s2); }
+.story-row__media { aspect-ratio: 4 / 5; overflow: hidden; background: var(--surface-alt); }
+.story-row__media img { width: 100%; height: 100%; object-fit: cover; }
+.story-list { display: flex; flex-direction: column; gap: var(--s2); margin: 0; padding: 0; }
+.story-list li { list-style: none; padding-left: var(--s3); position: relative; line-height: 1.7; color: var(--ink-muted); }
+.story-list li::before { content: ''; position: absolute; left: 0; top: .7em; width: 12px; height: 1px; background: var(--ink); }
+.story-list strong { color: var(--ink); font-weight: 500; }
+
+// Contact
+.container.contact-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: var(--s6);
+    max-width: var(--container);
+    padding: var(--s6) var(--s3) var(--s8);
+    align-items: start;
+}
+.contact-card { padding: var(--s4); background: var(--surface); border: 1px solid var(--line); }
+.contact-card__title { margin: 0 0 var(--s3); font-size: var(--fs-h3); font-weight: 500; }
+.contact-card .form-block label { display: block; padding: 0 0 6px; font-size: var(--fs-sm); font-weight: 500; }
+.contact-card .form-block input,
+.contact-card .form-block textarea { width: 100%; min-height: 48px; padding: var(--s1) var(--s2); }
+.contact-card .form-block textarea { min-height: 160px; resize: vertical; }
+.contact-card .btn { min-height: 52px; padding: 0 var(--s4); margin-top: var(--s1); }
+.contact-info { display: flex; flex-direction: column; gap: var(--s4); padding-top: var(--s2); }
+.contact-info h2 {
+    margin: 0 0 6px;
+    font-family: var(--font-body);
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+.contact-info p { color: var(--ink-muted); line-height: 1.7; }
+
+// Search
+.search-form {
+    position: relative;
+    display: flex;
+    gap: var(--s1);
+    max-width: 640px;
+    margin-top: var(--s3);
+}
+.search-form > i { position: absolute; left: var(--s2); top: 50%; transform: translateY(-50%); color: var(--ink-muted); font-size: 14px; }
+.search-form input { flex: 1; min-height: 52px; padding-left: calc(var(--s2) + 24px) !important; }
+.search-form .btn { min-height: 52px; padding: 0 var(--s4); }
+
+// 404
+.error-page { padding: var(--s8) var(--s2); }
+.error-page h1 { margin: 0; font-size: var(--fs-h2); font-weight: 400; }
+.error-page__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s1); margin-top: var(--s2); }
+
+@media screen and (max-width: $bp-md) {
+    .page-hero { padding: var(--s6) 0 var(--s4); }
+    .page-hero__inner,
+    .container.story { padding-left: var(--s2); padding-right: var(--s2); }
+    .page-hero__sub { font-size: var(--fs-base); }
+    .story-row { grid-template-columns: 1fr; gap: var(--s3); padding-top: var(--s6); }
+    .story-row--reverse .story-row__media { order: 0; }
+    .story-row__media { aspect-ratio: 4 / 3; }
+    .container.contact-layout { grid-template-columns: 1fr; gap: var(--s4); padding: var(--s4) var(--s2) var(--s6); }
+    .contact-card { padding: var(--s3) var(--s2); }
+    .search-form .btn { padding: 0 var(--s2); }
+}

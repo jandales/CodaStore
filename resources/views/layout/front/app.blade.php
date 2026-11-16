@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apprael Store</title>  
+    <title>@yield('title', 'Coda | Modern clothing store')</title>  
     <link rel="stylesheet" href="{{ asset('css/app.css') }}?v=3">  
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}"> 
     <link rel="shortcut icon" href="{{ asset('favicon.png') }}">
 
@@ -65,29 +68,27 @@
     </div>
 
     <div class="modal" id="sidecartModal">
-        <div class="modal-sidebar">
-            <div class="sidebar-close">                    
-                <span class="close-drawer"><i class="fas fa-times"></i></span>
-            </div>         
-            <div class="sidebar-heading">
-                <p>Shopping Cart</p>
+        <div class="modal-sidebar bag-drawer" role="dialog" aria-modal="true" aria-labelledby="bag-drawer-title">
+            <div class="bag-drawer__head">
+                <h2 id="bag-drawer-title" class="sidebar-heading">Your bag</h2>
+                <div class="sidebar-close">
+                    <button type="button" class="close-drawer icon-btn" aria-label="Close bag"><i class="fas fa-times" aria-hidden="true"></i></button>
+                </div>
             </div>
             <div class="sidebar-body">
-               
+
             </div>
-           
+
             <div class="sidebar-footer">
-                <div class="flex space-between">
-                    <span class=" mb-1">Subtotal</span>
+                <div class="bag-drawer__subtotal">
+                    <span>Subtotal</span>
                     <span class="cart-item-total"></span>
                 </div>
-               
-                <div class="flex gap10">
-                    <a href="{{ route('cart')}}" class="btn btn-dark w-6">VIEW CART</a>
-                    <a href="{{ route('checkout.information')}}" class="btn btn-dark w-6">CHECKOUT</a>
-                </div>
+                <p class="bag-drawer__note">Shipping and discounts calculated at checkout.</p>
+                <a href="{{ route('checkout.information') }}" class="btn btn-dark">Checkout</a>
+                <a href="{{ route('cart') }}" class="btn btn-default">View bag</a>
             </div>
-        </div> 
+        </div>
     </div>
 
    

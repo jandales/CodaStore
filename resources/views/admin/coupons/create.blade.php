@@ -92,7 +92,7 @@
                     
                                 {{-- <div class="form-block">
                                     <label for="email">Product</label>
-                                    <input type="text" class="product_search" data-type="include" name="include_product_id" value="" placeholder="Search here">                 
+                                    <input type="text" class="product_search" data-type="include" name="include_product_id" value="" placeholder="Search">                 
                                 </div> --}}
 
                                 <div class="form-block">
@@ -120,7 +120,7 @@
                     
                                 {{-- <div class="form-block">
                                     <label for="email">Product excluded</label>
-                                    <input type="text" name="exclude_product_id" class="product_search"  data-type="exclude" value="" placeholder="Search here">                 
+                                    <input type="text" name="exclude_product_id" class="product_search"  data-type="exclude" value="" placeholder="Search">                 
                                 </div> --}}
 
                                 <div class="form-block">

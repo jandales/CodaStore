@@ -1,48 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apprael Store</title>  
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">  
-    <meta name="csrf-token" content="{{ csrf_token() }}">    
-    
+    <title>@yield('title', 'Checkout | Coda')</title>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.png') }}">
 </head>
 
-<body>
-    <div class="container-lg mx-auto">
-        <a href="{{route('home')}}"><h1 class="block text-center mt-4 md-mt-2 text-2xl">CodaStore</h1></a>      
-        <div class="step-progress-wrapper w-6 sm-w-12">
-            <div class="step-circles">
-                <div class="step {{ checkoutProgress() == 0 || checkoutProgress() == 30 ||  checkoutProgress() == 60 ||  checkoutProgress() == 100 ? 'active' : '' }}">
-                    <div class="circle"><i class="fas fa-info"></i></div>
-                    <strong>Information</strong>
-                </div>
-
-                <div class="step {{ checkoutProgress() == 30  || checkoutProgress() == 60 || checkoutProgress() == 100   ? 'active' : '' }}">
-                    <div class="circle"><i class="fas fa-shipping-fast"></i></div>
-                    <strong>Shipping</strong>
-                </div>
-
-                <div class="step {{ checkoutProgress() == 60  ||  checkoutProgress() == 100 ? 'active' : '' }}">
-                    <div class="circle"><i class="fas fa-credit-card"></i></div>
-                    <strong>Payment</strong>
-                </div>  
-                
-                <div class="step {{ checkoutProgress() == 100  ? 'active' : '' }}">
-                    <div class="circle"><i class="fas fa-credit-card"></i></div>
-                    <strong>Completed</strong>
-                </div>   
-            </div>
-            <div style="--width:{{ checkoutProgress() }};" class="progress-bar"></div>       
+<body class="checkout-body">
+    @php
+        $progress = checkoutProgress();
+        $steps = [
+            ['label' => 'Bag', 'route' => route('cart'), 'reached' => true],
+            ['label' => 'Information', 'route' => route('checkout.information'), 'reached' => true],
+            ['label' => 'Shipping', 'route' => route('checkout.shipping'), 'reached' => $progress >= 30],
+            ['label' => 'Payment', 'route' => route('checkout.payment'), 'reached' => $progress >= 60],
+        ];
+        $currentIndex = $progress >= 100 ? 4 : ($progress >= 60 ? 3 : ($progress >= 30 ? 2 : 1));
+    @endphp
+    <header class="checkout-header">
+        <div class="checkout-header__inner">
+            <a href="{{ route('home') }}" class="wordmark" aria-label="Coda home">Coda</a>
+            <span class="checkout-header__secure"><i class="fas fa-lock" aria-hidden="true"></i> Secure checkout</span>
         </div>
-        @if (!(request()->is('/checkout/completed')))
-            <div class="sm-visible mt-5">
-                <span id="open-cart-summary" class="sm-text-right change">
-                    <i class="fa fa-bag"></i>
-                    Open Cart
-                </span>
+    </header>
+    <div class="container-lg mx-auto checkout-shell">
+        @if ($progress < 100)
+            <nav class="checkout-steps" aria-label="Checkout progress">
+                <ol>
+                    @foreach ($steps as $i => $step)
+                        <li class="{{ $i === $currentIndex ? 'is-current' : ($i < $currentIndex ? 'is-done' : '') }}">
+                            @if ($i < $currentIndex)
+                                <a href="{{ $step['route'] }}">{{ $step['label'] }}</a>
+                            @else
+                                <span @if($i === $currentIndex) aria-current="step" @endif>{{ $step['label'] }}</span>
+                            @endif
+                        </li>
+                    @endforeach
+                </ol>
+            </nav>
+        @endif
+        {{-- Kept for the JS progress module; hidden by CSS. --}}
+        <div class="step-progress-wrapper checkout-progress-legacy" aria-hidden="true">
+            <div style="--width:{{ $progress }};" class="progress-bar"></div>
+        </div>
+        @if (!request()->is('checkout/completed'))
+            <div class="sm-visible checkout-summary-toggle">
+                <button type="button" id="open-cart-summary" class="change">
+                    <i class="fas fa-shopping-bag" aria-hidden="true"></i>
+                    Show order summary
+                </button>
             </div>
         @endif
         @yield('content')
@@ -70,10 +83,10 @@
                                     </ul>
                                 </div>                 
                         @endforeach
-                        <button id="confirm-shipping-address" class="btn btn-success w-12" >CONFIRM</button>
+                        <button id="confirm-shipping-address" class="btn btn-success w-12" >Confirm</button>
                     </form> 
                 @else
-                        <label class="block text-center">No Address found</label>
+                        <label class="block text-center">No saved addresses</label>
                 @endif
                
                 
@@ -90,7 +103,7 @@
                 <span class="close-drawer"><i class="fas fa-times"></i></span>
             </div>         
             <div class="sidebar-heading">
-                <p>Shipping Address</p>
+                <p>Payment method</p>
             </div>
             <div class="sidebar-body">
                 @if (paymentOptions()->count() != 0)
@@ -106,10 +119,10 @@
                                     </ul>
                                 </div>                 
                         @endforeach
-                        <button id="confirm-payment-option" class="btn btn-success w-12" >CONFIRM</button>
+                        <button id="confirm-payment-option" class="btn btn-success w-12" >Confirm</button>
                     </form>
                 @else
-                    <label class="block text-center">No Address found</label>
+                    <label class="block text-center">No saved payment methods</label>
                 @endif
                
             </div>

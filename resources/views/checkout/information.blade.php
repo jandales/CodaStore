@@ -9,29 +9,29 @@
                 <div class="w-6 sm-w-12">
                    
                     <div class="flex  space-between  border-b-solid py-1">
-                        <h2 class="uppercase">Contact Information</h2>
+                        <h2 class="checkout-section-title">Contact</h2>
                         @guest
-                            <span>Already have an account?  <a href="" class="link link-primary"> Log in</a></span> 
+                            <span class="checkout-hint">Have an account? <a href="{{ route('login') }}" class="link-underline">Sign in</a></span> 
                         @endguest                
                     </div>            
                             
                         <div id="email-input"  class="form-block mt-1">
-                            <label for="contact" class="text-sm" >Email</label>
-                            <input type="email" validator-input="email" class="" name="email" value=" @auth {{$email }} @endauth"/>
+                            <label for="checkout-email" class="text-sm">Email</label>
+                            <input id="checkout-email" type="email" autocomplete="email" validator-input="email" name="email" value="{{ auth()->check() ? trim($email) : '' }}" placeholder="you@example.com"/>
                         </div>
             
                         <div class="flex space-between mt-2 border-b-solid py-1">                
-                            <h2 class="uppercase">Shipping Details</h2>    
+                            <h2 class="checkout-section-title">Shipping address</h2>    
                             @auth
-                                <span id="open-modal-shipping" class="change">Change</span>
+                                <button type="button" id="open-modal-shipping" class="change">Use a saved address</button>
                             @endauth                       
                         </div> 
 
                         <x-form-shipping :address="$address"></x-form-shipping>  
 
                     <div class="form-block mt-2">
-                        <button id="btn-continue" class="btn btn-dark mr-1 md-mr-0">Continue Shipping</button>
-                        <a href="{{route('cart')}}" class="change sm-text-center">Return to Cart</a>
+                        <button id="btn-continue" class="btn btn-dark mr-1 md-mr-0">Continue to shipping</button>
+                        <a href="{{route('cart')}}" class="change sm-text-center"><i class="fas fa-arrow-left" aria-hidden="true"></i> Return to bag</a>
                     </div> 
                 </div>            
                 <div class="w-6 sm-w-12">           

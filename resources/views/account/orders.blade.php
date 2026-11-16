@@ -12,33 +12,33 @@
                     </div>    
                     <div class="orders-wrapper">    
                         <ul class="order-navigation mb-2">
-                            <li class="{{(request()->is('account/orders/all')) ? 'active' : ''}}">
+                            <li class="{{(request()->is('orders/all')) ? 'active' : ''}}">
                                 <a href="{{ route('account.orders',['all'])}}">All</a>
                             </li>                   
-                            <li class="{{(request()->is('account/orders/confirmed')) ? 'active' : ''}}">
-                                <a  href="{{ route('account.orders',['confirmed'])}}">To Ship</a>
+                            <li class="{{(request()->is('orders/confirmed')) ? 'active' : ''}}">
+                                <a  href="{{ route('account.orders',['confirmed'])}}">To ship</a>
                             </li>
-                            <li class="{{(request()->is('account/orders/shipped')) ? 'active' : ''}}">
-                                <a  href="{{ route('account.orders',['shipped'])}}">To Recieve</a>
+                            <li class="{{(request()->is('orders/shipped')) ? 'active' : ''}}">
+                                <a  href="{{ route('account.orders',['shipped'])}}">To receive</a>
                             </li>
-                            <li class="{{(request()->is('account/orders/completed')) ? 'active' : ''}}" >
+                            <li class="{{(request()->is('orders/completed')) ? 'active' : ''}}" >
                                 <a href="{{ route('account.orders',['completed'])}}">Delivered</a>
                             </li>
-                            <li class="{{(request()->is('account/orders/cancelled')) ? 'active' : ''}}">
+                            <li class="{{(request()->is('orders/cancelled')) ? 'active' : ''}}">
                                 <a  href="{{ route('account.orders',['cancelled'])}}">Cancelled</a>
                             </li>
                         </ul> 
                         <div class="orders">
                             @if($orders->count() == 0)
                                <div class="block mt-2">
-                                   <h1 for="" class="block text-center">No Record Found</h1> 
+                                   <h1 for="" class="block text-center">No orders yet</h1> 
                                </div>
                             @endif
                             @foreach ($orders as $order)
                                 <div class="order">
                                     <div class="order-header">
                                         <div class="align-items-content-center">
-                                            <span>OR#:</span><a href="{{ route('orders.details',[$order->encryptedId()])}}" for="order">{{ $order->order_number }}</a>
+                                            <span>Order</span><a href="{{ route('orders.details',[$order->encryptedId()])}}" for="order">{{ $order->order_number }}</a>
                                         </div>
                                             <label class="capitalize order-status" for="status">{{$order->status }}</label>
                                     </div>                              

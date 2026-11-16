@@ -1,0 +1,111 @@
+// Storefront base layer (REDESIGN.md phase 1). Imported last so it refines legacy rules.
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--fs-base);
+    line-height: 1.6;
+    color: var(--ink);
+    background-color: var(--bg) !important;
+    -webkit-font-smoothing: antialiased;
+}
+
+a, p, label, span { color: inherit; }
+p { word-spacing: normal; }
+#flex { background-color: var(--bg); }
+
+h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.15;
+}
+h1 { font-size: var(--fs-h1); font-weight: 400; }
+h2 { font-size: var(--fs-h2); }
+h3 { font-size: var(--fs-h3); }
+
+img { max-width: 100%; height: auto; }
+
+// Keyboard focus: legacy code removes outlines in many places, so restore one globally.
+:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+}
+:focus:not(:focus-visible) { outline: none; }
+
+// Header
+.header-container { background: var(--bg); }
+.header,
+.sticky-header {
+    background: var(--bg) !important;
+    border-bottom: 1px solid var(--line);
+}
+
+// Buttons: one primary style, square and quiet.
+input[type="submit"],
+.btn {
+    min-height: 44px;
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.btn-dark,
+input[type="submit"] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+}
+.btn-dark:hover,
+input[type="submit"]:hover {
+    background: var(--ink-soft);
+    opacity: 1;
+}
+.btn-default {
+    background: transparent;
+    border-color: var(--ink);
+    color: var(--ink);
+}
+.btn-default:hover {
+    background: var(--ink);
+    color: var(--bg);
+    opacity: 1;
+}
+
+// Form fields
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="number"],
+select,
+textarea {
+    min-height: 44px;
+    font-family: var(--font-body);
+    font-size: var(--fs-base);
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+}
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    border-color: var(--ink);
+    outline-offset: 0;
+}
+
+// Footer
+footer, .footer { background: var(--ink); }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

@@ -26,7 +26,7 @@
                                 @enderror
 
                                 <div class="form-block">
-                                    <label>Lastname</label>
+                                    <label>Last name</label>
                                     <input type="text" class="user-name"  name="lastname" value="{{ $address->lastname }}">
                                 </div>
 
@@ -35,7 +35,7 @@
                                 @enderror
                             
                                 <div class="form-block">
-                                    <label>Phone Number</label>
+                                    <label>Phone number</label>
                                     <input type="number" name="phone" value="{{ $address->phone }}">
                                 </div>
 
@@ -77,7 +77,7 @@
                                 @enderror
                                 
                                 <div class="form-block">
-                                    <label>Zip Code</label>
+                                    <label>ZIP code</label>
                                     <input type="text" name="zipcode" value="{{ $address->zipcode }}">
                                 </div>
 
@@ -86,7 +86,7 @@
                                 @enderror
                             
                                 <div class="form-block">
-                                        <button class="btn btn-dark w-12">SAVE CHANGES</button>                              
+                                        <button class="btn btn-dark w-12">Save changes</button>                              
                                 </div>
                             </form>
                         </div>

@@ -36,15 +36,15 @@
         <div class="toolbar default-toolbar space-between">
                 <ul class="order-navigation">
                     <li class="{{ (request()->is('admin/orders')) ? 'selected' : '' }}"><a href="{{ route('admin.orders')}}">All</a></li>
-                    <li class="{{ (request()->is('admin/orders/confirmed')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['confirmed'])}}">To Ship</a></li>              
-                    <li class="{{ (request()->is('admin/orders/shipped')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['shipped'])}}">To Recieve</a></li>
+                    <li class="{{ (request()->is('admin/orders/confirmed')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['confirmed'])}}">To ship</a></li>              
+                    <li class="{{ (request()->is('admin/orders/shipped')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['shipped'])}}">To receive</a></li>
                     <li class="{{ (request()->is('admin/orders/completed')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['completed'])}}">Completed</a></li>
                     <li class="{{ (request()->is('admin/orders/cancelled')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['cancelled'])}}">Cancelled</a></li>
                 </ul> 
                 <form id="formSearch" action="{{route('admin.orders.search')}}" method="get">               
                     <div class="search-input">
                         <span class="icon-left" onclick="document.getElementById('formSearch').submit()"><i class="fas fa-search"></i></span>                           
-                        <input type="text" name="keyword"  placeholder="Search here">
+                        <input type="text" name="keyword"  placeholder="Search">
                         <a href="{{ route('admin.orders') }}" class="{{$keyword ?? 'hidden' }}"><span class="icon-right"><i class="fa fa-times"></i></span></a>
                     </div>
                 </form>
@@ -71,7 +71,7 @@
                         @csrf   
                         <input name="_method" type="hidden" value="post"> 
                     @if ( $orders->count() == 0 )
-                        <tr> <td colspan="7" ><label class="text-center">No found Record</label></td> </tr>
+                        <tr> <td colspan="7" ><label class="text-center">No records found</label></td> </tr>
                     @endif 
                     @forEach($orders as $order)
                         <tr>

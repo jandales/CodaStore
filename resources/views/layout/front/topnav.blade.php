@@ -4,7 +4,7 @@
             <p>Free Shipping for Standard over php 500</p>                        
             <ul>
                 @auth('admin')
-                <li><a href="{{ route('admin.dashboard') }}">Dashbaord</a></li>
+                <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                 @endauth
                 <li><a href="#">Customer Care</a></li>  
                 @auth                                

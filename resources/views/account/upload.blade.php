@@ -10,7 +10,7 @@
                 <div class="col2">
                     <div class="card no-border pad-2 bg-grey">
                         <div class="card-heading">
-                            <h2>Upload Image</h2>                
+                            <h2>Upload photo</h2>                
                         </div>
                         @if (session('success'))
                         <div class="alert alert-success alert-bordered mt-1 mb-1">{{ session('success')}}</div>
