@@ -16,8 +16,11 @@
                                     <div class="alert alert-danger">{{ session('error')}}</div>
                                 @endif
     
-                                @if (session('success'))
-                                    <div class="alert alert-success">{{ session('success')}}</div>
+                                @if (session('review_success'))
+                                    <div class="review-note review-note--success" role="status">
+                                        <i class="fas fa-check-circle" aria-hidden="true"></i>
+                                        <span>{{ session('review_success') }}</span>
+                                    </div>
                                 @endif
     
                               
@@ -51,16 +54,19 @@
                 
                                                  <form action = "{{route('review.store',[encrypt($product->id)])}}" method="POST">
                                                      @csrf
-                                                         <input type="hidden" id="input-rate"  name="rate" value="0">
-                                                         <div class="form-block">
-                                                             <label for="#">Your review</label>
-                                                             <textarea  name="comments" cols="30" rows="6">{{ $review->comments ?? '' }}</textarea>
-                                                         </div> 
-                                                         @error('comments')
-                                                         <div class="alert alert-danger mb-2">{{ $message }}</div>
+                                                         <input type="hidden" id="input-rate"  name="rate" value="{{ old('rate', $review->rating ?? 0) }}">
+                                                         @error('rate')
+                                                         <small class="error-message" role="alert">{{ $message }}</small>
                                                          @enderror
-                                                     <button  class="btn btn-dark w-2 right">Submit</button>    
-                                                 <form> 
+                                                         <div class="form-block">
+                                                             <label for="review-comments">Your review</label>
+                                                             <textarea id="review-comments" name="comments" rows="6" maxlength="1000">{{ old('comments', $review->comments ?? '') }}</textarea>
+                                                         </div>
+                                                         @error('comments')
+                                                         <small class="error-message" role="alert">{{ $message }}</small>
+                                                         @enderror
+                                                     <button class="btn btn-dark">{{ isset($review) && $review ? 'Update review' : 'Post review' }}</button>
+                                                 </form>
                                                   
                 
                                          </div>
@@ -83,10 +89,11 @@
             document.addEventListener('DOMContentLoaded', function(){
 
                 const productrating = document.getElementById('rating')
-                let rating = productrating.getAttribute('value');
+                // Prefer the value kept after a validation error, else the saved rating.
+                let rating = parseInt(document.querySelector('[name="rate"]').value, 10) || productrating.getAttribute('value');
                 const rate = document.querySelectorAll('.rate');
 
-                document.querySelector('[name="rate"]').value = rating   
+                document.querySelector('[name="rate"]').value = rating
 
                 rate.forEach(elem => {
                      if(elem.getAttribute('rate') <= rating)                      

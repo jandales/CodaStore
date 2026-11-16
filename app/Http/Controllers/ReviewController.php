@@ -38,32 +38,46 @@ class ReviewController extends Controller
     public function block(Review $review)
     {
         $this->services->block($review);
-        return back()->with('success', 'Review successfully block');
-
+        $message = $review->fresh()->block == 1 ? 'Review blocked' : 'Review unblocked';
+        return back()->with('success', $message);
     }
 
     public function store(StoreReviewRequest $request, Product $product)
-    { 
-        $this->services->store($request, $product);        
-        return back()->with('success', 'Your review successfully submitted'); 
+    {
+        $isEdit = (bool) $product->reviewby(auth()->user());
+        $this->services->store($request, $product);
+
+        $message = $isEdit ? 'Your review has been updated' : 'Thanks, your review is posted';
+        return $this->backToReviews()->with('review_success', $message);
     }
 
     public function update(StoreReviewRequest  $request, Review $review)
-    {        
+    {
         $this->services->update($request, $review);
-        return back();
-    }   
+        return $this->backToReviews()->with('review_success', 'Your review has been updated');
+    }
 
     public function destroy(Review $review)
     {
         $review->delete();
-        return back()->with('success', 'Review successfully Deleted');
+        // 'success' for the admin list, 'review_success' for the product page.
+        return $this->backToReviews()
+            ->with('success', 'Review deleted')
+            ->with('review_success', 'Your review has been deleted');
     }
 
     public function destroySelected(Request $request)
-    {        
+    {
         $this->services->destroySelected($request);
-        return back()->with('success', 'Review successfully Deleted');
+        return back()->with('success', 'Reviews deleted');
+    }
+
+    /**
+     * Return to the previous page, scrolled to the product reviews section.
+     */
+    private function backToReviews()
+    {
+        return redirect()->to(strtok(url()->previous(), '#') . '#product-tabs');
     }
 
 }

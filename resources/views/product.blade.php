@@ -4,7 +4,8 @@
 
 @section('content')
     <div class="container pdp">
-        @if (session('success'))
+        {{-- Review messages are shown inside the Reviews tab instead. --}}
+        @if (session('success') && !session('review_success'))
             <div class="alert alert-success mt-1" role="status">{{ session('success') }}</div>
         @endif
 

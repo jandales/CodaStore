@@ -61,6 +61,14 @@ class User extends Authenticatable
         'imagePath' => '/img/avatar/default-avatar.jpg',        
     ];   
 
+    /**
+     * Profile photo URL. Mirrors Admin::avatar() so admin views can call it on customers too.
+     */
+    public function avatar()
+    {
+        return $this->imagePath ?: '/img/avatar/default-avatar.jpg';
+    }
+
     public function reviews()
     {
         return $this->hasMany(Review::class);
