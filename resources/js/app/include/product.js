@@ -104,8 +104,20 @@ function validateProperties()
     return  result;
 }
 
+// Pick the most useful message from a failed add-to-bag response.
+// Laravel 8 validation (422) puts the specific text under `errors`.
+function cartErrorMessage(res){
+    const json = res.responseJSON || {};
+    if (json.errors) {
+        const first = Object.values(json.errors)[0];
+        if (first && first[0]) return first[0];
+    }
+    if (json.message && res.status !== 500) return json.message;
+    return 'Something went wrong. Please try again.';
+}
+
 //method ajax request store
-function store(){   
+function store(){
     let qty = document.querySelector('input[name="qty"]').value
     let url = cartBtn.getAttribute('url')  
     let attributes  = [];
@@ -130,12 +142,14 @@ function store(){
         success : function(res){
             showMessage('success', 'Successfully Added to your') 
             variantsOptionsUnSelect();
-            properties = [];
+            // Keep the required options (e.g. size) so the next add is validated;
+            // only clear what the shopper picked.
+            properties.forEach(p => p.value = "");
+            document.getElementById('quantity-input').value = 1;
             cartCountToElement(res.count);
-            console.log(res)
         },
-        error: function(res){        
-            console.log(res);    
+        error: function(res){
+            showMessage('danger', cartErrorMessage(res));
         }
     })
 }
@@ -147,8 +161,8 @@ function store(){
 if (cartBtn) {
     cartBtn.addEventListener('click',function(){
         let result =  validateProperties()
-        if(result[0].status === true) return showMessage('info', result['0'].message) 
-        store(); 
+        if(result[0].status === true) return showMessage('danger', result['0'].message)
+        store();
        
     })
 }

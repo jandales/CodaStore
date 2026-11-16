@@ -27,7 +27,7 @@ class CartServices
 
         $attributes = [];
 
-        foreach ($request->properties as $item)
+        foreach ($request->input('properties', []) as $item)
         {
             $attributes  += array($item['name'] => $item['value']);
         } 

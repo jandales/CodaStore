@@ -6199,11 +6199,14 @@ input[type=radio] {
 .pop-msg-overlay .msg-wrapper {
   max-width: 420px;
   width: calc(100% - 2rem);
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
 }
 
 .pop-msg-overlay .msg-content {
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 0;
   border-radius: var(--radius);
   box-shadow: var(--shadow-pop);
   padding: var(--s3);
