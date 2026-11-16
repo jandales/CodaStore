@@ -29,7 +29,8 @@ export function showMessage(status, message)
 
     const mgsSuccess =  document.getElementById('msg-popup')
     let _title = mgsSuccess.querySelector('.title')
-    _title.textContent = status
+    const titles = { success: 'Done', info: 'Please note', warning: 'Please check', danger: 'Please check' }
+    _title.textContent = titles[status] || status
     let _message = mgsSuccess.querySelector('.message') 
     _message.textContent = message;
 
@@ -56,12 +57,14 @@ export function icon(value)
     }
 
     if(value == "success"){
-        return icon == "fa-check-circle";
+        return icon = "fa-check-circle";
     }
 
-    if(value == "danger" || "warning"){
-        return icon == "fa-exclamation-circle";
+    if(value == "danger" || value == "warning"){
+        return icon = "fa-exclamation-circle";
     }
+
+    return "fa-info-circle";
 }
 
 

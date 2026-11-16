@@ -340,10 +340,16 @@ input[type="radio"] { accent-color: var(--ink); width: 18px; height: 18px; }
 
 // ---------- Feedback popup (styled as a quiet toast card) ----------
 .pop-msg-overlay { background: rgba(26, 26, 26, .28); }
-.pop-msg-overlay .msg-wrapper { max-width: 420px; width: calc(100% - 2rem); }
+.pop-msg-overlay .msg-wrapper {
+    max-width: 420px;
+    width: calc(100% - 2rem);
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
+}
 .pop-msg-overlay .msg-content {
     background: var(--surface);
-    border: 1px solid var(--line);
+    border: 0;
     border-radius: var(--radius);
     box-shadow: var(--shadow-pop);
     padding: var(--s3);

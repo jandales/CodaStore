@@ -23,8 +23,37 @@ class QuantityRequest extends FormRequest
      */
     public function rules()
     {
+        // Products with variants (size, colour...) must send the chosen options.
+        $product = $this->route('product');
+        $needsOptions = $product && $product->hasVariants() > 0;
+
         return [
-            'qty' => 'required|numeric',
+            'qty'                => 'required|integer|min:1',
+            'properties'         => [$needsOptions ? 'required' : 'nullable', 'array'],
+            'properties.*.name'  => 'required_with:properties|string',
+            'properties.*.value' => 'required_with:properties|string',
         ];
+    }
+
+    public function messages()
+    {
+        // Same wording as the product page: "Please select size".
+        $product = $this->route('product');
+        $firstOption = optional(optional(optional($product)->attributes)->first())->attributes->name ?? 'your options';
+
+        // Specific keys must come first: Laravel uses the first matching message.
+        $messages = [];
+
+        // Name the specific option that was left empty, e.g. properties.0 = size.
+        foreach ((array) $this->input('properties', []) as $i => $item) {
+            if (is_array($item) && !empty($item['name'])) {
+                $messages["properties.$i.value.required_with"] = 'Please select ' . $item['name'];
+            }
+        }
+
+        $messages['properties.required'] = 'Please select ' . $firstOption;
+        $messages['properties.*.value.required_with'] = 'Please select your options';
+
+        return $messages;
     }
 }

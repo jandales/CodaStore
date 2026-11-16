@@ -6795,22 +6795,40 @@ function store() {
     },
     success: function success(res) {
       (0,_module_alert__WEBPACK_IMPORTED_MODULE_2__.showMessage)('success', 'Successfully Added to your');
-      variantsOptionsUnSelect();
-      properties = [];
+      variantsOptionsUnSelect(); // Keep the required options (e.g. size) so the next add is validated;
+      // only clear what the shopper picked.
+
+      properties.forEach(function (p) {
+        return p.value = "";
+      });
+      document.getElementById('quantity-input').value = 1;
       (0,_module_Cart__WEBPACK_IMPORTED_MODULE_0__.cartCountToElement)(res.count);
-      console.log(res);
     },
     error: function error(res) {
-      console.log(res);
+      (0,_module_alert__WEBPACK_IMPORTED_MODULE_2__.showMessage)('danger', cartErrorMessage(res));
     }
   });
+} // Pick the most useful message from a failed add-to-bag response.
+// Laravel 8 validation (422) puts the specific text under `errors`.
+
+
+function cartErrorMessage(res) {
+  var json = res.responseJSON || {};
+
+  if (json.errors) {
+    var first = Object.values(json.errors)[0];
+    if (first && first[0]) return first[0];
+  }
+
+  if (json.message && res.status !== 500) return json.message;
+  return 'Something went wrong. Please try again.';
 } //cart button event
 
 
 if (cartBtn) {
   cartBtn.addEventListener('click', function () {
     var result = validateProperties();
-    if (result[0].status === true) return (0,_module_alert__WEBPACK_IMPORTED_MODULE_2__.showMessage)('info', result['0'].message);
+    if (result[0].status === true) return (0,_module_alert__WEBPACK_IMPORTED_MODULE_2__.showMessage)('danger', result['0'].message);
     store();
   });
 }
@@ -7651,7 +7669,13 @@ function showMessage(status, message) {
 
   var _title = mgsSuccess.querySelector('.title');
 
-  _title.textContent = status;
+  var titles = {
+    success: 'Done',
+    info: 'Please note',
+    warning: 'Please check',
+    danger: 'Please check'
+  };
+  _title.textContent = titles[status] || status;
 
   var _message = mgsSuccess.querySelector('.message');
 
@@ -7672,12 +7696,14 @@ function icon(value) {
   }
 
   if (value == "success") {
-    return icon == "fa-check-circle";
+    return icon = "fa-check-circle";
   }
 
-  if (value == "danger" || "warning") {
-    return icon == "fa-exclamation-circle";
+  if (value == "danger" || value == "warning") {
+    return icon = "fa-exclamation-circle";
   }
+
+  return "fa-info-circle";
 }
 
 /***/ }),
