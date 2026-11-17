@@ -33,7 +33,7 @@ class CartServices
         } 
 
 
-        if($productQuantity == 0)  return response()->json(['status' => 500, 'message' => 'Product is not available' ]);   
+        if($productQuantity == 0)  return response()->json(['status' => 422, 'message' => 'This item is sold out.'], 422);   
 
         $cart = Cart::ByUser()->first();
         

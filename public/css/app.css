@@ -7538,6 +7538,29 @@ input[type=radio] {
   color: var(--ink) !important;
 }
 
+.pdp-stock--out {
+  color: var(--danger);
+}
+
+.pdp-add--soldout,
+.pdp-add--soldout:hover {
+  width: 100%;
+  background: #CFC8BE !important;
+  border-color: #CFC8BE !important;
+  color: var(--ink) !important;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.product-card__badge--out {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.product-card:has(.product-card__badge--out) .product-card__media img {
+  opacity: 0.55;
+}
+
 #sidecartModal {
   background: rgba(26, 26, 26, 0.32);
 }

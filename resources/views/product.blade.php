@@ -62,9 +62,15 @@
                 </ul>
 
                 @if ($product->minQty())
-                    <p class="pdp-stock"><i class="fas fa-circle" aria-hidden="true"></i> {{ $product->minQty() }}</p>
+                    <p class="pdp-stock {{ $product->isSoldOut() ? 'pdp-stock--out' : '' }}"><i class="fas fa-circle" aria-hidden="true"></i> {{ $product->minQty() }}</p>
                 @endif
 
+                @if ($product->isSoldOut())
+                <div class="pdp-buy">
+                    <button type="button" class="btn btn-dark pdp-add pdp-add--soldout" disabled aria-disabled="true">Sold out</button>
+                    <p class="pdp-muted">This item is out of stock right now.</p>
+                </div>
+                @else
                 <div class="pdp-buy">
                     <label for="quantity-input" class="pdp-label">Quantity</label>
                     <div class="pdp-buy__row">
@@ -76,6 +82,7 @@
                         <button id="cart-button" data-id="{{ $product->encryptedId() }}" url="{{ route('cart.store', [$product->encryptedId()]) }}" class="btn btn-dark btn-add-cart pdp-add">Add to bag</button>
                     </div>
                 </div>
+                @endif
 
                 <ul class="pdp-perks" role="list">
                     <li><i class="fas fa-truck" aria-hidden="true"></i> Shipping calculated at checkout</li>

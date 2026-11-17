@@ -412,3 +412,10 @@
 }
 .rate-stars i,
 .rate-stars li i { color: var(--ink) !important; }
+
+// Sold out
+.pdp-stock--out { color: var(--danger); }
+.pdp-add--soldout,
+.pdp-add--soldout:hover { width: 100%; background: #CFC8BE !important; border-color: #CFC8BE !important; color: var(--ink) !important; cursor: not-allowed; opacity: 1; }
+.product-card__badge--out { background: var(--ink); color: var(--bg); }
+.product-card:has(.product-card__badge--out) .product-card__media img { opacity: .55; }
