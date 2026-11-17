@@ -1,8 +1,9 @@
 <div class="footer">
-    <h5>All rights reserved. Designed and Developed by Jesus Andales.</h5>
+    <h5>&copy; {{ date('Y') }} Coda. All rights reserved. Designed and developed by Jesus Andales.</h5>
 </div>
-</div>
-</div>
+</div>{{-- .page-wrapper --}}
+</div>{{-- .admin-main --}}
+</div>{{-- #wrapper --}}
 
 </div>
 <script src="{{asset('js/jquery.min.js')}}"></script>
