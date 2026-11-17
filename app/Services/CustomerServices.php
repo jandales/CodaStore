@@ -43,7 +43,6 @@ class CustomerServices {
     {
         $location = "/img/avatar/"; 
 
-        $default_image_path = '/img/avatar/default-avatar.jpg';
     
         if (!$request->hasFile('avatar'))  return ['error' => 'Please select image to upload', 'status' => 500];
 
@@ -55,8 +54,8 @@ class CustomerServices {
         $user->imagePath = $path;
         $user->save();
         
-        if (!$default_image_path == $oldpath) {
-            File::delete(public_path() .  $oldpath);
+        if ($oldpath !== $path) {
+            self::deleteUploadedAvatar($oldpath);
         }   
         return $user;
         // return ['success' => 'Image Successfully upload'];
@@ -80,15 +79,25 @@ class CustomerServices {
     public function removeImage()
     {
         $user = auth()->user(); 
-        $path = $user->imagePath; 
+        self::deleteUploadedAvatar($user->imagePath);
 
-        File::delete(public_path() .  $path);
-        
         $user->imagePath = null;
         $user->save();
         return $user;
          
     }
 
+    /**
+     * Deletes a customer's own uploaded photo. Shared images (the old stock default, the
+     * placeholder), Google photo URLs and anything outside /img/avatar/ are never touched.
+     */
+    private static function deleteUploadedAvatar(?string $path): void
+    {
+        $shared = ['/img/avatar/default-avatar.jpg', '/img/avatar/default-avatar.png', User::AVATAR_PLACEHOLDER];
+        if (!$path || in_array($path, $shared, true) || !preg_match('#^/img/avatar/[A-Za-z0-9._-]+$#', $path)) {
+            return;
+        }
 
+        File::delete(public_path($path));
+    }
 }

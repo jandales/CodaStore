@@ -26,7 +26,7 @@
                     <div class="flex sm-flex-column">
                         <div class="profile-wrapper">
                             <div class="avatar">
-                                    <img src="{{ auth()->user()->imagePath }}" alt="">
+                                    <img src="{{ auth()->user()->avatar() }}" alt="">
                                     <a href="{{ route('account.upload') }}"><span><i class="fa fa-camera" aria-hidden="true"></i></span></a>
                             </div>
                             <div class="profile-menu">

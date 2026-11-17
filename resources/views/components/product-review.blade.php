@@ -17,7 +17,7 @@
                 <li>
                     <div class="comment comment--own">
                         <div class="comment-avatar">
-                            <img src="{{ auth()->user()->imagePath }}" alt="">
+                            <img src="{{ auth()->user()->avatar() }}" alt="">
                         </div>
                         <div class="comment-message">
                             <div class="comment-user-rating">
@@ -56,7 +56,7 @@
                 <li>
                     <div class="comment">
                         <div class="comment-avatar">
-                            <img src="{{ $review->user->imagePath }}" alt="">
+                            <img src="{{ $review->user->avatar() }}" alt="">
                         </div>
                         <div class="comment-message">
                             <div class="comment-user-rating">
