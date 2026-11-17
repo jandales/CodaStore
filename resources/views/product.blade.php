@@ -84,6 +84,11 @@
                 </div>
                 @endif
 
+                @include('components.wishlist-heart', ['product' => $product, 'class' => 'pdp-wish', 'label' => true])
+                @if (session('wishlist_message'))
+                    <p class="pdp-muted" role="status">{{ session('wishlist_message') }}</p>
+                @endif
+
                 <ul class="pdp-perks" role="list">
                     <li><i class="fas fa-truck" aria-hidden="true"></i> Shipping calculated at checkout</li>
                     <li><i class="fas fa-rotate-left" aria-hidden="true"></i> Free returns within 30 days</li>

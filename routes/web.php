@@ -20,6 +20,7 @@ use App\Http\Controllers\InboxController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\CheckoutPaymentController;
+use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CheckOutController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SocialSiteController;
@@ -120,6 +121,13 @@ Route::group(['middleware' => 'auth'], function(){
         Route::post('/store/{product:id}','store')->name('review.store');
         Route::put('/{review:id}/edit/{rate}', 'update')->name('review.update');    
         Route::delete('/{review:id}','destroy')->name('review.destroy');
+    });
+
+    // Wishlist (heart button posts here; guests are sent to sign in by the auth middleware).
+    Route::controller(WishlistController::class)->group(function () {
+        Route::get('/account/wishlist', 'index')->name('account.wishlist');
+        Route::post('/wishlist/{product:id}', 'toggle')->name('wishlist.toggle');
+        Route::delete('/wishlist/{product:id}', 'destroy')->name('wishlist.remove');
     });
 
     Route::prefix('account')->group(function () {

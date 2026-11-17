@@ -129,10 +129,14 @@ class Product extends Model
         return $this->hasMany(Review::class);
     }
 
-    public function isWishlisted()
+    /** Whether the signed-in customer saved this product (false for guests). */
+    public function isWishlisted(): bool
     {
-        $user = auth()->user()->id;
-        return $this->wishlist->contains('user_id',  $user);
+        if (!auth()->check()) {
+            return false;
+        }
+
+        return $this->wishlist->contains('user_id', auth()->id());
     }
 
     public function reviewby(User $user)

@@ -13,6 +13,7 @@
             <span class="product-card__badge">New</span>
         @endif
     </a>
+    @include('components.wishlist-heart', ['product' => $product, 'class' => 'product-card__wish'])
     <div class="product-card__body">
         <h3 class="product-card__name"><a href="{{ $productUrl }}">{{ $product->name }}</a></h3>
         <p class="product-card__price">@include('components.price', ['product' => $product])</p>
