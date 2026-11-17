@@ -2382,90 +2382,6 @@ button:disabled {
   background: #f5f5f5 !important;
 }
 
-details {
-  position: relative;
-  width: 100px;
-}
-
-details[open] {
-  z-index: 1;
-}
-
-summary {
-  padding: 0.5rem;
-  cursor: pointer;
-  background-color: #fff;
-  border: 1px solid #eee;
-  list-style: none;
-}
-
-summary::-webkit-details-marker {
-  display: none;
-}
-
-details[open] summary:before {
-  content: "";
-  display: block;
-  width: 100vw;
-  height: 100vh;
-  background: transparent;
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-
-summary:after {
-  content: "";
-  display: inline-block;
-  width: 0.5rem;
-  height: 0.5rem;
-  border-bottom: 1px solid currentColor;
-  border-left: 1px solid currentColor;
-  border-bottom-left-radius: 2px;
-  transform: rotate(45deg) translate(50%, 0%);
-  transform-origin: center center;
-  transition: transform ease-in-out 100ms;
-}
-
-summary:focus {
-  outline: none;
-}
-
-details[open] summary:after {
-  transform: rotate(-45deg) translate(0%, 0%);
-}
-
-details ul {
-  width: 100%;
-  background: #f5f5f5;
-  position: absolute;
-  top: calc(100% + 0.5rem);
-  left: 0;
-  padding: 1rem;
-  margin: 0;
-  box-sizing: border-box;
-  border-radius: 5px;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-details ul li {
-  list-style: none;
-  margin: 0;
-  padding: 1rem 0;
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-}
-
-details ul li:first-child {
-  padding-top: 0;
-}
-
-details ul li:last-child {
-  padding-bottom: 0;
-  border-bottom: none;
-}
-
 .star {
   color: #ff523b;
 }
@@ -5444,6 +5360,54 @@ td span.inactive {
   border: 0 !important;
   flex: 1;
   min-width: 0;
+}
+
+.admin-body details > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.admin-body details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.admin-body details > summary::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 0.15s ease;
+}
+
+.admin-body details[open] > summary::before {
+  transform: rotate(45deg);
+}
+
+.admin-body details > summary:focus-visible {
+  outline: 2px solid var(--a-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.import-help ul {
+  list-style: disc;
+}
+
+.import-help li {
+  display: list-item;
+  list-style: disc;
+}
+
+.import-help code {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--a-bg);
+  font-size: 13px;
 }
 
 /*!
