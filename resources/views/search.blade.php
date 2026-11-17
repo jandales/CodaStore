@@ -15,7 +15,7 @@
         </header>
         @if ($keyword != null)
             <div class="productPage">
-                <x-product-list-component :products="$products"/>
+                <x-product-list-component :products="$products" :filterable="false"/>
             </div>
         @endif
     </div>

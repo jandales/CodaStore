@@ -7,14 +7,16 @@ use Illuminate\View\Component;
 class ProductListComponent extends Component
 {
     public $products;
+    public $filterable;
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($products)
+    public function __construct($products, $filterable = true)
     {
         $this->products = $products;
+        $this->filterable = (bool) $filterable;
     }
 
     /**

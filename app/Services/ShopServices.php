@@ -9,67 +9,110 @@ use App\Services\BaseServices;
 
 
 class ShopServices extends BaseServices
-{   
-    public function list()
-    {  
-        return Product::paginate($this->shop_perpage);
-       
-    }
+{
+    /** Sort options shown in the shop: key => label. */
+    public const SORTS = [
+        'newest' => 'Newest',
+        'featured' => 'Featured',
+        'price-asc' => 'Price: low to high',
+        'price-desc' => 'Price: high to low',
+        'name-asc' => 'Name: A to Z',
+        'name-desc' => 'Name: Z to A',
+        'oldest' => 'Oldest',
+    ];
 
-    public function category(Category $category)
-    {    
-  
-        return Product::where('category_id', $category->id)->paginate($this->shop_perpage);       
-       
-    }
+    /** Old /shop/sort-by/{value} keys mapped to the new sort keys. */
+    public const LEGACY_SORTS = [
+        'all' => 'newest', 'featured-product' => 'featured', 'low-to-high' => 'price-asc',
+        'high-to-low' => 'price-desc', 'a-z' => 'name-asc', 'z-a' => 'name-desc',
+        'new-to-old' => 'newest', 'old-to-new' => 'oldest',
+    ];
 
-    public function sortBy($value)
+    /**
+     * Published products with optional filters, as a paginator that keeps the query string.
+     * Filters: size[] (variant names), price_min, price_max, sale=1, in_stock=1, sort.
+     */
+    public function filter(array $filters, ?Category $category = null)
     {
-        $column = '';
-        $columnValue = '';
+        $price = Product::effectivePriceSql();
+        $query = Product::query()->published()->with('stock');
 
-        if ( $value == 'all' ) return [];    
-        
-        if ( $value == 'featured-product' ) {
-            return  Product::where('featured', 1)->orderBy('created_at', 'asc')->paginate(16);
+        if ($category) {
+            $query->where('category_id', $category->id);
         }
-      
-        switch ( $value )
-        {
-            case 'a-z':
-                $column = 'name';
-                $columnValue = 'desc';
-            break;
 
-            case  'z-a' : 
-                $column = 'name';
-                $columnValue = 'asc';
-            break;
+        $sizes = array_values(array_filter((array) ($filters['size'] ?? []), 'strlen'));
+        if ($sizes) {
+            $query->whereHas('variants', function ($q) use ($sizes) {
+                $q->whereIn('name', $sizes);
+            });
+        }
 
-            case  'new-to-old' : 
-                $column = 'created_at';
-                $columnValue = 'asc';
-            break;
+        if (is_numeric($filters['price_min'] ?? null)) {
+            // CAST keeps the comparison numeric on every database (SQLite compares bound values as text).
+            $query->whereRaw("$price >= CAST(? AS DECIMAL(12,2))", [(float) $filters['price_min']]);
+        }
+        if (is_numeric($filters['price_max'] ?? null)) {
+            $query->whereRaw("$price <= CAST(? AS DECIMAL(12,2))", [(float) $filters['price_max']]);
+        }
 
-            case  'old-to-new' : 
-                $column = 'created_at';
-                $columnValue = 'desc';
-            break;
+        if (!empty($filters['sale'])) {
+            $query->where('on_sale', 1)->where('sale_price', '>', 0)->whereColumn('sale_price', '<', 'regular_price');
+        }
 
-            case  'low-to-high' : 
-                $column = 'regular_price';
-                $columnValue = 'asc';
-            break;
+        if (!empty($filters['in_stock'])) {
+            $query->whereHas('stock', function ($q) {
+                $q->where('qty', '>', 0);
+            });
+        }
 
-            case  'high-to-low' : 
-                $column = 'regular_price';
-                $columnValue = 'desc';
-            break;
-          
-        };  
+        switch ($filters['sort'] ?? 'newest') {
+            case 'featured':
+                $query->orderByDesc('featured')->latest();
+                break;
+            case 'price-asc':
+                $query->orderByRaw("$price asc");
+                break;
+            case 'price-desc':
+                $query->orderByRaw("$price desc");
+                break;
+            case 'name-asc':
+                $query->orderBy('name');
+                break;
+            case 'name-desc':
+                $query->orderByDesc('name');
+                break;
+            case 'oldest':
+                $query->oldest();
+                break;
+            default:
+                $query->latest();
+        }
 
-        return  Product::orderBy($column,$columnValue)->paginate(16);
-        
+        return $query->orderBy('id')->paginate($this->shop_perpage)->withQueryString();
+    }
+
+    /** Size names that exist on published products, in a sensible order (S, M, L, XL, then others). */
+    public static function availableSizes(): array
+    {
+        $order = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', '2XL', '3XL'];
+        $names = \App\Models\ProductVariant::query()
+            ->whereIn('product_id', Product::where('status', 1)->select('id'))
+            ->distinct()
+            ->pluck('name')
+            ->filter()
+            ->all();
+
+        usort($names, function ($a, $b) use ($order) {
+            $ia = array_search(strtoupper($a), $order);
+            $ib = array_search(strtoupper($b), $order);
+            if ($ia === false && $ib === false) return strnatcasecmp($a, $b);
+            if ($ia === false) return 1;
+            if ($ib === false) return -1;
+            return $ia <=> $ib;
+        });
+
+        return array_values($names);
     }
 
     public function hasVariants(Product $product)
@@ -80,10 +123,10 @@ class ShopServices extends BaseServices
 
         foreach ( $product->attributes as $item ) {
           array_push( $attributes, $item->attributes->name );
-        }  
+        }
 
-        if ( $count > 0 ) $hasvariants = true;          
-        
+        if ( $count > 0 ) $hasvariants = true;
+
         return response()->json(['attributes' => $attributes, 'hasvariant' => $hasvariants]);
     }
 }

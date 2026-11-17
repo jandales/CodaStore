@@ -20,33 +20,37 @@ class ShopController extends Controller
         $this->perpage = config('setting.shop.perpage');
     }
 
-    public function index()
-    {  
-        $products = $this->services->list();
+    public function index(Request $request)
+    {
+        $products = $this->services->filter($request->all());
         return view('shop')->with(['products' => $products, 'category' => 'All Collection']);
     }
 
-    public function category(Category $category)
-    {    
-        $products = $this->services->category($category);     
+    public function category(Request $request, Category $category)
+    {
+        $products = $this->services->filter($request->all(), $category);
         return view('shop')->with(['products' => $products, 'category' => $category->name]);
     }
 
     public function view(Product $product)
-    {           
-        return view('product')->with('product',$product);
+    {
+        // Drafts are not visible in the shop.
+        abort_unless((int) $product->status === 1, 404);
+
+        return view('product')->with('product', $product);
     }
 
+    /** Old sort links (/shop/sort-by/{value}) now redirect to the filterable shop. */
     public function sortBy($value)
     {
-        $products = $this->services->sortBy($value);
-        if($products == null)  return redirect()->route('shop');             
-        return view('shop')->with(['products'  => $products, 'category' => 'All Collection']);
-    }    
-    
+        $sort = ShopServices::LEGACY_SORTS[$value] ?? 'newest';
+
+        return redirect()->route('shop', $sort === 'newest' ? [] : ['sort' => $sort], 301);
+    }
+
     public function hasVariants(Product $product)
     {
-        return $this->services->hasVariants($product);      
+        return $this->services->hasVariants($product);
     }
-   
+
 }
