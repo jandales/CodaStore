@@ -34,6 +34,8 @@ class ProductServices
                     $validated['slug'] = productSlug($request->name);
                     $validated['imagePath'] = $image['path'] ?? $this->defaultImage;
                     $validated['featured'] = $request->featured ?? 0;
+                    $validated['on_sale'] = $request->boolean('on_sale');
+                    $validated['sale_price'] = $request->sale_price ?? 0;
                     $validated['admin_id'] = auth()->guard('admin')->user()->id;
                     $validated['short_description'] = $request->short_description;
                     $validated['long_description'] = $request->long_description;
@@ -71,7 +73,8 @@ class ProductServices
             $product->long_description = $request->long_description;
             $product->sku = $request->sku;
             $product->barcode = $request->barcode;
-            $product->sale_price = $request->sale_price;
+            $product->sale_price = $request->sale_price ?? 0;
+            $product->on_sale = $request->boolean('on_sale');
             $product->regular_price = $request->regular_price;
             $product->status = $request->status;
             $product->tags = $request->tags;

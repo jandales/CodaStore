@@ -6619,6 +6619,47 @@ input[type=radio] {
     flex: 1 1 100%;
   }
 }
+.price {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+  letter-spacing: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+.price--sale .price__now {
+  color: var(--danger);
+  font-weight: 500;
+  font-size: inherit;
+  letter-spacing: 0;
+}
+
+.price__was {
+  color: var(--ink-muted);
+  font-size: 0.9em;
+  letter-spacing: 0;
+}
+
+.price__off {
+  padding: 1px 6px;
+  background: #F6E3DF;
+  color: var(--danger);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.product-card__badge--sale {
+  background: var(--danger);
+  color: #FFFFFF;
+}
+
+.pdp-price .price {
+  font-size: var(--fs-lg);
+}
+
 .breadcrumb ol {
   display: flex;
   flex-wrap: wrap;

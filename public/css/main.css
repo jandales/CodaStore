@@ -4981,6 +4981,22 @@ td span.inactive {
   color: var(--a-muted);
 }
 
+.sale-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.label-hint {
+  font-weight: 400;
+  color: var(--a-muted);
+  font-size: 12.5px;
+}
+
 /*!
  * Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)

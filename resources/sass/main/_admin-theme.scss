@@ -732,3 +732,6 @@ $admin-side: 272px;
 .order-status-form input { width: 100%; }
 .order-status-form .btn { justify-self: start; margin-top: 8px; }
 .ship-note { margin-top: 8px; font-size: 12.5px; color: var(--a-muted); }
+
+.sale-toggle { display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 14px; font-weight: 500; cursor: pointer; }
+.label-hint { font-weight: 400; color: var(--a-muted); font-size: 12.5px; }

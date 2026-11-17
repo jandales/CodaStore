@@ -48,7 +48,7 @@ function cartsToViews(){
                      </div>
                     <div class="cart-decription">
                         <p class="cart-item-name">${item.product.name}</p>  
-                        <span class="cart-item-info">${item.qty}  x  ${item.product.regular_price}</span>  
+                        <span class="cart-item-info">${item.qty}  x  ${item.product.effective_price}</span>  
                         <ul class="cart-item-variant">  
                           
                         </ul> 

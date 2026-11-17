@@ -39,14 +39,18 @@
                     <div class="panel-body">
                         <div class="form-inline gap30">
                             <div class="form-block col-6">
-                                <label for="name">Sale Price</label>
-                                <input type="number"  name="sale_price" value="{{ $product->sale_price }}">                 
-                            </div> 
+                                <label for="regular_price">Regular price</label>
+                                <input type="number" id="regular_price" name="regular_price" min="1" step="0.01" value="{{ $product->regular_price }}">
+                            </div>
                             <div class="form-block col-6">
-                                <label for="name">Regular Price</label>
-                                <input type="number" name="regular_price" value="{{ $product->regular_price }}">                 
-                            </div>                 
-                        </div>                        
+                                <label for="sale_price">Sale price <span class="label-hint">(optional)</span></label>
+                                <input type="number" id="sale_price" name="sale_price" min="0" step="0.01" value="{{ $product->sale_price ?: '' }}">
+                            </div>
+                        </div>
+                        <label class="sale-toggle"><input type="checkbox" name="on_sale" value="1" {{ $product->on_sale ? 'checked' : '' }}> On sale: customers pay the sale price</label>
+                        @if ($product->isOnSale())
+                            <p class="label-hint">Currently {{ $product->discountPercent() }}% off.</p>
+                        @endif                        
                     </div>
                 </div>
                 <!-- invetory --->

@@ -50,7 +50,7 @@
                                             </a>
                                             <div class="cart-line__info">
                                                 <a class="cart-line__name capitalize" href="{{ $itemUrl }}">{{ $item->product->name }}</a>
-                                                <span class="cart-line__meta">@money($item->product->effectivePrice())</span>
+                                                <span class="cart-line__meta">@include('components.price', ['product' => $item->product, 'compact' => true])</span>
                                                 @if ($item->attributes != null)
                                                     @foreach ($item->attributes as $key => $variant)
                                                         <span class="cart-line__meta capitalize">{{ $key }}: {{ $variant }}</span>

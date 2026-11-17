@@ -11,14 +11,14 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 /**
- * A5: all money maths goes through Product::effectivePrice(). Sale pricing is not switched on
- * yet, so the effective price must equal the regular price everywhere.
+ * All money maths goes through Product::effectivePrice(). Products that are not on sale
+ * (the default) pay the regular price; see SalePriceTest for sales.
  */
 class PricingTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_effective_price_is_the_regular_price_for_now()
+    public function test_effective_price_is_the_regular_price_when_not_on_sale()
     {
         $product = $this->createProduct(10, false, ['regular_price' => 899, 'sale_price' => 499]);
 

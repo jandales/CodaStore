@@ -24,6 +24,8 @@ class Product extends Model
      *
      * @var array
      */
+    protected $appends = ['effective_price'];
+
     protected $fillable = [
         'name',
         'category_id',
@@ -36,6 +38,7 @@ class Product extends Model
         'tags',
         'sale_price',
         'regular_price',
+        'on_sale',
         'status',
         'is_taxable',
         'featured',
@@ -51,14 +54,44 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    /** effective_price in JSON responses (used by the side-cart drawer). */
+    public function getEffectivePriceAttribute(): float
+    {
+        return $this->effectivePrice();
+    }
+
+    /** On sale only when the admin switched it on and the sale price is below the regular price. */
+    public function isOnSale(): bool
+    {
+        return (bool) $this->on_sale
+            && (float) $this->sale_price > 0
+            && (float) $this->sale_price < (float) $this->regular_price;
+    }
+
     /**
      * The price a shopper pays for one unit right now. Every cart, checkout and order total
-     * reads this, so sale pricing can be switched on in one place (REDESIGN/FEATURES_PLAN C1).
-     * For now it is always the regular price.
+     * reads this, so sale pricing lives in one place.
      */
     public function effectivePrice(): float
     {
-        return (float) $this->regular_price;
+        return $this->isOnSale() ? (float) $this->sale_price : (float) $this->regular_price;
+    }
+
+    /** Whole-number percentage off, e.g. 20 for 20% off; 0 when not on sale. */
+    public function discountPercent(): int
+    {
+        if (!$this->isOnSale()) {
+            return 0;
+        }
+
+        return (int) round((1 - (float) $this->sale_price / (float) $this->regular_price) * 100);
+    }
+
+    /** SQL for the effective price, for sorting and filtering in queries. */
+    public static function effectivePriceSql(string $table = 'products'): string
+    {
+        return "(CASE WHEN {$table}.on_sale = 1 AND {$table}.sale_price > 0 AND {$table}.sale_price < {$table}.regular_price"
+            . " THEN {$table}.sale_price ELSE {$table}.regular_price END)";
     }
 
     public function stock()

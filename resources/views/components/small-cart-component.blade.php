@@ -17,7 +17,7 @@
                 <div class="w-12">
                     <div class="flex space-between">
                         <span class="cart-item-name">{{$cart_item->product->name}}</span> 
-                        <span class="cart-item-name">@money($cart_item->product->effectivePrice())</span>   
+                        <span class="cart-item-name">@include('components.price', ['product' => $cart_item->product, 'compact' => true])</span>   
                     </div>                           
                     <span class="cart-item-info">Qty: {{ $cart_item->qty  }}</span>  
                     <ul class="cart-item-variant">    
