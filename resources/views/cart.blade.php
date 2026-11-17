@@ -41,7 +41,7 @@
                         </thead>
                         <tbody>
                             @foreach ($cart->items as $item)
-                                @php $itemUrl = route('shop.product', [$item->product->encryptedId()]); @endphp
+                                @php $itemUrl = $item->product->url(); @endphp
                                 <tr>
                                     <td>
                                         <div class="cart-line">

@@ -84,6 +84,20 @@ class AdminExportController extends Controller
         return self::download('products', $rows);
     }
 
+    public function subscribers()
+    {
+        $rows = [['Email', 'Customer', 'Subscribed']];
+        foreach (\App\Models\NewsletterSubscriber::active()->orderBy('id')->cursor() as $subscriber) {
+            $rows[] = [
+                $subscriber->email,
+                $subscriber->user_id ? 'Yes' : 'No',
+                optional($subscriber->created_at)->format('Y-m-d'),
+            ];
+        }
+
+        return self::download('newsletter-subscribers', $rows);
+    }
+
     private static function amount($value): string
     {
         return number_format((float) $value, 2, '.', '');

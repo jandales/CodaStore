@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('store:low-stock-digest')->dailyAt('08:00');
+        $schedule->command('store:cart-reminders')->hourly();
     }
 
     /**

@@ -14,7 +14,7 @@ class RegisterController extends Controller
     {
         $this->middleware(['guest']);
     }
-    
+
     public function index()
     {
         return view('register');
@@ -25,11 +25,12 @@ class RegisterController extends Controller
 
         $validated = $request->validated();
         $validated['password'] = Hash::make($request['password']);
-        User::create($validated);
+        $user = User::create($validated);
+        event(new \Illuminate\Auth\Events\Registered($user)); // sends the confirm-email link
         // auto login
         $credentials = $request->only('email', 'password');
         auth()->attempt($credentials);
-        return redirect()->route('account');
-        
+        return redirect()->route('account')->with('success', 'Welcome to Coda. We sent a link to ' . $user->email . ' to confirm your email.');
+
     }
 }

@@ -15,7 +15,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, HasApiTokens, SoftDeletes ,Notifiable, DateTimeFormat, Crypted;
 
@@ -28,8 +28,8 @@ class User extends Authenticatable
         'name',
         'email',
         'provider',
-        'provider_id',        
-        'password',       
+        'provider_id',
+        'password',
     ];
 
     /**
@@ -49,7 +49,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        
+
     ];
         /**
      * The attributes that should be cast to native types.
@@ -57,8 +57,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $attributes = [
-        'imagePath' => '/img/avatar/default-avatar.jpg',        
-    ];   
+        'imagePath' => '/img/avatar/default-avatar.jpg',
+    ];
 
     /**
      * Profile photo URL. Mirrors Admin::avatar() so admin views can call it on customers too.
@@ -82,7 +82,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Cart::class);
     }
-    
+
     public function shippingAddress()
     {
         return $this->hasMany(UserShippingAddress::class);
@@ -92,7 +92,17 @@ class User extends Authenticatable
     {
         return $this->shippingAddress->where('status', 1)->first();
     }
-    
+
+    /** Sends the confirm-email link; a mail outage must never break sign-up. */
+    public function sendEmailVerificationNotification()
+    {
+        try {
+            $this->notify(new \Illuminate\Auth\Notifications\VerifyEmail);
+        } catch (\Throwable $e) {
+            report($e);
+        }
+    }
+
     public function orders()
     {
         return $this->hasMany(Order::class);
@@ -106,16 +116,16 @@ class User extends Authenticatable
     public function activeCoupon()
     {
         return $this->coupons->where('deleted' , 0);
-    } 
+    }
 
     public function review(Product $product)
-    {       
-        return $this->reviews->where('product_id', $product->id)->first();     
+    {
+        return $this->reviews->where('product_id', $product->id)->first();
     }
 
     public function scopeSearch($query,$input)
     {
-        return $query->where('name','like','%' . $input . '%')                  
+        return $query->where('name','like','%' . $input . '%')
                      ->orWhere('email','like','%' . $input . '%');
     }
 
@@ -127,7 +137,7 @@ class User extends Authenticatable
     public function orderStatus($status)
     {
         return $this->orders->where('status', $status)->count();
-    }    
+    }
 
     public function age()
     {
@@ -138,5 +148,5 @@ class User extends Authenticatable
     {
         return $this->id === auth()->user()->id;
     }
-  
+
 }

@@ -1,6 +1,7 @@
 @extends('layout.front.app')
 
 @section('title', ($category === 'All Collection' ? 'All products' : ucfirst($category)) . ' | Coda')
+@section('meta_description', $category === 'All Collection' ? 'Shop all Coda clothing: shirts, jackets, hoodies and everyday essentials in natural fabrics.' : 'Shop ' . $category . ' at Coda: considered essentials in natural fabrics, cut simply and made to last.')
 
 @section('content')
     <div class="container shop-page">

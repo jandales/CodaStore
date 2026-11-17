@@ -367,3 +367,42 @@ input[type="radio"] { accent-color: var(--ink); width: 18px; height: 18px; }
 .pop-msg-overlay .message { color: var(--ink-muted); font-size: var(--fs-sm); }
 .pop-msg-overlay .msg-footer { margin-top: var(--s3); }
 .pop-msg-overlay .msg-footer .btn { min-height: 40px; padding: 0 var(--s3); }
+
+// ---------- Newsletter in the footer ----------
+.footer-grid { grid-template-columns: 1.6fr 1.6fr 1fr 1fr 1fr; gap: var(--s4); }
+.footer-newsletter p { font-size: var(--fs-sm); line-height: 1.6; color: #CFC8BE; margin: 0 0 var(--s2); padding: 0; }
+.footer-newsletter__form { display: flex; gap: 8px; }
+.footer-newsletter__form input[type="email"] { flex: 1; min-width: 0; height: 44px; padding: 0 12px; border: 1px solid rgba(250, 248, 245, .3); background: transparent; color: var(--bg); font: inherit; font-size: var(--fs-sm); }
+.footer-newsletter__form input[type="email"]::placeholder { color: #A8A094; }
+.footer-newsletter__form input[type="email"]:focus { border-color: var(--bg); outline: none; }
+.footer-newsletter__form .btn { height: 44px; background: var(--bg); color: var(--ink); border-color: var(--bg); white-space: nowrap; }
+.footer-newsletter__ok { color: var(--bg) !important; }
+.site-footer .footer-newsletter__error { color: #F2B8AE; font-size: var(--fs-xs); margin-top: 8px; }
+.hp-field { position: absolute !important; left: -10000px !important; width: 1px; height: 1px; opacity: 0; }
+@media screen and (max-width: $bp-md) {
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .footer-newsletter { grid-column: 1 / -1; }
+}
+
+// ---------- Content pages (Privacy, Terms, FAQ) ----------
+.content-page { max-width: 760px; padding-top: var(--s6); padding-bottom: var(--s8); }
+.content-page__head { border-bottom: 1px solid var(--line); padding-bottom: var(--s3); margin-bottom: var(--s4); }
+.content-page__head h1 { font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 500; margin: 0; }
+.content-page__updated { color: var(--ink-muted); font-size: var(--fs-sm); margin-top: 8px; }
+.prose { font-size: var(--fs-base); line-height: 1.75; color: var(--ink-soft); }
+.prose h2 { font-family: var(--font-display); font-size: var(--fs-h3); font-weight: 500; color: var(--ink); margin: var(--s4) 0 var(--s2); }
+.prose h3 { font-size: var(--fs-lg); font-weight: 500; color: var(--ink); margin: var(--s4) 0 var(--s1); }
+.prose p, .prose ul, .prose ol { margin: 0 0 var(--s2); }
+.prose ul, .prose ol { padding-left: 1.4em; }
+.prose ul { list-style: disc; }
+.prose ol { list-style: decimal; }
+.prose li { margin-bottom: 6px; }
+.prose a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.prose blockquote { margin: 0 0 var(--s3); padding: var(--s2) var(--s3); background: var(--surface-alt); border-left: 3px solid var(--accent); }
+.prose blockquote p:last-child { margin-bottom: 0; }
+
+// ---------- Email verification ----------
+.verify-icon { display: inline-grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--surface-alt); font-size: 1.4rem; margin-bottom: var(--s2); }
+.verify-help { margin-top: var(--s2); font-size: var(--fs-sm); color: var(--ink-muted); }
+.verify-banner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; }
+.verify-banner button { background: none; border: 0; padding: 0; font: inherit; cursor: pointer; }

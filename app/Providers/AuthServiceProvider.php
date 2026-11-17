@@ -33,6 +33,15 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-        
+
+        \Illuminate\Auth\Notifications\VerifyEmail::toMailUsing(function ($notifiable, $url) {
+            return (new \Illuminate\Notifications\Messages\MailMessage)
+                ->subject('Confirm your email for Coda')
+                ->greeting('Hi ' . ($notifiable->name ?: 'there') . ',')
+                ->line('Please confirm your email address so we can send your order updates.')
+                ->action('Confirm email', $url)
+                ->line('The link works for 60 minutes. If you didn\'t create a Coda account, you can ignore this email.');
+        });
+
     }
 }
