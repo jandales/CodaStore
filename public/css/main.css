@@ -5415,6 +5415,37 @@ td span.inactive {
   font-size: 13.5px;
 }
 
+.page-form textarea#body {
+  width: 100%;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.slug-input {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--a-line);
+  border-radius: var(--a-radius-sm);
+  overflow: hidden;
+}
+
+.slug-input span {
+  padding: 0 10px;
+  color: var(--a-muted);
+  background: var(--a-bg);
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.slug-input input {
+  border: 0 !important;
+  flex: 1;
+  min-width: 0;
+}
+
 /*!
  * Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)

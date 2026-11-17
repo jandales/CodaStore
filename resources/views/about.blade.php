@@ -1,6 +1,7 @@
 @extends('layout.front.app')
 
 @section('title', 'About | Coda')
+@section('meta_description', 'Coda makes considered essentials in natural fabrics, cut simply and made to be worn often.')
 
 @section('content')
     <section class="page-hero">

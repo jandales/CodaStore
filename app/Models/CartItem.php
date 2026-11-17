@@ -14,8 +14,11 @@ class CartItem extends Model
         'cart_id',
         'product_id',
         'qty',
-        'attributes', 
+        'attributes',
     ];
+
+    /** Changing an item marks the bag as recently used (for bag reminders). */
+    protected $touches = ['cart'];
 
     protected $casts = [
         'attributes' => 'array'
@@ -25,7 +28,7 @@ class CartItem extends Model
     {
         return $this->belongsTo(Cart::class);
     }
-    
+
     public function product()
     {
         return $this->belongsTo(Product::class);
@@ -38,8 +41,8 @@ class CartItem extends Model
 
 
 
-    
 
- 
-    
+
+
+
 }

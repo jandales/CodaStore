@@ -17,24 +17,24 @@ class UserLoginController extends Controller
     {
         $this->middleware(['guest']);
     }
-    
+
     public function index()
     {
         return view('login');
     }
 
     public function login(UserLoginRequest $request)
-    { 
+    {
 
        $url = $request->input('url');
-  
+
        if (auth()->attempt($request->only('email', 'password')))
        {
             if ($url == route('login.store')) return redirect()->route('home');
             return redirect()->to($url);
-       
+
        }
-       
+
        return back()->with('error','email not found');
 
     }
@@ -45,12 +45,12 @@ class UserLoginController extends Controller
     }
 
     public function handleProviderCallback()
-    {    
+    {
 
-            $provider = Socialite::driver('google')->stateless()->user();  
-        
+            $provider = Socialite::driver('google')->stateless()->user();
+
             if (!$provider) return redirect('/login');
-            
+
             $user = User::where(['provider' => 'google', 'provider_id' => $provider->id])->first();
 
             if (!$user) {
@@ -61,18 +61,20 @@ class UserLoginController extends Controller
                         'name' => $provider->name,
                         'imagePath' => $provider->avatar,
                     ]);
-            }          
-           
-            
-    
+                    // Google has already confirmed this address.
+                    $user->forceFill(['email_verified_at' => now()])->save();
+            }
+
+
+
             Auth::login($user);
-    
+
             return  redirect('/');
-        
+
     }
 
 
-  
-     
+
+
 
 }

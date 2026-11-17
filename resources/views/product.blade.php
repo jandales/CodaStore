@@ -1,6 +1,34 @@
 @extends('layout.front.app')
 
 @section('title', ucfirst($product->name) . ' | Coda')
+@section('meta_description', \Illuminate\Support\Str::limit(strip_tags($product->short_description ?: $product->long_description ?: ucfirst($product->name) . ' from Coda.'), 155))
+@section('meta_image', url($product->imagePath))
+@section('og_type', 'product')
+@push('head')
+    <meta property="product:price:amount" content="{{ number_format($product->effectivePrice(), 2, '.', '') }}">
+    <meta property="product:price:currency" content="PHP">
+    <script type="application/ld+json">{!! json_encode(array_filter([
+        '@context' => 'https://schema.org',
+        '@type' => 'Product',
+        'name' => ucfirst($product->name),
+        'image' => [url($product->imagePath)],
+        'description' => strip_tags($product->short_description ?: $product->long_description ?: ''),
+        'sku' => $product->sku,
+        'brand' => ['@type' => 'Brand', 'name' => 'Coda'],
+        'aggregateRating' => $product->reviews->count() ? [
+            '@type' => 'AggregateRating',
+            'ratingValue' => round($product->reviews->avg('rating'), 1),
+            'reviewCount' => $product->reviews->count(),
+        ] : null,
+        'offers' => [
+            '@type' => 'Offer',
+            'url' => $product->url(),
+            'priceCurrency' => 'PHP',
+            'price' => number_format($product->effectivePrice(), 2, '.', ''),
+            'availability' => $product->isSoldOut() ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
+        ],
+    ]), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
+@endpush
 
 @section('content')
     <div class="container pdp">
@@ -114,6 +142,21 @@
             </div>
         </div>
 
-        <x-featured-product-component/>
+        @php $related = $product->related(); @endphp
+        @if ($related->isNotEmpty())
+            <section class="home-block related-products" aria-labelledby="related-title">
+                <div class="home-block__head">
+                    <h2 id="related-title" class="home-block__title">You may also like</h2>
+                    @if ($product->category)
+                        <a href="{{ route('shop.category', [$product->category]) }}" class="link-underline">More {{ $product->category->name }}</a>
+                    @endif
+                </div>
+                <div class="product-grid">
+                    @foreach ($related as $item)
+                        @include('components.product-card', ['product' => $item])
+                    @endforeach
+                </div>
+            </section>
+        @endif
     </div>
 @endsection

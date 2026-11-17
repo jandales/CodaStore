@@ -5,7 +5,11 @@
 
 <div class="page-title order-page-title">
     <h1>Customers</h1>
-    <a href="{{ route('admin.exports.customers') }}" class="btn btn-light"><i class="fas fa-file-csv" aria-hidden="true"></i> Export CSV</a>
+    <div class="order-doc-actions">
+        @php $subscriberCount = \App\Models\NewsletterSubscriber::active()->count(); @endphp
+        <a href="{{ route('admin.exports.subscribers') }}" class="btn btn-light"><i class="fas fa-envelope-open-text" aria-hidden="true"></i> Newsletter list ({{ number_format($subscriberCount) }})</a>
+        <a href="{{ route('admin.exports.customers') }}" class="btn btn-light"><i class="fas fa-file-csv" aria-hidden="true"></i> Export CSV</a>
+    </div>
 
 </div>
 

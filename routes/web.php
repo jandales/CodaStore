@@ -71,6 +71,13 @@ Route::post('/login',[UserLoginController::class, 'login'])->name('login.store')
 Route::post('/register',[RegisterController::class, 'store'])->name('register.store');
 Route::get('/register', [RegisterController::class, 'index'])->name('register');
 
+// Email verification (checkout needs a confirmed address).
+Route::controller(\App\Http\Controllers\Auth\User\EmailVerificationController::class)->middleware('auth')->group(function () {
+    Route::get('/email/verify', 'notice')->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', 'verify')->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
+    Route::post('/email/verification-notification', 'send')->middleware('throttle:6,1')->name('verification.send');
+});
+
 Route::get('/auth/google/login', [UserLoginController::class, 'loginGoogle'])->name('authGoogle');
 Route::get('/auth/google/callback-url', [UserLoginController::class, 'handleProviderCallback'])->name('handleProviderCallback');
 
@@ -83,6 +90,18 @@ Route::controller(AppController::class)->group(function () {
 });
 
 Route::post('/send-message', [SendUsEmailController::class, 'send'])->name('sendMessage');
+
+// SEO
+Route::get('/sitemap.xml', [\App\Http\Controllers\SeoController::class, 'sitemap'])->name('sitemap');
+Route::get('/robots.txt', [\App\Http\Controllers\SeoController::class, 'robots'])->name('robots');
+// Newsletter and bag reminders
+Route::post('/newsletter', [\App\Http\Controllers\NewsletterController::class, 'subscribe'])->middleware('throttle:5,1')->name('newsletter.subscribe');
+Route::get('/newsletter/unsubscribe/{token}', [\App\Http\Controllers\NewsletterController::class, 'confirmUnsubscribe'])->name('newsletter.unsubscribe');
+Route::post('/newsletter/unsubscribe/{token}', [\App\Http\Controllers\NewsletterController::class, 'unsubscribe'])->name('newsletter.unsubscribe.confirm');
+Route::get('/cart/restore/{cart}', [\App\Http\Controllers\CartReminderController::class, 'restore'])->middleware(['signed', 'auth'])->name('cart.restore');
+Route::get('/cart-reminders/off/{user}', [\App\Http\Controllers\CartReminderController::class, 'off'])->middleware('signed')->name('cart.reminders.off');
+
+Route::get('/pages/{slug}', [\App\Http\Controllers\PageController::class, 'show'])->where('slug', '[a-z0-9-]+')->name('page');
 
 
 /*
@@ -153,7 +172,7 @@ Route::group(['middleware' => 'auth'], function(){
     });
 
 
-    Route::controller(CheckOutController::class)->prefix('checkout')->group(function () {
+    Route::controller(CheckOutController::class)->prefix('checkout')->middleware('verified')->group(function () {
         Route::get('/information', 'index')->name('checkout.information');
         Route::post('/information/store', 'store')->name('checkout.information.store');
         Route::get('/shipping', 'shipping')->name('checkout.shipping');
@@ -165,7 +184,7 @@ Route::group(['middleware' => 'auth'], function(){
     });
 
     // Payment happens on PayPal; the order is created only after PayPal confirms the capture.
-    Route::controller(CheckoutPaymentController::class)->prefix('checkout/paypal')->group(function () {
+    Route::controller(CheckoutPaymentController::class)->prefix('checkout/paypal')->middleware('verified')->group(function () {
         Route::post('/', 'start')->name('checkout.paypal.start');
         Route::get('/return', 'return')->name('checkout.paypal.return');
         Route::get('/cancel', 'cancel')->name('checkout.paypal.cancel');
@@ -327,6 +346,7 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
     Route::controller(\App\Http\Controllers\Admin\AdminExportController::class)->prefix('exports')->group(function () {
         Route::get('/orders.csv', 'orders')->middleware('permission:orders')->name('admin.exports.orders');
         Route::get('/customers.csv', 'customers')->middleware('permission:customers')->name('admin.exports.customers');
+        Route::get('/newsletter.csv', 'subscribers')->middleware('permission:customers')->name('admin.exports.subscribers');
         Route::get('/products.csv', 'products')->middleware('permission:products')->name('admin.exports.products');
     });
 
@@ -348,6 +368,15 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
     });
 
 
+
+    Route::controller(\App\Http\Controllers\Admin\PageController::class)->prefix('pages')->middleware('permission:settings')->group(function () {
+        Route::get('/', 'index')->name('admin.pages');
+        Route::get('/create', 'create')->name('admin.pages.create');
+        Route::post('/', 'store')->name('admin.pages.store');
+        Route::get('/{page}/edit', 'edit')->name('admin.pages.edit');
+        Route::put('/{page}', 'update')->name('admin.pages.update');
+        Route::delete('/{page}', 'destroy')->name('admin.pages.destroy');
+    });
 
     Route::prefix('setting')->middleware('permission:settings')->group(function () {
         Route::controller(SettingController::class)->group(function (){

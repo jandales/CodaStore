@@ -1,6 +1,7 @@
 @extends('layout.front.app')
 
 @section('title', 'Contact | Coda')
+@section('meta_description', 'Questions about an order, sizing or returns? Get in touch with the Coda team.')
 
 @section('content')
     <section class="page-hero">

@@ -188,6 +188,52 @@ class Product extends Model
 
     }
 
+    /**
+     * Public product URL that stays the same between visits, e.g. /shop/item/linen-shirt-12.
+     * (Encrypted ids change on every page load, which search engines treat as new pages.)
+     */
+    public function url(): string
+    {
+        $slug = \Illuminate\Support\Str::slug($this->name) ?: 'product';
+
+        return route('shop.product', [$slug . '-' . $this->id]);
+    }
+
+    /** Accepts "name-12" (storefront) or an encrypted id (admin and old links). */
+    public function resolveRouteBinding($value, $field = null)
+    {
+        if (preg_match('/^[a-z0-9-]*-(\d+)$/', (string) $value, $m)) {
+            return $this->where('id', $m[1])->firstOrFail();
+        }
+
+        try {
+            $id = decrypt($value);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            abort(404);
+        }
+
+        return $this->where('id', $id)->firstOrFail();
+    }
+
+    /** Published products in the same category first, then others, for "You may also like". */
+    public function related(int $limit = 4)
+    {
+        $base = static::published()->with('stock')->where('id', '!=', $this->id)
+            ->whereHas('stock', fn ($q) => $q->where('qty', '>', 0));
+
+        $related = (clone $base)->where('category_id', $this->category_id)
+            ->orderByDesc('featured')->latest()->take($limit)->get();
+
+        if ($related->count() < $limit) {
+            $related = $related->concat(
+                (clone $base)->whereNotIn('id', $related->pluck('id'))
+                    ->orderByDesc('featured')->latest()->take($limit - $related->count())->get()
+            );
+        }
+
+        return $related;
+    }
+
     /** Products whose stock is at or below the threshold (sold-out ones included). */
     public function scopeLowStock($query, int $threshold)
     {

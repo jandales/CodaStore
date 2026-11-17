@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}"> 
     <link rel="shortcut icon" href="{{ asset('favicon.png') }}">
+    @include('layout.front.seo')
 
     
 </head>

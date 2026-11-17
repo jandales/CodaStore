@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="robots" content="noindex, nofollow">
     <link rel="shortcut icon" href="{{ asset('favicon.png') }}">
     <title>@yield('title', 'Admin | Coda')</title>
 </head>
@@ -80,6 +81,7 @@
                         <ul>
                             <li><a class="{{ request()->is('admin/setting/general*') || request()->is('admin/setting/campany*') ? 'active' : '' }}" href="{{ route('admin.setting.general') }}"><i class="fas fa-gear" aria-hidden="true"></i><span class="hide-menu">Settings</span></a></li>
                             <li><a class="{{ request()->is('admin/setting/shipping-method*') ? 'active' : '' }}" href="{{ route('admin.shipping.method') }}"><i class="fas fa-truck" aria-hidden="true"></i><span class="hide-menu">Shipping methods</span></a></li>
+                            <li><a class="{{ request()->is('admin/pages*') ? 'active' : '' }}" href="{{ route('admin.pages') }}"><i class="fas fa-file-lines" aria-hidden="true"></i><span class="hide-menu">Pages</span></a></li>
                         </ul>
                     @endif
 

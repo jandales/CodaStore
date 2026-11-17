@@ -1,5 +1,5 @@
 @php
-    $productUrl = route('shop.product', [$product->encryptedId()]);
+    $productUrl = $product->url();
     $isNew = $product->created_at && $product->created_at->gt(now()->subDays(30));
 @endphp
 <article class="product-card">

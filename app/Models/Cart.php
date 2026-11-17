@@ -12,22 +12,31 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Cart extends Model
 {
     use HasFactory;
-    
-    protected $fillable = [       
-        'cart_id',        
+
+    protected $fillable = [
+        'cart_id',
         'expired_at',
+        'user_id',
+        'reminded_at',
     ];
+
+    protected $casts = ['reminded_at' => 'datetime'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function items()
     {
         return $this->hasMany(CartItem::class);
     }
-    
+
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
-    
+
     public function coupon()
     {
         return $this->belongsTo(Coupon::class);
@@ -49,7 +58,7 @@ class Cart extends Model
     }
 
     public function scopeTotal()
-    {       
+    {
         $cart = self::scopeByUser()->first();
         $total = 0;
         foreach($cart->items as $item)
@@ -84,14 +93,14 @@ class Cart extends Model
     public function scopeUpdateTotal()
     {
         $cart = self::scopeByUser()->first();
-        
+
         $total = 0;
 
         foreach($cart->items as $item) {
 
             $total += $item->qty * $item->product->effectivePrice();
 
-        }       
+        }
 
         $cart->total = $total;
         $cart->save();
@@ -100,7 +109,7 @@ class Cart extends Model
 
     public function scopeTotalItems()
     {
-        $cart = self::scopeByUser()->first();  
+        $cart = self::scopeByUser()->first();
 
         return $cart->items->sum('qty') ?? 0;
     }
@@ -117,18 +126,18 @@ class Cart extends Model
 
         return ($this->total + $shipping_charge) - $this->discount;
     }
-    
+
 
     public function couponName($name)
     {
         return $this->coupon_id != null ? $this->coupon->$name : '';
     }
- 
 
 
 
-   
 
-  
-    
+
+
+
+
 }
