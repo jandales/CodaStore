@@ -111,6 +111,7 @@ class Order extends Model
         {
           case 'returned': 
             return 'bg-warning';
+          case 'completed':
           case 'delivered':
             return 'bg-success';
           case  'cancelled':
