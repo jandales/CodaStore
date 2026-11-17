@@ -19,10 +19,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\CheckoutPaymentController;
 use App\Http\Controllers\CheckOutController;
 use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\PlaceOrderController;
 use App\Http\Controllers\SocialSiteController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ImageController;
@@ -85,12 +84,6 @@ Route::controller(AppController::class)->group(function () {
 
 Route::post('/send-message', [SendUsEmailController::class, 'send'])->name('sendMessage');
 
-Route::controller(AppController::class)->group(function () {
-    Route::get('/paypal', 'index')->name('paypal');
-    Route::get('/paypal-process', 'process')->name('paypal-process');
-    route::get('/paypal-success','success')->name('processSuccess');
-    Route::get('/paypal-cancel','cancel')->name('processCancel');
-});
 
 /*
 |--------------------------------------------------------------------------
@@ -175,7 +168,12 @@ Route::group(['middleware' => 'auth'], function(){
         Route::get('/order-details/{order}', 'details')->name('checkout.details');  
     });
 
-    Route::post('/pay-now/store',  [PlaceOrderController::class, 'store'])->name('checkout.paynow');  
+    // Payment happens on PayPal; the order is created only after PayPal confirms the capture.
+    Route::controller(CheckoutPaymentController::class)->prefix('checkout/paypal')->group(function () {
+        Route::post('/', 'start')->name('checkout.paypal.start');
+        Route::get('/return', 'return')->name('checkout.paypal.return');
+        Route::get('/cancel', 'cancel')->name('checkout.paypal.cancel');
+    });
 
     Route::controller(OrderController::class)->prefix('orders')->group(function () {
         Route::get('/{status}', 'index')->name('account.orders');

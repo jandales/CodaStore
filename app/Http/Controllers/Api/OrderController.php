@@ -9,42 +9,43 @@ use App\Http\Controllers\Controller;
 
 class OrderController extends Controller
 {
+    /** The signed-in user's orders only. */
+    private function mine()
+    {
+        return Order::where('user_id', auth()->id());
+    }
+
     public function index()
     {
-        return response()->json(Order::with('items','items.product')->withCount('items')->get());
+        return response()->json($this->mine()->with('items', 'items.product')->withCount('items')->latest()->get());
     }
 
-    public function show($id) 
+    public function show($id)
     {
-        $order = Self::find($id);
-        return response()->json($order);
-                                  
+        return response()->json($this->find($id));
     }
 
-
-    private function find($id){
-        return Order::with('items','items.product', 'shipping', 'billing', 'payment', 'shippingMethod')
-                ->withCount('items')
-                ->orWhere('id',$id)
-                ->orWhere('order_number',$id)
-                ->first();
+    private function find($id)
+    {
+        return $this->mine()
+            ->with('items', 'items.product', 'shipping', 'billing', 'payment', 'shippingMethod')
+            ->withCount('items')
+            ->where(function ($query) use ($id) {
+                $query->where('id', $id)->orWhere('order_number', $id);
+            })
+            ->firstOrFail();
     }
 
     public function cancel($id)
     {
-        $order =  $order = Self::find($id);
+        $order = $this->find($id);
 
-        $status = $order->status;
-
-        if($status != 'confirmed') return;
-
-        $order->status = 'cancelled';
-        $order->cancelled_at = now();
-        $order->save();
+        try {
+            $order = app(\App\Services\Orders\CancelOrder::class)->handle($order);
+        } catch (\App\Exceptions\OrderNotCancellableException $e) {
+            return response()->json(['message' => "This order can't be cancelled because it has already been {$order->status}."], 422);
+        }
 
         return response()->json($order);
-        
-        
     }
-
 }

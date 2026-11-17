@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\DB;
 
 class PlaceOrderServices {
     
-    private $provider = 'card';
     private $order;
     private $status = 'confirmed';
     private $payment = [];
@@ -29,18 +28,22 @@ class PlaceOrderServices {
     }
    
     /**
-     * Create the order from the current bag and checkout session.
+     * The amount to charge for the current bag, after re-checking it. Used before sending the
+     * shopper to PayPal; storeOrder() recomputes the same figure when the payment comes back.
      *
-     * @param  array|null  $payment  ['provider' => 'paypal', 'reference' => capture id, 'status' => 'paid']
+     * @return array{total: float, shipping_charge: float, tax: float}
      */
-    public function storeOrder(Request $request, ?array $payment = null)
+    public function quote(): array
     {
-        $this->payment = $payment ?? [
-            'provider' => $this->provider,
-            'reference' => $request->input('card_number'),
-            'status' => 'paid',
-        ];
-       
+        $cart = Self::currentCart();
+        Self::assertStock($cart->items);
+        $totals = Self::totals($cart);
+
+        return ['total' => round($totals['total'], 2), 'shipping_charge' => (float) $totals['shipping_charge'], 'tax' => (float) $totals['tax']];
+    }
+
+    private function currentCart(): Cart
+    {
         $cart = Cart::ByUser()->first();
 
         if (!$cart || $cart->items->isEmpty()) {
@@ -48,14 +51,45 @@ class PlaceOrderServices {
         }
 
         // Always charge from current prices, not a total saved when items were added.
-        $cart->recalculateTotal();
+        return $cart->recalculateTotal();
+    }
 
-        $shipping_method = ShippingMethod::find(session()->get('shipping_method')['id']); 
-        $shipping_charge = $shipping_method->amount;
+    /**
+     * Bag total + shipping - coupon + tax. Shipping comes from the chosen shipping method,
+     * which is also what is stored on the order.
+     */
+    private function totals(Cart $cart): array
+    {
+        $shipping_method = ShippingMethod::find(optional((object) session()->get('shipping_method'))->id);
+        if (!$shipping_method) {
+            throw new \RuntimeException('Please choose a shipping method.');
+        }
 
-        $gross_total = (double)$cart->grandTotal();
-        $tax = tax($gross_total);
-        $gross_total += $tax; 
+        $shipping_charge = (float) $shipping_method->amount;
+        $subtotal = (float) $cart->total + $shipping_charge - (float) $cart->discount;
+        $tax = tax($subtotal);
+
+        return [
+            'shipping_method' => $shipping_method,
+            'shipping_charge' => $shipping_charge,
+            'tax' => $tax,
+            'total' => $subtotal + $tax,
+        ];
+    }
+
+    /**
+     * Create the order from the current bag and checkout session.
+     *
+     * Only call this after the payment provider has confirmed the payment.
+     *
+     * @param  array  $payment  ['provider' => 'paypal', 'reference' => capture id, 'status' => 'paid']
+     */
+    public function storeOrder(Request $request, array $payment)
+    {
+        $this->payment = $payment;
+       
+        $cart = Self::currentCart();
+        ['shipping_method' => $shipping_method, 'shipping_charge' => $shipping_charge, 'tax' => $tax, 'total' => $gross_total] = Self::totals($cart);
 
         return DB::transaction(function () use ($cart,$shipping_method, $shipping_charge, $gross_total,$tax,$request){
 
@@ -170,7 +204,23 @@ class PlaceOrderServices {
             $needed[$item->product_id] = ($needed[$item->product_id] ?? 0) + (int) $item->qty;
         }
 
-        $stocks = Stock::whereIn('product_id', array_keys($needed))->lockForUpdate()->get()->keyBy('product_id');
+        Self::assertStock($items, true);
+
+        foreach ($needed as $productId => $qty) {
+            Stock::where('product_id', $productId)->decrement('qty', $qty);
+        }
+    }
+
+    /** Throw OutOfStockException if any product in the bag has fewer units than requested. */
+    private function assertStock($items, bool $lock = false)
+    {
+        $needed = [];
+        foreach ($items as $item) {
+            $needed[$item->product_id] = ($needed[$item->product_id] ?? 0) + (int) $item->qty;
+        }
+
+        $query = Stock::whereIn('product_id', array_keys($needed));
+        $stocks = ($lock ? $query->lockForUpdate() : $query)->get()->keyBy('product_id');
 
         foreach ($needed as $productId => $qty) {
             $available = (int) optional($stocks->get($productId))->qty;
@@ -178,10 +228,6 @@ class PlaceOrderServices {
                 $name = optional($items->firstWhere('product_id', $productId)->product)->name ?? 'This item';
                 throw new OutOfStockException($name, $available);
             }
-        }
-
-        foreach ($needed as $productId => $qty) {
-            Stock::where('product_id', $productId)->decrement('qty', $qty);
         }
     }
 

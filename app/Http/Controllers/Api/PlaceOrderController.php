@@ -9,17 +9,14 @@ use App\Http\Requests\PaymentRequest;
 
 class PlaceOrderController extends Controller
 {
-    public function store(PaymentRequest $request, PlaceOrderServices $service)
-    {  
-        
-        try {
-            $order = $service->storeOrder($request);   
-            return response()->json([               
-                'message' => 'order successfully create',
-                'order' => $order,
-            ]);         
-        } catch (Exception $e) {
-            return response()->json(['error' => 'server.error', 500]);  
-        } 
+    /**
+     * Placing an order needs a confirmed online payment, which the API does not support yet.
+     * Before this change the endpoint created orders marked "paid" without charging anything.
+     */
+    public function store()
+    {
+        return response()->json([
+            'message' => 'Online payment is required. Please complete checkout on the website.',
+        ], 422);
     }
 }

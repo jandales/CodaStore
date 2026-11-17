@@ -18,7 +18,8 @@ class OrderFactory extends Factory
         return [
             'user_id' => User::factory(),
             'order_number' => (int) (date('Y') . $this->faker->unique()->numberBetween(100000, 999999)),
-            'shipping_method_id' => ShippingMethod::factory(),
+            // Shipping method names are unique, so reuse one when it exists.
+            'shipping_method_id' => fn () => optional(ShippingMethod::first())->id ?? ShippingMethod::factory()->create()->id,
             'shipping_charge' => 150,
             'num_items_sold' => 1,
             'tax_total' => 0,
