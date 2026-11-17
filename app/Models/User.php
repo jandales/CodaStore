@@ -51,21 +51,21 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
 
     ];
-        /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $attributes = [
-        'imagePath' => '/img/avatar/default-avatar.jpg',
-    ];
+
+    public const AVATAR_PLACEHOLDER = '/img/avatar/placeholder.svg';
 
     /**
-     * Profile photo URL. Mirrors Admin::avatar() so admin views can call it on customers too.
+     * Profile photo URL: the customer's own photo (uploaded or from Google), otherwise a
+     * neutral placeholder. Mirrors Admin::avatar() so admin views can call it on customers too.
      */
     public function avatar()
     {
-        return $this->imagePath ?: '/img/avatar/default-avatar.jpg';
+        return $this->imagePath ?: self::AVATAR_PLACEHOLDER;
+    }
+
+    public function hasAvatar(): bool
+    {
+        return !empty($this->imagePath);
     }
 
     public function reviews()

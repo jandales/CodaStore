@@ -15,7 +15,7 @@
             <div class="flex gap50">
                 <div class="w-3">
                     <div class="avatar-big center">
-                        <img class="round" src="{{ $user->imagePath }}" alt="" srcset="">
+                        <img class="round" src="{{ $user->avatar() }}" alt="" srcset="">
                     </div> 
                     <div class="m-t-1 centered flex-column">
                         <h4>{{ $user->name }}</h4>
