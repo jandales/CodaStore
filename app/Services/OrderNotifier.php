@@ -5,6 +5,9 @@ namespace App\Services;
 use App\Mail\Orders\OrderCancelledMail;
 use App\Mail\Orders\OrderConfirmedMail;
 use App\Mail\Orders\OrderShippedMail;
+use App\Mail\Orders\ReturnApprovedMail;
+use App\Mail\Orders\ReturnRejectedMail;
+use App\Mail\Orders\ReturnRequestedMail;
 use App\Models\Order;
 use Illuminate\Contracts\Mail\Mailable;
 use Illuminate\Support\Facades\Mail;
@@ -28,6 +31,31 @@ class OrderNotifier
     public function cancelled(Order $order): void
     {
         $this->send($order, new OrderCancelledMail($order));
+    }
+
+    public function returnApproved(Order $order): void
+    {
+        $this->send($order, new ReturnApprovedMail($order));
+    }
+
+    public function returnRejected(Order $order): void
+    {
+        $this->send($order, new ReturnRejectedMail($order));
+    }
+
+    /** Tells the store a customer asked to return an order. */
+    public function returnRequested(Order $order): void
+    {
+        $to = \App\Models\GeneralSetting::storeRecipients();
+        if (!$to) {
+            return;
+        }
+
+        try {
+            Mail::to($to)->queue(new ReturnRequestedMail($order));
+        } catch (\Throwable $e) {
+            report($e);
+        }
     }
 
     /** The address the customer used at checkout, falling back to their account email. */

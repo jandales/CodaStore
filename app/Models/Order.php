@@ -79,6 +79,30 @@ class Order extends Model
         return $this->status === self::STATUS_CONFIRMED;
     }
 
+    public function returnRequest()
+    {
+        return $this->hasOne(OrderReturn::class);
+    }
+
+    /** Last day the customer can ask for a return, or null when the order isn't delivered. */
+    public function returnWindowEndsAt(): ?\Illuminate\Support\Carbon
+    {
+        if ($this->status !== self::STATUS_COMPLETED) {
+            return null;
+        }
+
+        $delivered = $this->delivered_at ?: $this->updated_at;
+
+        return $delivered ? $delivered->copy()->addDays(config('store.return_days', 30))->endOfDay() : null;
+    }
+
+    public function canRequestReturn(): bool
+    {
+        $ends = $this->returnWindowEndsAt();
+
+        return $ends !== null && now()->lte($ends) && !$this->returnRequest()->exists();
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -128,9 +152,10 @@ class Order extends Model
       return $this->items->sum('qty');
     }
 
+    /** Sum of the line totals (price is stored per unit). */
     public function subtotal()
     {
-      return $this->items->sum('price');
+      return $this->items->sum(fn ($item) => $item->qty * $item->price);
     }
     
     public function amount()

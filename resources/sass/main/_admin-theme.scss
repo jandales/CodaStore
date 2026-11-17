@@ -735,3 +735,33 @@ $admin-side: 272px;
 
 .sale-toggle { display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 14px; font-weight: 500; cursor: pointer; }
 .label-hint { font-weight: 400; color: var(--a-muted); font-size: 12.5px; }
+
+// Phase D: documents, exports, low stock, returns
+.order-page-title { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.order-doc-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.order-page-title .btn i { margin-right: 6px; }
+.form-help { margin: 6px 0 0; font-size: 12.5px; color: var(--a-muted); max-width: 60ch; }
+
+.low-stock { margin-top: 24px; }
+.low-stock .dash-card__title .sb-badge { margin-left: 6px; vertical-align: middle; }
+.low-stock__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px 24px; }
+.low-stock__list li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--a-line); }
+.low-stock__name { color: var(--a-ink); font-weight: 500; text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.low-stock__name:hover { color: var(--a-primary); }
+.low-stock__qty { flex: none; font-size: 12.5px; font-weight: 600; color: #B45309; background: #FEF3C7; border-radius: 999px; padding: 2px 10px; }
+.low-stock__qty.is-out { color: #B91C1C; background: #FEE2E2; }
+
+.return-panel { margin-bottom: 20px; padding: 16px; border: 1px solid #F59E0B; border-radius: var(--a-radius-sm); background: #FFFBEB; }
+.return-panel h4 { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 0 8px; font-size: 14px; font-weight: 700; }
+.return-panel p { display: flex; gap: 8px; font-size: 14px; margin: 4px 0; }
+.return-panel p span { flex: none; min-width: 110px; color: var(--a-muted); }
+.return-form { display: grid; gap: 8px; margin-top: 12px; }
+.return-form .btn { justify-self: start; }
+.return-form textarea { width: 100%; }
+.return-reject { margin-top: 12px; }
+.return-reject summary { cursor: pointer; font-size: 13.5px; font-weight: 600; color: #B91C1C; }
+.check-line { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+// Order page: details + side panel (w-9 + w-3 + gap overflowed and always wrapped)
+.order-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 360px); gap: 20px; align-items: start; }
+.order-layout > .w-9, .order-layout > .w-3 { width: auto !important; max-width: none; min-width: 0; } // .w-* use !important
+@media (max-width: 1000px) { .order-layout { grid-template-columns: 1fr; } }

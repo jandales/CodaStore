@@ -171,4 +171,30 @@
         </div>
     </section>
 </div>
+<section class="dash-card low-stock" aria-labelledby="low-stock-title">
+    <div class="dash-card__head">
+        <div>
+            <h2 id="low-stock-title" class="dash-card__title">Low stock @if($low_stock_count)<span class="sb-badge">{{ $low_stock_count }}</span>@endif</h2>
+            <p class="dash-card__sub">Published products with {{ $low_stock_threshold }} or fewer left</p>
+        </div>
+        @if ($low_stock_count)
+            <a href="{{ route('admin.inventory.filter', ['low-stock']) }}" class="dash-link">View all</a>
+        @endif
+    </div>
+    @if ($low_stock->isEmpty())
+        <div class="dash-empty">
+            <i class="fas fa-boxes-stacked" aria-hidden="true"></i>
+            <p>Everything is well stocked.</p>
+        </div>
+    @else
+        <ul class="low-stock__list" role="list">
+            @foreach ($low_stock as $product)
+                <li>
+                    <a href="{{ route('admin.products.edit', [$product->encryptedId()]) }}" class="low-stock__name capitalize">{{ $product->name }}</a>
+                    <span class="low-stock__qty {{ $product->stockQty() <= 0 ? 'is-out' : '' }}">{{ $product->stockQty() <= 0 ? 'Sold out' : $product->stockQty() . ' left' }}</span>
+                </li>
+            @endforeach
+        </ul>
+    @endif
+</section>
 @endsection

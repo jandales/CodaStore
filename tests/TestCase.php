@@ -6,6 +6,11 @@ use App\Models\Admin;
 use App\Models\Attribute;
 use App\Models\Category;
 use App\Models\GeneralSetting;
+use App\Models\Order;
+use App\Models\OrderBilling;
+use App\Models\OrderPayment;
+use App\Models\OrderProduct;
+use App\Models\OrderShipping;
 use App\Models\Product;
 use App\Models\ProductAttribute;
 use App\Models\ProductVariant;
@@ -76,5 +81,21 @@ abstract class TestCase extends BaseTestCase
         $this->actingAs($admin, 'admin');
 
         return $admin;
+    }
+
+    /**
+     * A paid PayPal order: 2 x overshirt at 500 + 150 shipping = 1150, with shipping and billing details.
+     */
+    protected function createPaidOrder(?User $user = null, array $attributes = [], int $stock = 10): Order
+    {
+        $user = $user ?: User::factory()->create();
+        $product = $this->createProduct($stock, true, ['name' => 'overshirt', 'regular_price' => 500, 'sku' => 'OVR-001']);
+        $order = Order::factory()->create(array_merge(['user_id' => $user->id, 'gross_total' => 1150, 'net_total' => 1000, 'shipping_charge' => 150], $attributes));
+        OrderProduct::factory()->create(['order_id' => $order->id, 'product_id' => $product->id, 'qty' => 2, 'price' => 500, 'properties' => ['size' => 'M']]);
+        OrderShipping::create(['order_id' => $order->id, 'firstname' => 'Ana', 'lastname' => 'Cruz', 'street' => '1 Main St', 'city' => 'Quezon City', 'phone' => '0917', 'country' => 'Philippines', 'region' => 'NCR', 'zipcode' => '1100']);
+        OrderBilling::create(['order_id' => $order->id, 'firstname' => 'Ana', 'lastname' => 'Cruz', 'email' => 'ana@example.test', 'street' => '1 Main St', 'city' => 'Quezon City', 'phone' => '0917', 'country' => 'Philippines', 'region' => 'NCR', 'zipcode' => '1100']);
+        OrderPayment::create(['order_id' => $order->id, 'provider' => 'paypal', 'reference_number' => 'CAP-123', 'amount' => '1150', 'status' => 'paid']);
+
+        return $order->fresh();
     }
 }

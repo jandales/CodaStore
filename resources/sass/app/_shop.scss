@@ -486,3 +486,15 @@
     .shop-filter-form { grid-template-columns: 1fr; gap: var(--s2); }
     .shop-filter-actions { flex-direction: row; align-items: center; padding-top: 0; }
 }
+
+// Returns and invoice on the customer order page
+.order-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.order-actions form { margin-left: auto; }
+.return-request { border: 1px solid var(--line); background: var(--surface); padding: 16px 20px; }
+.return-request summary { cursor: pointer; font-weight: 600; }
+.return-request__help { margin: 8px 0 12px; color: var(--ink-muted); font-size: var(--fs-sm); }
+.return-request fieldset { border: 0; padding: 0; margin: 0; }
+.return-request legend { font-weight: 600; margin-bottom: 4px; }
+.return-request label[for] { display: block; font-weight: 500; }
+.return-request textarea { width: 100%; max-width: 560px; display: block; margin-top: 4px; }
+.return-request .muted { color: var(--ink-muted); font-weight: 400; }

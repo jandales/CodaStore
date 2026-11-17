@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\GeneralSetting;
+
 use App\Models\Cart;
 use App\Models\Stock;
 use App\Models\Variant;
@@ -186,6 +188,14 @@ class Product extends Model
 
     }
 
+    /** Products whose stock is at or below the threshold (sold-out ones included). */
+    public function scopeLowStock($query, int $threshold)
+    {
+        return $query->whereHas('stock', function ($q) use ($threshold) {
+            $q->where('qty', '<=', $threshold);
+        });
+    }
+
     public function scopeFilterByCategory($query, $filter)
     {
         return $query->with(['category', 'stock'])
@@ -226,7 +236,7 @@ class Product extends Model
     {
         if ($this->isSoldOut()) return 'Sold out';
 
-        if ($this->stockQty() < 20) return 'Only ' . $this->stockQty() . ' left';
+        if ($this->stockQty() <= GeneralSetting::lowStockThreshold()) return 'Only ' . $this->stockQty() . ' left';
 
         return null;
     }

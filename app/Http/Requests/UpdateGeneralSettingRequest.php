@@ -30,6 +30,8 @@ class UpdateGeneralSettingRequest extends FormRequest
             'timezone' => 'required',
             'date_format' => 'required',
             'time_format' => 'required',
+            'site_email' => 'nullable|email',
+            'low_stock_threshold' => 'required|integer|min:0|max:1000',
         ];
     }
 }
