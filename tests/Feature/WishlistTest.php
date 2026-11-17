@@ -73,4 +73,22 @@ class WishlistTest extends TestCase
 
         $this->postJson(route('wishlist.toggle', [$product->encryptedId()]))->assertOk()->assertJson(['saved' => true]);
     }
+
+    public function test_shop_cards_show_the_heart_icon_only()
+    {
+        $product = $this->createProduct(5, true, ['name' => 'linen shirt']);
+
+        // Guest and signed-in, the card heart has no visible text (only an accessible name).
+        $this->get('/shop')->assertOk()->assertDontSee('<span>Save to wishlist</span>', false);
+
+        $user = $this->signInCustomer();
+        Wishlist::create(['user_id' => $user->id, 'product_id' => $product->id]);
+        $this->get('/shop')->assertOk()
+            ->assertDontSee('<span>Saved</span>', false)
+            ->assertDontSee('<span>Save to wishlist</span>', false)
+            ->assertSee('Remove linen shirt from wishlist');
+
+        // The product page keeps its text label.
+        $this->get($product->url())->assertSee('<span>Saved</span>', false);
+    }
 }
