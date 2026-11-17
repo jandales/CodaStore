@@ -23,11 +23,28 @@ class Admin extends Authenticatable
      */
     protected $fillable = [
         'username',
-        'email',        
+        'email',
         'firstname',
         'lastname',
         'password',
-        'role'        
+        'role',
+        'permissions',
+    ];
+
+    public const ROLE_ADMINISTRATOR = 1;
+    public const ROLE_STAFF = 2;
+
+    /**
+     * What staff can be given access to: key => [label, what it covers].
+     * Administrators have all of these plus Staff users and the activity log.
+     */
+    public const PERMISSIONS = [
+        'products' => ['Products', 'Products, categories, attributes, inventory and CSV import'],
+        'orders' => ['Orders', 'Orders, payments, shipping updates, invoices, packing slips and notes'],
+        'refunds' => ['Refunds', 'Cancelling paid orders and approving or declining returns (needs Orders)'],
+        'customers' => ['Customers', 'Customers, reviews and contact messages'],
+        'coupons' => ['Coupons', 'Creating and editing coupons'],
+        'settings' => ['Settings', 'Store settings, company address, shipping methods and social links'],
     ];
 
     /**
@@ -51,21 +68,46 @@ class Admin extends Authenticatable
     protected $casts = [
 
         'email_verified_at' => 'datetime',
+        'permissions' => 'array',
 
     ];
 
     public function fullName()
     {
 
-        $fullname =  $this->firstname . " " . $this->lastname; 
+        $fullname =  $this->firstname . " " . $this->lastname;
 
         return empty($fullname) ? '---' : $fullname;
 
     }
-    
+
     public function userRole()
     {
-        return $this->role == 1 ? 'Administrator' : 'Employee';
+        return $this->role == 1 ? 'Administrator' : 'Staff';
+    }
+
+    /** Administrators can do everything; staff only what is ticked for them. */
+    public function hasPermission(string $permission): bool
+    {
+        if ($this->is_admin()) {
+            return true;
+        }
+
+        return $permission !== 'staff' && in_array($permission, (array) $this->permissions, true);
+    }
+
+    /** Labels of the areas this account can use, for lists. */
+    public function permissionLabels(): array
+    {
+        if ($this->is_admin()) {
+            return ['Everything'];
+        }
+
+        return collect((array) $this->permissions)
+            ->map(fn ($key) => self::PERMISSIONS[$key][0] ?? null)
+            ->filter()
+            ->values()
+            ->all();
     }
 
     public function is_admin()
@@ -79,11 +121,11 @@ class Admin extends Authenticatable
     }
 
     public function scopeSearch($query, $input)
-    {    
+    {
         return $query->where('username', 'like', '%' . $input . '%')
                      ->orWhere('email','like','%' . $input . '%')
                      ->orWhere('firstname','like','%' . $input . '%')
                      ->orWhere('lastname','like','%' . $input . '%');
-       
+
     }
 }

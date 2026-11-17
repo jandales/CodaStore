@@ -98,4 +98,12 @@ abstract class TestCase extends BaseTestCase
 
         return $order->fresh();
     }
+
+    /** An admin account with a unique username and email (the factory's are fixed). */
+    protected function makeAdmin(array $attributes = []): Admin
+    {
+        $n = Admin::withTrashed()->count() + 1;
+
+        return Admin::factory()->create(array_merge(['username' => "staff{$n}", 'email' => "staff{$n}@coda.test"], $attributes));
+    }
 }

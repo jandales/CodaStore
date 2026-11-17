@@ -5,7 +5,10 @@
 
 <div class="page-title order-page-title">
     <h1>Products</h1>
-    <a href="{{ route('admin.exports.products') }}" class="btn btn-light"><i class="fas fa-file-csv" aria-hidden="true"></i> Export CSV</a>
+    <div class="order-doc-actions">
+        <a href="{{ route('admin.products.import') }}" class="btn btn-light"><i class="fas fa-file-import" aria-hidden="true"></i> Import CSV</a>
+        <a href="{{ route('admin.exports.products') }}" class="btn btn-light"><i class="fas fa-file-csv" aria-hidden="true"></i> Export CSV</a>
+    </div>
 </div>
 
 @if(session('success'))
