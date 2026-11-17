@@ -47,6 +47,9 @@ class PlaceOrderServices {
             throw new \RuntimeException('Your bag is empty.');
         }
 
+        // Always charge from current prices, not a total saved when items were added.
+        $cart->recalculateTotal();
+
         $shipping_method = ShippingMethod::find(session()->get('shipping_method')['id']); 
         $shipping_charge = $shipping_method->amount;
 
@@ -148,7 +151,7 @@ class PlaceOrderServices {
                 'order_id' => $this->order->id,
                 'product_id' => $item->product_id,
                 'qty' => $item->qty,
-                'price' => $item->product->regular_price,
+                'price' => $item->product->effectivePrice(),
                 'properties' => $item->attributes,
             ]); 
 

@@ -33,7 +33,7 @@ class CartItem extends Model
 
     public function subtotal()
     {
-        return $this->product->regular_price * $this->qty;
+        return $this->product->effectivePrice() * $this->qty;
     }
 
 

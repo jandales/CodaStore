@@ -51,6 +51,16 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    /**
+     * The price a shopper pays for one unit right now. Every cart, checkout and order total
+     * reads this, so sale pricing can be switched on in one place (REDESIGN/FEATURES_PLAN C1).
+     * For now it is always the regular price.
+     */
+    public function effectivePrice(): float
+    {
+        return (float) $this->regular_price;
+    }
+
     public function stock()
     {
         return $this->belongsTo(Stock::class, 'id', 'product_id');

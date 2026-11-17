@@ -40,7 +40,7 @@ class CartServices
 
         if($productQuantity <  $newQuantity) $newQuantity = $productQuantity; 
         
-        $total = $newQuantity * $product->regular_price;
+        $total = $newQuantity * $product->effectivePrice();
 
         if($cart)
         {   

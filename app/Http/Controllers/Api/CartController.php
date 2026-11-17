@@ -47,7 +47,7 @@ class CartController extends Controller
         $cart = Cart::ByUser()->first();        
 
         if ($productQuantity <  $newQuantity) $newQuantity = $productQuantity;         
-        $total = $newQuantity * $product->regular_price;
+        $total = $newQuantity * $product->effectivePrice();
 
         if ($cart) {   
             //check if an item  already in the cart;

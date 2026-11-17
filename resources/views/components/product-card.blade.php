@@ -11,6 +11,6 @@
     </a>
     <div class="product-card__body">
         <h3 class="product-card__name"><a href="{{ $productUrl }}">{{ $product->name }}</a></h3>
-        <p class="product-card__price">@money($product->regular_price)</p>
+        <p class="product-card__price">@money($product->effectivePrice())</p>
     </div>
 </article>

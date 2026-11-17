@@ -42,7 +42,7 @@
 
             <div class="description pdp-info">
                 <h1 class="title pdp-title capitalize">{{ $product->name }}</h1>
-                <p class="price pdp-price">@money($product->regular_price)</p>
+                <p class="price pdp-price">@money($product->effectivePrice())</p>
 
                 <div class="pdp-rating">
                     @if ($product->reviews->count() > 0)
