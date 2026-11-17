@@ -2,11 +2,9 @@
 
 namespace App\Services\Orders;
 
-use App\Contracts\PaymentGateway;
 use App\Exceptions\OrderNotCancellableException;
 use App\Models\Coupon;
 use App\Models\Order;
-use App\Models\OrderPayment;
 use App\Models\Stock;
 use App\Services\OrderNotifier;
 use Illuminate\Support\Facades\DB;
@@ -17,12 +15,12 @@ use Illuminate\Support\Facades\DB;
  */
 class CancelOrder
 {
-    private $gateway;
+    private $refunder;
     private $notifier;
 
-    public function __construct(PaymentGateway $gateway, OrderNotifier $notifier)
+    public function __construct(RefundPayment $refunder, OrderNotifier $notifier)
     {
-        $this->gateway = $gateway;
+        $this->refunder = $refunder;
         $this->notifier = $notifier;
     }
 
@@ -52,34 +50,9 @@ class CancelOrder
         });
 
         // Outside the transaction: the cancellation stands even if PayPal or email is unavailable.
-        $this->refund($order);
+        $this->refunder->handle($order, "Order {$order->order_number} cancelled");
         $this->notifier->cancelled($order->fresh());
 
         return $order->fresh();
-    }
-
-    private function refund(Order $order): void
-    {
-        $payment = $order->payment;
-        if (!$payment || $payment->status !== OrderPayment::STATUS_PAID || $payment->provider !== $this->gateway->name()) {
-            return;
-        }
-
-        $refunded = $this->gateway->refund(
-            (string) $payment->reference_number,
-            (float) $payment->amount,
-            config('paypal.currency', 'PHP'),
-            "Order {$order->order_number} cancelled"
-        );
-
-        $payment->status = $refunded ? OrderPayment::STATUS_REFUNDED : OrderPayment::STATUS_REFUND_FAILED;
-        $payment->save();
-
-        if (!$refunded) {
-            logger()->error('Automatic refund failed for cancelled order; refund manually in PayPal', [
-                'order' => $order->order_number,
-                'capture_id' => $payment->reference_number,
-            ]);
-        }
     }
 }

@@ -173,7 +173,9 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::controller(OrderController::class)->prefix('orders')->group(function () {
         Route::get('/{status}', 'index')->name('account.orders');
-        Route::get('/detail/{order:id}',  'details')->name('orders.details');    
+        Route::get('/detail/{order:id}',  'details')->name('orders.details');
+        Route::get('/invoice/{order:id}', 'invoice')->name('orders.invoice');
+        Route::post('/return/{order:id}', 'requestReturn')->name('orders.return');    
         Route::get('/{product}/review',  'review')->name('orders.review');
     }); 
 
@@ -304,8 +306,19 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
         Route::put('/update-status/{order:id}','updateStatus')->name('admin.orders.shipped1');
         Route::put('/deliver', 'deliver')->name('admin.orders.deliver');
         Route::get('/search', 'search')->name('admin.orders.search');
+        Route::get('/returns', 'returns')->name('admin.orders.returns');
+        Route::get('/{order:id}/invoice', 'invoice')->name('admin.orders.invoice');
+        Route::get('/{order:id}/packing-slip', 'packingSlip')->name('admin.orders.packing-slip');
+        Route::put('/{order:id}/return/approve', 'approveReturn')->name('admin.orders.return.approve');
+        Route::put('/{order:id}/return/reject', 'rejectReturn')->name('admin.orders.return.reject');
         Route::get('/{status}', 'listbyStatus')->name('admin.orders.list');
         Route::delete('/destroy/{order:id}', 'destroy')->name('admin.orders.destroy');
+    });
+
+    Route::controller(\App\Http\Controllers\Admin\AdminExportController::class)->prefix('exports')->group(function () {
+        Route::get('/orders.csv', 'orders')->name('admin.exports.orders');
+        Route::get('/customers.csv', 'customers')->name('admin.exports.customers');
+        Route::get('/products.csv', 'products')->name('admin.exports.products');
     });
 
     Route::controller(AdminPaymentController::class)->prefix('payments')->group(function () {

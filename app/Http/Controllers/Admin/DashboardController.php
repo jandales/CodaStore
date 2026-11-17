@@ -12,10 +12,10 @@ use App\Http\Controllers\Controller;
 
 class DashboardController extends Controller
 {
-      
+
     public function index()
-    {        
-       // count if theres record in admin table     
+    {
+       // count if theres record in admin table
         $admin = Admin::all();
 
         if(session()->has('adminLogined')) return redirect()->route('dashboard');
@@ -50,6 +50,8 @@ class DashboardController extends Controller
                 ->whereNotIn('status', ['cancelled', 'returned'])->sum('gross_total');
         $incomeChange = $lastMonth > 0 ? round((($thisMonth - $lastMonth) / $lastMonth) * 100, 1) : null;
 
+        $threshold = \App\Models\GeneralSetting::lowStockThreshold();
+
         return view('admin.index')->with([
             'orders'          => $orders,
             'order_count'     => Order::count(),
@@ -65,6 +67,10 @@ class DashboardController extends Controller
             'year_income'     => array_sum($monthly),
             'income_change'   => $incomeChange,
             'admin'           => auth()->guard('admin')->user(),
+            'low_stock'       => Product::published()->lowStock($threshold)->with('stock')
+                ->get()->sortBy(fn ($p) => $p->stockQty())->take(6)->values(),
+            'low_stock_count' => Product::published()->lowStock($threshold)->count(),
+            'low_stock_threshold' => $threshold,
         ]);
     }
 }
