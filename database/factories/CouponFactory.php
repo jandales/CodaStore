@@ -22,11 +22,10 @@ class CouponFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->unique(),
+            'name' => strtoupper($this->faker->unique()->bothify('CODA-####')),
             'description' => $this->faker->unique()->safeEmail(),
-            'discount_type' => 'percent-disc',
-            'include_product_id' => null,
-            'exclude_product_id' => null,
+            'discount_type' => 0, // 0 = percent, 1 = fixed amount (see Coupon::discount)
+            'amount' => 10,
             'min_amount' => 100,
             'max_amount' => 500,
             'limit_per_coupon' => 100,

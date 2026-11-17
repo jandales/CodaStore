@@ -53,9 +53,13 @@ class OrderController extends Controller
     {       
         $this->authorize('clientUpdate', $order);
 
-        $this->services->cancel($order);
+        try {
+            $this->services->cancel($order);
+        } catch (\App\Exceptions\OrderNotCancellableException $e) {
+            return back()->with('error', "This order can't be cancelled because it has already been {$order->status}.");
+        }
 
-        return back()->with('success',"You successfully cancelled your order");
+        return back()->with('success', 'Your order has been cancelled');
     }
 
 }

@@ -8,6 +8,9 @@
                 <div class="col2">
                     @if (session('success'))
                          <div class="alert alert-success alert-bordered mt-1 mb-1">{{ session('success')}}</div>
+                    @endif
+                    @if (session('error'))
+                         <div class="alert alert-danger alert-bordered mt-1 mb-1" role="alert">{{ session('error') }}</div>
                     @endif  
                     <div class="card no-border pad-2 bg-grey">
 

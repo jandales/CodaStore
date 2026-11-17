@@ -32,10 +32,22 @@ class Order extends Model
         'coupon_amount',
     ];
 
-    private $COMPLETED = 'completed';
-    private $TOSHIP = 'confirmed';
-    private $TORECIEVE = 'shipped';
-    private $CANCELLED = 'cancelled';
+    // Order lifecycle: confirmed (paid, to ship) -> shipped -> completed; or cancelled / returned.
+    public const STATUS_CONFIRMED = 'confirmed';
+    public const STATUS_SHIPPED = 'shipped';
+    public const STATUS_COMPLETED = 'completed';
+    public const STATUS_CANCELLED = 'cancelled';
+    public const STATUS_RETURNED = 'returned';
+
+    private $COMPLETED = self::STATUS_COMPLETED;
+    private $TOSHIP = self::STATUS_CONFIRMED;
+    private $TORECIEVE = self::STATUS_SHIPPED;
+    private $CANCELLED = self::STATUS_CANCELLED;
+
+    public function canBeCancelled(): bool
+    {
+        return $this->status === self::STATUS_CONFIRMED;
+    }
 
     public function user()
     {

@@ -12,9 +12,9 @@ use Illuminate\Http\Request;
 class OrderServices
 {
     public $COMPLETED = 'completed';
-    public $TOSHIP = 'to-ship';
-    public $TORECIEVE = 'to-receive';
-    private $CANCELLED = 'cancelled';
+    public $TOSHIP = Order::STATUS_CONFIRMED;
+    public $TORECIEVE = Order::STATUS_SHIPPED;
+    private $CANCELLED = Order::STATUS_CANCELLED;
 
     public function listOrders($status)
     {
@@ -45,12 +45,7 @@ class OrderServices
 
     public function cancel(Order $order)
     {
-        $order->status = "canceled";
-
-        $order->cancelled_at =  now();
-
-        $order->save();    
-            
+        return app(\App\Services\Orders\CancelOrder::class)->handle($order);
     }
 
        
