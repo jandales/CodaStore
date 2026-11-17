@@ -46,35 +46,62 @@ class UserLoginController extends Controller
 
     public function handleProviderCallback()
     {
+        // Cancelling on Google's screen, an expired request or a Google outage all end up
+        // here as an exception; send the customer back to sign in instead of an error page.
+        try {
+            $google = Socialite::driver('google')->stateless()->user();
+        } catch (\Throwable $e) {
+            report($e);
+            return redirect()->route('login')->with('error', "Google sign-in didn't finish. Please try again, or sign in with your email.");
+        }
 
-            $provider = Socialite::driver('google')->stateless()->user();
+        if (!$google || !$google->getId() || !$google->getEmail()) {
+            return redirect()->route('login')->with('error', "We couldn't get your email address from Google. Please sign in with your email instead.");
+        }
 
-            if (!$provider) return redirect('/login');
+        $googleId = (string) $google->getId();
+        $email = mb_strtolower(trim($google->getEmail()));
+        $emailVerified = (bool) data_get($google->user, 'email_verified', data_get($google->user, 'verified_email', false));
 
-            $user = User::where(['provider' => 'google', 'provider_id' => $provider->id])->first();
+        $user = User::where('provider', 'google')->where('provider_id', $googleId)->first();
 
-            if (!$user) {
-                    $user = User::create([
-                        'provider' => 'google',
-                        'provider_id' => $provider->id,
-                        'email' => $provider->email,
-                        'name' => $provider->name,
-                        'imagePath' => $provider->avatar,
-                    ]);
+        if (!$user) {
+            $existing = User::where('email', $email)->first();
+
+            if ($existing) {
+                // Same email as an existing account: link Google to it, but only when Google
+                // confirms the address belongs to this person. Otherwise anyone could take
+                // over an account by creating a Google login with someone else's email.
+                if (!$emailVerified) {
+                    return redirect()->route('login')->with('error', 'An account with this email already exists. Sign in with your email and password.');
+                }
+
+                $existing->forceFill([
+                    'provider' => 'google',
+                    'provider_id' => $googleId,
+                    'imagePath' => $existing->imagePath ?: $google->getAvatar(),
+                    'email_verified_at' => $existing->email_verified_at ?: now(),
+                ])->save();
+                $user = $existing;
+            } else {
+                $user = User::create([
+                    'provider' => 'google',
+                    'provider_id' => $googleId,
+                    'email' => $email,
+                    'name' => $google->getName() ?: strstr($email, '@', true),
+                ]);
+                $user->forceFill([
+                    'imagePath' => $google->getAvatar(),
                     // Google has already confirmed this address.
-                    $user->forceFill(['email_verified_at' => now()])->save();
+                    'email_verified_at' => $emailVerified ? now() : null,
+                ])->save();
             }
+        }
 
+        Auth::login($user, true);
 
-
-            Auth::login($user);
-
-            return  redirect('/');
-
+        // Back to where they were going (e.g. checkout), or the home page.
+        return redirect()->intended(route('home'));
     }
-
-
-
-
 
 }
