@@ -2,21 +2,33 @@
 
 namespace App\Services\Orders;
 
+use App\Contracts\PaymentGateway;
 use App\Exceptions\OrderNotCancellableException;
 use App\Models\Coupon;
 use App\Models\Order;
+use App\Models\OrderPayment;
 use App\Models\Stock;
+use App\Services\OrderNotifier;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Cancels an order that has not shipped yet: sets the status, puts the stock back and
- * gives the coupon use back. Used by both the customer and the admin.
+ * Cancels an order that has not shipped yet: sets the status, puts the stock back, gives the
+ * coupon use back, refunds a PayPal payment and emails the customer. Used by customer, admin and API.
  */
 class CancelOrder
 {
+    private $gateway;
+    private $notifier;
+
+    public function __construct(PaymentGateway $gateway, OrderNotifier $notifier)
+    {
+        $this->gateway = $gateway;
+        $this->notifier = $notifier;
+    }
+
     public function handle(Order $order): Order
     {
-        return DB::transaction(function () use ($order) {
+        $order = DB::transaction(function () use ($order) {
             // Re-read under a lock so two cancel requests can't both restore stock.
             $order = Order::whereKey($order->id)->lockForUpdate()->firstOrFail();
 
@@ -38,5 +50,36 @@ class CancelOrder
 
             return $order;
         });
+
+        // Outside the transaction: the cancellation stands even if PayPal or email is unavailable.
+        $this->refund($order);
+        $this->notifier->cancelled($order->fresh());
+
+        return $order->fresh();
+    }
+
+    private function refund(Order $order): void
+    {
+        $payment = $order->payment;
+        if (!$payment || $payment->status !== OrderPayment::STATUS_PAID || $payment->provider !== $this->gateway->name()) {
+            return;
+        }
+
+        $refunded = $this->gateway->refund(
+            (string) $payment->reference_number,
+            (float) $payment->amount,
+            config('paypal.currency', 'PHP'),
+            "Order {$order->order_number} cancelled"
+        );
+
+        $payment->status = $refunded ? OrderPayment::STATUS_REFUNDED : OrderPayment::STATUS_REFUND_FAILED;
+        $payment->save();
+
+        if (!$refunded) {
+            logger()->error('Automatic refund failed for cancelled order; refund manually in PayPal', [
+                'order' => $order->order_number,
+                'capture_id' => $payment->reference_number,
+            ]);
+        }
     }
 }

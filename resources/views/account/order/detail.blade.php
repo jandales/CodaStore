@@ -101,6 +101,35 @@
                               
     
                            </div>
+                           @if ($order->tracking_number)
+                                <div class="order-detail-wrapper order-tracking mt-2">
+                                    <div class="order-title"><p>Shipment</p></div>
+                                    <div class="separator mt-1 mb-1"></div>
+                                    <div class="order-summary">
+                                        <div class="flex space-between"><span>Courier</span><span>{{ $order->courierName() }}</span></div>
+                                        <div class="flex space-between"><span>Tracking number</span><span>{{ $order->tracking_number }}</span></div>
+                                        @if ($order->shipped_at)
+                                            <div class="flex space-between"><span>Shipped</span><span>{{ $order->shipped_at->format('M j, Y') }}</span></div>
+                                        @endif
+                                    </div>
+                                    @if ($order->trackingUrl())
+                                        <a href="{{ $order->trackingUrl() }}" target="_blank" rel="noopener" class="btn btn-default mt-1">Track parcel</a>
+                                    @endif
+                                </div>
+                           @endif
+                           @if ($order->status === 'cancelled' && $order->payment)
+                                <div class="review-note {{ $order->payment->status === 'refund_failed' ? '' : 'review-note--success' }} mt-2" role="status">
+                                    <span>
+                                        @if ($order->payment->status === 'refunded')
+                                            Refunded @money($order->payment->amount) to your PayPal account.
+                                        @elseif ($order->payment->status === 'refund_failed')
+                                            We couldn't refund this payment automatically. Our team will refund you within 2 business days.
+                                        @else
+                                            This order was cancelled.
+                                        @endif
+                                    </span>
+                                </div>
+                           @endif
                            <div class="mt-2">                           
 
                                 @if($order->status == "confirmed")

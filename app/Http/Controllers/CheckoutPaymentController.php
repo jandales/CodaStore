@@ -114,6 +114,8 @@ class CheckoutPaymentController extends Controller
         session()->forget(self::SESSION_KEY);
         session(['checkout_completed_payments' => $done + [$token => $order->order_number]]);
 
+        app(\App\Services\OrderNotifier::class)->confirmed($order);
+
         return redirect()->route('checkout.completed')->with('order_number', $order->order_number);
     }
 

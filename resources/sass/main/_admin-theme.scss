@@ -721,3 +721,14 @@ $admin-side: 272px;
     }
     .admin-body .side-bar.show + .admin-main .menubar a { background: var(--a-surface); }
 }
+
+// Order page: shipment details and status form
+.ship-info { margin-bottom: 20px; padding: 16px; border: 1px solid var(--a-line); border-radius: var(--a-radius-sm); background: var(--a-bg); }
+.ship-info h4 { margin: 0 0 8px; font-size: 14px; font-weight: 700; }
+.ship-info p { display: flex; gap: 8px; font-size: 14px; margin: 4px 0; }
+.ship-info p span { min-width: 120px; color: var(--a-muted); }
+.order-status-form { display: grid; gap: 4px; max-width: 420px; }
+.order-status-form select,
+.order-status-form input { width: 100%; }
+.order-status-form .btn { justify-self: start; margin-top: 8px; }
+.ship-note { margin-top: 8px; font-size: 12.5px; color: var(--a-muted); }
