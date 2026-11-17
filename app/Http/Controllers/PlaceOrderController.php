@@ -17,9 +17,14 @@ class PlaceOrderController extends Controller
                 'message' => 'order successfully create',
                 'route' => route('checkout.completed'),
             ]);         
-        } catch (Exception $e) {
-            return response()->json(['route' => route('server.error'), 500]);  
-        } 
+        } catch (\App\Exceptions\OutOfStockException $e) {
+            return response()->json(['status' => 422, 'message' => $e->getMessage(), 'route' => route('cart')], 422);
+        } catch (\RuntimeException $e) {
+            return response()->json(['status' => 422, 'message' => $e->getMessage(), 'route' => route('cart')], 422);
+        } catch (\Throwable $e) {
+            report($e);
+            return response()->json(['status' => 500, 'message' => 'Something went wrong. Please try again.', 'route' => route('server.error')], 500);
+        }
     }
 
    

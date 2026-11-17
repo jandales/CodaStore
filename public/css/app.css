@@ -8405,6 +8405,12 @@ input[type=radio] {
   text-align: left;
 }
 
+.cart-line__stock {
+  font-size: var(--fs-xs);
+  color: var(--danger);
+  letter-spacing: 0;
+}
+
 .container:has(> .account) {
   max-width: var(--container);
   padding: 0 var(--s3);

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\OutOfStockException;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Stock;
@@ -20,16 +21,32 @@ class PlaceOrderServices {
     private $provider = 'card';
     private $order;
     private $status = 'confirmed';
+    private $payment = [];
     
     private function orderNumber()
     {      
         return date('Y')."".now()->timestamp;         
     }
    
-    public function storeOrder(Request $request)
+    /**
+     * Create the order from the current bag and checkout session.
+     *
+     * @param  array|null  $payment  ['provider' => 'paypal', 'reference' => capture id, 'status' => 'paid']
+     */
+    public function storeOrder(Request $request, ?array $payment = null)
     {
+        $this->payment = $payment ?? [
+            'provider' => $this->provider,
+            'reference' => $request->input('card_number'),
+            'status' => 'paid',
+        ];
        
-        $cart = Cart::ByUser()->first(); 
+        $cart = Cart::ByUser()->first();
+
+        if (!$cart || $cart->items->isEmpty()) {
+            throw new \RuntimeException('Your bag is empty.');
+        }
+
         $shipping_method = ShippingMethod::find(session()->get('shipping_method')['id']); 
         $shipping_charge = $shipping_method->amount;
 
@@ -38,6 +55,9 @@ class PlaceOrderServices {
         $gross_total += $tax; 
 
         return DB::transaction(function () use ($cart,$shipping_method, $shipping_charge, $gross_total,$tax,$request){
+
+            // Check and take the stock first, under a row lock, so two shoppers can't buy the last unit.
+            Self::reserveStock($cart->items);
 
             $this->order = Order::create([    
                 'order_number' => Self::orderNumber(),
@@ -113,9 +133,9 @@ class PlaceOrderServices {
         return OrderPayment::create([
             'order_id' => $this->order->id,
             'amount' => $amount,
-            'provider' => $this->provider,
-            'reference_number' => request()->input('card_number'),
-            'status' => 'paid',
+            'provider' => $this->payment['provider'],
+            'reference_number' => $this->payment['reference'],
+            'status' => $this->payment['status'],
         ]);
     }
        
@@ -131,9 +151,34 @@ class PlaceOrderServices {
                 'price' => $item->product->regular_price,
                 'properties' => $item->attributes,
             ]); 
-              
-            Stock::where('product_id', $item->product_id)->decrement('qty', $item->qty);
+
             $item->delete();
+        }
+    }
+
+    /**
+     * Lock the stock rows for every product in the bag, make sure there is enough of each,
+     * then subtract. Throws OutOfStockException (rolling back the whole order) if not.
+     */
+    private function reserveStock($items)
+    {
+        $needed = [];
+        foreach ($items as $item) {
+            $needed[$item->product_id] = ($needed[$item->product_id] ?? 0) + (int) $item->qty;
+        }
+
+        $stocks = Stock::whereIn('product_id', array_keys($needed))->lockForUpdate()->get()->keyBy('product_id');
+
+        foreach ($needed as $productId => $qty) {
+            $available = (int) optional($stocks->get($productId))->qty;
+            if ($available < $qty) {
+                $name = optional($items->firstWhere('product_id', $productId)->product)->name ?? 'This item';
+                throw new OutOfStockException($name, $available);
+            }
+        }
+
+        foreach ($needed as $productId => $qty) {
+            Stock::where('product_id', $productId)->decrement('qty', $qty);
         }
     }
 
