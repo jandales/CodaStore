@@ -10,11 +10,14 @@ class OrderPayment extends Model
 {
     use HasFactory, DateTimeFormat;
 
+    public const STATUS_PAID = 'paid';
+    public const STATUS_REFUNDED = 'refunded';
+    public const STATUS_REFUND_FAILED = 'refund_failed';
+
     protected $fillable = [
         'order_id',
         'amount',
         'provider',
-        'card_cvc',
         'reference_number',
         'status'       
     ];

@@ -30,12 +30,22 @@ class ProductRequest extends FormRequest
                 'slug' => 'string',                 
                 'sku' => 'required|string',   
                 'barcode' => 'required|string', 
-                'sale_price' => 'required|numeric',
-                'regular_price' => 'required|numeric',
+                'regular_price' => 'required|numeric|min:1',
+                'on_sale' => 'nullable|boolean',
+                // Optional; required and below the regular price only when the product is on sale.
+                'sale_price' => 'nullable|numeric|min:0|required_if:on_sale,1' . ($this->input('on_sale') ? '|lt:regular_price' : ''),
                 'status' => 'numeric',
                 'is_taxable' => 'numeric',
                 'featured' => 'numeric',
              
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'sale_price.required_if' => 'Enter a sale price, or untick "On sale".',
+            'sale_price.lt' => 'The sale price must be lower than the regular price.',
         ];
     }
 }

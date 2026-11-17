@@ -11,14 +11,14 @@ class AdminOrderServices
 {
 
     public $COMPLETED = 'completed';
-    public $TOSHIP = 'to-ship';
-    public $TORECIEVE = 'to-receive';
-    private $CANCELLED = 'cancelled';
+    public $TOSHIP = Order::STATUS_CONFIRMED;
+    public $TORECIEVE = Order::STATUS_SHIPPED;
+    private $CANCELLED = Order::STATUS_CANCELLED;
     private $perpage;
 
     public function __construct()
     {
-        $this->services = config('settings.app.perpage');
+        $this->perpage = config('setting.app.perpage');
     }
 
 
@@ -35,29 +35,28 @@ class AdminOrderServices
     public function updateStatus(Order $order)
     {
         $status = request()->status;
-       
-        if ($status == 'shipped')
-        {
-            $order->shipped_at = now(); 
-        }           
-        
-        if($status == 'completed')
-        {
+
+        // Cancelling also restores stock, gives the coupon back, refunds and emails the customer.
+        if ($status == Order::STATUS_CANCELLED) {
+            return app(\App\Services\Orders\CancelOrder::class)->handle($order);
+        }
+
+        if ($status == Order::STATUS_SHIPPED) {
+            $order->shipped_at = now();
+            $order->courier = request()->courier;
+            $order->tracking_number = trim((string) request()->tracking_number);
+        }
+
+        if ($status == Order::STATUS_COMPLETED) {
             $order->delivered_at = now();
         }
 
-        if ($status == 'completed') 
-        {
-            $order->cancelled_at = now();
-        }
-        
-        // if ($status == 'returned')            
-        // {
-        //     $order->returned_at = now();
-        // }
-
-        $order->status = $status;         
+        $order->status = $status;
         $order->save();
+
+        if ($status == Order::STATUS_SHIPPED) {
+            app(\App\Services\OrderNotifier::class)->shipped($order);
+        }
 
         return $order;
     }
@@ -72,7 +71,7 @@ class AdminOrderServices
 
         foreach($orders as $order)
         {
-           $shipped_at =  Carbon::parse($order->created_at);  
+           $shipped_at =  Carbon::parse($order->shipped_at ?? $order->created_at);
            if($currentDate->diffInDays($shipped_at) > 1)
            {               
                 $order->delivered_at = now();

@@ -50,11 +50,17 @@
                                             </a>
                                             <div class="cart-line__info">
                                                 <a class="cart-line__name capitalize" href="{{ $itemUrl }}">{{ $item->product->name }}</a>
-                                                <span class="cart-line__meta">@money($item->product->regular_price)</span>
+                                                <span class="cart-line__meta">@include('components.price', ['product' => $item->product, 'compact' => true])</span>
                                                 @if ($item->attributes != null)
                                                     @foreach ($item->attributes as $key => $variant)
                                                         <span class="cart-line__meta capitalize">{{ $key }}: {{ $variant }}</span>
                                                     @endforeach
+                                                @endif
+                                                @php $inStock = (int) optional($item->product->stock)->qty; @endphp
+                                                @if ($inStock < $item->qty)
+                                                    <span class="cart-line__stock" role="alert">
+                                                        {{ $inStock === 0 ? 'Sold out. Please remove this item.' : 'Only ' . $inStock . ' left. Please lower the quantity.' }}
+                                                    </span>
                                                 @endif
                                                 <button type="button" class="cart-item-remove cart-line__remove" data-id="{{ $item->id }}">Remove</button>
                                             </div>

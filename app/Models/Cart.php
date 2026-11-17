@@ -54,9 +54,26 @@ class Cart extends Model
         $total = 0;
         foreach($cart->items as $item)
         {
-            $total += $item->qty * $item->product->regular_price;
+            $total += $item->qty * $item->product->effectivePrice();
         }
         return $total;
+    }
+
+    /**
+     * Recompute the stored total from the current items and prices, so checkout never
+     * charges a stale amount.
+     */
+    public function recalculateTotal(): self
+    {
+        $this->loadMissing('items.product');
+        $total = 0;
+        foreach ($this->items as $item) {
+            $total += $item->qty * $item->product->effectivePrice();
+        }
+        $this->total = $total;
+        $this->save();
+
+        return $this;
     }
 
     public function hasThisProduct($id)
@@ -72,7 +89,7 @@ class Cart extends Model
 
         foreach($cart->items as $item) {
 
-            $total += $item->qty * $item->product->regular_price;
+            $total += $item->qty * $item->product->effectivePrice();
 
         }       
 

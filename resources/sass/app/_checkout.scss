@@ -372,3 +372,44 @@
     font-weight: 500;
     text-align: left;
 }
+
+.cart-line__stock { font-size: var(--fs-xs); color: var(--danger); letter-spacing: 0; }
+
+// PayPal payment option and order-complete page
+.paypal-box {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--s2);
+    padding: var(--s3);
+    border: 1px solid var(--ink);
+    background: var(--surface);
+}
+.paypal-box > i { font-size: 1.6rem; color: #003087; margin-top: 2px; }
+.paypal-box strong { display: block; font-size: var(--fs-base); font-weight: 500; }
+.paypal-box span { display: block; margin-top: 4px; font-size: var(--fs-sm); color: var(--ink-muted); letter-spacing: 0; }
+#pay-with-paypal i { font-size: 1rem; }
+
+.order-done {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--s2);
+    max-width: 520px;
+    margin: var(--s8) auto;
+    text-align: center;
+}
+.order-done__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #EEF4F0;
+    color: var(--success);
+    font-size: 1.3rem;
+}
+.order-done__title { margin: 0; font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 400; }
+.order-done__number { font-size: var(--fs-base); }
+.order-done__text { color: var(--ink-muted); line-height: 1.7; }
+.order-done__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s1); margin-top: var(--s2); }

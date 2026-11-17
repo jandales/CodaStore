@@ -30,12 +30,54 @@ class Order extends Model
         'net_total',
         'coupon_id',
         'coupon_amount',
+        'courier',
+        'tracking_number',
     ];
 
-    private $COMPLETED = 'completed';
-    private $TOSHIP = 'confirmed';
-    private $TORECIEVE = 'shipped';
-    private $CANCELLED = 'cancelled';
+    protected $casts = [
+        'shipped_at' => 'datetime',
+        'delivered_at' => 'datetime',
+        'returned_at' => 'datetime',
+        'cancelled_at' => 'datetime',
+    ];
+
+    // Order lifecycle: confirmed (paid, to ship) -> shipped -> completed; or cancelled / returned.
+    public const STATUS_CONFIRMED = 'confirmed';
+    public const STATUS_SHIPPED = 'shipped';
+    public const STATUS_COMPLETED = 'completed';
+    public const STATUS_CANCELLED = 'cancelled';
+    public const STATUS_RETURNED = 'returned';
+
+    private $COMPLETED = self::STATUS_COMPLETED;
+    private $TOSHIP = self::STATUS_CONFIRMED;
+    private $TORECIEVE = self::STATUS_SHIPPED;
+    private $CANCELLED = self::STATUS_CANCELLED;
+
+    /** Courier display name, e.g. "LBC Express". */
+    public function courierName(): ?string
+    {
+        if (!$this->courier) {
+            return null;
+        }
+
+        return config("couriers.{$this->courier}.name", $this->courier);
+    }
+
+    /** Public tracking link when the courier has a URL configured in config/couriers.php. */
+    public function trackingUrl(): ?string
+    {
+        $template = config("couriers.{$this->courier}.url");
+        if (!$template || !$this->tracking_number) {
+            return null;
+        }
+
+        return str_replace('{number}', rawurlencode($this->tracking_number), $template);
+    }
+
+    public function canBeCancelled(): bool
+    {
+        return $this->status === self::STATUS_CONFIRMED;
+    }
 
     public function user()
     {

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\OutOfStockException;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Stock;
@@ -17,27 +18,83 @@ use Illuminate\Support\Facades\DB;
 
 class PlaceOrderServices {
     
-    private $provider = 'card';
     private $order;
     private $status = 'confirmed';
+    private $payment = [];
     
     private function orderNumber()
     {      
         return date('Y')."".now()->timestamp;         
     }
    
-    public function storeOrder(Request $request)
+    /**
+     * The amount to charge for the current bag, after re-checking it. Used before sending the
+     * shopper to PayPal; storeOrder() recomputes the same figure when the payment comes back.
+     *
+     * @return array{total: float, shipping_charge: float, tax: float}
+     */
+    public function quote(): array
     {
-       
-        $cart = Cart::ByUser()->first(); 
-        $shipping_method = ShippingMethod::find(session()->get('shipping_method')['id']); 
-        $shipping_charge = $shipping_method->amount;
+        $cart = Self::currentCart();
+        Self::assertStock($cart->items);
+        $totals = Self::totals($cart);
 
-        $gross_total = (double)$cart->grandTotal();
-        $tax = tax($gross_total);
-        $gross_total += $tax; 
+        return ['total' => round($totals['total'], 2), 'shipping_charge' => (float) $totals['shipping_charge'], 'tax' => (float) $totals['tax']];
+    }
+
+    private function currentCart(): Cart
+    {
+        $cart = Cart::ByUser()->first();
+
+        if (!$cart || $cart->items->isEmpty()) {
+            throw new \RuntimeException('Your bag is empty.');
+        }
+
+        // Always charge from current prices, not a total saved when items were added.
+        return $cart->recalculateTotal();
+    }
+
+    /**
+     * Bag total + shipping - coupon + tax. Shipping comes from the chosen shipping method,
+     * which is also what is stored on the order.
+     */
+    private function totals(Cart $cart): array
+    {
+        $shipping_method = ShippingMethod::find(optional((object) session()->get('shipping_method'))->id);
+        if (!$shipping_method) {
+            throw new \RuntimeException('Please choose a shipping method.');
+        }
+
+        $shipping_charge = (float) $shipping_method->amount;
+        $subtotal = (float) $cart->total + $shipping_charge - (float) $cart->discount;
+        $tax = tax($subtotal);
+
+        return [
+            'shipping_method' => $shipping_method,
+            'shipping_charge' => $shipping_charge,
+            'tax' => $tax,
+            'total' => $subtotal + $tax,
+        ];
+    }
+
+    /**
+     * Create the order from the current bag and checkout session.
+     *
+     * Only call this after the payment provider has confirmed the payment.
+     *
+     * @param  array  $payment  ['provider' => 'paypal', 'reference' => capture id, 'status' => 'paid']
+     */
+    public function storeOrder(Request $request, array $payment)
+    {
+        $this->payment = $payment;
+       
+        $cart = Self::currentCart();
+        ['shipping_method' => $shipping_method, 'shipping_charge' => $shipping_charge, 'tax' => $tax, 'total' => $gross_total] = Self::totals($cart);
 
         return DB::transaction(function () use ($cart,$shipping_method, $shipping_charge, $gross_total,$tax,$request){
+
+            // Check and take the stock first, under a row lock, so two shoppers can't buy the last unit.
+            Self::reserveStock($cart->items);
 
             $this->order = Order::create([    
                 'order_number' => Self::orderNumber(),
@@ -113,9 +170,9 @@ class PlaceOrderServices {
         return OrderPayment::create([
             'order_id' => $this->order->id,
             'amount' => $amount,
-            'provider' => $this->provider,
-            'reference_number' => request()->input('card_number'),
-            'status' => 'paid',
+            'provider' => $this->payment['provider'],
+            'reference_number' => $this->payment['reference'],
+            'status' => $this->payment['status'],
         ]);
     }
        
@@ -128,12 +185,49 @@ class PlaceOrderServices {
                 'order_id' => $this->order->id,
                 'product_id' => $item->product_id,
                 'qty' => $item->qty,
-                'price' => $item->product->regular_price,
+                'price' => $item->product->effectivePrice(),
                 'properties' => $item->attributes,
             ]); 
-              
-            Stock::where('product_id', $item->product_id)->decrement('qty', $item->qty);
+
             $item->delete();
+        }
+    }
+
+    /**
+     * Lock the stock rows for every product in the bag, make sure there is enough of each,
+     * then subtract. Throws OutOfStockException (rolling back the whole order) if not.
+     */
+    private function reserveStock($items)
+    {
+        $needed = [];
+        foreach ($items as $item) {
+            $needed[$item->product_id] = ($needed[$item->product_id] ?? 0) + (int) $item->qty;
+        }
+
+        Self::assertStock($items, true);
+
+        foreach ($needed as $productId => $qty) {
+            Stock::where('product_id', $productId)->decrement('qty', $qty);
+        }
+    }
+
+    /** Throw OutOfStockException if any product in the bag has fewer units than requested. */
+    private function assertStock($items, bool $lock = false)
+    {
+        $needed = [];
+        foreach ($items as $item) {
+            $needed[$item->product_id] = ($needed[$item->product_id] ?? 0) + (int) $item->qty;
+        }
+
+        $query = Stock::whereIn('product_id', array_keys($needed));
+        $stocks = ($lock ? $query->lockForUpdate() : $query)->get()->keyBy('product_id');
+
+        foreach ($needed as $productId => $qty) {
+            $available = (int) optional($stocks->get($productId))->qty;
+            if ($available < $qty) {
+                $name = optional($items->firstWhere('product_id', $productId)->product)->name ?? 'This item';
+                throw new OutOfStockException($name, $available);
+            }
         }
     }
 

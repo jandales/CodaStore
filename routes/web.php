@@ -19,10 +19,10 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\CheckoutPaymentController;
+use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CheckOutController;
 use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\PlaceOrderController;
 use App\Http\Controllers\SocialSiteController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ImageController;
@@ -41,7 +41,6 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminPaymentController;
-use App\Http\Controllers\UserPaymentOptionController;
 use App\Http\Controllers\Auth\AdminRegisterController;
 use App\Http\Controllers\Auth\User\RegisterController;
 use App\Http\Controllers\Auth\User\UserLoginController;
@@ -85,12 +84,6 @@ Route::controller(AppController::class)->group(function () {
 
 Route::post('/send-message', [SendUsEmailController::class, 'send'])->name('sendMessage');
 
-Route::controller(AppController::class)->group(function () {
-    Route::get('/paypal', 'index')->name('paypal');
-    Route::get('/paypal-process', 'process')->name('paypal-process');
-    route::get('/paypal-success','success')->name('processSuccess');
-    Route::get('/paypal-cancel','cancel')->name('processCancel');
-});
 
 /*
 |--------------------------------------------------------------------------
@@ -130,6 +123,13 @@ Route::group(['middleware' => 'auth'], function(){
         Route::delete('/{review:id}','destroy')->name('review.destroy');
     });
 
+    // Wishlist (heart button posts here; guests are sent to sign in by the auth middleware).
+    Route::controller(WishlistController::class)->group(function () {
+        Route::get('/account/wishlist', 'index')->name('account.wishlist');
+        Route::post('/wishlist/{product:id}', 'toggle')->name('wishlist.toggle');
+        Route::delete('/wishlist/{product:id}', 'destroy')->name('wishlist.remove');
+    });
+
     Route::prefix('account')->group(function () {
         Route::controller(UserController::class)->group(function () {
             Route::get('/', 'account')->name('account');   
@@ -152,17 +152,6 @@ Route::group(['middleware' => 'auth'], function(){
         });
     });
 
-    Route::controller(UserPaymentOptionController::class)->prefix('payment-option')->group(function () {
-         // payment Method
-        Route::get('/', 'index')->name('account.payment-option');
-        Route::get('/create', 'create')->name('account.payment-option.create');    
-        Route::post('/store',  'store')->name('account.payment-option.store');    
-        Route::get('/edit/{option:id}',  'edit')->name('account.payment-option.edit');    
-        Route::put('/update/{option:id}',  'update')->name('account.payment-option.update');    
-        Route::delete('/destroy/{option:id}',  'destroy')->name('account.payment-option.destroy');    
-        Route::put('/status/{option:id}',  'updateStatus')->name('account.payment-option.update.status');  
-
-    });
 
     Route::controller(CheckOutController::class)->prefix('checkout')->group(function () {
         Route::get('/information', 'index')->name('checkout.information');
@@ -175,7 +164,12 @@ Route::group(['middleware' => 'auth'], function(){
         Route::get('/order-details/{order}', 'details')->name('checkout.details');  
     });
 
-    Route::post('/pay-now/store',  [PlaceOrderController::class, 'store'])->name('checkout.paynow');  
+    // Payment happens on PayPal; the order is created only after PayPal confirms the capture.
+    Route::controller(CheckoutPaymentController::class)->prefix('checkout/paypal')->group(function () {
+        Route::post('/', 'start')->name('checkout.paypal.start');
+        Route::get('/return', 'return')->name('checkout.paypal.return');
+        Route::get('/cancel', 'cancel')->name('checkout.paypal.cancel');
+    });
 
     Route::controller(OrderController::class)->prefix('orders')->group(function () {
         Route::get('/{status}', 'index')->name('account.orders');

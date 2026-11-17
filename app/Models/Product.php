@@ -18,43 +18,86 @@ class Product extends Model
 {
 
     use HasFactory, SoftDeletes, DateTimeFormat, Crypted;
-    
+
      /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
+    protected $appends = ['effective_price'];
+
     protected $fillable = [
         'name',
         'category_id',
-        'slug',        
+        'slug',
         'short_description',
         'imagePath',
         'long_description',
-        'sku',  
-        'barcode',     
+        'sku',
+        'barcode',
         'tags',
         'sale_price',
         'regular_price',
+        'on_sale',
         'status',
         'is_taxable',
         'featured',
         'admin_id'
     ];
 
-    // protected $attributes = [    
+    // protected $attributes = [
     //     'is_taxable' => 0,
     // ];
 
     public function category()
-    {      
+    {
         return $this->belongsTo(Category::class);
+    }
+
+    /** effective_price in JSON responses (used by the side-cart drawer). */
+    public function getEffectivePriceAttribute(): float
+    {
+        return $this->effectivePrice();
+    }
+
+    /** On sale only when the admin switched it on and the sale price is below the regular price. */
+    public function isOnSale(): bool
+    {
+        return (bool) $this->on_sale
+            && (float) $this->sale_price > 0
+            && (float) $this->sale_price < (float) $this->regular_price;
+    }
+
+    /**
+     * The price a shopper pays for one unit right now. Every cart, checkout and order total
+     * reads this, so sale pricing lives in one place.
+     */
+    public function effectivePrice(): float
+    {
+        return $this->isOnSale() ? (float) $this->sale_price : (float) $this->regular_price;
+    }
+
+    /** Whole-number percentage off, e.g. 20 for 20% off; 0 when not on sale. */
+    public function discountPercent(): int
+    {
+        if (!$this->isOnSale()) {
+            return 0;
+        }
+
+        return (int) round((1 - (float) $this->sale_price / (float) $this->regular_price) * 100);
+    }
+
+    /** SQL for the effective price, for sorting and filtering in queries. */
+    public static function effectivePriceSql(string $table = 'products'): string
+    {
+        return "(CASE WHEN {$table}.on_sale = 1 AND {$table}.sale_price > 0 AND {$table}.sale_price < {$table}.regular_price"
+            . " THEN {$table}.sale_price ELSE {$table}.regular_price END)";
     }
 
     public function stock()
     {
         return $this->belongsTo(Stock::class, 'id', 'product_id');
-    }   
+    }
 
     public function photos()
     {
@@ -68,11 +111,11 @@ class Product extends Model
 
     public function hasVariants()
     {
-        return $this->variants->count();        
+        return $this->variants->count();
     }
 
     public function attributes()
-    { 
+    {
         return $this->hasMany(ProductAttribute::class);
     }
 
@@ -86,10 +129,14 @@ class Product extends Model
         return $this->hasMany(Review::class);
     }
 
-    public function isWishlisted()
+    /** Whether the signed-in customer saved this product (false for guests). */
+    public function isWishlisted(): bool
     {
-        $user = auth()->user()->id;
-        return $this->wishlist->contains('user_id',  $user);        
+        if (!auth()->check()) {
+            return false;
+        }
+
+        return $this->wishlist->contains('user_id', auth()->id());
     }
 
     public function reviewby(User $user)
@@ -99,7 +146,7 @@ class Product extends Model
 
     public function rating()
     {
-        $result = $this->reviews->sum('rating') / 5;        
+        $result = $this->reviews->sum('rating') / 5;
         return round($result);
     }
 
@@ -107,12 +154,12 @@ class Product extends Model
     public function carts()
     {
         return $this->hasMany(Cart::class);
-    }   
+    }
 
     public function hasInCart()
     {
         return $this->carts->where('product_id', $this->id)->contains('user_id',auth()->user()->id);
-    }  
+    }
 
 
 
@@ -129,14 +176,14 @@ class Product extends Model
     public function scopePublished($query)
     {
        return $query->where('status',1);
-    } 
-    
+    }
+
 
     public function scopeSearch($query,$input)
     {
-        return $query->where('name','like','%' . $input . '%')                  
+        return $query->where('name','like','%' . $input . '%')
                      ->orWhere('slug','like','%' . $input . '%');
-                
+
     }
 
     public function scopeFilterByCategory($query, $filter)
@@ -146,7 +193,7 @@ class Product extends Model
                     if($filter != 'all'){
                         $q->where('slug', $filter)
                         ->orWhere('name', $filter);
-                    }                   
+                    }
                 });
     }
 
@@ -154,29 +201,41 @@ class Product extends Model
     public function scopePublishedSearch($query,$input)
     {
         return $query->where('status',1)
-                     ->where('name','like','%' . $input . '%')                  
+                     ->where('name','like','%' . $input . '%')
                      ->orWhere('slug','like','%' . $input . '%');
-                
+
     }
 
     public function scopeTags($query, $tag)
-    {     
-        return $query->where('tags','like','%' . $tag . '%');                                    
+    {
+        return $query->where('tags','like','%' . $tag . '%');
     }
 
+    public function stockQty(): int
+    {
+        return max(0, (int) optional($this->stock)->qty);
+    }
+
+    public function isSoldOut(): bool
+    {
+        return $this->stockQty() === 0;
+    }
+
+    /** Short stock note for the product page, or null when there is plenty. */
     public function minQty()
     {
-        if($this->stock->qty == 0) return "Items not Available";
-        
-        if($this->stock->qty < 20)  return $this->stock->qty . " items left";
-        
+        if ($this->isSoldOut()) return 'Sold out';
+
+        if ($this->stockQty() < 20) return 'Only ' . $this->stockQty() . ' left';
+
+        return null;
     }
 
 
-    
 
-   
 
-   
+
+
+
 
 }

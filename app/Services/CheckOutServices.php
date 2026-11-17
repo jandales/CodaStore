@@ -77,8 +77,7 @@ class CheckOutServices
 
         if(!$cart) return false;
 
-        $user_payment_option = auth()->user()->defaultPayment()->first();     
-        return (object)['cart' => $cart,'user_payment_option' => $user_payment_option];      
+        return (object)['cart' => $cart];      
     }
 
     public function updateShippingMethod(Request $request)

@@ -37,11 +37,17 @@ class AdminOrderController extends Controller
         return view('admin.orders.show')->with('order' , $order);
     } 
 
-    public function updateStatus(Order $order)
+    public function updateStatus(\App\Http\Requests\UpdateOrderStatusRequest $request, Order $order)
     {
-        $this->services->updateStatus($order);
+        $order = $this->services->updateStatus($order);
 
-        return back()->with('success','Order status successfully updated');
+        $messages = [
+            Order::STATUS_SHIPPED => 'Order marked as shipped. The customer has been emailed the tracking number.',
+            Order::STATUS_COMPLETED => 'Order marked as delivered.',
+            Order::STATUS_CANCELLED => 'Order cancelled. Stock was restored and the customer has been emailed.',
+        ];
+
+        return back()->with('success', $messages[$order->status] ?? 'Order status updated');
     }
 
     public function search(Request $request)

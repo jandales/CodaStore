@@ -15,7 +15,6 @@ use App\Http\Controllers\Api\PlaceOrderController;
 use App\Http\Controllers\Api\UserAddressController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\ShippingMethodController;
-use App\Http\Controllers\Api\UserPaymentOptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -111,25 +110,6 @@ Route::group(['middleware' => ['auth:sanctum']], function ()  {
 
         });
 
-        Route::controller(UserPaymentOptionController::class)->group(function () {
-                
-                Route::get('/user/paymentOption', 'index');
-
-                Route::get('/user/paymentOption/{id}',  'show');
-
-                Route::get('/user/paymentOption/default/1',  'default');
-
-                Route::get('/user/paymentOption/card-number/{card_number}',  'findByCardNumber');
-
-                Route::post('/user/paymentOption',  'store');
-
-                Route::put('/user/paymentOption/{id}',  'update');
-
-                Route::patch('/user/paymentOption/{id}',  'setActive');
-
-                Route::delete('/user/paymentOption/{id}',  'destroy');
-
-        });
 
         Route::controller(OrderController::class)->group(function () {
                 

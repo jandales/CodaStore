@@ -42,7 +42,7 @@
 
             <div class="description pdp-info">
                 <h1 class="title pdp-title capitalize">{{ $product->name }}</h1>
-                <p class="price pdp-price">@money($product->regular_price)</p>
+                <p class="pdp-price">@include('components.price', ['product' => $product])</p>
 
                 <div class="pdp-rating">
                     @if ($product->reviews->count() > 0)
@@ -62,9 +62,15 @@
                 </ul>
 
                 @if ($product->minQty())
-                    <p class="pdp-stock"><i class="fas fa-circle" aria-hidden="true"></i> {{ $product->minQty() }}</p>
+                    <p class="pdp-stock {{ $product->isSoldOut() ? 'pdp-stock--out' : '' }}"><i class="fas fa-circle" aria-hidden="true"></i> {{ $product->minQty() }}</p>
                 @endif
 
+                @if ($product->isSoldOut())
+                <div class="pdp-buy">
+                    <button type="button" class="btn btn-dark pdp-add pdp-add--soldout" disabled aria-disabled="true">Sold out</button>
+                    <p class="pdp-muted">This item is out of stock right now.</p>
+                </div>
+                @else
                 <div class="pdp-buy">
                     <label for="quantity-input" class="pdp-label">Quantity</label>
                     <div class="pdp-buy__row">
@@ -76,6 +82,12 @@
                         <button id="cart-button" data-id="{{ $product->encryptedId() }}" url="{{ route('cart.store', [$product->encryptedId()]) }}" class="btn btn-dark btn-add-cart pdp-add">Add to bag</button>
                     </div>
                 </div>
+                @endif
+
+                @include('components.wishlist-heart', ['product' => $product, 'class' => 'pdp-wish', 'label' => true])
+                @if (session('wishlist_message'))
+                    <p class="pdp-muted" role="status">{{ session('wishlist_message') }}</p>
+                @endif
 
                 <ul class="pdp-perks" role="list">
                     <li><i class="fas fa-truck" aria-hidden="true"></i> Shipping calculated at checkout</li>

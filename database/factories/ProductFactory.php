@@ -35,6 +35,7 @@ class ProductFactory extends Factory
             'barcode' => $this->faker->phoneNumber(),      
             'tags' => $name,
             'sale_price' => 399,
+            'on_sale' => false,
             'regular_price' => 500,
             'status' => 1,
             'admin_id' => 1,

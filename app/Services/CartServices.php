@@ -33,14 +33,14 @@ class CartServices
         } 
 
 
-        if($productQuantity == 0)  return response()->json(['status' => 500, 'message' => 'Product is not available' ]);   
+        if($productQuantity == 0)  return response()->json(['status' => 422, 'message' => 'This item is sold out.'], 422);   
 
         $cart = Cart::ByUser()->first();
         
 
         if($productQuantity <  $newQuantity) $newQuantity = $productQuantity; 
         
-        $total = $newQuantity * $product->regular_price;
+        $total = $newQuantity * $product->effectivePrice();
 
         if($cart)
         {   

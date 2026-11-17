@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use App\Models\Coupon;
 use App\Models\Product;
 use App\Http\Traits\Crypted;
-use App\Models\UserPaymentOption;
 use Laravel\Sanctum\HasApiTokens;
 use App\Http\Traits\DateTimeFormat;
 use App\Models\UserShippingAddress;
@@ -74,15 +73,10 @@ class User extends Authenticatable
         return $this->hasMany(Review::class);
     }
 
-    public function payment_options()
+    public function wishlist()
     {
-        return $this->hasMany(UserPaymentOption::class);
+        return $this->hasMany(Wishlist::class);
     }
-
-    public function defaultPayment()
-    {
-        return $this->payment_options->where('status', 1);
-    } 
 
     public function carts()
     {

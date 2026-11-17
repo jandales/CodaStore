@@ -11,6 +11,11 @@ class Review extends Model
 {
     use HasFactory, DateTimeFormat, Crypted;
 
+    // New reviews start unblocked so the admin "unblocked" filter (block = 0) includes them.
+    protected $attributes = [
+        'block' => 0,
+    ];
+
     protected $fillable = [
         'product_id',
         'user_id', 

@@ -37,7 +37,7 @@ class CartController extends Controller
 
         $productQuantity = $product->stock->qty; 
 
-        if ($productQuantity == 0)  return response()->json(['status' => 500, 'message' => 'Product is not available' ]); 
+        if ($productQuantity == 0)  return response()->json(['status' => 422, 'message' => 'This item is sold out.'], 422); 
           
         $newQuantity = (int)$request->qty;  
         $total = 0; 
@@ -47,7 +47,7 @@ class CartController extends Controller
         $cart = Cart::ByUser()->first();        
 
         if ($productQuantity <  $newQuantity) $newQuantity = $productQuantity;         
-        $total = $newQuantity * $product->regular_price;
+        $total = $newQuantity * $product->effectivePrice();
 
         if ($cart) {   
             //check if an item  already in the cart;

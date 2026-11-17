@@ -19,10 +19,6 @@ function shippingAddress()
 {
     return  auth()->user()->shippingAddress;
 }
-function paymentOptions()
-{
-    return auth()->user()->payment_options;
-}
 function app_per_page()
 {
     return config('setting.app.perpage');
