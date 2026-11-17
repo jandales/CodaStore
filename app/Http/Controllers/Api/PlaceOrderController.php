@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Services\PlaceOrderServices;
-use App\Http\Requests\PaymentRequest;
 
 class PlaceOrderController extends Controller
 {

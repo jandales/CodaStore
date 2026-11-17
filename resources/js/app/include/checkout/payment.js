@@ -71,37 +71,5 @@ if (payNow) {
 }
 
 
-const paymentOptionChange = document.getElementById('payment-option-change');
-const paymentOptionInput = document.querySelectorAll('.payment-option-input');
-const confirmPaymentOption = document.getElementById('confirm-payment-option');
+// Saved cards were removed (payments go through PayPal).
 
-function SelectedPaymentOption(){
-    const shippingaddressmodal =  document.getElementById('payment-option-modal');
-    if(shippingaddressmodal){
-        return shippingaddressmodal.querySelector('.payment-option-item.active')        
-    }
-}
-
-if (paymentOptionChange){
-    paymentOptionChange.onclick = function(){
-        openSidebarModal('payment-option-modal');
-    }
-}
-
-paymentOptionInput.forEach(elem => {   
-    elem.onclick=  function(){
-       const paymentOptionItem = elem.parentElement;
-       SelectedPaymentOption().classList.remove('active');
-       paymentOptionItem.classList.add('active');    
-    }
-})
-
-if (confirmPaymentOption) {
-    confirmPaymentOption.onclick = function(e){
-        const form = document.getElementById('form-payment-option'); 
-        const input = SelectedPaymentOption().querySelector('input[type="radio"]');
-        const route = input.value;
-        form.setAttribute('action',route);   
-        form.submit(); 
-    }
-}

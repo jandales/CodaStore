@@ -40,7 +40,6 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminPaymentController;
-use App\Http\Controllers\UserPaymentOptionController;
 use App\Http\Controllers\Auth\AdminRegisterController;
 use App\Http\Controllers\Auth\User\RegisterController;
 use App\Http\Controllers\Auth\User\UserLoginController;
@@ -145,17 +144,6 @@ Route::group(['middleware' => 'auth'], function(){
         });
     });
 
-    Route::controller(UserPaymentOptionController::class)->prefix('payment-option')->group(function () {
-         // payment Method
-        Route::get('/', 'index')->name('account.payment-option');
-        Route::get('/create', 'create')->name('account.payment-option.create');    
-        Route::post('/store',  'store')->name('account.payment-option.store');    
-        Route::get('/edit/{option:id}',  'edit')->name('account.payment-option.edit');    
-        Route::put('/update/{option:id}',  'update')->name('account.payment-option.update');    
-        Route::delete('/destroy/{option:id}',  'destroy')->name('account.payment-option.destroy');    
-        Route::put('/status/{option:id}',  'updateStatus')->name('account.payment-option.update.status');  
-
-    });
 
     Route::controller(CheckOutController::class)->prefix('checkout')->group(function () {
         Route::get('/information', 'index')->name('checkout.information');

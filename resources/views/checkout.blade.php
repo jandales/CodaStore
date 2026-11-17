@@ -97,42 +97,6 @@
             </div>
         </div> 
     </div>
-    <div class="modal" id="payment-option-modal">
-        <div class="modal-sidebar">
-            <div class="sidebar-close">                    
-                <span class="close-drawer"><i class="fas fa-times"></i></span>
-            </div>         
-            <div class="sidebar-heading">
-                <p>Payment method</p>
-            </div>
-            <div class="sidebar-body">
-                @if (paymentOptions()->count() != 0)
-                    <form id="form-payment-option" method="post">
-                        @csrf          
-                        @method('PUT')    
-                        @foreach (paymentOptions() as $item)        
-                                <div class="payment-option-item {{$item->status == 1 ? 'active' : ''}}">
-                                    <input type="radio" name="selected"  class="payment-option-input"  value="{{route('account.payment-option.update.status',[ $item->id ])}}" {{$item->status == 1 ? 'checked' : ''}}>
-                                    <ul>
-                                        <li>{{ $item->card_name }}</li>
-                                        <li>{{ $item->card_number }}</li>
-                                    </ul>
-                                </div>                 
-                        @endforeach
-                        <button id="confirm-payment-option" class="btn btn-success w-12" >Confirm</button>
-                    </form>
-                @else
-                    <label class="block text-center">No saved payment methods</label>
-                @endif
-               
-            </div>
-           
-            <div class="sidebar-footer">
-                
-            </div>
-        </div> 
-    </div>
-
     <div class="spinner-wrapper">
         <div class="spinner-container">
            <div class="spinner"></div>

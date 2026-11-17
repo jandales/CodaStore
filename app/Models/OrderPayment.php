@@ -14,7 +14,6 @@ class OrderPayment extends Model
         'order_id',
         'amount',
         'provider',
-        'card_cvc',
         'reference_number',
         'status'       
     ];

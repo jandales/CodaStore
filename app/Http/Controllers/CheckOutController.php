@@ -39,7 +39,7 @@ class CheckOutController extends Controller
 
        if(!$result) return redirect()->route('cart'); 
 
-       return view('checkout.payment')->with(['cart' => $result->cart,'user_payment_option' => $result->user_payment_option ]);
+       return view('checkout.payment')->with(['cart' => $result->cart]);
     }
 
 

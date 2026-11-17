@@ -20,7 +20,6 @@ class AuthServiceProvider extends ServiceProvider
         Category::class => App\Policies\Category::class,
         User::class => App\Policies\UserPolicy::class,
         Order::class => App\Policies\OrderPolicy::class,
-        UserPaymentOption::class => App\Policies\UserPaymentOptionPolicy::class,
         UserShippingAddress::class => App\Policies\UserShippingAddressPolicy::class,
         Inbox::class => App\Policies\InboxPolicy::class,
         Coupon::class => App\Polocies\CouponPolicy::class,

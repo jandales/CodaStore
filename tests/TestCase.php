@@ -63,7 +63,8 @@ abstract class TestCase extends BaseTestCase
 
     protected function signInCustomer(?User $user = null): User
     {
-        $user = $user ?: User::factory()->create();
+        // Reload so every column (with database defaults) is present, as on a real request.
+        $user = ($user ?: User::factory()->create())->fresh();
         $this->actingAs($user, 'web');
 
         return $user;
