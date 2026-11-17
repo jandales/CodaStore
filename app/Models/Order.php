@@ -79,6 +79,11 @@ class Order extends Model
         return $this->status === self::STATUS_CONFIRMED;
     }
 
+    public function notes()
+    {
+        return $this->hasMany(OrderNote::class)->latest();
+    }
+
     public function returnRequest()
     {
         return $this->hasOne(OrderReturn::class);

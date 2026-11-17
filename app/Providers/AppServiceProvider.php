@@ -48,5 +48,10 @@ class AppServiceProvider extends ServiceProvider
 
          Paginator::defaultView('vendor.pagination.default');
 
+        // Activity log: changes made by staff in the admin.
+        \App\Models\Order::observe(\App\Observers\OrderObserver::class);
+        \App\Models\Product::observe(\App\Observers\ProductObserver::class);
+        \App\Models\Stock::observe(\App\Observers\StockObserver::class);
+
     }
 }

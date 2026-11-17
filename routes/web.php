@@ -75,7 +75,7 @@ Route::get('/auth/google/login', [UserLoginController::class, 'loginGoogle'])->n
 Route::get('/auth/google/callback-url', [UserLoginController::class, 'handleProviderCallback'])->name('handleProviderCallback');
 
 Route::controller(AppController::class)->group(function () {
-    Route::get('/', 'index')->name('home'); 
+    Route::get('/', 'index')->name('home');
     Route::get('/search', 'search')->name('search');
     Route::get('/create-cart-cookie', 'setCartCookie');
     Route::get('/about',  'about')->name('about');
@@ -98,28 +98,28 @@ Route::controller(CartController::class)->prefix('cart')->group(function () {
     Route::delete('/destroy',  'destroies')->name('cart.destroy.selected');
     Route::put('/update/{cartitem:id}', 'update')->name('cart.update');
     Route::put('/product/discount/update','updateProductsDiscount' );
-    Route::get('/count', 'count')->name('cart.count');    
+    Route::get('/count', 'count')->name('cart.count');
     Route::get('/coupon/activate',  'couponActivate')->name('coupon');
     Route::put('/coupon/remove',  'couponRemove')->name('coupon.remove');
-    Route::get('/select/{ShippingMethod:id}/shipping-method/','selectShippingMethod')->name('cart.select.shippingMethod');    //cart ajax request 
+    Route::get('/select/{ShippingMethod:id}/shipping-method/','selectShippingMethod')->name('cart.select.shippingMethod');    //cart ajax request
     Route::get('/get-user-cart', 'get_user_cart');
 });
 
 // Shop route
 Route::controller(ShopController::class)->prefix('shop')->group(function () {
-    Route::get( '/', [ ShopController::class, 'index' ])->name( 'shop' ); 
+    Route::get( '/', [ ShopController::class, 'index' ])->name( 'shop' );
     Route::get( '/{category:slug}', [ ShopController::class, 'category' ])->name( 'shop.category' );
     Route::get( '/item/{product:id}', [ ShopController::class, 'view' ])->name( 'shop.product' );
     Route::get('/sort-by/{value}', [ShopController::class, 'sortBy'])->name('shop.sort');
-    Route::post( '/search', [ ShopController::class, 'search' ])->name( 'shop.search' );    
+    Route::post( '/search', [ ShopController::class, 'search' ])->name( 'shop.search' );
 });
 
-Route::get( '/product/hasvariant/{product:id}', [ ShopController::class, 'hasVariants' ])->name( 'product.hasvariants' ); 
+Route::get( '/product/hasvariant/{product:id}', [ ShopController::class, 'hasVariants' ])->name( 'product.hasvariants' );
 
 Route::group(['middleware' => 'auth'], function(){
     Route::controller(ReviewController::class)->prefix('review')->group(function () {
         Route::post('/store/{product:id}','store')->name('review.store');
-        Route::put('/{review:id}/edit/{rate}', 'update')->name('review.update');    
+        Route::put('/{review:id}/edit/{rate}', 'update')->name('review.update');
         Route::delete('/{review:id}','destroy')->name('review.destroy');
     });
 
@@ -132,22 +132,22 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::prefix('account')->group(function () {
         Route::controller(UserController::class)->group(function () {
-            Route::get('/', 'account')->name('account');   
+            Route::get('/', 'account')->name('account');
             Route::prefix('profile')->group(function () {
-                Route::get('/password','password')->name('account.password');        
-                Route::get('/upload/avatar','upload')->name('account.upload');        
-                Route::get('/edit', 'edit')->name('account.edit');            
+                Route::get('/password','password')->name('account.password');
+                Route::get('/upload/avatar','upload')->name('account.upload');
+                Route::get('/edit', 'edit')->name('account.edit');
                 Route::put('/change-password','changePassword')->name('account.changePassword');
-            });              
-        }); 
+            });
+        });
 
-        Route::controller(UserShippingAddressController::class)->prefix('shipping-address')->group(function () {                
+        Route::controller(UserShippingAddressController::class)->prefix('shipping-address')->group(function () {
             Route::get('/', 'index')->name('account.shippingaddress');
-            Route::get('/create',  'create')->name('account.shippingaddress.create');            
-            Route::post('/store', 'store')->name('account.shippingaddress.store');        
-            Route::get('/{address:id}/edit',  'edit')->name('account.shippingaddress.edit');        
-            Route::put('/{address:id}/update',  'update')->name('account.shippingaddress.update');        
-            Route::delete('/{address:id}/destroy', 'destroy')->name('account.shippingaddress.destroy');        
+            Route::get('/create',  'create')->name('account.shippingaddress.create');
+            Route::post('/store', 'store')->name('account.shippingaddress.store');
+            Route::get('/{address:id}/edit',  'edit')->name('account.shippingaddress.edit');
+            Route::put('/{address:id}/update',  'update')->name('account.shippingaddress.update');
+            Route::delete('/{address:id}/destroy', 'destroy')->name('account.shippingaddress.destroy');
             Route::put('/{address:id}/update-status',  'set_default_address')->name('account.shippingaddress.update-status');
         });
     });
@@ -155,13 +155,13 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::controller(CheckOutController::class)->prefix('checkout')->group(function () {
         Route::get('/information', 'index')->name('checkout.information');
-        Route::post('/information/store', 'store')->name('checkout.information.store');      
-        Route::get('/shipping', 'shipping')->name('checkout.shipping');    
-        Route::put('/shipping/update', 'updateShippingMethod')->name('checkout.shipping.update');    
-        Route::get('/payment', 'payment')->name('checkout.payment');        
-        Route::get('/get-shipping-charge/{id}', 'shippingCharge');  
-        Route::get('/completed', 'completed')->name('checkout.completed');          
-        Route::get('/order-details/{order}', 'details')->name('checkout.details');  
+        Route::post('/information/store', 'store')->name('checkout.information.store');
+        Route::get('/shipping', 'shipping')->name('checkout.shipping');
+        Route::put('/shipping/update', 'updateShippingMethod')->name('checkout.shipping.update');
+        Route::get('/payment', 'payment')->name('checkout.payment');
+        Route::get('/get-shipping-charge/{id}', 'shippingCharge');
+        Route::get('/completed', 'completed')->name('checkout.completed');
+        Route::get('/order-details/{order}', 'details')->name('checkout.details');
     });
 
     // Payment happens on PayPal; the order is created only after PayPal confirms the capture.
@@ -175,9 +175,9 @@ Route::group(['middleware' => 'auth'], function(){
         Route::get('/{status}', 'index')->name('account.orders');
         Route::get('/detail/{order:id}',  'details')->name('orders.details');
         Route::get('/invoice/{order:id}', 'invoice')->name('orders.invoice');
-        Route::post('/return/{order:id}', 'requestReturn')->name('orders.return');    
+        Route::post('/return/{order:id}', 'requestReturn')->name('orders.return');
         Route::get('/{product}/review',  'review')->name('orders.review');
-    }); 
+    });
 
     Route::get('/get-shipping-method/{ShippingMethod:id}', [ShippingMethodController::class, 'getShippingMethod']);
     Route::get('/logout',[LogoutController::class, 'store'])->name('logout');
@@ -206,7 +206,7 @@ Route::group(['middleware' => 'adminLogined', 'prefix' => 'admin'], function(){
 
 
 
-Route::group(['middleware' => 'guest:admin', 'prefix' => 'admin',], function(){   
+Route::group(['middleware' => 'guest:admin', 'prefix' => 'admin',], function(){
 
     Route::controller(DashboardController::class)->group(function (){
         Route::get('','index')->name('admin');
@@ -219,33 +219,40 @@ Route::group(['middleware' => 'guest:admin', 'prefix' => 'admin',], function(){
 
     Route::controller(AdminResetPasswordController::class)->group(function (){
         Route::get('/forget-password','index')->name('admin.forget.password');
-        Route::post('/forget-password-request','request')->name('admin.request.password');    
-        Route::get('/reset_password/{token}','reset');    
+        Route::post('/forget-password-request','request')->name('admin.request.password');
+        Route::get('/reset_password/{token}','reset');
         Route::post('/reset_store','store')->name('admin.accountreset.password');
     });
-  
 
-   
 
-    
 
-  
 
-   
+
+
+
+
+
 });
 
-Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {  
+Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
 
     Route::post('/logout',[LogoutController::class, 'logout'])->name('admin.logout');
 
-    Route::controller(AdminController::class)->group(function (){       
+    Route::controller(AdminController::class)->group(function (){
         Route::get('/profile', 'profile')->name('admin.account');
         Route::put('/update/profile/{admin:id}',  'updateProfile')->name('admin.update.profile');
         Route::post('/update/password/{id}', 'updatePassword')->name('update.password');
         Route::post('/update/avatar/{id}',  'updateAvatar')->name('update.avatar');
     });
 
-    Route::prefix('products')->group(function (){
+    Route::prefix('products')->middleware('permission:products')->group(function (){
+        Route::controller(\App\Http\Controllers\Admin\ProductImportController::class)->prefix('import')->group(function () {
+            Route::get('/', 'create')->name('admin.products.import');
+            Route::get('/template.csv', 'template')->name('admin.products.import.template');
+            Route::post('/preview', 'preview')->name('admin.products.import.preview');
+            Route::post('/run', 'run')->name('admin.products.import.run');
+        });
+
         Route::controller(ProductController::class)->group(function (){
             Route::get('/','index')->name('admin.products');
             Route::get('/add','create')->name('admin.products.create');
@@ -253,14 +260,14 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
             Route::put( '/update/{product:id}', 'update')->name('admin.products.update');
             Route::get('/edit/{product:id}','edit')->name('admin.products.edit');
             Route::delete('/destroy/{product:id}', 'destroy')->name('admin.products.destroy');
-            Route::post('/selected-destroy', 'destroySelectedItem')->name('admin.products.destroys');      
+            Route::post('/selected-destroy', 'destroySelectedItem')->name('admin.products.destroys');
             Route::get('/search','search')->name('admin.products.search');
             Route::put('/{product:id}/status', 'changeStatus')->name('admin.products.status.update');
-            Route::post('/status/{status}', 'changeSelectedItemStatus')->name('admin.products.status.updates');    
-            Route::get('/find','find')->name('admin.products.find'); 
-            Route::get('/{filterBy}/{value}', 'filter')->name('admin.products.filter');  
-            Route::get('/get','getProduct');     
-        }); 
+            Route::post('/status/{status}', 'changeSelectedItemStatus')->name('admin.products.status.updates');
+            Route::get('/find','find')->name('admin.products.find');
+            Route::get('/{filterBy}/{value}', 'filter')->name('admin.products.filter');
+            Route::get('/get','getProduct');
+        });
 
         Route::controller(StockController::class)->prefix('inventory')->group(function (){
             Route::get('/', 'inventory')->name('admin.inventory');
@@ -270,7 +277,7 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
         });
 
         Route::controller(CategoryController::class)->prefix('categories')->group(function (){
-            Route::get('/', 'index')->name('admin.categories');       
+            Route::get('/', 'index')->name('admin.categories');
             Route::post('/store', 'store')->name('categories.store');
             Route::get('/{category:slug}/edit', 'edit')->name('categories.edit');
             Route::put('/update/{category:slug}', 'update')->name('admin.categories.update');
@@ -287,19 +294,19 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
             Route::delete('/{attribute:slug}/destroy', 'destroy')->name('admin.attributes.destroy');
             Route::delete('/selected-destroy','destroySelected')->name('admin.attributes.destroy.selected');
             Route::get('/p/search',  'search')->name('admin.attributes.search');
-        });        
+        });
 
-   
+
     });
 
 
     Route::get('/dashboard',[DashboardController::class,'dashboard'])->name('admin.dashboard');
-    Route::controller(ImageController::class)->group(function (){
+    Route::controller(ImageController::class)->middleware('permission:products')->group(function (){
         Route::post('/image/uploads', 'uploads');
         Route::delete('/image/{photo:id}/delete', 'unlink');
     });
-    
-    Route::controller(AdminOrderController::Class)->prefix('orders')->group(function (){
+
+    Route::controller(AdminOrderController::Class)->prefix('orders')->middleware('permission:orders')->group(function (){
         Route::get('/','index')->name('admin.orders');
         Route::get('/{order:id}/show', 'show')->name('admin.orders.show');
         Route::put('/ship/{order:id}', 'toShip')->name('admin.orders.shipped');
@@ -311,22 +318,24 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
         Route::get('/{order:id}/packing-slip', 'packingSlip')->name('admin.orders.packing-slip');
         Route::put('/{order:id}/return/approve', 'approveReturn')->name('admin.orders.return.approve');
         Route::put('/{order:id}/return/reject', 'rejectReturn')->name('admin.orders.return.reject');
+        Route::post('/{order:id}/notes', 'storeNote')->name('admin.orders.notes.store');
+        Route::delete('/{order:id}/notes/{note}', 'destroyNote')->name('admin.orders.notes.destroy');
         Route::get('/{status}', 'listbyStatus')->name('admin.orders.list');
         Route::delete('/destroy/{order:id}', 'destroy')->name('admin.orders.destroy');
     });
 
     Route::controller(\App\Http\Controllers\Admin\AdminExportController::class)->prefix('exports')->group(function () {
-        Route::get('/orders.csv', 'orders')->name('admin.exports.orders');
-        Route::get('/customers.csv', 'customers')->name('admin.exports.customers');
-        Route::get('/products.csv', 'products')->name('admin.exports.products');
+        Route::get('/orders.csv', 'orders')->middleware('permission:orders')->name('admin.exports.orders');
+        Route::get('/customers.csv', 'customers')->middleware('permission:customers')->name('admin.exports.customers');
+        Route::get('/products.csv', 'products')->middleware('permission:products')->name('admin.exports.products');
     });
 
-    Route::controller(AdminPaymentController::class)->prefix('payments')->group(function () {
+    Route::controller(AdminPaymentController::class)->prefix('payments')->middleware('permission:orders')->group(function () {
         Route::get('/', 'index')->name('admin.payments');
     });
 
-    
-    Route::controller(CouponController::class)->prefix('coupons')->group(function (){
+
+    Route::controller(CouponController::class)->prefix('coupons')->middleware('permission:coupons')->group(function (){
         Route::get('/', 'index')->name('admin.coupons');
         Route::get('/create','create')->name('admin.coupon.create');
         Route::get('/edit/{coupon:id}','edit')->name('admin.coupon.edit');
@@ -337,14 +346,14 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
         Route::delete('/destroy-selected-item','destroySelectedItem')->name('admin.coupon.destroy.selected');
         Route::get('/search','search')->name('admin.coupons.search');
     });
- 
 
 
-    Route::prefix('setting')->group(function () {
+
+    Route::prefix('setting')->middleware('permission:settings')->group(function () {
         Route::controller(SettingController::class)->group(function (){
             Route::get('/general','general')->name('admin.setting.general');
             Route::get('/campany','campany')->name('admin.setting.campany');
-            Route::get('/email','emailer')->name('admin.setting.emailer');    
+            Route::get('/email','emailer')->name('admin.setting.emailer');
             Route::put('/general/update/{general_setting}','updateGeneral')->name('admin.setting.general.update');
             Route::put('/general/campany/update/{general_setting}','updateCampanyAddress')->name('admin.setting.campany.update');
         });
@@ -358,7 +367,7 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
             Route::get('/index', 'index')->name('admin.shipping.method');
             Route::get('/create', 'create')->name('admin.shipping.method.create');
             Route::post('/store','store')->name('admin.shipping.method.store');
-            Route::get('/search', 'search')->name('admin.shipping.method.search');   
+            Route::get('/search', 'search')->name('admin.shipping.method.search');
             Route::get('/{method:id}/edit','edit')->name('admin.shipping.method.edit');
             Route::put('/{method:id}/update','update')->name('admin.shipping.method.update');
             Route::delete('/{method:id}/destroy','destroy')->name('admin.shipping.method.destroy');
@@ -367,11 +376,11 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
             Route::put('/selected-update-status','selected_update_status')->name('admin.shipping.method.selected.update.status');
         });
 
-     
-    
-      
+
+
+
     });
-    Route::controller(ReviewController::class)->prefix('review')->group(function (){
+    Route::controller(ReviewController::class)->prefix('review')->middleware('permission:customers')->group(function (){
         Route::get('/', 'index')->name('admin.reviews');
         Route::get('block/{status}', 'listbyStatus')->name('admin.reviews.list');
         Route::put('/block/{review:id}', 'block')->name('admin.reviews.block');
@@ -380,30 +389,33 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
         Route::get('/search', 'search')->name('admin.reviews.search');
     });
 
-    Route::controller(AdminController::class)->prefix('users')->group(function () {
+    // Staff accounts and the activity log: administrators only.
+    Route::get('/activity', [\App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->middleware('permission:staff')->name('admin.activity');
+
+    Route::controller(AdminController::class)->prefix('users')->middleware('permission:staff')->group(function () {
         Route::get('/','index')->name('admin.users');
-        Route::get('/create',  'create')->name('admin.users.create');    
-        Route::post('/store',  'store')->name('admin.users.store');    
-        Route::get('/edit/{admin:id}',  'edit')->name('admin.users.edit');    
-        Route::put('/update/{admin:id}', 'update')->name('admin.users.update');    
-        Route::post('/destroy/{admin:id}','destroy')->name('admin.users.destroy');    
-        Route::post('/selected/destory', 'destroySelectedItem')->name('admin.users.destroySelectedItem');    
-        Route::put('/change-selected-item-role-to/', 'updateSelectItemRoleTo')->name('admin.users.updateSelectItemRoleTo');           
-        Route::get('/search',  'search')->name('admin.users.search');    
-        Route::get('/show/{admin:id}',  'show')->name('admin.users.show');    
-        Route::post('/send-reset-password/{admin:id}',  'sentResetPassword')->name('admin.users.sentPasswordResetPassword');    
+        Route::get('/create',  'create')->name('admin.users.create');
+        Route::post('/store',  'store')->name('admin.users.store');
+        Route::get('/edit/{admin:id}',  'edit')->name('admin.users.edit');
+        Route::put('/update/{admin:id}', 'update')->name('admin.users.update');
+        Route::post('/destroy/{admin:id}','destroy')->name('admin.users.destroy');
+        Route::post('/selected/destory', 'destroySelectedItem')->name('admin.users.destroySelectedItem');
+        Route::put('/change-selected-item-role-to/', 'updateSelectItemRoleTo')->name('admin.users.updateSelectItemRoleTo');
+        Route::get('/search',  'search')->name('admin.users.search');
+        Route::get('/show/{admin:id}',  'show')->name('admin.users.show');
+        Route::post('/send-reset-password/{admin:id}',  'sentResetPassword')->name('admin.users.sentPasswordResetPassword');
         Route::put('/changepassword/{admin:id}','updatePassword')->name('users.updatePassword');
     });
 
-    Route::controller(UserController::class)->prefix('customers')->group(function () {
+    Route::controller(UserController::class)->prefix('customers')->middleware('permission:customers')->group(function () {
         Route::get('/','index')->name('admin.customers');
         Route::get('/show/{user:id}','show')->name('admin.customers.show');
         Route::delete('/destroy/{user:id}','destroy')->name('admin.customers.destroy');
         Route::delete('/selected/destroy', 'selectedDestroy')->name('admin.customers.selected.destroy');
-        Route::get('/search', 'search')->name('admin.customers.search'); 
+        Route::get('/search', 'search')->name('admin.customers.search');
     });
 
-    Route::controller(InboxController::class)->prefix('inboxes')->group(function () {
+    Route::controller(InboxController::class)->prefix('inboxes')->middleware('permission:customers')->group(function () {
         Route::get('/','index')->name('admin.inbox');
         Route::get('/{id}','view')->name('admin.inbox.show');
         Route::patch('/{id}','update')->name('admin.inbox.update');
@@ -411,13 +423,13 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
         Route::patch('/unread/{id}','unread')->name('admin.inbox.unread');
     });
 
-    
 
- 
-        
 
-    Route::get('/attributes/all', [AttributeController::class, 'getAll']);
-    Route::get('/api/products/categories', [CategoryController::class, 'lists'])->name('admin.categories.all');
+
+
+
+    Route::get('/attributes/all', [AttributeController::class, 'getAll'])->middleware('permission:products');
+    Route::get('/api/products/categories', [CategoryController::class, 'lists'])->middleware('permission:products')->name('admin.categories.all');
     Route::post('/variants/store', [VariantController::class, 'store'])->name('variants.store');
     Route::delete('/variants/destroy/{variant:id}', [VariantController::class, 'destroy'])->name('variants.destroy');
 
@@ -426,10 +438,10 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
 | End main Rotue
 |--------------------------------------------------------------------------
 */
-    
+
 });
 
-    
+
 
 
 Route::post('/users/update',[UserController::class, 'update'])->name('users.update');

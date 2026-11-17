@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\AdminOrderServices;
 use App\Models\OrderReturn;
+use App\Models\OrderNote;
+use App\Models\ActivityLog;
 use App\Services\Orders\ProcessReturn;
 use App\Exceptions\ReturnNotAllowedException;
 
@@ -23,25 +25,55 @@ class AdminOrderController extends Controller
 
     public function index()
     {
-        $orders = $this->services->list(); 
+        $orders = $this->services->list();
 
         return view('admin.orders.index')->with('orders', $orders);
-    }  
+    }
 
     public function listbyStatus($status)
-    {        
+    {
         $orders = $this->services->list($status);
 
         return view('admin.orders.index')->with('orders', $orders);
     }
 
     public function show(Order $order)
-    {    
-        return view('admin.orders.show')->with('order' , $order);
-    } 
+    {
+        // Notes and activity for this order, newest first, in one timeline.
+        $timeline = $order->notes()->with('admin')->get()->map(fn ($note) => ['type' => 'note', 'at' => $note->created_at, 'item' => $note])
+            ->concat(ActivityLog::for($order)->with('admin')->get()->map(fn ($log) => ['type' => 'log', 'at' => $log->created_at, 'item' => $log]))
+            ->sortByDesc('at')
+            ->values();
+
+        return view('admin.orders.show')->with(['order' => $order, 'timeline' => $timeline]);
+    }
+
+    public function storeNote(Request $request, Order $order)
+    {
+        $data = $request->validate(['body' => 'required|string|max:2000'], ['body.required' => 'Write the note first.']);
+
+        $order->notes()->create(['admin_id' => auth('admin')->id(), 'body' => trim($data['body'])]);
+
+        return back()->with('success', 'Note added.');
+    }
+
+    public function destroyNote(Order $order, OrderNote $note)
+    {
+        $admin = auth('admin')->user();
+        abort_unless($note->order_id === $order->id, 404);
+        abort_unless($note->admin_id === $admin->id || $admin->is_admin(), 403);
+
+        $note->delete();
+
+        return back()->with('success', 'Note deleted.');
+    }
 
     public function updateStatus(\App\Http\Requests\UpdateOrderStatusRequest $request, Order $order)
     {
+        if ($request->status === Order::STATUS_CANCELLED && !auth('admin')->user()->hasPermission('refunds')) {
+            return back()->with('error', 'Cancelling refunds the customer, which needs the Refunds permission.');
+        }
+
         $order = $this->services->updateStatus($order);
 
         $messages = [
@@ -66,8 +98,11 @@ class AdminOrderController extends Controller
 
     public function approveReturn(Request $request, Order $order, ProcessReturn $returns)
     {
+        abort_unless(auth('admin')->user()->hasPermission('refunds'), 403);
+
         try {
-            $returns->approve($order, $request->boolean('restock'));
+            $return = $returns->approve($order, $request->boolean('restock'));
+            ActivityLog::record('order.return.approved', $order, 'Return approved: refund of ₱' . number_format((float) $return->refund_amount, 2) . ($return->restocked ? ', items restocked' : ', not restocked'));
         } catch (ReturnNotAllowedException $e) {
             return back()->with('error', $e->getMessage());
         }
@@ -82,6 +117,8 @@ class AdminOrderController extends Controller
 
     public function rejectReturn(Request $request, Order $order, ProcessReturn $returns)
     {
+        abort_unless(auth('admin')->user()->hasPermission('refunds'), 403);
+
         $data = $request->validate(
             ['admin_note' => 'required|string|max:1000'],
             ['admin_note.required' => 'Tell the customer why the return was declined.']
@@ -89,6 +126,7 @@ class AdminOrderController extends Controller
 
         try {
             $returns->reject($order, $data['admin_note']);
+            ActivityLog::record('order.return.rejected', $order, 'Return declined: ' . $data['admin_note']);
         } catch (ReturnNotAllowedException $e) {
             return back()->with('error', $e->getMessage());
         }
@@ -121,7 +159,7 @@ class AdminOrderController extends Controller
     {
         $data = $this->services->search($request);
 
-        return view('admin.orders.index')->with(['orders' => $data['orders'], 'keyword' => $data['keyword']]);        
+        return view('admin.orders.index')->with(['orders' => $data['orders'], 'keyword' => $data['keyword']]);
     }
 
     public function destroy(Order $order)

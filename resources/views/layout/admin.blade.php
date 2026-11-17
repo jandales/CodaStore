@@ -37,6 +37,7 @@
                     <p class="sb-label">Menu</p>
                     <ul>
                         <li><a class="{{ request()->is('admin/dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}"><i class="fas fa-house" aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a></li>
+                        @if ($admin->hasPermission('products'))
                         <li class="nav-dropdown {{ request()->is('admin/products*') ? 'active' : '' }}">
                             <div class="nav-dropdown-btn">
                                 <a><i class="fas fa-box-open" aria-hidden="true"></i><span class="hide-menu">Products</span></a>
@@ -47,21 +48,40 @@
                                 <li class="{{ request()->is('admin/products/categories*') ? 'active' : '' }}"><a href="{{ route('admin.categories') }}">Categories</a></li>
                                 <li class="{{ request()->is('admin/products/inventory*') ? 'active' : '' }}"><a href="{{ route('admin.inventory') }}">Inventory</a></li>
                                 <li class="{{ request()->is('admin/products/attributes*') ? 'active' : '' }}"><a href="{{ route('admin.attributes') }}">Attributes</a></li>
+                                <li class="{{ request()->is('admin/products/import*') ? 'active' : '' }}"><a href="{{ route('admin.products.import') }}">Import CSV</a></li>
                             </ul>
                         </li>
+                        @endif
+                        @if ($admin->hasPermission('orders'))
                         <li><a class="{{ request()->is('admin/orders*') ? 'active' : '' }}" href="{{ route('admin.orders') }}"><i class="fas fa-receipt" aria-hidden="true"></i><span class="hide-menu">Orders</span>@if($pendingOrders)<span class="sb-badge" aria-label="{{ $pendingOrders }} to ship">{{ $pendingOrders }}</span>@endif</a></li>
                         <li><a class="{{ request()->is('admin/payments*') ? 'active' : '' }}" href="{{ route('admin.payments') }}"><i class="fas fa-credit-card" aria-hidden="true"></i><span class="hide-menu">Payments</span></a></li>
+                        @endif
+                        @if ($admin->hasPermission('coupons'))
                         <li><a class="{{ request()->is('admin/coupons*') ? 'active' : '' }}" href="{{ route('admin.coupons') }}"><i class="fas fa-ticket" aria-hidden="true"></i><span class="hide-menu">Coupons</span></a></li>
+                        @endif
+                        @if ($admin->hasPermission('customers'))
                         <li><a class="{{ request()->is('admin/review*') ? 'active' : '' }}" href="{{ route('admin.reviews') }}"><i class="far fa-comments" aria-hidden="true"></i><span class="hide-menu">Reviews</span></a></li>
+                        @endif
                     </ul>
 
                     <p class="sb-label">People</p>
                     <ul>
-                        <li><a class="{{ request()->is('admin/customers*') ? 'active' : '' }}" href="{{ route('admin.customers') }}"><i class="fas fa-user-group" aria-hidden="true"></i><span class="hide-menu">Customers</span></a></li>
+                        @if ($admin->hasPermission('customers'))
+                            <li><a class="{{ request()->is('admin/customers*') ? 'active' : '' }}" href="{{ route('admin.customers') }}"><i class="fas fa-user-group" aria-hidden="true"></i><span class="hide-menu">Customers</span></a></li>
+                        @endif
                         @if($admin->is_admin())
                             <li><a class="{{ request()->is('admin/users*') ? 'active' : '' }}" href="{{ route('admin.users') }}"><i class="fas fa-user-shield" aria-hidden="true"></i><span class="hide-menu">Staff users</span></a></li>
+                            <li><a class="{{ request()->is('admin/activity*') ? 'active' : '' }}" href="{{ route('admin.activity') }}"><i class="fas fa-clock-rotate-left" aria-hidden="true"></i><span class="hide-menu">Activity log</span></a></li>
                         @endif
                     </ul>
+
+                    @if ($admin->hasPermission('settings'))
+                        <p class="sb-label">Store</p>
+                        <ul>
+                            <li><a class="{{ request()->is('admin/setting/general*') || request()->is('admin/setting/campany*') ? 'active' : '' }}" href="{{ route('admin.setting.general') }}"><i class="fas fa-gear" aria-hidden="true"></i><span class="hide-menu">Settings</span></a></li>
+                            <li><a class="{{ request()->is('admin/setting/shipping-method*') ? 'active' : '' }}" href="{{ route('admin.shipping.method') }}"><i class="fas fa-truck" aria-hidden="true"></i><span class="hide-menu">Shipping methods</span></a></li>
+                        </ul>
+                    @endif
 
                     <p class="sb-label">Sales channel</p>
                     <ul>

@@ -32,8 +32,8 @@
                         <div class="select-option">
                             <select name="role" id="">
                                 <option value="">Change role to..</option>
-                                <option value="0">Employee</option>
-                                <option value="1">Adminstrator</option>
+                                <option value="2">Staff</option>
+                                <option value="1">Administrator</option>
                             </select>
                             <span id="update-selected-item-role-to" class="btn btn-light">Change</span>
                         </div>  
@@ -97,7 +97,7 @@
                                 </td>
                                 <td> {{ $user->fullName() }} </td>                         
                                 <td>{{$user->email}}</td> 
-                                <td><p>{{ $user->userRole() }}</p></td>
+                                <td><p>{{ $user->userRole() }}</p>@unless($user->is_admin())<small class="access-summary">{{ implode(', ', $user->permissionLabels()) ?: 'No access yet' }}</small>@endunless</td>
                                 <td width="100px"> 
                                     <div class="table-action">
                                         <ul>  

@@ -78,6 +78,51 @@
                     </table>
                 </div>
             </div>
+            <div class="panel w-12 mt20 order-notes" id="notes">
+                <div class="panel-heading">
+                    <h4>Notes and activity</h4>
+                </div>
+                <div class="panel-body">
+                    <form method="post" action="{{ route('admin.orders.notes.store', [$order->encryptedId()]) }}" class="note-form">
+                        @csrf
+                        <label for="note-body" class="sr-only">Add a note</label>
+                        <textarea id="note-body" name="body" rows="2" maxlength="2000" placeholder="Add a note for the team. Customers never see these." required>{{ old('body') }}</textarea>
+                        @error('body')<div class="alert alert-danger">{{ $message }}</div>@enderror
+                        <button class="btn btn-primary">Add note</button>
+                    </form>
+
+                    @if ($timeline->isEmpty())
+                        <p class="timeline-empty">No notes or changes yet.</p>
+                    @else
+                        <ol class="timeline" role="list">
+                            @foreach ($timeline as $entry)
+                                @php $item = $entry['item']; @endphp
+                                <li class="timeline__item timeline__item--{{ $entry['type'] }}">
+                                    <span class="timeline__dot" aria-hidden="true"><i class="fas {{ $entry['type'] === 'note' ? 'fa-note-sticky' : 'fa-clock-rotate-left' }}"></i></span>
+                                    <div class="timeline__body">
+                                        <p class="timeline__meta">
+                                            <strong>{{ $entry['type'] === 'note' ? $item->authorName() : $item->actorName() }}</strong>
+                                            <time datetime="{{ $entry['at']->toIso8601String() }}">{{ $entry['at']->format('M j, Y g:i a') }}</time>
+                                        </p>
+                                        @if ($entry['type'] === 'note')
+                                            <p class="timeline__note">{!! nl2br(e($item->body)) !!}</p>
+                                            @if ($item->admin_id === auth('admin')->id() || auth('admin')->user()->is_admin())
+                                                <form method="post" action="{{ route('admin.orders.notes.destroy', [$order->encryptedId(), $item->id]) }}" onsubmit="return confirm('Delete this note?')">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button class="link-button">Delete</button>
+                                                </form>
+                                            @endif
+                                        @else
+                                            <p>{{ $item->description }}</p>
+                                        @endif
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ol>
+                    @endif
+                </div>
+            </div>
         </div>
 
         <div class="panel m-t-2 w-3">
@@ -188,7 +233,9 @@
                                     <p><span>Your note</span> {{ $return->admin_note }}</p>
                                 @endif
 
-                                @if ($return->isOpen())
+                                @if ($return->isOpen() && !auth('admin')->user()->hasPermission('refunds'))
+                                    <p class="ship-note">An administrator or a staff member with the Refunds permission needs to decide this return.</p>
+                                @elseif ($return->isOpen())
                                     <form method="post" action="{{ route('admin.orders.return.approve', [$order->encryptedId()]) }}" class="return-form">
                                         @csrf
                                         @method('put')
@@ -225,7 +272,9 @@
                                     <select name="status" id="order-status">
                                         @if ($order->status == 'confirmed')
                                             <option value="shipped" {{ old('status', 'shipped') == 'shipped' ? 'selected' : '' }}>Shipped</option>
-                                            <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Cancelled (restores stock and refunds)</option>
+                                            @if (auth('admin')->user()->hasPermission('refunds'))
+                                                <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Cancelled (restores stock and refunds)</option>
+                                            @endif
                                         @endif
                                         @if ($order->status == 'shipped')
                                             <option value="completed">Delivered</option>
