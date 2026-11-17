@@ -101,7 +101,20 @@ class UserLoginController extends Controller
         Auth::login($user, true);
 
         // Back to where they were going (e.g. checkout), or the home page.
-        return redirect()->intended(route('home'));
+        return redirect()->to(self::customerIntendedUrl());
+    }
+
+    /** The page a customer was heading to before signing in, never an admin page. */
+    private static function customerIntendedUrl(): string
+    {
+        $url = session()->pull('url.intended');
+        $path = $url ? '/' . ltrim((string) parse_url($url, PHP_URL_PATH), '/') : null;
+
+        if (!$url || $path === '/admin' || str_starts_with($path, '/admin/')) {
+            return route('home');
+        }
+
+        return $url;
     }
 
 }

@@ -16,7 +16,11 @@ class Authenticate extends Middleware
     {
      
         if (! $request->expectsJson()) {
-             
+            // Admin pages have their own sign-in; customers never see it.
+            if ($request->is('admin', 'admin/*')) {
+                return route('admin.login');
+            }
+
             return route('login');
         }
     }

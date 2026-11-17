@@ -115,4 +115,20 @@ class GoogleSignInTest extends TestCase
 
         $this->get(route('handleProviderCallback'))->assertRedirect(route('checkout.information'));
     }
+
+    public function test_a_remembered_admin_page_is_never_used_after_customer_sign_in()
+    {
+        $this->googleReturns();
+        $this->get('/admin/dashboard')->assertRedirect(route('admin.login')); // signed out: admin sign-in, not the shop's
+
+        $this->withSession(['url.intended' => url('/admin/dashboard')])
+            ->get(route('handleProviderCallback'))
+            ->assertRedirect(route('home'));
+    }
+
+    public function test_signed_out_admin_pages_go_to_the_admin_sign_in()
+    {
+        $this->get('/admin/orders')->assertRedirect(route('admin.login'));
+        $this->get('/account')->assertRedirect(route('login'));
+    }
 }
