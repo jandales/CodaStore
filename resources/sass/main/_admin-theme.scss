@@ -822,3 +822,13 @@ $admin-side: 272px;
 .slug-input { display: flex; align-items: center; border: 1px solid var(--a-line); border-radius: var(--a-radius-sm); overflow: hidden; }
 .slug-input span { padding: 0 10px; color: var(--a-muted); background: var(--a-bg); align-self: stretch; display: flex; align-items: center; font-size: 14px; }
 .slug-input input { border: 0 !important; flex: 1; min-width: 0; }
+
+// Disclosure boxes (import help, decline return)
+.admin-body details > summary { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; list-style: none; }
+.admin-body details > summary::-webkit-details-marker { display: none; }
+.admin-body details > summary::before { content: ''; width: 7px; height: 7px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); transition: transform .15s ease; }
+.admin-body details[open] > summary::before { transform: rotate(45deg); }
+.admin-body details > summary:focus-visible { outline: 2px solid var(--a-primary); outline-offset: 2px; border-radius: 4px; }
+.import-help ul { list-style: disc; }
+.import-help li { display: list-item; list-style: disc; }
+.import-help code { padding: 1px 6px; border-radius: 4px; background: var(--a-bg); font-size: 13px; }
