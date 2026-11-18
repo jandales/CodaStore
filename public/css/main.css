@@ -5836,6 +5836,38 @@ td span.inactive {
   max-width: 260px;
 }
 
+.inventory-table td {
+  vertical-align: middle;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.inventory-table .inventory-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+.inventory-table .inventory-item .item-name {
+  display: inline;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.inventory-table .inventory-item .inventory-variant__label {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.inventory-table .inventory-review {
+  margin-top: 8px;
+}
+
+.inventory-table .column-image .image-50 {
+  margin: 0 auto;
+}
+
 /*!
  * Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)

@@ -63,8 +63,10 @@
                         <div class="image-50"><img src="{{ $row->image }}" alt="" loading="lazy"></div>
                     </td>
                     <td class="column-product">
-                        <a class="item-name link-primary capitalize" href="{{ route('admin.products.edit', [$row->product->encryptedId()]) }}">{{ $row->product->name }}</a>
-                        @if ($row->variant)<span class="inventory-variant__label">{{ $row->variant }}</span>@endif
+                        <div class="inventory-item">
+                            <a class="item-name link-primary capitalize" href="{{ route('admin.products.edit', [$row->product->encryptedId()]) }}">{{ $row->product->name }}</a>
+                            @if ($row->variant)<span class="inventory-variant__label">{{ $row->variant }}</span>@endif
+                        </div>
                         @if ($row->firstOfProduct && !$row->product->variant_stock_reviewed)
                             <form method="post" action="{{ route('admin.inventory.reviewed', [$row->product->encryptedId()]) }}" class="inventory-review">
                                 @csrf
