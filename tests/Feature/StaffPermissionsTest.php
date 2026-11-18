@@ -145,9 +145,10 @@ class StaffPermissionsTest extends TestCase
         $migration->up();
 
         $old = Admin::find($old->id);
-        foreach (array_keys(Admin::PERMISSIONS) as $permission) {
+        foreach (['products', 'orders', 'refunds', 'customers', 'coupons', 'settings'] as $permission) {
             $this->assertTrue($old->hasPermission($permission), $permission);
         }
         $this->assertFalse($old->hasPermission('staff'));
+        $this->assertFalse($old->hasPermission('reports'), 'Reports (revenue) is added later and only given on purpose');
     }
 }

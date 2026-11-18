@@ -4,13 +4,13 @@
 
 @section('content')
 @php
-    $hour = now()->hour;
+    $hour = $store_now->hour;
     $greeting = $hour < 12 ? 'Good morning' : ($hour < 18 ? 'Good afternoon' : 'Good evening');
     $firstName = $admin->firstname ?: $admin->username;
 
     $months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     $maxIncome = max($monthly_income) ?: 1;
-    $currentMonth = (int) now()->format('n');
+    $currentMonth = (int) $store_now->format('n');
 
     $statusParts = [
         ['label' => 'To ship',    'count' => $to_ship,         'color' => '#5B3DF5'],
@@ -66,7 +66,7 @@
 <section class="dash-card income" aria-labelledby="income-title">
     <div class="income__summary">
         <h2 id="income-title" class="dash-card__title">Income summary</h2>
-        <p class="income__label">Total income · {{ now()->year }}</p>
+        <p class="income__label">Total income · {{ $store_now->year }}</p>
         <p class="income__value">@money($year_income)</p>
         @if (!is_null($income_change))
             <span class="trend {{ $income_change >= 0 ? 'trend--up' : 'trend--down' }}">
@@ -76,9 +76,12 @@
         @else
             <span class="trend trend--flat">No sales last month to compare</span>
         @endif
+        @if ($admin->hasPermission('reports'))
+            <p class="income__more"><a href="{{ route('admin.reports') }}" class="dash-link">View reports <i class="fas fa-arrow-right" aria-hidden="true"></i></a></p>
+        @endif
     </div>
 
-    <div class="income__chart" role="img" aria-label="Monthly income for {{ now()->year }}">
+    <div class="income__chart" role="img" aria-label="Monthly income for {{ $store_now->year }}">
         <div class="chart-bars">
             @foreach ($months as $i => $label)
                 @php $value = $monthly_income[$i + 1]; $pct = $value > 0 ? max(4, round($value / $maxIncome * 100)) : 0; @endphp

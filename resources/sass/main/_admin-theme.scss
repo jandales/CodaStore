@@ -989,3 +989,61 @@ $admin-side: 272px;
 .mo-card [data-mode] .mo-search ~ .mo-chosen { margin-top: 12px; }
 .mo-card .mo-toggle + .mo-grid { margin-top: 0; }
 .mo-search input[type="search"] { padding: 10px 14px; }
+
+// ---------- Reports ----------
+.income__more { margin-top: 18px; }
+.rp-head { align-items: flex-start; }
+.rp-head .dash-sub { margin-top: 4px; }
+.rp-filter { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 16px; padding: 16px 20px; margin-bottom: 16px; }
+.rp-filter .form-block { margin: 0; min-width: 170px; }
+.rp-filter .form-block label { display: block; margin-bottom: 6px; font-size: 13px; color: var(--a-muted); }
+.rp-compare { margin: 0 0 10px; }
+.rp-tabs { display: flex; gap: 4px; overflow-x: auto; margin-bottom: 20px; border-bottom: 1px solid var(--a-line); }
+.rp-tabs a { padding: 10px 14px; border-bottom: 2px solid transparent; margin-bottom: -1px; color: var(--a-muted); font-size: 14px; font-weight: 500; text-decoration: none; white-space: nowrap; }
+.rp-tabs a:hover { color: var(--a-ink); }
+.rp-tabs a.is-active { color: var(--a-primary); border-bottom-color: var(--a-primary); font-weight: 600; }
+.rp-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 20px; }
+.rp-cards--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.rp-card { padding: 20px; display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.rp-card__value { font-size: 28px; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; color: var(--a-ink); }
+.rp-card__meta { font-size: 13px; color: var(--a-muted); }
+.rp-change { display: inline-flex; align-items: center; gap: 5px; margin-top: 4px; padding: 4px 10px; border-radius: 20px; font-size: 12.5px; font-weight: 600; }
+.rp-change--good { background: var(--a-success-soft); color: var(--a-success); }
+.rp-change--bad { background: var(--a-danger-soft); color: var(--a-danger); }
+.rp-change--flat { background: var(--a-bg); color: var(--a-muted); font-weight: 500; }
+.rp-chart, .rp-section { margin-bottom: 20px; }
+.rp-bars .chart-month { white-space: nowrap; overflow: visible; font-size: 11.5px; }
+.rp-section > .dash-card__sub { margin-bottom: 16px; }
+.rp-section > .dash-card__title + .rp-table, .rp-section > .dash-card__title + .table-responsive { margin-top: 16px; }
+.rp-table { width: 100%; font-size: 14px; }
+.rp-table th, .rp-table td { padding: 10px 12px; vertical-align: middle; }
+.rp-table thead th { font-size: 12.5px; font-weight: 600; color: var(--a-muted); white-space: nowrap; }
+.rp-table tfoot th, .rp-table tfoot td { font-weight: 700; border-top: 2px solid var(--a-line); }
+.rp-name { font-weight: 600; color: var(--a-ink); }
+a.rp-name { color: var(--a-primary); text-decoration: none; }
+a.rp-name:hover { text-decoration: underline; }
+.rp-sub { display: block; font-size: 12px; color: var(--a-muted); }
+.rp-out { color: var(--a-danger); font-weight: 600; }
+.rp-share-col { width: 180px; }
+.rp-share { display: inline-block; width: 90px; height: 6px; margin-right: 6px; border-radius: 3px; background: var(--a-bg); vertical-align: middle; overflow: hidden; }
+.rp-share span { display: block; height: 100%; background: var(--a-primary); border-radius: 3px; }
+.rp-breakdown { max-width: 560px; margin-top: 12px; }
+.rp-breakdown th { font-weight: 500; }
+.rp-breakdown th small { margin-left: 6px; color: var(--a-muted); font-weight: 400; }
+.rp-breakdown td { text-align: right; white-space: nowrap; }
+.rp-breakdown .rp-subtotal th, .rp-breakdown .rp-subtotal td { font-weight: 600; border-top: 1px solid var(--a-line); }
+.rp-breakdown .rp-total th, .rp-breakdown .rp-total td { font-weight: 700; font-size: 16px; border-top: 2px solid var(--a-ink); color: var(--a-ink); }
+.rp-note { margin-top: 12px; max-width: 720px; }
+.rp-mini { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.rp-mini > div { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border: 1px solid var(--a-line); border-radius: var(--a-radius-sm); }
+.rp-mini span, .rp-mini small { font-size: 13px; color: var(--a-muted); }
+.rp-mini strong { font-size: 20px; color: var(--a-ink); }
+@media (max-width: 991px) {
+    .rp-cards, .rp-cards--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 575px) {
+    .rp-cards, .rp-cards--4, .rp-mini { grid-template-columns: minmax(0, 1fr); }
+    .rp-filter .form-block { min-width: 0; flex: 1 1 140px; }
+}
+.rp-tabs { overflow-y: hidden; }
+.rp-breakdown th { text-align: left; }

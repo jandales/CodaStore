@@ -57,6 +57,9 @@
                         <li><a class="{{ request()->is('admin/orders*') ? 'active' : '' }}" href="{{ route('admin.orders') }}"><i class="fas fa-receipt" aria-hidden="true"></i><span class="hide-menu">Orders</span>@if($pendingOrders)<span class="sb-badge" aria-label="{{ $pendingOrders }} to ship">{{ $pendingOrders }}</span>@endif</a></li>
                         <li><a class="{{ request()->is('admin/payments*') ? 'active' : '' }}" href="{{ route('admin.payments') }}"><i class="fas fa-credit-card" aria-hidden="true"></i><span class="hide-menu">Payments</span></a></li>
                         @endif
+                        @if ($admin->hasPermission('reports'))
+                        <li><a class="{{ request()->is('admin/reports*') ? 'active' : '' }}" href="{{ route('admin.reports') }}"><i class="fas fa-chart-line" aria-hidden="true"></i><span class="hide-menu">Reports</span></a></li>
+                        @endif
                         @if ($admin->hasPermission('coupons'))
                         <li><a class="{{ request()->is('admin/coupons*') ? 'active' : '' }}" href="{{ route('admin.coupons') }}"><i class="fas fa-ticket" aria-hidden="true"></i><span class="hide-menu">Coupons</span></a></li>
                         @endif

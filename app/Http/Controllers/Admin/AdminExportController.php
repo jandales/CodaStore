@@ -127,6 +127,12 @@ class AdminExportController extends Controller
 
     private static function download(string $name, array $rows)
     {
+        return self::csv("coda-{$name}-" . now()->format('Y-m-d') . '.csv', $rows);
+    }
+
+    /** A CSV download with formula-safe cells and a BOM for Excel. */
+    public static function csv(string $filename, array $rows)
+    {
         $out = fopen('php://temp', 'r+');
         fwrite($out, "\xEF\xBB\xBF"); // BOM so Excel reads ₱ and accents as UTF-8
         foreach ($rows as $row) {
@@ -135,8 +141,6 @@ class AdminExportController extends Controller
         rewind($out);
         $csv = stream_get_contents($out);
         fclose($out);
-
-        $filename = "coda-{$name}-" . now()->format('Y-m-d') . '.csv';
 
         return response($csv, 200, [
             'Content-Type' => 'text/csv; charset=UTF-8',
