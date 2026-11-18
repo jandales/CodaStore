@@ -24,127 +24,83 @@
              <form id="form-search" class="flex-auto" action="{{ route('admin.inventory.search')}}" method="get">
                     <div class="search-input">
                         <span class="icon-right"><i class="fas fa-search"></i></span>
-                        <input type="text" id="keyword" name="keyword" placeholder="Search by Name or Sku">
-                        <a href="{{ route('admin.inventory') }}" class="{{ $keyword ?? 'hidden'}}"><span class="icon-right"><i class="fas fa-times"></i></span></a>
+                        <input type="text" id="keyword" name="keyword" placeholder="Search by product name, SKU or variant SKU" value="{{ $keyword }}" aria-label="Search inventory">
+                        <a href="{{ route('admin.inventory') }}" class="{{ $keyword ? '' : 'hidden' }}" aria-label="Clear search"><span class="icon-right"><i class="fas fa-times"></i></span></a>
                     </div>
             </form>
         </div>
     </div>
 
 
-    <table class="table">
+    @if (session('success'))
+        <div class="alert alert-success m-t-1" role="status">{{ session('success') }}</div>
+    @endif
+
+    {{-- One row per variant, and one per product without variants. --}}
+    <table class="table inventory-table">
         <thead>
             <tr>
-                <th class="column-0"></th>
-                <th class="column-image"></th>
+                <th class="column-image"><span class="sr-only">Photo</span></th>
                 <th class="column-product">Product</th>
+                <th class="column-base">SKU</th>
                 <th class="column-base">Category</th>
-                <th class="column-base">Stock</th>
+                <th class="column-base">Available</th>
                 <th class="column-base">Action</th>
-                <th class="column-base">Update Quantity</th>
-                <th class="column-action"></th>
+                <th class="column-base">Update quantity</th>
+                <th class="column-action"><span class="sr-only">Save</span></th>
             </tr>
         </thead>
         <tbody>
-            @if (session('success'))
-                <tr><td colspan="9"><div class="alert alert-success" role="status">{{ session('success') }}</div></td></tr>
-            @endif
-            @if($products->count() == 0)
+            @if ($rows->isEmpty())
                 <tr class="tr-center">
-                    <td colspan="9">No Product Found</td>
+                    <td colspan="8">{{ $keyword ? 'Nothing matches "' . $keyword . '".' : 'No products found.' }}</td>
                 </tr>
             @endif
-            @foreach ($products as $product)
-                @if ($product->skus->isNotEmpty())
-                    {{-- Products with variants: the total, then one adjustable row per variant. --}}
-                    <tr class="inventory-product">
-                        <td class="column-0"></td>
-                        <td class="column-image"><div class="image-50"><img src="{{ $product->imagePath }}" alt="{{ $product->name }}" loading="lazy"></div></td>
-                        <td class="column-product">
-                            <div class="item-name">{{ $product->name }}</div>
-                            @unless ($product->variant_stock_reviewed)
-                                <form method="post" action="{{ route('admin.inventory.reviewed', [$product->encryptedId()]) }}" class="inventory-review">
-                                    @csrf
-                                    @method('put')
-                                    <span>Stock was split evenly across sizes.</span>
-                                    <button class="link-button">Mark as checked</button>
-                                </form>
-                            @endunless
-                        </td>
-                        <td class="column-base">{{ optional($product->category)->name }}</td>
-                        <td class="column-base"><strong>{{ $product->stockQty() }}</strong> <span class="label-hint">total</span></td>
-                        <td class="column-base" colspan="3"><span class="label-hint">Adjust each variant below</span></td>
-                    </tr>
-                    @foreach ($product->skus as $sku)
-                        <tr class="inventory-variant">
-                            <td class="column-0"></td>
-                            <td class="column-image">@if ($sku->image)<div class="image-50"><img src="{{ $sku->image }}" alt="" loading="lazy"></div>@endif</td>
-                            <td class="column-product"><span class="inventory-variant__label">{{ $sku->label() }}</span>@if ($sku->sku) <span class="label-hint">{{ $sku->sku }}</span>@endif</td>
-                            <td class="column-base"></td>
-                            <td class="column-base"><span class="stock link-primary">{{ $sku->qty }}</span></td>
-                            <td class="column-base">
-                                <select name="type" class="type" aria-label="Stock in or out for {{ $product->name }} {{ $sku->label() }}">
-                                    <option value="1">Stock In</option>
-                                    <option value="0">Stock Out</option>
-                                </select>
-                            </td>
-                            <td class="column-base">
-                                <div class="form-group-qty">
-                                    <div class="btn-num-product-down flex-vert-center btn-add-minus" type="minus"> <i class="fas fa-minus"></i></div>
-                                    <input class="num-product bg-grey" item="" type="number" value="0" aria-label="Quantity for {{ $sku->label() }}">
-                                    <div class="btn-num-product-up flex-vert-center btn-add-minus" type="add"> <i class="fas fa-plus"></i></div>
-                                </div>
-                            </td>
-                            <td class="column-action">
-                                <button disabled data-url="{{ route('admin.inventory.update.variant', [$sku->id]) }}" class="btn btn-primary btn-save">Save</button>
-                            </td>
-                        </tr>
-                    @endforeach
-                    @continue
-                @endif
-                <tr>
-                    <td class="column-0"></td>
+            @foreach ($rows as $row)
+                @php $label = $row->product->name . ($row->variant ? ' ' . $row->variant : ''); @endphp
+                <tr class="{{ $row->qty <= 0 ? 'is-out' : '' }}">
                     <td class="column-image">
-                        <div class="image-50">
-                            <img src="{{ $product->imagePath }}" alt="{{ $product->name }}" loading="lazy">
+                        <div class="image-50"><img src="{{ $row->image }}" alt="" loading="lazy"></div>
+                    </td>
+                    <td class="column-product">
+                        <a class="item-name link-primary capitalize" href="{{ route('admin.products.edit', [$row->product->encryptedId()]) }}">{{ $row->product->name }}</a>
+                        @if ($row->variant)<span class="inventory-variant__label">{{ $row->variant }}</span>@endif
+                        @if ($row->firstOfProduct && !$row->product->variant_stock_reviewed)
+                            <form method="post" action="{{ route('admin.inventory.reviewed', [$row->product->encryptedId()]) }}" class="inventory-review">
+                                @csrf
+                                @method('put')
+                                <span>Stock was split evenly across sizes.</span>
+                                <button class="link-button">Mark as checked</button>
+                            </form>
+                        @endif
+                    </td>
+                    <td class="column-base">{{ $row->code ?: '—' }}</td>
+                    <td class="column-base capitalize">{{ optional($row->product->category)->name }}</td>
+                    <td class="column-base"><span class="stock link-primary">{{ $row->qty }}</span></td>
+                    <td class="column-base">
+                        <select name="type" class="type" aria-label="Stock in or out for {{ $label }}">
+                            <option value="1">Stock In</option>
+                            <option value="0">Stock Out</option>
+                        </select>
+                    </td>
+                    <td class="column-base">
+                        <div class="form-group-qty">
+                            <div class="btn-num-product-down flex-vert-center btn-add-minus" type="minus" role="button" aria-label="Less"><i class="fas fa-minus" aria-hidden="true"></i></div>
+                            <input class="num-product bg-grey" item="" type="number" value="0" aria-label="Quantity to change for {{ $label }}">
+                            <div class="btn-num-product-up flex-vert-center btn-add-minus" type="add" role="button" aria-label="More"><i class="fas fa-plus" aria-hidden="true"></i></div>
                         </div>
                     </td>
-                        <td class="column-product">
-                            <div class="product-image-container">
-
-                                <div class="image-description ml-0">
-                                    <div class="item-name">{{ $product->name }}</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="column-base">{{ $product->category->name }}</td>
-                        <td class="column-base"><span class="stock link-primary">{{ $product->stock->qty }}</span></td>
-                        <td class="column-base">
-                            <select name="type" class="type">
-                                <option value="1">Stock In</option>
-                                <option value="0">Stock Out</option>
-                            </select>
-                        </td>
-                        <td class="column-base">
-                            <div class="form-group-qty">
-                                <div class="btn-num-product-down flex-vert-center btn-add-minus" type="minus"> <i class="fas fa-minus"></i></div>
-                                <input class="num-product bg-grey"  item=""  type="number" value="0">
-                                <div class="btn-num-product-up flex-vert-center btn-add-minus" type="add"> <i class="fas fa-plus"></i></div>
-                            </div>
-                        </td>
-                        <td class="column-action">
-                            <button disabled  data-url = "{{ route('admin.inventory.update.quantity',[$product->stock->id])}}"class="btn btn-primary btn-save">Save</button>
-                        </td>
-                    </tr>
+                    <td class="column-action">
+                        @if ($row->saveUrl)
+                            <button disabled data-url="{{ $row->saveUrl }}" class="btn btn-primary btn-save">Save</button>
+                        @endif
+                    </td>
+                </tr>
             @endforeach
-
         </tbody>
     </table>
 </div>
 <div class="mt-2 mb-2 right mr10">
-    {{ $products->links() }}
+    {{ $rows->links() }}
 </div>
-
-
-
 @endsection

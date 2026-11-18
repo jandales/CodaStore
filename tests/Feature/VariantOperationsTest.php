@@ -59,8 +59,7 @@ class VariantOperationsTest extends TestCase
         $this->signInAdmin();
 
         $this->get(route('admin.inventory'))->assertOk()
-            ->assertSee(route('admin.inventory.update.variant', [$m->id]), false)
-            ->assertSee('Adjust each variant below');
+            ->assertSee(route('admin.inventory.update.variant', [$m->id]), false);
 
         $this->putJson(route('admin.inventory.update.variant', [$m->id]), ['qty' => 3, 'action' => 1])
             ->assertOk()->assertJson(['stock' => ['qty' => 5]]);
@@ -151,5 +150,34 @@ class VariantOperationsTest extends TestCase
 
         $report = $this->post(route('admin.products.import.preview'), ['file' => UploadedFile::fake()->createWithContent('p.csv', "SKU,Stock\nTEE-1,40\n")])->viewData('report');
         $this->assertStringContainsString('set stock per variant', implode(' ', $report['rows'][0]['errors']));
+    }
+
+    public function test_inventory_is_a_flat_list_with_one_row_per_variant()
+    {
+        $this->tee(['S' => 20, 'M' => 2, 'L' => 0]);
+        $this->createProduct(7, false, ['name' => 'cap', 'sku' => 'CAP-1']);
+        $this->signInAdmin();
+
+        $rows = $this->get(route('admin.inventory'))->assertOk()->viewData('rows');
+
+        $this->assertSame(
+            [['cap', null, 7], ['tee', 'S', 20], ['tee', 'M', 2], ['tee', 'L', 0]],
+            collect($rows->items())->map(fn ($r) => [$r->product->name, $r->variant, $r->qty])->all()
+        );
+    }
+
+    public function test_inventory_search_finds_variant_skus_and_low_stock_shows_only_low_rows()
+    {
+        $product = $this->tee(['S' => 20, 'M' => 2]);
+        $product->skuFor(['size' => 'M'])->update(['sku' => 'TEE-M-BLK']);
+        $this->signInAdmin();
+
+        $found = $this->get(route('admin.inventory.search', ['keyword' => 'M-BLK']))->viewData('rows');
+        $this->assertSame(['M'], collect($found->items())->pluck('variant')->all(), 'just the matching variant');
+        $byName = $this->get(route('admin.inventory.search', ['keyword' => 'tee']))->viewData('rows');
+        $this->assertSame(['S', 'M'], collect($byName->items())->pluck('variant')->all(), 'a product name match lists all its variants');
+
+        $low = $this->get(route('admin.inventory.filter', ['low-stock']))->viewData('rows');
+        $this->assertSame(['M'], collect($low->items())->pluck('variant')->all(), 'S has plenty, so only M is listed');
     }
 }

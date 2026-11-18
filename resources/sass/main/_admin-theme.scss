@@ -904,3 +904,11 @@ $admin-side: 272px;
 
 // The hidden attribute always hides, even on elements styled display:flex/grid.
 .admin-body [hidden] { display: none !important; }
+
+// Flat inventory: one row per variant
+.inventory-table .column-product .item-name { display: block; font-weight: 600; text-decoration: none; }
+.inventory-table .inventory-variant__label { display: inline-block; margin-top: 2px; padding: 1px 8px; border-radius: 6px; background: #EEF0F4; font-size: 12.5px; font-weight: 600; }
+.inventory-table tr.is-out .stock { color: #B91C1C; }
+.inventory-table .column-product { min-width: 220px; }
+.inventory-table .type { min-width: 116px; }
+.inventory-table .inventory-review { max-width: 260px; }

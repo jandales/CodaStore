@@ -5804,6 +5804,38 @@ td span.inactive {
   display: none !important;
 }
 
+.inventory-table .column-product .item-name {
+  display: block;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.inventory-table .inventory-variant__label {
+  display: inline-block;
+  margin-top: 2px;
+  padding: 1px 8px;
+  border-radius: 6px;
+  background: #EEF0F4;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.inventory-table tr.is-out .stock {
+  color: #B91C1C;
+}
+
+.inventory-table .column-product {
+  min-width: 220px;
+}
+
+.inventory-table .type {
+  min-width: 116px;
+}
+
+.inventory-table .inventory-review {
+  max-width: 260px;
+}
+
 /*!
  * Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
