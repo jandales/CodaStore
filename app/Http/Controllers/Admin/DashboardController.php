@@ -35,19 +35,20 @@ class DashboardController extends Controller
             ->take(8)
             ->get();
 
-        // Income per month for the current year (cancelled and returned orders excluded).
-        $paid = Order::whereYear('created_at', $now->year)
+        // Income per month for the current year in the store timezone (cancelled and returned orders excluded).
+        $tz = \App\Services\Reports\ReportRange::timezone();
+        $local = Carbon::now($tz);
+        $income = fn (Carbon $from, Carbon $to) => Order::whereBetween('created_at', [$from->copy()->utc(), $to->copy()->utc()])
             ->whereNotIn('status', ['cancelled', 'returned']);
         $monthly = array_fill(1, 12, 0.0);
-        foreach ((clone $paid)->get(['created_at', 'gross_total']) as $order) {
-            $monthly[(int) $order->created_at->format('n')] += (float) $order->gross_total;
+        foreach ($income($local->copy()->startOfYear(), $local->copy()->endOfYear())->get(['created_at', 'gross_total']) as $order) {
+            $monthly[(int) $order->created_at->copy()->setTimezone($tz)->format('n')] += (float) $order->gross_total;
         }
 
-        $thisMonth = $monthly[(int) $now->format('n')];
-        $lastMonth = (int) $now->format('n') > 1
-            ? $monthly[(int) $now->format('n') - 1]
-            : (float) Order::whereYear('created_at', $now->year - 1)->whereMonth('created_at', 12)
-                ->whereNotIn('status', ['cancelled', 'returned'])->sum('gross_total');
+        $thisMonth = $monthly[(int) $local->format('n')];
+        $lastMonth = (int) $local->format('n') > 1
+            ? $monthly[(int) $local->format('n') - 1]
+            : (float) $income($local->copy()->subYear()->month(12)->startOfMonth(), $local->copy()->subYear()->endOfYear())->sum('gross_total');
         $incomeChange = $lastMonth > 0 ? round((($thisMonth - $lastMonth) / $lastMonth) * 100, 1) : null;
 
         $threshold = \App\Models\GeneralSetting::lowStockThreshold();
@@ -66,6 +67,7 @@ class DashboardController extends Controller
             'monthly_income'  => $monthly,
             'year_income'     => array_sum($monthly),
             'income_change'   => $incomeChange,
+            'store_now'       => $local,
             'admin'           => auth()->guard('admin')->user(),
             'low_stock'       => \App\Services\Products\LowStock::items($threshold, 6),
             'low_stock_count' => \App\Services\Products\LowStock::items($threshold)->count(),

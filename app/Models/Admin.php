@@ -44,6 +44,7 @@ class Admin extends Authenticatable
         'refunds' => ['Refunds', 'Cancelling paid orders and approving or declining returns (needs Orders)'],
         'customers' => ['Customers', 'Customers, reviews and contact messages'],
         'coupons' => ['Coupons', 'Creating and editing coupons'],
+        'reports' => ['Reports', 'Sales reports: revenue, best sellers, customers and CSV downloads'],
         'settings' => ['Settings', 'Store settings, company address, shipping methods and social links'],
     ];
 

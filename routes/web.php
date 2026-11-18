@@ -444,6 +444,12 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
         Route::get('/search', 'search')->name('admin.reviews.search');
     });
 
+    // Sales reports (revenue is sensitive, so it has its own permission).
+    Route::controller(\App\Http\Controllers\Admin\ReportController::class)->prefix('reports')->middleware('permission:reports')->group(function () {
+        Route::get('/', 'index')->name('admin.reports');
+        Route::get('/export', 'export')->name('admin.reports.export');
+    });
+
     // Staff accounts and the activity log: administrators only.
     Route::get('/activity', [\App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->middleware('permission:staff')->name('admin.activity');
 
