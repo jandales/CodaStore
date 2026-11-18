@@ -18,7 +18,7 @@ class LowStockDigest extends Command
     public function handle()
     {
         $threshold = GeneralSetting::lowStockThreshold();
-        $products = Product::published()->lowStock($threshold)->with('stock')->orderBy('name')->get();
+        $products = \App\Services\Products\LowStock::items($threshold);
 
         if ($products->isEmpty()) {
             $this->info('No products are low on stock.');
@@ -33,7 +33,7 @@ class LowStockDigest extends Command
         }
 
         Mail::to($recipients)->send(new LowStockDigestMail($products, $threshold));
-        $this->info("Sent the low-stock digest ({$products->count()} products) to " . implode(', ', $recipients) . '.');
+        $this->info("Sent the low-stock digest ({$products->count()} items) to " . implode(', ', $recipients) . '.');
 
         return 0;
     }

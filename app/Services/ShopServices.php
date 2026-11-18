@@ -43,8 +43,23 @@ class ShopServices extends BaseServices
 
         $sizes = array_values(array_filter((array) ($filters['size'] ?? []), 'strlen'));
         if ($sizes) {
-            $query->whereHas('variants', function ($q) use ($sizes) {
-                $q->whereIn('name', $sizes);
+            $query->where(function ($q) use ($sizes) {
+                // Products with variants: that size must have stock.
+                $q->whereHas('skus', function ($sku) use ($sizes) {
+                    $sku->where('qty', '>', 0)->where(function ($match) use ($sizes) {
+                        foreach ($sizes as $size) {
+                            $segment = 'size:' . mb_strtolower(trim($size));
+                            $match->orWhere('option_key', $segment)
+                                ->orWhere('option_key', 'like', $segment . '|%')
+                                ->orWhere('option_key', 'like', '%|' . $segment)
+                                ->orWhere('option_key', 'like', '%|' . $segment . '|%');
+                        }
+                    });
+                })
+                // Products without variants: the size is listed.
+                ->orWhere(function ($plain) use ($sizes) {
+                    $plain->whereDoesntHave('skus')->whereHas('variants', fn ($v) => $v->whereIn('name', $sizes));
+                });
             });
         }
 

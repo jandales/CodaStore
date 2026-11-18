@@ -289,8 +289,11 @@ class Product extends Model
     /** Products whose stock is at or below the threshold (sold-out ones included). */
     public function scopeLowStock($query, int $threshold)
     {
-        return $query->whereHas('stock', function ($q) use ($threshold) {
-            $q->where('qty', '<=', $threshold);
+        // Without variants: the product's stock. With variants: any variant at or below it.
+        return $query->where(function ($q) use ($threshold) {
+            $q->where(function ($plain) use ($threshold) {
+                $plain->whereDoesntHave('skus')->whereHas('stock', fn ($s) => $s->where('qty', '<=', $threshold));
+            })->orWhereHas('skus', fn ($s) => $s->where('qty', '<=', $threshold));
         });
     }
 

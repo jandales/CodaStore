@@ -5575,6 +5575,32 @@ td span.inactive {
   justify-content: space-between;
 }
 
+.inventory-product td {
+  background: var(--a-bg);
+}
+
+.inventory-variant .column-product {
+  padding-left: 28px;
+}
+
+.inventory-variant__label {
+  font-weight: 600;
+}
+
+.inventory-review {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  align-items: baseline;
+  margin-top: 4px;
+  font-size: 12.5px;
+  color: #92400E;
+}
+
+.inventory-review .link-button {
+  color: var(--a-primary);
+}
+
 /*!
  * Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)

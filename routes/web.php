@@ -295,6 +295,8 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
             Route::get('/filter/{filter}','filter')->name('admin.inventory.filter');
             Route::get('/adjust/search', 'search')->name('admin.inventory.search');
             Route::put('/update/stock/{stock:id}', 'updateQuantity')->name('admin.inventory.update.quantity');
+            Route::put('/variant/{sku}', 'updateVariantQuantity')->name('admin.inventory.update.variant');
+            Route::put('/{product:id}/reviewed', 'markReviewed')->name('admin.inventory.reviewed');
         });
 
         Route::controller(CategoryController::class)->prefix('categories')->group(function (){

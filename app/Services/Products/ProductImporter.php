@@ -36,6 +36,8 @@ class ProductImporter
         'qty' => 'stock',
         'quantity' => 'stock',
         'sizes' => 'sizes',
+        'variant_stock' => 'variant_stock',
+        'variant_prices' => 'variant_prices',
         'description' => 'description',
         'short_description' => 'description',
     ];
@@ -157,14 +159,19 @@ class ProductImporter
                         $created++;
                     }
 
-                    if (array_key_exists('stock', $values)) {
-                        Stock::updateOrCreate(['product_id' => $product->id], ['qty' => $values['stock']]);
-                    } elseif (!$product->stock()->exists()) {
-                        Stock::create(['product_id' => $product->id, 'qty' => 0]);
-                    }
-
                     if (array_key_exists('sizes', $values) && $sizeAttribute) {
                         $this->replaceSizes($product, $sizeAttribute, $values['sizes']);
+                        $this->sizeVariants($product, $values);
+                    } elseif (isset($values['variant_stock']) || isset($values['variant_prices'])) {
+                        $this->updateVariants($product, $values);
+                    }
+
+                    if (!$product->skus()->exists()) {
+                        if (array_key_exists('stock', $values)) {
+                            Stock::updateOrCreate(['product_id' => $product->id], ['qty' => $values['stock']]);
+                        } elseif (!$product->stock()->exists()) {
+                            Stock::create(['product_id' => $product->id, 'qty' => 0]);
+                        }
                     }
                 }
 
@@ -291,6 +298,60 @@ class ProductImporter
             $values['sizes'] = array_map(fn ($s) => mb_substr(mb_strtoupper($s), 0, 20), $sizes);
         }
 
+        // Variant stock "S:5|M:3" and variant prices "XL:700" (labels as in the product, e.g. "M / Black").
+        $knownLabels = isset($values['sizes'])
+            ? array_map('mb_strtolower', $values['sizes'])
+            : ($product ? $product->skus()->get()->map(fn ($sku) => mb_strtolower($sku->label()))->all() : []);
+        foreach (['variant_stock' => 'Variant stock', 'variant_prices' => 'Variant prices'] as $column => $title) {
+            if (($data[$column] ?? '') === '') {
+                continue;
+            }
+            if (!$knownLabels) {
+                $errors[] = "{$title}: this product has no variants. Add a Sizes column, or set up variants in the product form.";
+                continue;
+            }
+            $pairs = [];
+            foreach (explode('|', $data[$column]) as $part) {
+                if (trim($part) === '') {
+                    continue;
+                }
+                $at = strrpos($part, ':');
+                if ($at === false) {
+                    $errors[] = "{$title}: write each variant as Name:number, for example S:5|M:3.";
+                    break;
+                }
+                $label = mb_strtolower(trim(substr($part, 0, $at)));
+                $number = trim(str_replace(',', '', substr($part, $at + 1)));
+                if (!in_array($label, $knownLabels, true)) {
+                    $errors[] = "{$title}: \"" . trim(substr($part, 0, $at)) . "\" isn't one of this product's variants (" . implode(', ', $knownLabels) . ').';
+                    continue;
+                }
+                if ($column === 'variant_stock') {
+                    if (!preg_match('/^\d+$/', $number)) {
+                        $errors[] = "{$title}: stock must be a whole number, 0 or more.";
+                        continue;
+                    }
+                    $pairs[$label] = (int) $number;
+                } else {
+                    $price = $this->money($number);
+                    if ($price === false || ($price !== null && $price < 1)) {
+                        $errors[] = "{$title}: prices must be numbers of at least 1, or empty for the product's price.";
+                        continue;
+                    }
+                    $pairs[$label] = $price;
+                }
+            }
+            $values[$column] = $pairs;
+        }
+
+        // Products with variants: stock is set per variant, not as one number.
+        if ($product && !isset($values['sizes']) && $knownLabels && isset($values['stock']) && !isset($values['variant_stock'])) {
+            if ((int) $values['stock'] !== $product->stockQty()) {
+                $errors[] = 'This product has variants: set stock per variant in the "Variant stock" column (e.g. S:5|M:3).';
+            }
+            unset($values['stock']);
+        }
+
         if (($data['description'] ?? '') !== '') {
             $values['short_description'] = $data['description'];
         }
@@ -350,8 +411,65 @@ class ProductImporter
         if (isset($values['sizes'])) {
             $out[] = 'sizes ' . implode('/', $values['sizes']);
         }
+        if (isset($values['variant_stock'])) {
+            $current = $product->skus()->get()->mapWithKeys(fn ($sku) => [mb_strtolower($sku->label()) => (int) $sku->qty]);
+            $changed = collect($values['variant_stock'])->filter(fn ($qty, $label) => $current->get($label) !== $qty);
+            if ($changed->isNotEmpty()) {
+                $out[] = 'variant stock ' . $changed->map(fn ($qty, $label) => strtoupper($label) . ' ' . $current->get($label, 0) . ' → ' . $qty)->implode(', ');
+            }
+        }
+        if (isset($values['variant_prices'])) {
+            $out[] = 'variant prices updated';
+        }
 
         return $out ?: ['No changes'];
+    }
+
+    /**
+     * Sizes column: one variant per size. Stock comes from "Variant stock", or the Stock column
+     * split evenly (flagged for the store to check), keeping existing per-size stock otherwise.
+     */
+    private function sizeVariants(Product $product, array $values): void
+    {
+        $sizes = $values['sizes'];
+        $existing = $product->skus()->get()->keyBy(fn ($sku) => mb_strtolower($sku->label()));
+        $total = $values['stock'] ?? $product->stockQty();
+        $split = !isset($values['variant_stock']) && $existing->isEmpty();
+        $count = max(1, count($sizes));
+
+        $rows = [];
+        foreach ($sizes as $i => $size) {
+            $label = mb_strtolower($size);
+            $qty = $values['variant_stock'][$label]
+                ?? ($split ? intdiv($total, $count) + ($i < $total % $count ? 1 : 0) : (int) optional($existing->get($label))->qty);
+            $price = array_key_exists($label, $values['variant_prices'] ?? []) ? $values['variant_prices'][$label] : optional($existing->get($label))->price;
+            $rows[] = ['options' => ['size' => $size], 'qty' => $qty, 'price' => $price];
+        }
+
+        app(ProductSkus::class)->sync($product, $rows);
+        if ($split && $sizes && $total > 0) {
+            $product->forceFill(['variant_stock_reviewed' => false])->saveQuietly();
+        }
+    }
+
+    /** Variant stock / prices columns for a product that already has variants. */
+    private function updateVariants(Product $product, array $values): void
+    {
+        foreach ($product->skus()->get() as $sku) {
+            $label = mb_strtolower($sku->label());
+            if (isset($values['variant_stock'][$label])) {
+                $sku->qty = $values['variant_stock'][$label];
+            }
+            if (array_key_exists($label, $values['variant_prices'] ?? [])) {
+                $price = $values['variant_prices'][$label];
+                $sku->price = $price !== null && (float) $price != (float) $product->regular_price ? $price : null;
+            }
+            $sku->save();
+        }
+        ProductSkus::refreshTotals($product);
+        if (isset($values['variant_stock'])) {
+            $product->forceFill(['variant_stock_reviewed' => true])->saveQuietly();
+        }
     }
 
     private function replaceSizes(Product $product, Attribute $size, array $sizes): void

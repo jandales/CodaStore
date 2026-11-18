@@ -59,7 +59,7 @@ class ExportsAndDocumentsTest extends TestCase
         $this->assertSame(['1', '1150.00'], array_slice($customers[1], 4, 2));
 
         $products = collect($this->csv($this->get(route('admin.exports.products'))->assertOk()))->keyBy(0);
-        $this->assertSame(['sale coat', 'COAT-1', 'hoddie', 'Published', '2000.00', '1500.00', 'Yes', '1500.00', '4'], $products['sale coat']);
+        $this->assertSame(['sale coat', 'COAT-1', 'hoddie', 'Published', '2000.00', '1500.00', 'Yes', '1500.00', '4', '', ''], $products['sale coat']);
     }
 
     public function test_formula_like_cells_are_neutralised()

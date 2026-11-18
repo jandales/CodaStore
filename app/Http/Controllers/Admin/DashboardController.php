@@ -67,9 +67,9 @@ class DashboardController extends Controller
             'year_income'     => array_sum($monthly),
             'income_change'   => $incomeChange,
             'admin'           => auth()->guard('admin')->user(),
-            'low_stock'       => Product::published()->lowStock($threshold)->with('stock')
-                ->get()->sortBy(fn ($p) => $p->stockQty())->take(6)->values(),
-            'low_stock_count' => Product::published()->lowStock($threshold)->count(),
+            'low_stock'       => \App\Services\Products\LowStock::items($threshold, 6),
+            'low_stock_count' => \App\Services\Products\LowStock::items($threshold)->count(),
+            'stock_to_review' => Product::where('variant_stock_reviewed', false)->count(),
             'low_stock_threshold' => $threshold,
         ]);
     }

@@ -52,6 +52,7 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\Order::observe(\App\Observers\OrderObserver::class);
         \App\Models\Product::observe(\App\Observers\ProductObserver::class);
         \App\Models\Stock::observe(\App\Observers\StockObserver::class);
+        \App\Models\ProductSku::observe(\App\Observers\ProductSkuObserver::class);
 
     }
 }
