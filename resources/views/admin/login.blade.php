@@ -56,5 +56,6 @@
             </div>
         </div>
     </main>
+<script src="{{ asset('js/saving-forms.js') }}?v=2"></script>
 </body>
 </html>

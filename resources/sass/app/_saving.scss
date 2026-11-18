@@ -1,0 +1,6 @@
+// Saving state on submit buttons (js/saving-forms.js)
+.is-loading { cursor: progress; opacity: .85; pointer-events: none; }
+.btn-spinner { display: inline-block; width: 14px; height: 14px; margin-right: 6px; vertical-align: -2px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: btn-spin .7s linear infinite; }
+@keyframes btn-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .btn-spinner { animation-duration: 2s; } }
+form[aria-busy="true"] { cursor: progress; }

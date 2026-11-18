@@ -1,7 +1,8 @@
 /*
- * Admin: while a form is being saved, show it on the button (spinner + "Please wait…") and
- * stop double clicks, so a slow save (emails, stock checks) never looks frozen.
- * Opt out with data-no-loading on the form. Source copy: resources/js/admin/forms.js.
+ * Every page (admin, store and checkout): while a form is being saved, show it on the button
+ * (spinner + "Please wait…") and stop double clicks, so a slow save (emails, stock checks,
+ * payment) never looks frozen. Search and filter forms (GET) are left alone.
+ * Opt out with data-no-loading on the form. Source copy: resources/js/saving-forms.js.
  */
 (function () {
     'use strict';
@@ -10,6 +11,7 @@
         var form = e.target;
         // Runs after the form's own handlers: skip when one of them stopped it (e.g. a cancelled confirm()).
         if (e.defaultPrevented || !(form instanceof HTMLFormElement) || form.hasAttribute('data-no-loading')) return;
+        if ((form.getAttribute('method') || 'get').toLowerCase() === 'get') return; // searching, not saving
 
         if (form.getAttribute('data-submitting') === '1') {
             e.preventDefault(); // already on its way
