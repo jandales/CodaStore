@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Services;
 
@@ -11,28 +11,28 @@ class ImageServices
     {
         $images = [];
 
-        if (!$request->hasfile('images')) return; 
-    
-        foreach($request->file('images') as $image){ 
-            $name = imageName($image); 
+        if (!$request->hasfile('images')) return;
+
+        foreach($request->file('images') as $image){
+            $name = imageName($image);
             $location = '/img/test/';
             $path =  $location . $name;
-            $photo = Photo::create([        
+            $photo = Photo::create([
                 'path' => $path,
                 'name' => $name,
                 'location' => $location
             ]);
             if ($photo) $image->move(public_path($location),$name);
             array_push($images, ["id" => $photo->id, "path" => $photo->path, 'deleted' => 0]);
-        } 
-        return $images; 
+        }
+        return $images;
     }
 
     public function delete(Photo $photo)
     {
-        $deleted = $photo->delete();  
-        if(!$deleted) return back()->with('error','Image cant delete');  
-        $path = public_path($photo->path);
-        File::delete($path);   
+        $deleted = $photo->delete();
+        if(!$deleted) return back()->with('error','Image cant delete');
+        // Only remove the file when no other product, photo or variant uses it.
+        \App\Services\Products\ProductImageFiles::deleteIfUnused($photo->path);
     }
 }

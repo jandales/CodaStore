@@ -142,11 +142,10 @@ class ProductServices
 
             foreach ($product->photos as $photo ) {
 
-                $path = public_path( $photo->path );
-
-                File::delete( $path );
-
                 $photo->delete();
+
+                // Other products may share the same file.
+                \App\Services\Products\ProductImageFiles::deleteIfUnused($photo->path);
 
             }
 
@@ -319,9 +318,8 @@ class ProductServices
 
             if(!$deleted) return back()->with('error','Image cant delete');
 
-            $path = public_path($photo->path);
-
-            File::delete($path);
+            // Only remove the file when no other product, photo or variant uses it.
+            \App\Services\Products\ProductImageFiles::deleteIfUnused($photo->path);
 
             return response()->json(['deleted' => $deleted]);
 
