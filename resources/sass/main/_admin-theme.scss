@@ -920,3 +920,15 @@ $admin-side: 272px;
 .inventory-table .inventory-item .inventory-variant__label { margin: 0; line-height: 1.6; }
 .inventory-table .inventory-review { margin-top: 8px; }
 .inventory-table .column-image .image-50 { margin: 0 auto; }
+
+// Category add / edit pages
+.category-form-wrap { max-width: 640px; }
+.category-form textarea { width: 100%; resize: vertical; }
+.category-image { position: relative; display: inline-block; }
+.category-image img { max-width: 220px; max-height: 160px; border-radius: var(--a-radius-sm); border: 1px solid var(--a-line); object-fit: cover; }
+.category-image #remove-image { position: absolute; top: 6px; right: 6px; width: 26px; height: 26px; border-radius: 50%; background: #fff; display: grid; place-items: center; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,.15); }
+.category-form .image-holder { width: auto !important; height: auto !important; min-height: 0 !important; border: 0 !important; background: none !important; padding: 0 !important; }
+.category-form .image-holder:has(img.hidden) { display: none; }
+.category-form .file-uploader { display: inline-flex !important; align-items: center; width: auto !important; height: auto !important; padding: 8px 14px !important; border: 1px solid var(--a-line) !important; border-radius: var(--a-radius-sm) !important; background: #fff !important; color: var(--a-ink) !important; font-size: 14px; font-weight: 600; cursor: pointer; }
+.category-form .file-uploader:hover { border-color: var(--a-primary) !important; color: var(--a-primary) !important; }
+.category-form .file-uploader, .category-form .category-image { align-self: flex-start; }
