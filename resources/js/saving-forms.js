@@ -1,11 +1,39 @@
 /*
- * Every page (admin, store and checkout): while a form is being saved, show it on the button
+ * Every page (admin, store and checkout): while something is being saved, show it on the button
  * (spinner + "Please wait…") and stop double clicks, so a slow save (emails, stock checks,
- * payment) never looks frozen. Search and filter forms (GET) are left alone.
- * Opt out with data-no-loading on the form. Source copy: resources/js/saving-forms.js.
+ * payment) never looks frozen.
+ *  - Normal forms that save (POST/PUT/DELETE). Search and filter forms (GET) are left alone.
+ *  - Admin background saves made with jQuery after a button click (product add/edit, inventory).
+ * Opt out with data-no-loading on the form or button. Source copy: resources/js/saving-forms.js.
  */
 (function () {
     'use strict';
+
+    function setLoading(button) {
+        if (!button || button.classList.contains('is-loading')) return;
+        button.style.minWidth = button.offsetWidth + 'px';
+        button.setAttribute('data-label', button.tagName === 'INPUT' ? button.value : button.innerHTML);
+        if (button.tagName === 'INPUT') {
+            button.value = 'Please wait…';
+        } else {
+            button.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span> Please wait…';
+        }
+        button.disabled = true;
+        button.classList.add('is-loading');
+        button.setAttribute('aria-busy', 'true');
+    }
+
+    function restore(button) {
+        if (!button || !button.classList.contains('is-loading')) return;
+        if (button.tagName === 'INPUT') button.value = button.getAttribute('data-label');
+        else button.innerHTML = button.getAttribute('data-label');
+        button.disabled = false;
+        button.classList.remove('is-loading');
+        button.removeAttribute('aria-busy');
+        button.style.minWidth = '';
+    }
+
+    // ------------------------------------------------------------------ normal forms
 
     document.addEventListener('submit', function (e) {
         var form = e.target;
@@ -21,7 +49,7 @@
         form.setAttribute('aria-busy', 'true');
 
         var button = e.submitter || form.querySelector('button[type="submit"], button:not([type]), input[type="submit"]');
-        if (!button) return;
+        if (!button || button.hasAttribute('data-no-loading')) return;
 
         // A disabled button isn't sent, so keep its name/value (e.g. "action=approve") as a hidden field.
         if (button.name) {
@@ -33,32 +61,48 @@
         }
 
         // Disable after the browser has read the form, so the submission still goes through.
-        setTimeout(function () {
-            button.style.minWidth = button.offsetWidth + 'px';
-            button.setAttribute('data-label', button.tagName === 'INPUT' ? button.value : button.innerHTML);
-            if (button.tagName === 'INPUT') {
-                button.value = 'Please wait…';
-            } else {
-                button.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span> Please wait…';
-            }
-            button.disabled = true;
-            button.classList.add('is-loading');
-        }, 0);
+        setTimeout(function () { setLoading(button); }, 0);
     });
 
-    // Coming back with the browser's Back button: put the buttons back as they were.
+    // ------------------------------------------------------------------ background (jQuery) saves
+
+    var lastClick = { button: null, at: 0 };
+    var leaving = false;
+
+    document.addEventListener('click', function (e) {
+        var button = e.target.closest && e.target.closest('button, input[type="submit"], .btn');
+        if (button && !button.hasAttribute('data-no-loading')) lastClick = { button: button, at: Date.now() };
+    }, true);
+    window.addEventListener('beforeunload', function () { leaving = true; });
+
+    // Admin only: on the store these are small icon buttons (wishlist, cart +/−) with their own feedback.
+    if (window.jQuery && document.body.classList.contains('admin-body')) {
+        jQuery(document).ajaxSend(function (event, xhr, settings) {
+            var type = String(settings.type || settings.method || 'GET').toUpperCase();
+            // Only saves the person just asked for with a button.
+            if (type === 'GET' || !lastClick.button || Date.now() - lastClick.at > 1000) return;
+            xhr._savingButton = lastClick.button;
+            setLoading(lastClick.button);
+        });
+        jQuery(document).ajaxError(function (event, xhr) {
+            restore(xhr._savingButton); // show the button again with the errors
+        });
+        jQuery(document).ajaxSuccess(function (event, xhr) {
+            var button = xhr._savingButton;
+            // A save that moves on to the next page keeps the spinner until it loads.
+            if (button) setTimeout(function () { if (!leaving) restore(button); }, 600);
+        });
+    }
+
+    // ------------------------------------------------------------------ back button
+
     window.addEventListener('pageshow', function (e) {
         if (!e.persisted) return;
+        leaving = false;
         document.querySelectorAll('form[data-submitting]').forEach(function (form) {
             form.removeAttribute('data-submitting');
             form.removeAttribute('aria-busy');
         });
-        document.querySelectorAll('.is-loading[data-label]').forEach(function (button) {
-            if (button.tagName === 'INPUT') button.value = button.getAttribute('data-label');
-            else button.innerHTML = button.getAttribute('data-label');
-            button.disabled = false;
-            button.classList.remove('is-loading');
-            button.style.minWidth = '';
-        });
+        document.querySelectorAll('.is-loading[data-label]').forEach(restore);
     });
 })();
