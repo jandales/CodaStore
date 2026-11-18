@@ -32,27 +32,32 @@
         <a href="{{ $historyUrl() }}" class="{{ $variant ? '' : 'is-active' }}" @unless ($variant) aria-current="page" @endunless>All variants <span>{{ $product->stockQty() }}</span></a>
         @foreach ($product->skus as $sku)
             <a href="{{ $historyUrl($sku->id) }}" class="{{ $variant && $variant->id === $sku->id ? 'is-active' : '' }} {{ (int) $sku->qty <= 0 ? 'is-out' : '' }}" @if ($variant && $variant->id === $sku->id) aria-current="page" @endif>
-                {{ $sku->label() }} <span>{{ max(0, (int) $sku->qty) }}</span>
+                {{ $sku->label() }} <span>{{ max(0, (int) $sku->qty) }}</span>@if ((int) $sku->damaged_qty > 0)<em class="sd-tab-damaged">{{ (int) $sku->damaged_qty }} damaged</em>@endif
             </a>
         @endforeach
     </nav>
 @endif
 
-<div class="sd-cards">
+<div class="sd-cards sd-cards--4">
     <div class="stat-card sd-card">
-        <p class="stat-label">In stock now</p>
+        <p class="stat-label">Available now</p>
         <p class="sd-card__value {{ $inStock <= 0 ? 'is-out' : '' }}">{{ number_format($inStock) }}</p>
-        <p class="sd-card__meta">{{ $variant ? $variant->label() : ($hasVariants ? 'All variants' : 'Units') }}</p>
+        <p class="sd-card__meta">Can be sold · {{ $variant ? $variant->label() : ($hasVariants ? 'all variants' : 'units') }}</p>
     </div>
     <div class="stat-card sd-card">
-        <p class="stat-label">Added · last 30 days</p>
-        <p class="sd-card__value sd-in">+{{ number_format($added) }}</p>
-        <p class="sd-card__meta">Stock in, restocks and edits</p>
+        <p class="stat-label">Damaged now</p>
+        <p class="sd-card__value {{ $damaged > 0 ? 'sd-out' : '' }}">{{ number_format($damaged) }}</p>
+        <p class="sd-card__meta">Kept apart until repaired or written off</p>
     </div>
     <div class="stat-card sd-card">
-        <p class="stat-label">Removed · last 30 days</p>
-        <p class="sd-card__value sd-out">−{{ number_format($removed) }}</p>
-        <p class="sd-card__meta">Sales, stock out and edits</p>
+        <p class="stat-label">On hand</p>
+        <p class="sd-card__value">{{ number_format($onHand) }}</p>
+        <p class="sd-card__meta">Available + damaged</p>
+    </div>
+    <div class="stat-card sd-card">
+        <p class="stat-label">Damaged · last 30 days</p>
+        <p class="sd-card__value">{{ number_format($damagedRecently) }}</p>
+        <p class="sd-card__meta">Added {{ number_format($added) }} · removed {{ number_format($removed) }}</p>
     </div>
 </div>
 
@@ -68,8 +73,8 @@
                         <th scope="col">Date</th>
                         @if ($hasVariants && !$variant)<th scope="col">Variant</th>@endif
                         <th scope="col">Movement</th>
-                        <th scope="col" class="text-right">Change</th>
-                        <th scope="col" class="text-right">Stock after</th>
+                        <th scope="col" class="text-right">Available</th>
+                        <th scope="col" class="text-right">Damaged</th>
                         <th scope="col">By</th>
                     </tr>
                 </thead>
@@ -95,8 +100,18 @@
                                 @endif
                                 @if ($m->note)<small class="sd-sub">“{{ $m->note }}”</small>@endif
                             </td>
-                            <td class="text-right"><strong class="{{ $m->change > 0 ? 'sd-in' : 'sd-out' }}">{{ $m->change > 0 ? '+' : '−' }}{{ number_format(abs($m->change)) }}</strong></td>
-                            <td class="text-right">{{ number_format($m->balance) }}</td>
+                            <td class="text-right text-nowrap">
+                                @if ($m->change !== 0)<strong class="{{ $m->change > 0 ? 'sd-in' : 'sd-out' }}">{{ $m->change > 0 ? '+' : '−' }}{{ number_format(abs($m->change)) }}</strong>@else<span class="text-muted">0</span>@endif
+                                <small class="sd-sub">→ {{ number_format($m->balance) }}</small>
+                            </td>
+                            <td class="text-right text-nowrap">
+                                @if ($m->damaged_change !== 0)
+                                    <strong class="sd-damaged">{{ $m->damaged_change > 0 ? '+' : '−' }}{{ number_format(abs($m->damaged_change)) }}</strong>
+                                    <small class="sd-sub">→ {{ number_format($m->damaged_balance) }}</small>
+                                @else
+                                    <span class="text-muted">—</span>
+                                @endif
+                            </td>
                             <td>
                                 @if ($m->admin)
                                     {{ trim($m->admin->fullName()) ?: $m->admin->username }}

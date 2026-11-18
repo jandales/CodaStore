@@ -298,6 +298,7 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
             Route::put('/variant/{sku}', 'updateVariantQuantity')->name('admin.inventory.update.variant');
             Route::put('/{product:id}/reviewed', 'markReviewed')->name('admin.inventory.reviewed');
             Route::get('/{product:id}/stock', 'history')->name('admin.inventory.history');
+            Route::put('/{product:id}/adjust', 'adjust')->name('admin.inventory.adjust');
         });
 
         Route::controller(CategoryController::class)->prefix('categories')->group(function (){

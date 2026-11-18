@@ -60,6 +60,24 @@ class StockController extends Controller
         return response()->json(['status' => 200, 'stock' => ['qty' => $sku->qty]]);
     }
 
+    /** Adjust stock: Stock In, Stock Out, mark as damaged, repaired, write off. */
+    public function adjust(Request $request, Product $product, \App\Services\Products\StockAdjuster $adjuster)
+    {
+        $data = $request->validate([
+            'action' => ['required', \Illuminate\Validation\Rule::in(array_keys(\App\Services\Products\StockAdjuster::ACTIONS))],
+            'qty' => ['required', 'integer', 'min:1', 'max:100000'],
+            'sku_id' => ['nullable', 'integer'],
+            'note' => ['nullable', 'string', 'max:255'],
+        ], [
+            'action.required' => 'Choose what happened to the stock.',
+            'qty.min' => 'Enter a quantity of at least 1.',
+        ]);
+
+        $stock = $adjuster->adjust($product, $data['sku_id'] ?? null, $data['action'], (int) $data['qty'], $data['note'] ?? null);
+
+        return response()->json(['status' => 200, 'stock' => $stock, 'message' => \App\Services\Products\StockAdjuster::ACTIONS[$data['action']][0] . ': saved.']);
+    }
+
     /** Stock details: the history of every stock change, per variant (or for the product). */
     public function history(Request $request, Product $product)
     {
@@ -76,13 +94,18 @@ class StockController extends Controller
             ->withQueryString();
 
         $recent = \App\Models\StockMovement::where($scope)->where('created_at', '>=', now()->subDays(30))
-            ->where('reason', '!=', 'opening')->get(['change']);
+            ->where('reason', '!=', 'opening')->get(['change', 'damaged_change', 'reason']);
+        $available = $variant ? max(0, (int) $variant->qty) : $product->stockQty();
+        $damaged = $variant ? max(0, (int) $variant->damaged_qty) : $product->damagedQty();
 
         return view('admin.stock.history', [
             'product' => $product,
             'variant' => $variant,
             'movements' => $movements,
-            'inStock' => $variant ? max(0, (int) $variant->qty) : $product->stockQty(),
+            'inStock' => $available,
+            'damaged' => $damaged,
+            'onHand' => $available + $damaged,
+            'damagedRecently' => (int) $recent->where('reason', 'damaged')->sum('damaged_change'),
             'added' => (int) $recent->where('change', '>', 0)->sum('change'),
             'removed' => (int) -$recent->where('change', '<', 0)->sum('change'),
         ]);
@@ -110,6 +133,11 @@ class StockController extends Controller
         if ($filter === 'low-stock') {
             // Only the variants (or products) that are actually low.
             $rows = InventoryRows::paginate(Product::lowStock($threshold), fn ($row) => $row->qty <= $threshold);
+        } elseif ($filter === 'damaged') {
+            // Only the variants (or products) with damaged units.
+            $damaged = Product::where(fn ($q) => $q->whereHas('skus', fn ($s) => $s->where('damaged_qty', '>', 0))
+                ->orWhereHas('stock', fn ($s) => $s->where('damaged_qty', '>', 0)));
+            $rows = InventoryRows::paginate($damaged, fn ($row) => $row->damaged > 0);
         } elseif ($filter === 'needs-review') {
             $rows = InventoryRows::paginate(Product::where('variant_stock_reviewed', false));
         } elseif ($filter === 'all') {
