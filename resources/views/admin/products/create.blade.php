@@ -5,28 +5,28 @@
     <div class="page-title">
         <h1>Add Products</h1>
     </div>
-    <div id="notify-message" class="m-t-2">        
+    <div id="notify-message" class="m-t-2">
     </div>
 
 
     <form id="form" method="post"  action="{{route('admin.products.store')}}" enctype="multipart/form-data">
         @csrf
-        <div class="page-container m-t-2">  
-            
+        <div class="page-container m-t-2">
+
             <div class="left-column">
                 <div class="panel">
                 <div class="panel-body">
                         <div class="form-block">
                             <label for="name">Name</label>
-                            <input type="text" name="name" value="">                 
+                            <input type="text" name="name" value="">
                         </div>
                         <div class="form-block">
                             <label for="email">Short Description</label>
-                            <textarea id="short_description" name="short_description"  cols="30" rows="3"></textarea>                
+                            <textarea id="short_description" name="short_description"  cols="30" rows="3"></textarea>
                         </div>
                         <div class="form-block">
                             <label for="email">Long Description</label>
-                            <textarea id="long_description"  name="long_description"  cols="30" rows="10"></textarea>                
+                            <textarea id="long_description"  name="long_description"  cols="30" rows="10"></textarea>
                         </div>
                 </div>
                 </div>
@@ -45,7 +45,7 @@
                                 <input type="number" id="sale_price" name="sale_price" min="0" step="0.01" value="">
                             </div>
                         </div>
-                        <label class="sale-toggle"><input type="checkbox" name="on_sale" value="1"> On sale: customers pay the sale price</label>                       
+                        <label class="sale-toggle"><input type="checkbox" name="on_sale" value="1"> On sale: customers pay the sale price</label>
                     </div>
                 </div>
                 <!-- invetory --->
@@ -57,17 +57,17 @@
                         <div class="form-inline gap30">
                             <div class="form-block col-6">
                                 <label for="name">SKU</label>
-                                <input type="text"  name="sku" value="">                 
-                            </div> 
+                                <input type="text"  name="sku" value="">
+                            </div>
                             <div class="form-block col-6">
                                 <label for="name">Barcode</label>
-                                <input type="text" name="barcode" value="">                 
-                            </div>                 
+                                <input type="text" name="barcode" value="">
+                            </div>
                         </div>
                         <div class="form-block">
                             <label for="name">Quantity</label>
-                            <input type="number" name="qty" value="">                 
-                        </div> 
+                            <input type="number" name="qty" value="">
+                        </div>
                     </div>
                 </div>
                 <!-- /inventory --->
@@ -90,27 +90,28 @@
                                 <select id="selectInput" class="capitalized">
                                 </select>
                                 <span id="btn-add-variant" class="btn btn-default ml20">Add</span>
-                            </div>   
+                            </div>
                             <div class="options-wrapper">
-                            
-                            </div> 
+
+                            </div>
                         </div>
                     </div>
+                    @include('admin.products._variant-table')
                 </div>
                 <!-- /variants --->
             </div>
-        
+
             <div class="right-column">
                 <div class="panel">
                     <div class="panel-heading">
                         <label for="" class="panel-title"></label>
-                    </div>          
-                    <div class="panel-body"> 
-                        <div class="form-block">                     
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-block">
                             <select id="status" name="status" >
                                 <option value="0">Draft</option>
-                                <option value="1">Published</option>                            
-                            </select>     
+                                <option value="1">Published</option>
+                            </select>
                         </div>
                         <div class="form-inline">
                             <input type="checkbox" name="featured" value="1">
@@ -118,24 +119,24 @@
                         </div>
                         <div class="form-block w-12">
                             <button id="btnsave" type="create" class="btn btn-primary align-self-end">Save</button>
-                        </div>                  
+                        </div>
                     </div>
                 </div>
                 <!-- categories --->
                 <div class="panel">
                     <div class="panel-heading">
                         <label for="" class="panel-title">Category</label>
-                    </div>          
-                    <div class="panel-body">                
+                    </div>
+                    <div class="panel-body">
                     <div class="form-inline">
-                            <div class="form-block w-12">                     
-                                <select id="categories" class="capitalized" name="category_id" > 
-                                        <option value="0">Uncategories</option> 
-                                    @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option> 
-                                    @endforeach                                                        
-                                </select>     
-                            </div>                    
+                            <div class="form-block w-12">
+                                <select id="categories" class="capitalized" name="category_id" >
+                                        <option value="0">Uncategories</option>
+                                    @foreach (categories() as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                     </div>
                     </div>
                 </div>
@@ -144,95 +145,98 @@
                 <div class="panel">
                     <div class="panel-heading">
                         <label for="" class="panel-title">Tags</label>
-                    </div>          
-                    <div class="panel-body"> 
-                            <div class="form-block">                     
-                                <input type="text" name="tags" value="{{ old('name') }}">  
+                    </div>
+                    <div class="panel-body">
+                            <div class="form-block">
+                                <input type="text" name="tags" value="{{ old('name') }}">
                             </div>
                             <span>Separate tags with commas</span>
                     </div>
                 </div>
                 <!-- /Tags --->
-        
+
                     <!-- product images --->
                 <div class="panel">
                     <div class="panel-heading">
                         <label for="" class="panel-title">Image Product</label>
-                    </div>          
-                    <div class="panel-body">   
+                    </div>
+                    <div class="panel-body">
                         <div class="form-block">
                             <div class="image-product">
                                 <div class="image">
-                                 
+
                                 </div>
 
-                                <div class="progress-bar-wrapper progress-image">  
-                                    <div class="progress-bar" style="--width:0" data-value="Loading...."></div>                                  
+                                <div class="progress-bar-wrapper progress-image">
+                                    <div class="progress-bar" style="--width:0" data-value="Loading...."></div>
                                 </div>
-                                
-                            
-                            </div> 
+
+
+                            </div>
                             <div class="file btn btn-primary m-t-1">
                                 <label>
-                                    Choose 
+                                    Choose
                                     <input  type="file" id="file-product-image" name="images[]" style="display:none;">
                                 </label>
 
-                            </div>  
+                            </div>
 
-                        
-                            
-                            
-                        </div>  
+
+
+
+                        </div>
                     </div>
                 </div>
                 <!-- /product images --->
-        
+
                 <!-- product-images gallery --->
                 <div class="panel">
                     <div class="panel-heading">
                         <label for="" class="panel-title">Image gallery</label>
-                    </div>          
-                    <div class="panel-body">                        
+                    </div>
+                    <div class="panel-body">
                             <div class="image-gallery-wrapper">
-                                <div class="image-gallery">                                
-                                                                     
+                                <div class="image-gallery">
+
                                 </div>
-                                <div class="progress-bar-wrapper progress-images">  
-                                    <div class="progress-bar" style="--width:0" data-value="Loading...."></div>                                  
-                                </div> 
+                                <div class="progress-bar-wrapper progress-images">
+                                    <div class="progress-bar" style="--width:0" data-value="Loading...."></div>
+                                </div>
                             </div>
-                           
+
 
                             <div class="file btn btn-primary m-t-1 w-12">
                                 <label>
-                                    Choose 
+                                    Choose
                                     <input  type="file" id="file-image-gallery" name="images[]" style="display:none;" multiple >
                                 </label>
                             </div>
-                        
-                            
-                    
+
+
+
                     </div>
                 </div>
                 <!-- /product-images gallery  --->
-        
-        
-            
-    
-        
-        
-        
+
+
+
+
+
+
+
             </div>
-            
+
         </div>
     </form>
     <form id="formUpload" method="post"   enctype="multipart/form-data">
         @csrf
     </form>
-        
+
 </div>
 
 
 
+@push('scripts')
+<script src="{{ asset('js/admin-variant-table.js') }}?v=1"></script>
+@endpush
 @endsection

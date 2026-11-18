@@ -5493,6 +5493,88 @@ td span.inactive {
   margin-right: 6px;
 }
 
+.variant-table__scroll {
+  overflow-x: auto;
+}
+
+.variant-table table {
+  min-width: 640px;
+}
+
+.variant-table td {
+  vertical-align: middle;
+}
+
+.variant-table input[type=number], .variant-table input[type=text] {
+  width: 100%;
+  min-width: 90px;
+}
+
+.variant-table__photo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 170px;
+}
+
+.variant-thumb {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  border: 1px solid var(--a-line);
+  background: var(--a-bg);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: var(--a-faint);
+}
+
+.variant-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.variant-table__photo select {
+  width: 130px;
+  max-width: none;
+}
+
+.variant-table__warning[hidden] {
+  display: none !important;
+}
+
+.variant-table table {
+  min-width: 720px;
+}
+
+.variant-table__label {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.variant-table__total {
+  margin: 12px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--a-line);
+  text-align: center;
+  font-size: 14px;
+  color: var(--a-muted);
+}
+
+.variant-table__total strong {
+  color: var(--a-ink);
+}
+
+.stock-review-note {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
 /*!
  * Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)

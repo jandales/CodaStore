@@ -76,7 +76,30 @@ class Product extends Model
      */
     public function effectivePrice(): float
     {
+        // Products with variants: the lowest variant price ("From ₱X"), with the sale applied.
+        if ($this->price_from !== null) {
+            return round((float) $this->price_from * $this->saleRatio(), 2);
+        }
+
         return $this->isOnSale() ? (float) $this->sale_price : (float) $this->regular_price;
+    }
+
+    /** Lowest price before any sale (the "was" price on cards). */
+    public function basePrice(): float
+    {
+        return $this->price_from !== null ? (float) $this->price_from : (float) $this->regular_price;
+    }
+
+    /** Fraction of the price a shopper pays: 1.0, or e.g. 0.8 for 20% off. Applies to every variant. */
+    public function saleRatio(): float
+    {
+        return $this->isOnSale() ? (float) $this->sale_price / (float) $this->regular_price : 1.0;
+    }
+
+    /** Variants cost different amounts, so lists show "From ₱X". */
+    public function hasVariablePrice(): bool
+    {
+        return $this->price_from !== null && $this->price_to !== null && (float) $this->price_to > (float) $this->price_from;
     }
 
     /** Whole-number percentage off, e.g. 20 for 20% off; 0 when not on sale. */
@@ -92,8 +115,13 @@ class Product extends Model
     /** SQL for the effective price, for sorting and filtering in queries. */
     public static function effectivePriceSql(string $table = 'products'): string
     {
-        return "(CASE WHEN {$table}.on_sale = 1 AND {$table}.sale_price > 0 AND {$table}.sale_price < {$table}.regular_price"
-            . " THEN {$table}.sale_price ELSE {$table}.regular_price END)";
+        $onSale = "{$table}.on_sale = 1 AND {$table}.sale_price > 0 AND {$table}.sale_price < {$table}.regular_price";
+
+        // Variants: lowest variant price, with the sale percentage applied.
+        return "(CASE WHEN {$table}.price_from IS NULL"
+            . " THEN (CASE WHEN {$onSale} THEN {$table}.sale_price ELSE {$table}.regular_price END)"
+            . " ELSE (CASE WHEN {$onSale} THEN ROUND({$table}.price_from * {$table}.sale_price * 1.0 / {$table}.regular_price, 2) ELSE {$table}.price_from END)"
+            . " END)";
     }
 
     public function stock()
@@ -109,6 +137,30 @@ class Product extends Model
     public function variants()
     {
         return $this->hasMany(ProductVariant::class);
+    }
+
+    /** Sellable variants (option combinations) with their own price, stock and photo. */
+    public function skus()
+    {
+        return $this->hasMany(ProductSku::class)->orderBy('position')->orderBy('id');
+    }
+
+    public function hasSkus(): bool
+    {
+        return $this->relationLoaded('skus') ? $this->skus->isNotEmpty() : $this->skus()->exists();
+    }
+
+    /** The variant matching the shopper's choices, e.g. ['size' => 'M'], or null. */
+    public function skuFor(array $options): ?ProductSku
+    {
+        if (!$options) {
+            return null;
+        }
+        $key = ProductSku::keyFor($options);
+
+        return $this->relationLoaded('skus')
+            ? $this->skus->firstWhere('option_key', $key)
+            : $this->skus()->where('option_key', $key)->first();
     }
 
     public function hasVariants()
