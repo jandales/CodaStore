@@ -54,7 +54,7 @@ class Cart extends Model
     public function scopeByUser()
     {
         $id = Cookie::get('cart-id');
-        return $this->where('cart_id',$id)->with('items','items.product','items.product.stock', 'coupon');
+        return $this->where('cart_id',$id)->with('items','items.product','items.product.stock', 'items.sku.product', 'coupon');
     }
 
     public function scopeTotal()
@@ -63,7 +63,7 @@ class Cart extends Model
         $total = 0;
         foreach($cart->items as $item)
         {
-            $total += $item->qty * $item->product->effectivePrice();
+            $total += $item->qty * $item->unitPrice();
         }
         return $total;
     }
@@ -74,10 +74,10 @@ class Cart extends Model
      */
     public function recalculateTotal(): self
     {
-        $this->loadMissing('items.product');
+        $this->loadMissing('items.product', 'items.sku.product');
         $total = 0;
         foreach ($this->items as $item) {
-            $total += $item->qty * $item->product->effectivePrice();
+            $total += $item->qty * $item->unitPrice();
         }
         $this->total = $total;
         $this->save();
@@ -90,6 +90,12 @@ class Cart extends Model
         return $this->items->where('product_id', $id)->first();
     }
 
+    /** The bag line for this product and variant (each variant is its own line). */
+    public function lineFor(int $productId, ?int $skuId)
+    {
+        return $this->items->first(fn ($item) => (int) $item->product_id === $productId && (int) $item->sku_id === (int) $skuId);
+    }
+
     public function scopeUpdateTotal()
     {
         $cart = self::scopeByUser()->first();
@@ -98,7 +104,7 @@ class Cart extends Model
 
         foreach($cart->items as $item) {
 
-            $total += $item->qty * $item->product->effectivePrice();
+            $total += $item->qty * $item->unitPrice();
 
         }
 

@@ -22,8 +22,8 @@ class LowStockDigestMail extends Mailable
 
     public function build()
     {
-        $soldOut = $this->products->filter(fn ($p) => $p->stockQty() <= 0)->count();
-        $subject = "{$this->products->count()} products low on stock" . ($soldOut ? " ({$soldOut} sold out)" : '');
+        $soldOut = $this->products->filter(fn ($item) => $item->qty <= 0)->count();
+        $subject = "{$this->products->count()} " . ($this->products->count() === 1 ? 'item' : 'items') . " low on stock" . ($soldOut ? " ({$soldOut} sold out)" : '');
 
         return $this->subject($subject)->markdown('emails.admin.low-stock', [
             'products' => $this->products,

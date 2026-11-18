@@ -18,8 +18,14 @@ class OrderProduct extends Model
         'product_id',
         'qty',
         'price',
-        'properties'
+        'properties',
+        'sku_id',
     ];
+
+    public function sku()
+    {
+        return $this->belongsTo(ProductSku::class, 'sku_id');
+    }
 
     public function product()
     {
@@ -29,6 +35,6 @@ class OrderProduct extends Model
     public function total()
     {
         return $this->qty * $this->price;
-    } 
-  
+    }
+
 }

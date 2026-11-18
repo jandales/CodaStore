@@ -498,3 +498,8 @@
 .return-request label[for] { display: block; font-weight: 500; }
 .return-request textarea { width: 100%; max-width: 560px; display: block; margin-top: 4px; }
 .return-request .muted { color: var(--ink-muted); font-weight: 400; }
+
+// Product page: variant stock
+.pdp-variants .variant-options.is-soldout .attribute { opacity: .45; text-decoration: line-through; cursor: not-allowed; }
+.pdp-stock--ok { color: var(--success); }
+.price__from { font-size: .85em; color: var(--ink-muted); margin-right: 2px; }

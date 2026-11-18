@@ -46,17 +46,17 @@
                                     <td>
                                         <div class="cart-line">
                                             <a href="{{ $itemUrl }}" class="cart-line__image" tabindex="-1" aria-hidden="true">
-                                                <img src="{{ $item->product->imagePath }}" alt="">
+                                                <img src="{{ optional($item->sku)->image ?: $item->product->imagePath }}" alt="">
                                             </a>
                                             <div class="cart-line__info">
                                                 <a class="cart-line__name capitalize" href="{{ $itemUrl }}">{{ $item->product->name }}</a>
-                                                <span class="cart-line__meta">@include('components.price', ['product' => $item->product, 'compact' => true])</span>
+                                                <span class="cart-line__meta">@include('components.price', ['product' => $item->product, 'sku' => $item->sku, 'compact' => true])</span>
                                                 @if ($item->attributes != null)
                                                     @foreach ($item->attributes as $key => $variant)
                                                         <span class="cart-line__meta capitalize">{{ $key }}: {{ $variant }}</span>
                                                     @endforeach
                                                 @endif
-                                                @php $inStock = (int) optional($item->product->stock)->qty; @endphp
+                                                @php $inStock = $item->availableQty(); @endphp
                                                 @if ($inStock < $item->qty)
                                                     <span class="cart-line__stock" role="alert">
                                                         {{ $inStock === 0 ? 'Sold out. Please remove this item.' : 'Only ' . $inStock . ' left. Please lower the quantity.' }}
@@ -69,7 +69,7 @@
                                     <td>
                                         <div class="cart-form-group cart-line__qty">
                                             <div class="btn-num-product-down flex-vert-center add-less-quantity" type="less" role="button" aria-label="Decrease quantity"><i class="fas fa-minus" aria-hidden="true"></i></div>
-                                            <input class="cart-qty num-product" item="{{ $item->id }}" type="number" min="1" value="{{ $item->qty }}" aria-label="Quantity for {{ $item->product->name }}" {!! $item->product->stock->qty == 0 ? 'disabled' : '' !!}>
+                                            <input class="cart-qty num-product" item="{{ $item->id }}" type="number" min="1" value="{{ $item->qty }}" aria-label="Quantity for {{ $item->product->name }}" {!! $item->availableQty() == 0 ? 'disabled' : '' !!} max="{{ max(1, $item->availableQty()) }}">
                                             <div class="btn-num-product-up flex-vert-center add-less-quantity" type="add" role="button" aria-label="Increase quantity"><i class="fas fa-plus" aria-hidden="true"></i></div>
                                         </div>
                                     </td>

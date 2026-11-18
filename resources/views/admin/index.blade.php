@@ -171,11 +171,18 @@
         </div>
     </section>
 </div>
+@if ($stock_to_review)
+    <div class="alert alert-warning stock-review-note mt20" role="status">
+        <span><strong>{{ $stock_to_review }} {{ \Illuminate\Support\Str::plural('product', $stock_to_review) }}</strong> had their stock split evenly across sizes when variants were added. Check the real count for each size.</span>
+        <a href="{{ route('admin.inventory.filter', ['needs-review']) }}" class="btn btn-light">Check stock</a>
+    </div>
+@endif
+
 <section class="dash-card low-stock" aria-labelledby="low-stock-title">
     <div class="dash-card__head">
         <div>
             <h2 id="low-stock-title" class="dash-card__title">Low stock @if($low_stock_count)<span class="sb-badge">{{ $low_stock_count }}</span>@endif</h2>
-            <p class="dash-card__sub">Published products with {{ $low_stock_threshold }} or fewer left</p>
+            <p class="dash-card__sub">Products and sizes with {{ $low_stock_threshold }} or fewer left</p>
         </div>
         @if ($low_stock_count)
             <a href="{{ route('admin.inventory.filter', ['low-stock']) }}" class="dash-link">View all</a>
@@ -188,10 +195,10 @@
         </div>
     @else
         <ul class="low-stock__list" role="list">
-            @foreach ($low_stock as $product)
+            @foreach ($low_stock as $item)
                 <li>
-                    <a href="{{ route('admin.products.edit', [$product->encryptedId()]) }}" class="low-stock__name capitalize">{{ $product->name }}</a>
-                    <span class="low-stock__qty {{ $product->stockQty() <= 0 ? 'is-out' : '' }}">{{ $product->stockQty() <= 0 ? 'Sold out' : $product->stockQty() . ' left' }}</span>
+                    <a href="{{ route('admin.products.edit', [$item->product->encryptedId()]) }}" class="low-stock__name capitalize">{{ $item->name }}</a>
+                    <span class="low-stock__qty {{ $item->qty <= 0 ? 'is-out' : '' }}">{{ $item->qty <= 0 ? 'Sold out' : $item->qty . ' left' }}</span>
                 </li>
             @endforeach
         </ul>

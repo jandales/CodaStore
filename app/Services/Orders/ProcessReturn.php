@@ -57,7 +57,7 @@ class ProcessReturn
 
             if ($restock) {
                 foreach ($order->items as $item) {
-                    Stock::where('product_id', $item->product_id)->increment('qty', $item->qty);
+                    \App\Services\Products\StockLedger::restore($item);
                 }
             }
 

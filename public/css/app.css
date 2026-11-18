@@ -8049,6 +8049,22 @@ input[type=radio] {
   font-weight: 400;
 }
 
+.pdp-variants .variant-options.is-soldout .attribute {
+  opacity: 0.45;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+.pdp-stock--ok {
+  color: var(--success);
+}
+
+.price__from {
+  font-size: 0.85em;
+  color: var(--ink-muted);
+  margin-right: 2px;
+}
+
 #sidecartModal {
   background: rgba(26, 26, 26, 0.32);
 }

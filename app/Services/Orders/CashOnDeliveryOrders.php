@@ -28,7 +28,7 @@ class CashOnDeliveryOrders
             }
 
             foreach ($order->items as $item) {
-                Stock::where('product_id', $item->product_id)->increment('qty', $item->qty);
+                \App\Services\Products\StockLedger::restore($item);
             }
             if ($order->coupon_id) {
                 Coupon::whereKey($order->coupon_id)->where('usage', '>', 0)->decrement('usage');

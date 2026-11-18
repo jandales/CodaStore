@@ -5493,6 +5493,381 @@ td span.inactive {
   margin-right: 6px;
 }
 
+.variant-table__scroll {
+  overflow-x: auto;
+}
+
+.variant-table table {
+  min-width: 640px;
+}
+
+.variant-table td {
+  vertical-align: middle;
+}
+
+.variant-table input[type=number], .variant-table input[type=text] {
+  width: 100%;
+  min-width: 90px;
+}
+
+.variant-table__photo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 170px;
+}
+
+.variant-thumb {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  border: 1px solid var(--a-line);
+  background: var(--a-bg);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: var(--a-faint);
+}
+
+.variant-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.variant-table__photo select {
+  width: 130px;
+  max-width: none;
+}
+
+.variant-table__warning[hidden] {
+  display: none !important;
+}
+
+.variant-table table {
+  min-width: 720px;
+}
+
+.variant-table__label {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.variant-table__total {
+  margin: 12px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--a-line);
+  text-align: center;
+  font-size: 14px;
+  color: var(--a-muted);
+}
+
+.variant-table__total strong {
+  color: var(--a-ink);
+}
+
+.stock-review-note {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.inventory-product td {
+  background: var(--a-bg);
+}
+
+.inventory-variant .column-product {
+  padding-left: 28px;
+}
+
+.inventory-variant__label {
+  font-weight: 600;
+}
+
+.inventory-review {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  align-items: baseline;
+  margin-top: 4px;
+  font-size: 12.5px;
+  color: #92400E;
+}
+
+.inventory-review .link-button {
+  color: var(--a-primary);
+}
+
+.variants-card .panel-body {
+  display: grid;
+  gap: 12px;
+}
+
+.variant-options-list {
+  display: grid;
+  gap: 0;
+  border: 1px solid var(--a-line);
+  border-radius: var(--a-radius-sm);
+  overflow: hidden;
+}
+
+.variant-options-list:empty {
+  display: none;
+}
+
+.variant-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--a-line);
+  background: #fff;
+}
+
+.variant-option:last-child {
+  border-bottom: 0;
+}
+
+.variant-option.is-editing {
+  display: grid;
+  gap: 4px;
+  align-items: stretch;
+  background: var(--a-bg);
+}
+
+.variant-option__name {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.variant-chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.variant-chips li {
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: #EEF0F4;
+  font-size: 13px;
+  color: var(--a-ink);
+}
+
+.variant-values {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border: 1px solid var(--a-line);
+  border-radius: var(--a-radius-sm);
+  background: #fff;
+}
+
+.variant-values input {
+  flex: 1;
+  min-width: 140px;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 4px;
+}
+
+.variant-chip-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 4px 3px 10px;
+  border-radius: 6px;
+  background: #EEF0F4;
+  font-size: 13px;
+}
+
+.variant-chip-edit button {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--a-muted);
+  padding: 2px 4px;
+}
+
+.variant-option__actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.variant-option__delete {
+  color: #B91C1C;
+}
+
+.variant-add-option {
+  justify-self: start;
+  border: 0;
+  background: none;
+  padding: 4px 0;
+  color: var(--a-primary);
+  font: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.variant-add-option[hidden] {
+  display: none;
+}
+
+.variant-add-option:hover {
+  text-decoration: underline;
+}
+
+.variants-card .variant-table {
+  border-top: 1px solid var(--a-line);
+}
+
+.variants-card .variant-table[hidden] {
+  display: none;
+}
+
+.variants-card .variant-table table {
+  min-width: 560px;
+  margin: 0;
+}
+
+.variant-table__variant {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.variants-card .variant-thumb {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  cursor: pointer;
+}
+
+.variants-card .variant-thumb select {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.variant-table__label {
+  font-weight: 600;
+}
+
+.money-input {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--a-line);
+  border-radius: var(--a-radius-sm);
+  background: #fff;
+  padding-left: 10px;
+}
+
+.money-input span {
+  color: var(--a-muted);
+  font-size: 14px;
+}
+
+.money-input input {
+  border: 0 !important;
+  box-shadow: none !important;
+  min-width: 80px;
+}
+
+.variants-card .variant-table__total {
+  margin: 0;
+  padding: 14px 16px;
+  border-top: 1px solid var(--a-line);
+  background: var(--a-bg);
+}
+
+.variant-table__help {
+  padding: 0 16px 14px;
+  margin: 0;
+  background: var(--a-bg);
+}
+
+.admin-body [hidden] {
+  display: none !important;
+}
+
+.inventory-table .column-product .item-name {
+  display: block;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.inventory-table .inventory-variant__label {
+  display: inline-block;
+  margin-top: 2px;
+  padding: 1px 8px;
+  border-radius: 6px;
+  background: #EEF0F4;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.inventory-table tr.is-out .stock {
+  color: #B91C1C;
+}
+
+.inventory-table .column-product {
+  min-width: 220px;
+}
+
+.inventory-table .type {
+  min-width: 116px;
+}
+
+.inventory-table .inventory-review {
+  max-width: 260px;
+}
+
+.inventory-table td {
+  vertical-align: middle;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.inventory-table .inventory-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+.inventory-table .inventory-item .item-name {
+  display: inline;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.inventory-table .inventory-item .inventory-variant__label {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.inventory-table .inventory-review {
+  margin-top: 8px;
+}
+
+.inventory-table .column-image .image-50 {
+  margin: 0 auto;
+}
+
 /*!
  * Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)

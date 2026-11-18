@@ -26,6 +26,7 @@ class ActivityLog extends Model
         'products' => ['Products', 'product.'],
         'stock' => ['Stock', 'stock.'],
         'staff' => ['Staff', 'staff.'],
+        'couriers' => ['Couriers', 'courier.'],
     ];
 
     /** Set while a bulk job (e.g. CSV import) writes its own summary entry instead. */

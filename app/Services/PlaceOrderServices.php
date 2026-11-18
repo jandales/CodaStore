@@ -6,6 +6,7 @@ use App\Exceptions\OutOfStockException;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Stock;
+use App\Models\ProductSku;
 use App\Models\Coupon;
 use App\Models\OrderBilling;
 use App\Models\OrderPayment;
@@ -194,8 +195,9 @@ class PlaceOrderServices {
             OrderProduct::create([
                 'order_id' => $this->order->id,
                 'product_id' => $item->product_id,
+                'sku_id' => $item->sku_id,
                 'qty' => $item->qty,
-                'price' => $item->product->effectivePrice(),
+                'price' => $item->unitPrice(),
                 'properties' => $item->attributes,
             ]);
 
@@ -204,39 +206,58 @@ class PlaceOrderServices {
     }
 
     /**
-     * Lock the stock rows for every product in the bag, make sure there is enough of each,
-     * then subtract. Throws OutOfStockException (rolling back the whole order) if not.
+     * Lock the stock rows for every product and variant in the bag, make sure there is enough
+     * of each, then subtract. Throws OutOfStockException (rolling back the whole order) if not.
      */
     private function reserveStock($items)
     {
-        $needed = [];
-        foreach ($items as $item) {
-            $needed[$item->product_id] = ($needed[$item->product_id] ?? 0) + (int) $item->qty;
-        }
-
         Self::assertStock($items, true);
 
-        foreach ($needed as $productId => $qty) {
-            Stock::where('product_id', $productId)->decrement('qty', $qty);
+        foreach ($items as $item) {
+            if ($item->sku_id) {
+                ProductSku::whereKey($item->sku_id)->decrement('qty', (int) $item->qty);
+            }
+            Stock::where('product_id', $item->product_id)->decrement('qty', (int) $item->qty);
         }
     }
 
-    /** Throw OutOfStockException if any product in the bag has fewer units than requested. */
+    /** Throw OutOfStockException if any product or variant in the bag has fewer units than requested. */
     private function assertStock($items, bool $lock = false)
     {
-        $needed = [];
+        $needed = [];      // product id => qty (products without variants)
+        $neededSku = [];   // variant id => qty
         foreach ($items as $item) {
-            $needed[$item->product_id] = ($needed[$item->product_id] ?? 0) + (int) $item->qty;
+            if ($item->sku_id) {
+                $neededSku[$item->sku_id] = ($neededSku[$item->sku_id] ?? 0) + (int) $item->qty;
+            } else {
+                $needed[$item->product_id] = ($needed[$item->product_id] ?? 0) + (int) $item->qty;
+            }
         }
 
-        $query = Stock::whereIn('product_id', array_keys($needed));
-        $stocks = ($lock ? $query->lockForUpdate() : $query)->get()->keyBy('product_id');
+        if ($neededSku) {
+            $query = ProductSku::whereIn('id', array_keys($neededSku));
+            $skus = ($lock ? $query->lockForUpdate() : $query)->get()->keyBy('id');
+            foreach ($neededSku as $skuId => $qty) {
+                $sku = $skus->get($skuId);
+                $available = (int) optional($sku)->qty;
+                if ($available < $qty) {
+                    $line = $items->firstWhere('sku_id', $skuId);
+                    $name = optional($line->product)->name ?? 'This item';
+                    throw new OutOfStockException($sku ? $name . ' (' . $sku->label() . ')' : $name, $available);
+                }
+            }
+        }
 
-        foreach ($needed as $productId => $qty) {
-            $available = (int) optional($stocks->get($productId))->qty;
-            if ($available < $qty) {
-                $name = optional($items->firstWhere('product_id', $productId)->product)->name ?? 'This item';
-                throw new OutOfStockException($name, $available);
+        if ($needed) {
+            $query = Stock::whereIn('product_id', array_keys($needed));
+            $stocks = ($lock ? $query->lockForUpdate() : $query)->get()->keyBy('product_id');
+
+            foreach ($needed as $productId => $qty) {
+                $available = (int) optional($stocks->get($productId))->qty;
+                if ($available < $qty) {
+                    $name = optional($items->firstWhere('product_id', $productId)->product)->name ?? 'This item';
+                    throw new OutOfStockException($name, $available);
+                }
             }
         }
     }

@@ -6344,21 +6344,21 @@ __webpack_require__.r(__webpack_exports__);
 // const MAX_LENGTH = 16;
 // const DELIMITER = "-";
 // if(cartNumberInput){
-//     cartNumberInput.addEventListener('input', () => { 
+//     cartNumberInput.addEventListener('input', () => {
 //         const value = cartNumberInput.value;
 //         let cardNumer = '';
-//         if (value.length >= MAX_LENGTH){          
-//             Array.from(value).forEach((number, index) => {  
+//         if (value.length >= MAX_LENGTH){
+//             Array.from(value).forEach((number, index) => {
 //                if(index / 4 == 1 || index / 4 == 2 || index / 4 == 3){
 //                     if(index < MAX_LENGTH) {
-//                         cardNumer += ` ${DELIMITER} ${number}`; 
-//                     }    
-//                }  
-//                else{                   
+//                         cardNumer += ` ${DELIMITER} ${number}`;
+//                     }
+//                }
+//                else{
 //                     if(index  < MAX_LENGTH) {
-//                         cardNumer  += number; 
-//                     }  
-//                }     
+//                         cardNumer  += number;
+//                     }
+//                }
 //             });
 //         }
 //         cartNumberInput.value = cardNumer;
@@ -6783,7 +6783,7 @@ function store() {
   //     attributes.push( { name : value } )
   //    }
   // );
-  // return 
+  // return
 
   $.ajax({
     url: url,
@@ -6885,7 +6885,7 @@ function reviewerRating() {
   // get the element
   var reviewer = document.querySelectorAll('.ul-rate-star');
   reviewer.forEach(function (review) {
-    // get the product rating from the element    
+    // get the product rating from the element
     var rating = review.getAttribute('rate-star'); // creating the review rating
 
     createStars(rating, review);
@@ -6909,9 +6909,9 @@ function createStars(rating, elemContainer) {
 
   for (i = 0; i < rating; i++) {
     //create an element list item
-    var li = document.createElement('li'); // set li elemenent a innner html 
+    var li = document.createElement('li'); // set li elemenent a innner html
 
-    li.innerHTML = '<i class="fas fa-star" aria-hidden="true">'; //append star in the elemContainer                   
+    li.innerHTML = '<i class="fas fa-star" aria-hidden="true">'; //append star in the elemContainer
 
     elemContainer.appendChild(li);
   } // creating transparent star
@@ -6919,10 +6919,10 @@ function createStars(rating, elemContainer) {
 
   for (j = 0; j < star - rating; j++) {
     //create an element list item
-    var _li = document.createElement('li'); // set li elemenent a innner html 
+    var _li = document.createElement('li'); // set li elemenent a innner html
 
 
-    _li.innerHTML = '<i class="far fa-star" aria-hidden="true">'; //append star in the elemContainer                          
+    _li.innerHTML = '<i class="far fa-star" aria-hidden="true">'; //append star in the elemContainer
 
     elemContainer.appendChild(_li);
   }
@@ -6935,7 +6935,7 @@ var addreviewwrapper = document.querySelector('.add-review-wrapper');
 if (editbtn) {
   editbtn.addEventListener('click', function () {
     //  /// scroll to texteditor
-    //  scrolldown();    
+    //  scrolldown();
     //set the review text tot texteditor
     textEditor.innerText = editbtn.getAttribute('value');
     var rating = this.getAttribute('rate'); /// set the review rate into input element
@@ -7057,7 +7057,7 @@ function cartsToViews() {
   cart.items.forEach(function (item) {
     var cartItemsElement = document.createElement('div');
     cartItemsElement.classList.add('cart-items', 'gap10');
-    var items = "<div class=\"cart-image\">\n                        <img class=\"img\" src=\"".concat(item.product.imagePath, "\" alt=\"\" srcset=\"\">              \n                     </div>\n                    <div class=\"cart-decription\">\n                        <p class=\"cart-item-name\">").concat(item.product.name, "</p>  \n                        <span class=\"cart-item-info\">").concat(item.qty, "  x  ").concat(item.product.effective_price, "</span>  \n                        <ul class=\"cart-item-variant\">  \n                          \n                        </ul> \n                    </div>\n                    <span class=\"cart-remove\" data-id=\"").concat(item.id, "\">Remove</span>           \n            ");
+    var items = "<div class=\"cart-image\">\n                        <img class=\"img\" src=\"".concat(item.product.imagePath, "\" alt=\"\" srcset=\"\">              \n                     </div>\n                    <div class=\"cart-decription\">\n                        <p class=\"cart-item-name\">").concat(item.product.name, "</p>  \n                        <span class=\"cart-item-info\">").concat(item.qty, "  x  ").concat(item.unit_price != null ? item.unit_price : item.product.effective_price, "</span>  \n                        <ul class=\"cart-item-variant\">  \n                          \n                        </ul> \n                    </div>\n                    <span class=\"cart-remove\" data-id=\"").concat(item.id, "\">Remove</span>           \n            ");
     cartItemsElement.innerHTML = items;
     var ul = cartItemsElement.querySelector('.cart-item-variant');
     var attributes = item.attributes;
@@ -7151,7 +7151,7 @@ cartQtys.forEach(function (element) {
 });
 updateQuantity.forEach(function (element) {
   element.addEventListener('click', function () {
-    // get type (add, minus) 
+    // get type (add, minus)
     var type = element.getAttribute('type'); // get quantity  element
 
     var input = element.closest('td').querySelector('.cart-qty'); // get current item in the cart
@@ -7169,7 +7169,7 @@ updateQuantity.forEach(function (element) {
 
 
     if (type == 'minus') {
-      qty = parseInt(input.value) - 1; // call ajax request to update cart quantity 
+      qty = parseInt(input.value) - 1; // call ajax request to update cart quantity
 
       updateQty(cart, qty);
       return;
@@ -7487,13 +7487,13 @@ var images = []; // variable index use for set index in images array
 var index = 0; // load when pageload
 
 document.addEventListener('DOMContentLoaded', function () {
-  getImages(); // setFullImage(images[0].src); 
+  getImages(); // setFullImage(images[0].src);
   // images.forEach(image => {
   //     image.element.addEventListener('click', () => {
   //         setFullImage(image.src);
   //         thumbnailFucos(image.element);
   //     })
-  // })               
+  // })
 });
 
 function thumbnailFucos(elem) {
@@ -7527,7 +7527,7 @@ function getImages() {
 
 function setFullImage(src) {
   // get images container
-  var fullimage = document.querySelector('.full-image'); // get img tag                 
+  var fullimage = document.querySelector('.full-image'); // get img tag
 
   var image = document.getElementById('fullImage'); // remove image from container
 
@@ -7596,14 +7596,14 @@ function runTabs() {
       tabToActivate.classList.add('tabs-content-active'); //set background color for active content
 
       tabToActivate.classList.add(background); // add class in tabs-button
-      // add class tab-button-active for active tab button           
+      // add class tab-button-active for active tab button
 
       button.classList.add('tab-button-active'); // add background color for active button
 
       button.classList.add(background);
     });
   });
-} // reset element 
+} // reset element
 // remove some classes (active, background)
 
 
@@ -7611,11 +7611,11 @@ function reset(parent, child, classList) {
   // find selector element in parent elemet
   // and iterate the child element
   parent.querySelectorAll(child).forEach(function (content) {
-    // iterate the classes 
+    // iterate the classes
     classList.forEach(function (classitem) {
-      // if class is not null              
+      // if class is not null
       if (classitem != null) {
-        // remove class 
+        // remove class
         content.classList.remove(classitem);
       }
     });
@@ -7924,7 +7924,7 @@ NumeralFormatter.groupStyle = {
     thousand: 'thousand',
     lakh:     'lakh',
     wan:      'wan',
-    none:     'none'    
+    none:     'none'
 };
 
 NumeralFormatter.prototype = {
@@ -7971,7 +7971,7 @@ NumeralFormatter.prototype = {
         } else {
             partSignAndPrefix = partSign;
         }
-        
+
         partInteger = value;
 
         if (value.indexOf(owner.numeralDecimalMark) >= 0) {
@@ -8036,7 +8036,7 @@ var DateFormatter = function (datePattern, dateMin, dateMax) {
         return parseInt(x, 10);
       });
     if (owner.dateMax.length === 2) owner.dateMax.unshift(0);
-    
+
     owner.initBlocks();
 };
 
@@ -8907,7 +8907,7 @@ var DefaultProperties = {
 
         // others
         target.swapHiddenInput = !!opts.swapHiddenInput;
-        
+
         target.numericOnly = target.creditCard || target.date || !!opts.numericOnly;
 
         target.uppercase = !!opts.uppercase;
@@ -26902,7 +26902,7 @@ module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBun
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -26916,20 +26916,20 @@ module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBun
 /******/ 			loaded: false,
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 	
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = __webpack_modules__;
-/******/ 	
+/******/
 /************************************************************************/
 /******/ 	/* webpack/runtime/chunk loaded */
 /******/ 	(() => {
@@ -26962,7 +26962,7 @@ module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBun
 /******/ 			return result;
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
 /******/ 		// getDefaultExport function for compatibility with non-harmony modules
@@ -26974,7 +26974,7 @@ module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBun
 /******/ 			return getter;
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -26986,7 +26986,7 @@ module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBun
 /******/ 			}
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/global */
 /******/ 	(() => {
 /******/ 		__webpack_require__.g = (function() {
@@ -26998,12 +26998,12 @@ module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBun
 /******/ 			}
 /******/ 		})();
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -27014,7 +27014,7 @@ module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBun
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/node module decorator */
 /******/ 	(() => {
 /******/ 		__webpack_require__.nmd = (module) => {
@@ -27023,11 +27023,11 @@ module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBun
 /******/ 			return module;
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	(() => {
 /******/ 		// no baseURI
-/******/ 		
+/******/
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
@@ -27036,19 +27036,19 @@ module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBun
 /******/ 			"css/main": 0,
 /******/ 			"css/app": 0
 /******/ 		};
-/******/ 		
+/******/
 /******/ 		// no chunk on demand loading
-/******/ 		
+/******/
 /******/ 		// no prefetching
-/******/ 		
+/******/
 /******/ 		// no preloaded
-/******/ 		
+/******/
 /******/ 		// no HMR
-/******/ 		
+/******/
 /******/ 		// no HMR manifest
-/******/ 		
+/******/
 /******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
-/******/ 		
+/******/
 /******/ 		// install a JSONP callback for chunk loading
 /******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
 /******/ 			var [chunkIds, moreModules, runtime] = data;
@@ -27073,14 +27073,14 @@ module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBun
 /******/ 			}
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
-/******/ 		
+/******/
 /******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
-/******/ 	
+/******/
 /************************************************************************/
-/******/ 	
+/******/
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
@@ -27088,6 +27088,6 @@ module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBun
 /******/ 	__webpack_require__.O(undefined, ["css/main","css/app"], () => (__webpack_require__("./resources/sass/app.scss")))
 /******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/main","css/app"], () => (__webpack_require__("./resources/sass/main.scss")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
-/******/ 	
+/******/
 /******/ })()
 ;

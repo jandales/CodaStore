@@ -1,13 +1,13 @@
 @component('mail::message')
 # Low-stock report
 
-These published products have {{ $threshold }} or fewer left. Restock them before they sell out.
+These products and sizes have {{ $threshold }} or fewer left. Restock them before they sell out.
 
 @component('mail::table')
 | Product | SKU | Left |
 |:--------|:----|-----:|
-@foreach ($products as $product)
-| {{ ucwords($product->name) }} | {{ $product->sku ?: '—' }} | {{ $product->stockQty() <= 0 ? 'Sold out' : $product->stockQty() }} |
+@foreach ($products as $item)
+| {{ ucwords($item->name) }} | {{ optional($item->sku)->sku ?: ($item->product->sku ?: '—') }} | {{ $item->qty <= 0 ? 'Sold out' : $item->qty }} |
 @endforeach
 @endcomponent
 

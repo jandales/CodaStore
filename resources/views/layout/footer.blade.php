@@ -9,6 +9,7 @@
 <script src="{{asset('js/jquery.min.js')}}"></script>
 <script src="{{ asset('js/main.js') }}"></script>
 <script src="/library/ckeditor/ckeditor.js"></script>
+@stack('scripts')
 
 {{-- <script type="text/javascript">
     $(document).ready(function () {

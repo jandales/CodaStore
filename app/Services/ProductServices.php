@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
 
-class ProductServices 
+class ProductServices
 {
 
     private $defaultImage = '/img/products/default.jpg';
@@ -21,12 +21,12 @@ class ProductServices
     public function list()
     {
         return Product::with('category','stock')->paginate(10);
-    }  
-    
+    }
+
 
     public function store(Request $request)
-    {     
-        
+    {
+
        $image = json_decode($request->image, true);
 
        return  DB::transaction(function ()  use ($request, $image){
@@ -39,36 +39,37 @@ class ProductServices
                     $validated['admin_id'] = auth()->guard('admin')->user()->id;
                     $validated['short_description'] = $request->short_description;
                     $validated['long_description'] = $request->long_description;
-                    $validated['tags'] = $request->tags;            
-                    $product = Product::create($validated);  
+                    $validated['tags'] = $request->tags;
+                    $product = Product::create($validated);
 
                     Stock::create([
                         'product_id' => $product->id,
-                        'qty' => $request->qty,
-                    ]);         
+                        'qty' => (int) ($request->qty ?? 0), // variants: set from the variant table below
+                    ]);
 
-                    Self::imageGalleryUpdate($request->input('images'), $product->id);    
-                    Self::createAttributes($request->input('attributes'), $request->hasVariant, $product->id);    
+                    Self::imageGalleryUpdate($request->input('images'), $product->id);
+                    Self::createAttributes($request->input('attributes'), $request->hasVariant, $product->id);
+                    Self::syncVariants($request, $product);
 
                     return $product;
                 });
-       
 
-      
-        
-          
-       
+
+
+
+
+
     }
 
-    public function update(Request $request, Product $product) 
-    {     
-     
+    public function update(Request $request, Product $product)
+    {
+
         $image = json_decode($request->image, true);
-        
+
         return DB::transaction(function () use($request, $product, $image) {
             $product->name = $request->name;
             $product->slug = productSlug($request->name);
-            $product->category_id = $request->category_id;    
+            $product->category_id = $request->category_id;
             $product->short_description = $request->short_description;
             $product->long_description = $request->long_description;
             $product->sku = $request->sku;
@@ -80,84 +81,99 @@ class ProductServices
             $product->tags = $request->tags;
             $product->featured = $request->featured ?? 0;
             $product->imagePath = $image['path'] ?? $product->imagePath;
-            $product->save();        
-    
+            $product->save();
+
             $stock = $product->stock;
 
-            $stock->qty = $request->qty;
+            $stock->qty = (int) ($request->qty ?? 0); // variants: replaced by the sum of the variants below
 
-            $stock->save();     
-       
+            $stock->save();
+
             Self::updateProductImage($image, $product->imageDetail() );
-           
+
             Self::imageGalleryUpdate($request->input('images'), $product->id);
-    
+
             Self::createAttributes($request->input('attributes'), $request->hasVariant, $product->id);
-    
+            Self::syncVariants($request, $product);
+
             return $product;
 
         });
-  
-            
-             
-       
+
+
+
+
+    }
+
+    /** Variants table from the form; without options the single quantity is the stock. */
+    private function syncVariants(Request $request, Product $product): void
+    {
+        $skus = app(\App\Services\Products\ProductSkus::class);
+
+        if ($request->boolean('hasVariant') && !empty($request->input('attributes')) && is_array($request->input('skus'))) {
+            $skus->sync($product, $request->input('skus'));
+        } else {
+            $skus->clear($product);
+        }
+
+        // Saving the form means the per-variant stock has been looked at.
+        $product->forceFill(['variant_stock_reviewed' => true])->saveQuietly();
     }
 
     public function destroy(Product $product)
-    {    
-        return $product->delete();       
+    {
+        return $product->delete();
     }
 
     public function forceDestroy(Product $product)
-    {    
-      
+    {
+
         return DB::transaction( function () use ( $product ) {
 
             ProductAttribute::where('product_id', $product->id)->delete();
 
-            ProductVariant::where('product_id', $product->id)->delete();   
-               
+            ProductVariant::where('product_id', $product->id)->delete();
+
             if ( $product->stock != null ) {
 
-                $product->stock->delete(); 
+                $product->stock->delete();
 
             }
-    
+
             foreach ($product->photos as $photo ) {
-
-                $path = public_path( $photo->path );
-
-                File::delete( $path );
 
                 $photo->delete();
 
+                // Other products may share the same file.
+                \App\Services\Products\ProductImageFiles::deleteIfUnused($photo->path);
+
             }
-    
+
             return $product->delete();
 
         });
-        
-       
+
+
     }
 
     public function destroySelectedItem($selected)
     {
-        foreach ( $selected as $id ) {  
+        foreach ( $selected as $id ) {
 
             $id = decrypt($id);
 
             $product = Product::find($id);
 
-            Self::destroy($product);  
+            Self::destroy($product);
 
         }
     }
 
     public function changeStatus(Product $product)
-    {    
-        $status = $product->status == 0 ?? 1;  
+    {
+        $status = $product->status == 0 ?? 1;
 
-        Self::updateStatus($product, $status); 
+        Self::updateStatus($product, $status);
 
     }
 
@@ -172,76 +188,76 @@ class ProductServices
 
             Self::updateStatus($product, $status);
 
-        }  
-    }  
+        }
+    }
 
-   
+
     public function filter($filterBy, $value)
-    {   
+    {
 
         $products = Product::with(['category', 'stock'])
 
             ->whereHas('category', function ($query) use ($filterBy, $value) {
 
-                if($filterBy != 'all') $query->where($filterBy, $value); 
+                if($filterBy != 'all') $query->where($filterBy, $value);
 
-        })->paginate(10);       
-        
+        })->paginate(10);
+
         return ['products' => $products, 'filter' => $value == 0 ? "status=unpublished" : "status=published"];
     }
 
     private function updateStatus(Product $product, $status)
-    {   
+    {
         $product->status = $status;
 
-        $product->save();  
+        $product->save();
     }
-    
+
     private function updateProductImage($request, $photo)
     {
-        if ($request == null) return;   
+        if ($request == null) return;
 
-        if ($photo != null)  Self::unlink($photo); 
+        if ($photo != null)  Self::unlink($photo);
 
     }
 
     private function imageGalleryUpdate($images, $product_id)
-    {       
-      
-        if ($images == null)  return;  
-    
-        foreach ($images as $image) {  
+    {
 
-            $image = json_decode($image, true);  
-         
+        if ($images == null)  return;
+
+        foreach ($images as $image) {
+
+            $image = json_decode($image, true);
+
             $photo = Photo::find($image['id']);
-                      
-            if ($image['deleted']  == 1) {  
+
+            if ($image['deleted']  == 1) {
 
                 Self::unlink($photo);
 
             }
 
-            if ($photo->product_id != $product_id) {  
+            if ($photo->product_id != $product_id) {
 
-                Self::updatePhotoOwner($photo, $product_id);  
-                         
+                Self::updatePhotoOwner($photo, $product_id);
+
             }
-        }        
-        
-    }  
+        }
+
+    }
 
     private function createAttributes($attributes, $hasVariant, $product_id)
-    {      
+    {
         if (!$hasVariant) return Self::destroyAttributes($product_id);
 
         if ($attributes == null) return;
 
         DB::transaction(function () use ($hasVariant, $attributes, $product_id) {
-            
+
             Self::destroyAttributes($product_id);
 
-            foreach($attributes as $attribute) {  
+            foreach($attributes as $attribute) {
 
                 $attribute = json_decode($attribute,true);
 
@@ -251,10 +267,10 @@ class ProductServices
 
                     'attribute_id' => $attribute['id']
 
-                ]);   
-    
-                $variants = $attribute['variants'];  
-    
+                ]);
+
+                $variants = $attribute['variants'];
+
                 foreach($variants as $variant) {
 
                     ProductVariant::create([
@@ -263,15 +279,15 @@ class ProductServices
 
                         'attribute_id' => $attribute['id'],
 
-                        'name' => $variant,   
+                        'name' => $variant,
 
                     ]);
-                }            
+                }
             }
-            
+
         });
 
-       
+
     }
 
     private function destroyAttributes($product_id)
@@ -283,11 +299,11 @@ class ProductServices
             ProductVariant::where('product_id', $product_id)->delete();
 
         });
-       
+
     }
 
     private function updatePhotoOwner(Photo $photo, $product_id)
-    {        
+    {
 
         $photo->product_id = $product_id;
 
@@ -295,28 +311,27 @@ class ProductServices
 
     }
     private function unlink(Photo $photo)
-    {  
+    {
         return DB::transaction(function () use($photo) {
 
-            $deleted = $photo->delete();  
+            $deleted = $photo->delete();
 
-            if(!$deleted) return back()->with('error','Image cant delete'); 
+            if(!$deleted) return back()->with('error','Image cant delete');
 
-            $path = public_path($photo->path);
+            // Only remove the file when no other product, photo or variant uses it.
+            \App\Services\Products\ProductImageFiles::deleteIfUnused($photo->path);
 
-            File::delete($path);      
-
-            return response()->json(['deleted' => $deleted]); 
+            return response()->json(['deleted' => $deleted]);
 
         });
-      
+
     }
 
     public function search(Request $request)
     {
         $keyword = $request->keyword  ?? 'null';
 
-        return Product::search($keyword)->with('category','stock')->paginate(10); 
+        return Product::search($keyword)->with('category','stock')->paginate(10);
     }
 
 }
