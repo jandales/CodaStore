@@ -14,7 +14,17 @@ class OrderPayment extends Model
     public const STATUS_PAID = 'paid';
     public const STATUS_FAILED = 'failed';            // cash on delivery, parcel not collected
     public const STATUS_CANCELLED = 'cancelled';      // cash on delivery, order cancelled before shipping
-    public const STATUS_REFUND_PENDING = 'refund_pending'; // returned COD order, refund to be sent by hand
+    public const STATUS_REFUND_PENDING = 'refund_pending'; // refund to be sent by hand (COD and manual payments)
+    public const STATUS_AWAITING = 'awaiting';        // manual order, waiting for the customer to pay
+
+    /** Manual-order payment methods (provider "manual"). */
+    public const MANUAL_METHODS = [
+        'cash' => 'Cash',
+        'bank_transfer' => 'Bank transfer',
+        'gcash' => 'GCash',
+        'maya' => 'Maya',
+        'other' => 'Other',
+    ];
     public const STATUS_REFUNDED = 'refunded';
     public const STATUS_REFUND_FAILED = 'refund_failed';
 
@@ -26,6 +36,7 @@ class OrderPayment extends Model
         'status',
         'collected_at',
         'refunded_at',
+        'method',
     ];
 
     protected $casts = [
@@ -38,9 +49,19 @@ class OrderPayment extends Model
         return $this->provider === 'cod';
     }
 
-    /** "PayPal", "Cash on delivery". */
+    /** Paid outside the website (cash on delivery, or a manual order's cash / bank transfer / GCash). */
+    public function isOffline(): bool
+    {
+        return in_array($this->provider, ['cod', 'manual'], true);
+    }
+
+    /** "PayPal", "Cash on delivery", "GCash". */
     public function methodLabel(): string
     {
+        if ($this->provider === 'manual') {
+            return self::MANUAL_METHODS[$this->method] ?? 'Manual payment';
+        }
+
         return ['paypal' => 'PayPal', 'cod' => 'Cash on delivery'][$this->provider] ?? ucfirst((string) $this->provider);
     }
 
@@ -52,6 +73,14 @@ class OrderPayment extends Model
                 self::STATUS_PAID => 'Cash collected',
                 self::STATUS_FAILED => 'Not collected',
                 self::STATUS_CANCELLED => 'Cancelled, nothing to collect',
+                self::STATUS_REFUND_PENDING => 'Refund to send',
+                self::STATUS_REFUNDED => 'Refunded',
+            ];
+        } elseif ($this->provider === 'manual') {
+            $labels = [
+                self::STATUS_AWAITING => 'Awaiting payment',
+                self::STATUS_PAID => 'Paid',
+                self::STATUS_CANCELLED => 'Cancelled, nothing paid',
                 self::STATUS_REFUND_PENDING => 'Refund to send',
                 self::STATUS_REFUNDED => 'Refunded',
             ];
@@ -78,6 +107,7 @@ class OrderPayment extends Model
             case 'completed':
                 return 'bg-success';
             case 'pending':
+            case 'awaiting':
             case 'refund_pending':
             case 'refund_failed':
                 return 'bg-warning';

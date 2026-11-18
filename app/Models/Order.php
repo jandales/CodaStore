@@ -33,6 +33,20 @@ class Order extends Model
         'courier',
         'tracking_number',
         'payment_fee',
+        'channel',
+        'created_by_admin_id',
+        'discount_amount',
+    ];
+
+    /** Where an order came from. */
+    public const CHANNELS = [
+        'website' => 'Website',
+        'facebook' => 'Facebook',
+        'instagram' => 'Instagram',
+        'tiktok' => 'TikTok',
+        'phone' => 'Phone',
+        'walk_in' => 'Walk-in',
+        'other' => 'Other',
     ];
 
     protected $casts = [
@@ -74,6 +88,35 @@ class Order extends Model
     public function trackingUrl(): ?string
     {
         return optional($this->courierRecord)->trackingUrlFor($this->tracking_number);
+    }
+
+    public function channelLabel(): string
+    {
+        return self::CHANNELS[$this->channel ?? 'website'] ?? ucfirst((string) $this->channel);
+    }
+
+    public function isManual(): bool
+    {
+        return ($this->channel ?? 'website') !== 'website' || $this->created_by_admin_id !== null;
+    }
+
+    /** Staff member who created a manual order. */
+    public function createdBy()
+    {
+        return $this->belongsTo(Admin::class, 'created_by_admin_id')->withTrashed();
+    }
+
+    /** Customer name: the account, or the delivery name for guest orders. */
+    public function customerName(): string
+    {
+        return optional($this->user)->name
+            ?: trim(optional($this->shipping)->firstname . ' ' . optional($this->shipping)->lastname)
+            ?: 'Guest';
+    }
+
+    public function isGuest(): bool
+    {
+        return $this->user_id === null;
     }
 
     public function isCashOnDelivery(): bool

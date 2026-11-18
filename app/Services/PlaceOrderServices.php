@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Services\Orders\OrderBuilder;
+
 use App\Exceptions\OutOfStockException;
 use App\Models\Cart;
 use App\Models\Order;
@@ -37,7 +39,7 @@ class PlaceOrderServices {
     public function quote(float $paymentFee = 0): array
     {
         $cart = Self::currentCart();
-        Self::assertStock($cart->items);
+        app(OrderBuilder::class)->assertStock(Self::linesFromCart($cart));
         $totals = Self::totals($cart, $paymentFee);
 
         return [
@@ -95,179 +97,53 @@ class PlaceOrderServices {
      */
     public function storeOrder(Request $request, array $payment)
     {
-        $this->payment = $payment;
-
         $cart = Self::currentCart();
-        ['shipping_method' => $shipping_method, 'shipping_charge' => $shipping_charge, 'tax' => $tax, 'total' => $gross_total, 'payment_fee' => $payment_fee] = Self::totals($cart, (float) ($payment['fee'] ?? 0));
+        ['shipping_method' => $shipping_method, 'shipping_charge' => $shipping_charge, 'tax' => $tax] = Self::totals($cart, (float) ($payment['fee'] ?? 0));
 
-        return DB::transaction(function () use ($cart,$shipping_method, $shipping_charge, $gross_total,$tax,$request,$payment_fee){
+        $shipping = (array) session()->get('shipping_address');
+        $billing = $request->input('is_new_billing') == 1
+            ? [
+                'firstname' => $request->input('billing_firstname'), 'lastname' => $request->input('billing_lastname'),
+                'street' => $request->input('billing_street'), 'city' => $request->input('billing_city'),
+                'phone' => $request->input('billing_phone'), 'country' => $request->input('billing_country'),
+                'region' => $request->input('billing_region'), 'zipcode' => $request->input('billing_zipcode'),
+            ]
+            : $shipping;
+        $billing['email'] = session()->get('email');
 
-            // Check and take the stock first, under a row lock, so two shoppers can't buy the last unit.
-            Self::reserveStock($cart->items);
-
-            $this->order = Order::create([
-                'order_number' => Self::orderNumber(),
-                'user_id' => auth()->user()->id,
-                'shipping_method_id' => $shipping_method->id,
-                'gross_total' => $gross_total,
-                'net_total' => $cart->total,
-                'shipping_charge' => $shipping_charge,
-                'status' => $this->status,
-                'num_items_sold' => $cart->items->count(),
-                'tax_total' => $tax,
-                'coupon_id' => $cart->coupon_id,
-                'coupon_amount' => $cart->discount,
-                'payment_fee' => $payment_fee,
-            ]);
-
-
-            Self::storeOrderShipping();
-
-            Self::storeOrderBilling();
-
-            Self::storeOrderItem($cart->items);
-
-            Self::storeOrderPayment($gross_total);
-
-            Self::updateCouponUsage($cart->coupon_id);
-
-            Self::deleteCheckoutSession();
-
-            $cart->delete();
-
-            return $this->order;
-        });
-
-
-
-    }
-
-    private function storeOrderBilling()
-    {
-        return OrderBilling::create([
-            'firstname' => request()->input('is_new_billing') == 1 ?  request()->input('billing_firstname') : session()->get('shipping_address')['firstname'],
-            'lastname' => request()->input('is_new_billing') == 1 ?  request()->input('billing_lastname') : session()->get('shipping_address')['lastname'],
-            'email' =>  session()->get('email'),
-            'street' => request()->input('is_new_billing') == 1 ? request()->input('billing_street') : session()->get('shipping_address')['street'],
-            'city' => request()->input('is_new_billing') == 1 ?  request()->input('billing_city') : session()->get('shipping_address')['city'],
-            'phone' =>  request()->input('is_new_billing') == 1 ? request()->input('billing_phone') :session()->get('shipping_address')['phone'],
-            'country' =>request()->input('is_new_billing') == 1 ? request()->input('billing_country') : session()->get('shipping_address')['country'],
-            'region' => request()->input('is_new_billing') == 1 ?  request()->input('billing_region') : session()->get('shipping_address')['region'],
-            'zipcode' => request()->input('is_new_billing') == 1 ? request()->input('billing_zipcode') :session()->get('shipping_address')['zipcode'],
-            'order_id' =>  $this->order->id,
-        ]);
-    }
-
-
-    private function storeOrderShipping()
-    {
-        OrderShipping::create([
-            'firstname' => session()->get('shipping_address')['firstname'],
-            'lastname' => session()->get('shipping_address')['lastname'],
-            'street' => session()->get('shipping_address')['street'],
-            'city' => session()->get('shipping_address')['city'],
-            'phone' =>session()->get('shipping_address')['phone'],
-            'country' => session()->get('shipping_address')['country'],
-            'region' => session()->get('shipping_address')['region'],
-            'zipcode' => session()->get('shipping_address')['zipcode'],
-            'order_id' => $this->order->id,
-        ]);
-    }
-
-
-    private function storeOrderPayment($amount)
-    {
-        return OrderPayment::create([
-            'order_id' => $this->order->id,
-            'amount' => $amount,
-            'provider' => $this->payment['provider'],
-            // Cash on delivery has no provider reference; use the order number.
-            'reference_number' => $this->payment['reference'] ?? ('COD-' . $this->order->order_number),
-            'status' => $this->payment['status'],
-        ]);
-    }
-
-
-    private function storeOrderItem($items)
-    {
-        foreach($items as $item)
-        {
-            OrderProduct::create([
-                'order_id' => $this->order->id,
-                'product_id' => $item->product_id,
-                'sku_id' => $item->sku_id,
-                'qty' => $item->qty,
-                'price' => $item->unitPrice(),
-                'properties' => $item->attributes,
-            ]);
-
-            $item->delete();
-        }
-    }
-
-    /**
-     * Lock the stock rows for every product and variant in the bag, make sure there is enough
-     * of each, then subtract. Throws OutOfStockException (rolling back the whole order) if not.
-     */
-    private function reserveStock($items)
-    {
-        Self::assertStock($items, true);
-
-        foreach ($items as $item) {
-            if ($item->sku_id) {
-                ProductSku::whereKey($item->sku_id)->decrement('qty', (int) $item->qty);
-            }
-            Stock::where('product_id', $item->product_id)->decrement('qty', (int) $item->qty);
-        }
-    }
-
-    /** Throw OutOfStockException if any product or variant in the bag has fewer units than requested. */
-    private function assertStock($items, bool $lock = false)
-    {
-        $needed = [];      // product id => qty (products without variants)
-        $neededSku = [];   // variant id => qty
-        foreach ($items as $item) {
-            if ($item->sku_id) {
-                $neededSku[$item->sku_id] = ($neededSku[$item->sku_id] ?? 0) + (int) $item->qty;
-            } else {
-                $needed[$item->product_id] = ($needed[$item->product_id] ?? 0) + (int) $item->qty;
-            }
-        }
-
-        if ($neededSku) {
-            $query = ProductSku::whereIn('id', array_keys($neededSku));
-            $skus = ($lock ? $query->lockForUpdate() : $query)->get()->keyBy('id');
-            foreach ($neededSku as $skuId => $qty) {
-                $sku = $skus->get($skuId);
-                $available = (int) optional($sku)->qty;
-                if ($available < $qty) {
-                    $line = $items->firstWhere('sku_id', $skuId);
-                    $name = optional($line->product)->name ?? 'This item';
-                    throw new OutOfStockException($sku ? $name . ' (' . $sku->label() . ')' : $name, $available);
+        return app(OrderBuilder::class)->create([
+            'user_id' => auth()->id(),
+            'lines' => Self::linesFromCart($cart),
+            'shipping_method_id' => $shipping_method->id,
+            'shipping_charge' => $shipping_charge,
+            'shipping' => $shipping,
+            'billing' => $billing,
+            'coupon_id' => $cart->coupon_id,
+            'coupon_amount' => (float) $cart->discount,
+            'tax' => $tax,
+            'payment' => $payment,
+            'channel' => 'website',
+            // Inside the same transaction: the bag and checkout session are used up.
+            'after' => function () use ($cart) {
+                foreach ($cart->items as $item) {
+                    $item->delete();
                 }
-            }
-        }
-
-        if ($needed) {
-            $query = Stock::whereIn('product_id', array_keys($needed));
-            $stocks = ($lock ? $query->lockForUpdate() : $query)->get()->keyBy('product_id');
-
-            foreach ($needed as $productId => $qty) {
-                $available = (int) optional($stocks->get($productId))->qty;
-                if ($available < $qty) {
-                    $name = optional($items->firstWhere('product_id', $productId)->product)->name ?? 'This item';
-                    throw new OutOfStockException($name, $available);
-                }
-            }
-        }
+                Self::deleteCheckoutSession();
+                $cart->delete();
+            },
+        ]);
     }
 
-    private function updateCouponUsage($coupon_id)
+    /** The bag as order lines, priced from the catalogue now (per variant). */
+    private function linesFromCart(Cart $cart): array
     {
-        $coupon = Coupon::find($coupon_id);
-        if(empty($coupon)) return;
-        $coupon->usage += 1;
-        $coupon->save();
+        return $cart->items->map(fn ($item) => [
+            'product_id' => $item->product_id,
+            'sku_id' => $item->sku_id,
+            'qty' => (int) $item->qty,
+            'price' => $item->unitPrice(),
+            'properties' => $item->attributes,
+        ])->all();
     }
 
     private function deleteCheckoutSession()
