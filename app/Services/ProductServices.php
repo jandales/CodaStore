@@ -51,6 +51,8 @@ class ProductServices
                     Self::createAttributes($request->input('attributes'), $request->hasVariant, $product->id);
                     Self::syncVariants($request, $product);
 
+                    \App\Services\Products\StockMovements::recordDiff($product->id, ['product' => 0, 'skus' => []], 'created');
+
                     return $product;
                 });
 
@@ -67,6 +69,7 @@ class ProductServices
         $image = json_decode($request->image, true);
 
         return DB::transaction(function () use($request, $product, $image) {
+            $stockBefore = \App\Services\Products\StockMovements::snapshot($product->id);
             $product->name = $request->name;
             $product->slug = productSlug($request->name);
             $product->category_id = $request->category_id;
@@ -95,6 +98,8 @@ class ProductServices
 
             Self::createAttributes($request->input('attributes'), $request->hasVariant, $product->id);
             Self::syncVariants($request, $product);
+
+            \App\Services\Products\StockMovements::recordDiff($product->id, $stockBefore, 'product_edit');
 
             return $product;
 

@@ -97,6 +97,7 @@ class OrderBuilder
                     'price' => (float) $line['price'],
                     'properties' => $line['properties'] ?? null,
                 ]);
+                \App\Services\Products\StockMovements::record((int) $line['product_id'], !empty($line['sku_id']) ? (int) $line['sku_id'] : null, -(int) $line['qty'], 'sale', ['order_id' => $order->id]);
             }
 
             $payment = $data['payment'];

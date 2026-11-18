@@ -1069,3 +1069,40 @@ form[aria-busy="true"] { cursor: progress; }
 .fe-actions { white-space: nowrap; }
 .fe-actions form { display: inline-block; margin-left: 6px; }
 .fe-delete { color: var(--a-danger); }
+
+// ---------- Stock details ----------
+a.inventory-variant__link { text-decoration: none; }
+a.inventory-variant__link:hover { background: var(--a-primary-soft); color: var(--a-primary); }
+.sd-back { margin-bottom: 12px; }
+.sd-head { align-items: center; }
+.sd-product { display: flex; align-items: center; gap: 14px; }
+.sd-product h1 { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 0; }
+.sd-product .dash-sub { margin-top: 4px; }
+.sd-variant { font-size: 14px; }
+.sd-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.sd-tabs a { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border: 1px solid var(--a-line); border-radius: 20px; background: var(--a-surface); color: var(--a-ink); font-size: 13.5px; font-weight: 500; text-decoration: none; }
+.sd-tabs a span { padding: 1px 8px; border-radius: 10px; background: var(--a-bg); color: var(--a-muted); font-size: 12px; font-weight: 600; }
+.sd-tabs a:hover { border-color: var(--a-primary); }
+.sd-tabs a.is-active { border-color: var(--a-primary); background: var(--a-primary-soft); color: var(--a-primary); }
+.sd-tabs a.is-out span { background: var(--a-danger-soft); color: var(--a-danger); }
+.sd-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 20px; }
+.sd-card { padding: 20px; }
+.sd-card__value { margin-top: 6px; font-size: 28px; font-weight: 700; letter-spacing: -.02em; color: var(--a-ink); }
+.sd-card__value.is-out { color: var(--a-danger); }
+.sd-card__meta { margin-top: 4px; font-size: 13px; color: var(--a-muted); }
+.sd-in { color: var(--a-success); }
+.sd-out { color: var(--a-danger); }
+.sd-section { margin-bottom: 20px; }
+.sd-section > .dash-card__title { margin-bottom: 12px; }
+.sd-table { width: 100%; font-size: 14px; }
+.sd-table th, .sd-table td { padding: 10px 12px; vertical-align: top; }
+.sd-table thead th { font-size: 12.5px; font-weight: 600; color: var(--a-muted); white-space: nowrap; }
+.sd-sub { display: block; margin-top: 2px; font-size: 12.5px; color: var(--a-muted); }
+.sd-reason { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; color: var(--a-ink); }
+.sd-reason i { width: 14px; color: var(--a-muted); font-size: 12px; }
+.sd-reason--sale i, .sd-reason--stock_out i, .sd-reason--variant_removed i { color: var(--a-danger); }
+.sd-reason--stock_in i, .sd-reason--cancel i, .sd-reason--return i, .sd-reason--not_collected i, .sd-reason--created i { color: var(--a-success); }
+@media (max-width: 767px) {
+    .sd-cards { grid-template-columns: minmax(0, 1fr); }
+    .sd-head { flex-direction: column; align-items: flex-start; gap: 12px; }
+}
