@@ -228,17 +228,22 @@ class ProductServices
 
         foreach ($images as $image) {
 
-            $image = json_decode($image, true);
+            $image = is_array($image) ? $image : json_decode((string) $image, true);
+            if (!is_array($image) || empty($image['id'])) continue;
 
+            // Already gone (removed earlier, or the page was saved twice): nothing to do.
             $photo = Photo::find($image['id']);
+            if (!$photo) continue;
 
-            if ($image['deleted']  == 1) {
+            // Only this product's photos, or new uploads not attached to a product yet.
+            if ($photo->product_id && (int) $photo->product_id !== (int) $product_id) continue;
 
+            if ((int) ($image['deleted'] ?? 0) === 1) {
                 Self::unlink($photo);
-
+                continue;
             }
 
-            if ($photo->product_id != $product_id) {
+            if ((int) $photo->product_id !== (int) $product_id) {
 
                 Self::updatePhotoOwner($photo, $product_id);
 

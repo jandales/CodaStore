@@ -90,4 +90,47 @@ class ProductImageFilesTest extends TestCase
         $this->assertNull(Photo::find($removed->id));
         $this->assertFileExists(public_path($path), 'the other product still shows it');
     }
+
+    public function test_removing_a_photo_returns_whether_it_was_deleted()
+    {
+        $product = $this->createProduct(5, false);
+        $photo = Photo::create(['product_id' => $product->id, 'path' => '/img/test/zz-gone.jpg', 'location' => '/img/test/']);
+        $this->signInAdmin();
+
+        $this->deleteJson('/admin/image/' . $photo->id . '/delete')->assertOk()->assertJson(['deleted' => true]);
+        $this->assertNull(Photo::find($photo->id));
+    }
+
+    public function test_saving_a_product_with_a_photo_that_is_already_gone_still_works()
+    {
+        $product = $this->createProduct(5, false, ['regular_price' => 500, 'sku' => 'P1']);
+        $kept = Photo::create(['product_id' => $product->id, 'path' => '/img/test/zz-kept.jpg', 'location' => '/img/test/']);
+        $removed = Photo::create(['product_id' => $product->id, 'path' => '/img/test/zz-removed.jpg', 'location' => '/img/test/']);
+        $upload = Photo::create(['product_id' => null, 'path' => '/img/test/zz-new.jpg', 'location' => '/img/test/']);
+        $other = $this->createProduct(5, false);
+        $notOurs = Photo::create(['product_id' => $other->id, 'path' => '/img/test/zz-other.jpg', 'location' => '/img/test/']);
+        $this->signInAdmin();
+
+        $this->putJson(route('admin.products.update', [$product->encryptedId()]), [
+            'name' => 'renamed shirt', 'category_id' => $product->category_id, 'sku' => 'P1', 'barcode' => '1',
+            'regular_price' => 500, 'status' => 1, 'qty' => 5,
+            'image' => json_encode(['path' => $product->imagePath]),
+            'images' => [
+                json_encode(['id' => 999999, 'path' => '/img/test/zz-missing.jpg', 'deleted' => 1]),  // removed earlier
+                json_encode(['id' => 999998, 'path' => '/img/test/zz-missing2.jpg', 'deleted' => 0]),
+                json_encode(['id' => $removed->id, 'path' => $removed->path, 'deleted' => 1]),
+                json_encode(['id' => $kept->id, 'path' => $kept->path, 'deleted' => 0]),
+                json_encode(['id' => $upload->id, 'path' => $upload->path, 'deleted' => 0]),
+                json_encode(['id' => $notOurs->id, 'path' => $notOurs->path, 'deleted' => 1]),
+            ],
+        ])->assertOk();
+
+        $this->assertSame('renamed shirt', $product->fresh()->name);
+        $this->assertNull(Photo::find($removed->id));
+        $this->assertNull(Photo::withoutGlobalScopes()->find($removed->id), 'a removed photo is not saved again');
+        $this->assertSame($product->id, (int) $kept->fresh()->product_id);
+        $this->assertSame($product->id, (int) $upload->fresh()->product_id, 'new uploads join the product');
+        $this->assertNotNull($notOurs->fresh(), 'another product\'s photo is left alone');
+        $this->assertSame($other->id, (int) $notOurs->fresh()->product_id);
+    }
 }
