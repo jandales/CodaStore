@@ -89,11 +89,23 @@
                                             <span>Coupon</span>
                                             <span>@money($order->coupon_amount)</span>
                                         </div>
+                                        @if ((float) $order->payment_fee > 0)
+                                        <div class="flex space-between">
+                                            <span>COD fee</span>
+                                            <span>@money($order->payment_fee)</span>
+                                        </div>
+                                        @endif
                                         <div class="separator mt-1 mb-1"></div>
                                         <div class="flex space-between">
                                             <span>Total (VAT incl.)</span>
                                             <span>@money($order->gross_total)</span>
                                         </div>
+                                        @if ($order->payment)
+                                        <div class="flex space-between order-payment-line">
+                                            <span>Payment</span>
+                                            <span>{{ $order->payment->methodLabel() }}@if ($order->isCashOnDelivery()) · {{ $order->payment->statusLabel() }}@endif</span>
+                                        </div>
+                                        @endif
 
                                    </div>
                                 </div>
@@ -120,7 +132,9 @@
                            @if ($order->status === 'cancelled' && $order->payment)
                                 <div class="review-note {{ $order->payment->status === 'refund_failed' ? '' : 'review-note--success' }} mt-2" role="status">
                                     <span>
-                                        @if ($order->payment->status === 'refunded')
+                                        @if ($order->isCashOnDelivery())
+                                            This order was cancelled. You haven't been charged.
+                                        @elseif ($order->payment->status === 'refunded')
                                             Refunded @money($order->payment->amount) to your PayPal account.
                                         @elseif ($order->payment->status === 'refund_failed')
                                             We couldn't refund this payment automatically. Our team will refund you within 2 business days.
@@ -138,7 +152,9 @@
                                             Return requested on {{ $return->created_at->format('M j, Y') }}. We'll email you once it's reviewed.
                                         @elseif ($return->status === 'refunded')
                                             Return approved.
-                                            @if (optional($order->payment)->status === 'refunded') Refunded @money($order->payment->amount) to your PayPal account.
+                                            @if (optional($order->payment)->status === 'refund_pending') We'll send your refund of @money($order->payment->amount) by bank transfer or GCash. Reply to the email we sent with the account to use.
+                                            @elseif (optional($order->payment)->status === 'refunded' && $order->isCashOnDelivery()) Your refund of @money($order->payment->amount) has been sent.
+                                            @elseif (optional($order->payment)->status === 'refunded') Refunded @money($order->payment->amount) to your PayPal account.
                                             @elseif (optional($order->payment)->status === 'refund_failed') Our team will refund you within 2 business days.
                                             @endif
                                         @else

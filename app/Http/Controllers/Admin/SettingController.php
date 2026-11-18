@@ -41,6 +41,37 @@ class SettingController extends Controller
         return view('admin.setting.campany')->with('general_setting', $general_setting);
     }
 
+    public function payments()
+    {
+        return view('admin.setting.payments', [
+            'settings' => GeneralSetting::firstOrFail(),
+            'shippingMethods' => \App\Models\ShippingMethod::orderBy('name')->get(),
+        ]);
+    }
+
+    public function updatePayments(Request $request)
+    {
+        $data = $request->validate([
+            'cod_fee' => ['required', 'numeric', 'min:0', 'max:10000'],
+            'cod_max_total' => ['nullable', 'numeric', 'min:0'],
+            'cod_max_open_orders' => ['required', 'integer', 'min:0', 'max:50'],
+            'cod_shipping_methods' => ['nullable', 'array'],
+            'cod_shipping_methods.*' => ['integer', 'exists:shipping_methods,id'],
+        ], [
+            'cod_fee.required' => 'Enter a COD fee, or 0 for none.',
+        ]);
+
+        GeneralSetting::firstOrFail()->update([
+            'cod_enabled' => $request->boolean('cod_enabled'),
+            'cod_fee' => round((float) $data['cod_fee'], 2),
+            'cod_max_total' => ($data['cod_max_total'] ?? null) !== null && (float) $data['cod_max_total'] > 0 ? round((float) $data['cod_max_total'], 2) : null,
+            'cod_max_open_orders' => (int) $data['cod_max_open_orders'],
+            'cod_shipping_methods' => array_values(array_map('intval', $data['cod_shipping_methods'] ?? [])) ?: null,
+        ]);
+
+        return back()->with('success', 'Payment settings saved.');
+    }
+
     public function emailer()
     {
         return view('admin.setting.emailer');

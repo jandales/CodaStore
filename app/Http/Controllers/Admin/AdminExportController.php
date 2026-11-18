@@ -18,7 +18,7 @@ class AdminExportController extends Controller
             ->when($status, fn ($q) => $q->where('status', $status))
             ->orderBy('id');
 
-        $rows = [['Order number', 'Date', 'Status', 'Customer', 'Email', 'Items', 'Subtotal', 'Shipping', 'Coupon', 'Total', 'Payment', 'PayPal capture ID', 'Courier', 'Tracking number']];
+        $rows = [['Order number', 'Date', 'Status', 'Customer', 'Email', 'Items', 'Subtotal', 'Shipping', 'Coupon', 'COD fee', 'Total', 'Payment method', 'Payment', 'Payment reference', 'Courier', 'Tracking number']];
         foreach ($orders->cursor() as $order) {
             $rows[] = [
                 $order->order_number,
@@ -30,7 +30,9 @@ class AdminExportController extends Controller
                 self::amount($order->subtotal()),
                 self::amount($order->shipping_charge),
                 self::amount($order->coupon_amount),
+                self::amount($order->payment_fee),
                 self::amount($order->gross_total),
+                $order->payment ? $order->payment->methodLabel() : '',
                 optional($order->payment)->status,
                 optional($order->payment)->reference_number,
                 $order->courierName(),

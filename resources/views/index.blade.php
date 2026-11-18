@@ -36,7 +36,7 @@
             <div>
                 <i class="fas fa-lock" aria-hidden="true"></i>
                 <h2>Secure checkout</h2>
-                <p>Cards, PayPal and cash on delivery.</p>
+                <p>PayPal (cards accepted) or cash on delivery.</p>
             </div>
         </div>
     </section>

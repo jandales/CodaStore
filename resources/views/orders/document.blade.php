@@ -53,6 +53,7 @@
         .stamp { display: inline-block; margin-top: 8px; padding: 2px 10px; border: 1.5px solid currentColor; border-radius: 4px; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
         .stamp--paid { color: #1d7a4c; }
         .stamp--refunded { color: #b3261e; }
+        .stamp--cod { color: #8a5a00; }
         @media (max-width: 640px) {
             .doc { padding: 24px 16px; margin: 12px 0 24px; border-left: 0; border-right: 0; }
             header { flex-direction: column; }
@@ -98,6 +99,10 @@
                     <div class="stamp-wrap">
                         <span class="stamp stamp--{{ $payment->status }}">{{ $payment->status === 'paid' ? 'Paid' : 'Refunded' }}</span>
                     </div>
+                @elseif ($payment && $payment->isCashOnDelivery() && $payment->status === 'pending')
+                    <div class="stamp-wrap">
+                        <span class="stamp stamp--cod">Cash on delivery · @money($payment->amount) due</span>
+                    </div>
                 @endif
             </div>
         </header>
@@ -115,14 +120,19 @@
                     @if ($billing)
                         <p>{{ $billing->personName() }}<br>{{ $billing->email }}<br>{{ $billing->phone }}</p>
                     @endif
-                    @if ($payment)
-                        <p>Paid with {{ $payment->provider === 'paypal' ? 'PayPal' : ucfirst((string) $payment->provider) }}@if ($payment->reference_number) · {{ $payment->reference_number }}@endif</p>
+                    @if ($payment && $payment->isCashOnDelivery())
+                        <p>Cash on delivery · {{ $payment->statusLabel() }}</p>
+                    @elseif ($payment)
+                        <p>Paid with {{ $payment->methodLabel() }}@if ($payment->reference_number) · {{ $payment->reference_number }}@endif</p>
                     @endif
                 </div>
             @else
                 <div>
                     <h2>Contents</h2>
                     <p>{{ $order->totalItems() }} {{ \Illuminate\Support\Str::plural('item', $order->totalItems()) }}</p>
+                    @if ($payment && $payment->isCashOnDelivery() && $payment->status === 'pending')
+                        <p><strong>Cash on delivery: collect @money($payment->amount)</strong></p>
+                    @endif
                 </div>
             @endif
         </section>
@@ -167,6 +177,9 @@
                 <div><span>Shipping</span><span>@money($order->shipping_charge)</span></div>
                 @if ((float) $order->coupon_amount > 0)
                     <div><span>Coupon</span><span>−@money($order->coupon_amount)</span></div>
+                @endif
+                @if ((float) $order->payment_fee > 0)
+                    <div><span>COD fee</span><span>@money($order->payment_fee)</span></div>
                 @endif
                 <div class="grand"><span>Total</span><span>@money($order->gross_total)</span></div>
                 <div class="vat"><span>Prices include VAT</span></div>

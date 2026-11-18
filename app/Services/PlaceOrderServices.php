@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Services;
 
@@ -17,29 +17,35 @@ use App\Models\ShippingMethod;
 use Illuminate\Support\Facades\DB;
 
 class PlaceOrderServices {
-    
+
     private $order;
     private $status = 'confirmed';
     private $payment = [];
-    
+
     private function orderNumber()
-    {      
-        return date('Y')."".now()->timestamp;         
+    {
+        return date('Y')."".now()->timestamp;
     }
-   
+
     /**
      * The amount to charge for the current bag, after re-checking it. Used before sending the
      * shopper to PayPal; storeOrder() recomputes the same figure when the payment comes back.
      *
      * @return array{total: float, shipping_charge: float, tax: float}
      */
-    public function quote(): array
+    public function quote(float $paymentFee = 0): array
     {
         $cart = Self::currentCart();
         Self::assertStock($cart->items);
-        $totals = Self::totals($cart);
+        $totals = Self::totals($cart, $paymentFee);
 
-        return ['total' => round($totals['total'], 2), 'shipping_charge' => (float) $totals['shipping_charge'], 'tax' => (float) $totals['tax']];
+        return [
+            'total' => round($totals['total'], 2),
+            'shipping_charge' => (float) $totals['shipping_charge'],
+            'shipping_method_id' => $totals['shipping_method']->id,
+            'tax' => (float) $totals['tax'],
+            'payment_fee' => (float) $totals['payment_fee'],
+        ];
     }
 
     private function currentCart(): Cart
@@ -55,10 +61,10 @@ class PlaceOrderServices {
     }
 
     /**
-     * Bag total + shipping - coupon + tax. Shipping comes from the chosen shipping method,
-     * which is also what is stored on the order.
+     * Bag total + shipping - coupon + tax, plus any payment-method fee (cash on delivery).
+     * Shipping comes from the chosen shipping method, which is also what is stored on the order.
      */
-    private function totals(Cart $cart): array
+    private function totals(Cart $cart, float $paymentFee = 0): array
     {
         $shipping_method = ShippingMethod::find(optional((object) session()->get('shipping_method'))->id);
         if (!$shipping_method) {
@@ -73,63 +79,66 @@ class PlaceOrderServices {
             'shipping_method' => $shipping_method,
             'shipping_charge' => $shipping_charge,
             'tax' => $tax,
-            'total' => $subtotal + $tax,
+            'payment_fee' => round($paymentFee, 2),
+            'total' => $subtotal + $tax + round($paymentFee, 2),
         ];
     }
 
     /**
      * Create the order from the current bag and checkout session.
      *
-     * Only call this after the payment provider has confirmed the payment.
+     * Call this after the payment provider has confirmed the payment, or for cash on delivery.
      *
      * @param  array  $payment  ['provider' => 'paypal', 'reference' => capture id, 'status' => 'paid']
+     *                          or ['provider' => 'cod', 'reference' => null, 'status' => 'pending', 'fee' => 50.0]
      */
     public function storeOrder(Request $request, array $payment)
     {
         $this->payment = $payment;
-       
-        $cart = Self::currentCart();
-        ['shipping_method' => $shipping_method, 'shipping_charge' => $shipping_charge, 'tax' => $tax, 'total' => $gross_total] = Self::totals($cart);
 
-        return DB::transaction(function () use ($cart,$shipping_method, $shipping_charge, $gross_total,$tax,$request){
+        $cart = Self::currentCart();
+        ['shipping_method' => $shipping_method, 'shipping_charge' => $shipping_charge, 'tax' => $tax, 'total' => $gross_total, 'payment_fee' => $payment_fee] = Self::totals($cart, (float) ($payment['fee'] ?? 0));
+
+        return DB::transaction(function () use ($cart,$shipping_method, $shipping_charge, $gross_total,$tax,$request,$payment_fee){
 
             // Check and take the stock first, under a row lock, so two shoppers can't buy the last unit.
             Self::reserveStock($cart->items);
 
-            $this->order = Order::create([    
+            $this->order = Order::create([
                 'order_number' => Self::orderNumber(),
                 'user_id' => auth()->user()->id,
                 'shipping_method_id' => $shipping_method->id,
-                'gross_total' => $gross_total, 
+                'gross_total' => $gross_total,
                 'net_total' => $cart->total,
-                'shipping_charge' => $shipping_charge,               
+                'shipping_charge' => $shipping_charge,
                 'status' => $this->status,
                 'num_items_sold' => $cart->items->count(),
                 'tax_total' => $tax,
                 'coupon_id' => $cart->coupon_id,
-                'coupon_amount' => $cart->discount,        
-            ]);           
-           
-           
+                'coupon_amount' => $cart->discount,
+                'payment_fee' => $payment_fee,
+            ]);
+
+
             Self::storeOrderShipping();
-           
+
             Self::storeOrderBilling();
-    
+
             Self::storeOrderItem($cart->items);
 
-            Self::storeOrderPayment($gross_total);  
+            Self::storeOrderPayment($gross_total);
 
             Self::updateCouponUsage($cart->coupon_id);
-    
+
             Self::deleteCheckoutSession();
 
             $cart->delete();
-    
-            return $this->order; 
+
+            return $this->order;
         });
-        
-          
-       
+
+
+
     }
 
     private function storeOrderBilling()
@@ -144,7 +153,7 @@ class PlaceOrderServices {
             'country' =>request()->input('is_new_billing') == 1 ? request()->input('billing_country') : session()->get('shipping_address')['country'],
             'region' => request()->input('is_new_billing') == 1 ?  request()->input('billing_region') : session()->get('shipping_address')['region'],
             'zipcode' => request()->input('is_new_billing') == 1 ? request()->input('billing_zipcode') :session()->get('shipping_address')['zipcode'],
-            'order_id' =>  $this->order->id,      
+            'order_id' =>  $this->order->id,
         ]);
     }
 
@@ -160,22 +169,23 @@ class PlaceOrderServices {
             'country' => session()->get('shipping_address')['country'],
             'region' => session()->get('shipping_address')['region'],
             'zipcode' => session()->get('shipping_address')['zipcode'],
-            'order_id' => $this->order->id,      
+            'order_id' => $this->order->id,
         ]);
     }
 
-    
+
     private function storeOrderPayment($amount)
-    { 
+    {
         return OrderPayment::create([
             'order_id' => $this->order->id,
             'amount' => $amount,
             'provider' => $this->payment['provider'],
-            'reference_number' => $this->payment['reference'],
+            // Cash on delivery has no provider reference; use the order number.
+            'reference_number' => $this->payment['reference'] ?? ('COD-' . $this->order->order_number),
             'status' => $this->payment['status'],
         ]);
     }
-       
+
 
     private function storeOrderItem($items)
     {
@@ -187,7 +197,7 @@ class PlaceOrderServices {
                 'qty' => $item->qty,
                 'price' => $item->product->effectivePrice(),
                 'properties' => $item->attributes,
-            ]); 
+            ]);
 
             $item->delete();
         }
@@ -245,6 +255,6 @@ class PlaceOrderServices {
         session()->forget('shipping_address');
         session()->forget('shipping_method');
         session()->forget('shipping_charge');
-      
+
     }
 }

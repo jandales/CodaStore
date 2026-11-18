@@ -147,8 +147,14 @@
             <div class="panel-body">
                 <div class="row mt10">
                     <div>Payment Method</div>
-                    <span>{{ optional($order->payment)->provider === 'paypal' ? 'PayPal' : ucfirst((string) optional($order->payment)->provider ?: '—') }}</span>
+                    <span>{{ $order->payment ? $order->payment->methodLabel() : '—' }}</span>
                 </div>
+                @if ($order->payment)
+                <div class="row mt10">
+                    <div>Payment</div>
+                    <span class="status {{ $order->payment->statusColor() }}">{{ $order->payment->statusLabel() }}</span>
+                </div>
+                @endif
                 <div class="row mt10">
                     <div>Name</div>
                     <span>{{ $order->billing->personName() }}</span>
@@ -183,6 +189,12 @@
                     <div>Tax</div>
                     <span>@money($order->tax_total)</span>
                 </div>
+                @if ((float) $order->payment_fee > 0)
+                <div class="row mt10">
+                    <div>COD fee</div>
+                    <span>@money($order->payment_fee)</span>
+                </div>
+                @endif
                 <div class="row mt10">
                     <div>Coupon</div>
                     <span>@money($order->coupon_amount)</span>
@@ -213,10 +225,44 @@
                                 @endif
                             </div>
                        @endif
-                       @if ($order->payment && in_array($order->payment->status, ['refunded', 'refund_failed']))
+                       @if ($order->payment && !$order->isCashOnDelivery() && in_array($order->payment->status, ['refunded', 'refund_failed']))
                             <div class="alert {{ $order->payment->status === 'refunded' ? 'alert-success' : 'alert-danger' }} mt-1">
                                 {{ $order->payment->status === 'refunded' ? 'Payment refunded to the customer through PayPal.' : 'Automatic refund failed. Refund this payment manually in PayPal (capture ' . $order->payment->reference_number . ').' }}
                             </div>
+                       @endif
+
+                       @if ($order->isCashOnDelivery())
+                            @php $codPayment = $order->payment; @endphp
+                            <section class="cod-panel" aria-labelledby="cod-title">
+                                <h4 id="cod-title"><i class="fas fa-money-bill-wave" aria-hidden="true"></i> Cash on delivery</h4>
+                                @if ($codPayment->status === 'pending')
+                                    <p class="cod-panel__due">Cash to collect: <strong>@money($codPayment->amount)</strong></p>
+                                    <p class="ship-note">Marking the order as delivered records the cash as collected.</p>
+                                    @if ($order->status === 'shipped')
+                                        <form method="post" action="{{ route('admin.orders.cod.not-collected', [$order->encryptedId()]) }}" onsubmit="return confirm('Mark as not collected? The order becomes returned and the stock goes back.')">
+                                            @csrf
+                                            @method('put')
+                                            <button class="btn btn-light">Not collected / returned to us</button>
+                                        </form>
+                                    @endif
+                                @elseif ($codPayment->status === 'paid')
+                                    <p>Collected @money($codPayment->amount){{ $codPayment->collected_at ? ' on ' . $codPayment->collected_at->format('M j, Y') : '' }}.</p>
+                                @elseif ($codPayment->status === 'refund_pending')
+                                    <p class="cod-panel__due">Refund to send: <strong>@money($codPayment->amount)</strong></p>
+                                    <p class="ship-note">Send it to the customer by bank or GCash, then record it here.</p>
+                                    @if (auth('admin')->user()->hasPermission('refunds'))
+                                        <form method="post" action="{{ route('admin.orders.cod.refund-sent', [$order->encryptedId()]) }}">
+                                            @csrf
+                                            @method('put')
+                                            <button class="btn btn-primary">Refund sent</button>
+                                        </form>
+                                    @endif
+                                @elseif ($codPayment->status === 'refunded')
+                                    <p>Refund of @money($codPayment->amount) sent{{ $codPayment->refunded_at ? ' on ' . $codPayment->refunded_at->format('M j, Y') : '' }}.</p>
+                                @else
+                                    <p>{{ $codPayment->statusLabel() }}.</p>
+                                @endif
+                            </section>
                        @endif
 
                        @php $return = $order->returnRequest; @endphp
@@ -299,7 +345,7 @@
                                     </div>
                                 @endif
                                 <button class="btn btn-primary">Update status</button>
-                                <p class="ship-note">The customer is emailed when the order ships or is cancelled.</p>
+                                <p class="ship-note">The customer is emailed when the order ships or is cancelled.@if ($order->isCashOnDelivery() && $order->status === 'shipped') Marking it delivered records the cash as collected.@endif</p>
                             </form>
                             <script>
                                 (function () {

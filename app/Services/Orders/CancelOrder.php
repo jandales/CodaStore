@@ -5,6 +5,7 @@ namespace App\Services\Orders;
 use App\Exceptions\OrderNotCancellableException;
 use App\Models\Coupon;
 use App\Models\Order;
+use App\Models\OrderPayment;
 use App\Models\Stock;
 use App\Services\OrderNotifier;
 use Illuminate\Support\Facades\DB;
@@ -51,6 +52,12 @@ class CancelOrder
 
         // Outside the transaction: the cancellation stands even if PayPal or email is unavailable.
         $this->refunder->handle($order, "Order {$order->order_number} cancelled");
+
+        // Cash on delivery: nothing was paid, so there is simply nothing left to collect.
+        $payment = $order->payment()->first();
+        if ($payment && $payment->isCashOnDelivery() && $payment->status === OrderPayment::STATUS_PENDING) {
+            $payment->update(['status' => OrderPayment::STATUS_CANCELLED]);
+        }
         $this->notifier->cancelled($order->fresh());
 
         return $order->fresh();

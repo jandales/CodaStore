@@ -6,6 +6,8 @@ Hi {{ optional($order->shipping)->firstname ?: 'there' }}, we've approved the re
 @php $payment = $order->payment; @endphp
 @if ($payment && $payment->status === \App\Models\OrderPayment::STATUS_REFUNDED)
 We've refunded **₱{{ number_format((float) $payment->amount, 2) }}** to your PayPal account. Refunds usually appear within a few days, depending on your bank.
+@elseif ($payment && $payment->status === \App\Models\OrderPayment::STATUS_REFUND_PENDING)
+You paid cash on delivery, so we'll send your refund of **₱{{ number_format((float) $payment->amount, 2) }}** by bank transfer or GCash. Please reply to this email with the account you'd like it sent to.
 @elseif ($payment && $payment->status === \App\Models\OrderPayment::STATUS_REFUND_FAILED)
 We couldn't send the refund automatically. Our team has been notified and will refund **₱{{ number_format((float) $payment->amount, 2) }}** to you within 2 business days.
 @endif

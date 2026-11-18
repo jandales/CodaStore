@@ -107,12 +107,40 @@ class AdminOrderController extends Controller
             return back()->with('error', $e->getMessage());
         }
 
-        $payment = optional($order->payment()->first())->status;
+        $paymentModel = $order->payment()->first();
+        $payment = optional($paymentModel)->status;
+        if ($payment === 'refund_pending') {
+            return back()->with('success', 'Return approved. This was cash on delivery: send the refund of ₱' . number_format((float) $paymentModel->amount, 2) . ' to the customer by bank or GCash, then click "Refund sent".');
+        }
         $message = $payment === 'refund_failed'
             ? 'Return approved, but the PayPal refund failed. Refund it by hand in PayPal.'
             : 'Return approved. The customer was refunded and emailed.';
 
         return back()->with($payment === 'refund_failed' ? 'error' : 'success', $message);
+    }
+
+    public function notCollected(Order $order, \App\Services\Orders\CashOnDeliveryOrders $cod)
+    {
+        try {
+            $cod->notCollected($order);
+        } catch (\App\Exceptions\OrderNotCancellableException $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
+        return back()->with('success', 'Marked as not collected. The order is now returned and the stock has been restored.');
+    }
+
+    public function refundSent(Order $order, \App\Services\Orders\CashOnDeliveryOrders $cod)
+    {
+        abort_unless(auth('admin')->user()->hasPermission('refunds'), 403);
+
+        try {
+            $cod->refundSent($order);
+        } catch (\App\Exceptions\OrderNotCancellableException $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
+        return back()->with('success', 'Refund recorded as sent.');
     }
 
     public function rejectReturn(Request $request, Order $order, ProcessReturn $returns)

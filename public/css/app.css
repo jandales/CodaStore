@@ -9042,6 +9042,92 @@ input[type=radio] {
   margin-top: var(--s2);
 }
 
+.pay-methods {
+  border: 0;
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.pay-methods legend {
+  padding: 0;
+  margin-bottom: 4px;
+}
+
+.pay-option {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+
+.pay-option input {
+  margin-top: 4px;
+  accent-color: var(--ink);
+}
+
+.pay-option__icon {
+  font-size: 1.4rem;
+  width: 24px;
+  text-align: center;
+  margin-top: 1px;
+  color: var(--ink-soft);
+}
+
+.pay-option .fa-paypal {
+  color: #003087;
+}
+
+.pay-option__text strong {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  align-items: baseline;
+  font-size: var(--fs-base);
+  font-weight: 500;
+}
+
+.pay-option__text > span {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--fs-sm);
+  color: var(--ink-muted);
+  line-height: 1.5;
+}
+
+.pay-option__fee {
+  font-size: var(--fs-sm);
+  font-weight: 400;
+  color: var(--ink-muted);
+}
+
+.pay-option:has(input:checked) {
+  border-color: var(--ink);
+  background: var(--surface-alt);
+}
+
+.pay-option:has(input:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.pay-option.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.pay-form:has(#pm-cod:checked) .pay-btn--paypal,
+.pay-form:has(#pm-paypal:checked) .pay-btn--cod {
+  display: none;
+}
+
 .container:has(> .account) {
   max-width: var(--container);
   padding: 0 var(--s3);

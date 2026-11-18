@@ -31,8 +31,8 @@ class ExportsAndDocumentsTest extends TestCase
         $this->assertStringContainsString('attachment; filename="coda-orders-', $response->headers->get('Content-Disposition'));
         $rows = $this->csv($response);
         $this->assertSame('Order number', $rows[0][0]);
-        $this->assertSame(['CODA-1001', 'Ana Cruz', 'ana@example.test', '2', '1000.00', '150.00', '1150.00', 'paid', 'CAP-123', 'LBC9'],
-            [$rows[1][0], $rows[1][3], $rows[1][4], $rows[1][5], $rows[1][6], $rows[1][7], $rows[1][9], $rows[1][10], $rows[1][11], $rows[1][13]]);
+        $this->assertSame(['CODA-1001', 'Ana Cruz', 'ana@example.test', '2', '1000.00', '150.00', '0.00', '1150.00', 'PayPal', 'paid', 'CAP-123', 'LBC9'],
+            [$rows[1][0], $rows[1][3], $rows[1][4], $rows[1][5], $rows[1][6], $rows[1][7], $rows[1][9], $rows[1][10], $rows[1][11], $rows[1][12], $rows[1][13], $rows[1][15]]);
     }
 
     public function test_orders_export_can_be_filtered_by_status()
