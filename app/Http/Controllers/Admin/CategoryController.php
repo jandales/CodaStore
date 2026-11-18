@@ -11,7 +11,7 @@ use App\Http\Requests\updateCategoryRequest;
 
 class CategoryController extends Controller
 {
-    
+
     private $services;
 
     public  function __construct(CategoryServices $services)
@@ -20,50 +20,55 @@ class CategoryController extends Controller
     }
 
     public function index()
-    {            
-        return view('admin.category.index')->with('keyword', null);
-    }      
+    {
+        return view('admin.category.index')->with(['categories' => Category::orderBy('name')->get(), 'keyword' => null]);
+    }
+
+    public function create()
+    {
+        return view('admin.category.create')->with('category', new Category);
+    }
+
     public function store(CategoryRequest $request)
-    {   
-        $this->services->store($request);
-        return redirect()->back()->with(['status' => 'success', 'message' => 'Successfully Created']);  
-    
+    {
+        $category = $this->services->store($request);
+        return redirect()->route('admin.categories')->with(['status' => 'success', 'message' => 'Category "' . $request->name . '" added.']);
     }
     public function edit(Category $category)
-    {        
+    {
         return view('admin.category.edit')->with('category', $category);
     }
 
     public function update(updateCategoryRequest $request, Category $category)
-    {             
+    {
         $this->services->update($category, $request);
-        return redirect()->route('admin.categories')->with(['status' => 'success', 'message' => 'Successfully Updated']); 
+        return redirect()->route('admin.categories')->with(['status' => 'success', 'message' => 'Category "' . $category->fresh()->name . '" saved.']);
     }
     public function destroy(Category $category)
-    {   
+    {
         $this->authorize('delete', $category);
 
         $this->services->destroy($category);
 
-        return redirect()->back()->with(['status' => 'success', 'message' => 'Successfully Deleted']);       
+        return redirect()->back()->with(['status' => 'success', 'message' => 'Successfully Deleted']);
     }
 
     public function destroySelected(Request $request)
     {
         $category = Category::find($request->selectedId[0]);
-        
+
         $this->authorize('delete', $category);
 
-        $this->services->selectedDestroy($request->selectedId); 
+        $this->services->selectedDestroy($request->selectedId);
 
-        return route('admin.categories');    
+        return route('admin.categories');
     }
     public function search(Request $request)
-    {       
-              
-        $categories = Category::search($request->keyword)->get(); 
+    {
 
-        return view('admin.category.index')->with(['categories' => $categories, 'keyword' => $request->keyword]);   
-    }   
-   
+        $categories = Category::search($request->keyword)->get();
+
+        return view('admin.category.index')->with(['categories' => $categories, 'keyword' => $request->keyword]);
+    }
+
 }

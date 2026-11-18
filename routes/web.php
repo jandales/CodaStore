@@ -286,7 +286,7 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
             Route::put('/{product:id}/status', 'changeStatus')->name('admin.products.status.update');
             Route::post('/status/{status}', 'changeSelectedItemStatus')->name('admin.products.status.updates');
             Route::get('/find','find')->name('admin.products.find');
-            Route::get('/{filterBy}/{value}', 'filter')->name('admin.products.filter');
+            Route::get('/{filterBy}/{value}', 'filter')->where('filterBy', '(?!(?:categories|inventory|attributes|import)/)[^/]+')->name('admin.products.filter'); // don't swallow the sections below
             Route::get('/get','getProduct');
         });
 
@@ -301,6 +301,7 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
 
         Route::controller(CategoryController::class)->prefix('categories')->group(function (){
             Route::get('/', 'index')->name('admin.categories');
+            Route::get('/create', 'create')->name('admin.categories.create');
             Route::post('/store', 'store')->name('categories.store');
             Route::get('/{category:slug}/edit', 'edit')->name('categories.edit');
             Route::put('/update/{category:slug}', 'update')->name('admin.categories.update');
@@ -311,6 +312,7 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
 
         Route::controller(AttributeController::class)->prefix('attributes')->group(function (){
             Route::get('/', 'index')->name('admin.attributes');
+            Route::get('/create', 'create')->name('admin.attributes.create');
             Route::post('/store', 'store')->name('admin.attributes.store');
             Route::get('/edit/{attribute:slug}', 'edit')->name('admin.attributes.edit');
             Route::put('/update/{attribute:slug}',  'update')->name('admin.attributes.update');
