@@ -50,7 +50,7 @@ class CashOnDeliveryOrders
     public function refundSent(Order $order): OrderPayment
     {
         $payment = $order->payment()->first();
-        if (!$payment || !$payment->isCashOnDelivery() || $payment->status !== OrderPayment::STATUS_REFUND_PENDING) {
+        if (!$payment || !$payment->isOffline() || $payment->status !== OrderPayment::STATUS_REFUND_PENDING) {
             throw new OrderNotCancellableException('There is no refund waiting to be sent for this order.');
         }
 

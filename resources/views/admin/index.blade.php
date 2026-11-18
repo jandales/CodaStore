@@ -128,8 +128,8 @@
                                 <td>
                                     <a class="link-primary" href="{{ route('admin.orders.show', [$order->encryptedId()]) }}">
                                         <span class="flex items-center gap10">
-                                            <span class="avatar-sm"><img src="{{ $order->user->avatar() }}" alt=""></span>
-                                            <span>{{ $order->user->name }}</span>
+                                            <span class="avatar-sm"><img src="{{ $order->user ? $order->user->avatar() : \App\Models\User::AVATAR_PLACEHOLDER }}" alt=""></span>
+                                            <span>{{ $order->customerName() }}</span>
                                         </span>
                                     </a>
                                 </td>

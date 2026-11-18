@@ -5,7 +5,10 @@
 
 <div class="page-title order-page-title">
     <h1>Orders</h1>
+    <div class="order-doc-actions">
+    <a href="{{ route('admin.orders.create') }}" class="btn btn-primary"><i class="fas fa-plus" aria-hidden="true"></i> Create order</a>
     <a href="{{ route('admin.exports.orders', request()->is('admin/orders/*') && in_array(request()->segment(3), ['confirmed', 'shipped', 'completed', 'cancelled', 'returned']) ? ['status' => request()->segment(3)] : []) }}" class="btn btn-light"><i class="fas fa-file-csv" aria-hidden="true"></i> Export CSV</a>
+    </div>
 
 </div>
 
@@ -44,6 +47,8 @@
                     @php $openReturns = \App\Models\OrderReturn::where('status', 'requested')->count(); @endphp
                     <li class="{{ (request()->is('admin/orders/returns')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.returns') }}">Return requests @if($openReturns)<span class="sb-badge">{{ $openReturns }}</span>@endif</a></li>
                     <li class="{{ (request()->is('admin/orders/returned')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.list',['returned'])}}">Returned</a></li>
+                    @php $awaitingPayment = \App\Models\OrderPayment::where('status', 'awaiting')->count(); @endphp
+                    <li class="{{ (request()->is('admin/orders/awaiting-payment')) ? 'selected' : '' }}"><a href="{{ route('admin.orders.awaiting') }}">Awaiting payment @if($awaitingPayment)<span class="sb-badge">{{ $awaitingPayment }}</span>@endif</a></li>
                 </ul>
                 <form id="formSearch" action="{{route('admin.orders.search')}}" method="get">
                     <div class="search-input">
@@ -63,6 +68,7 @@
                              </div>
                          </th>
                         <th>Order Number</th>
+                        <th>Customer</th>
                         <th>Quantity</th>
                         <th>Amount</th>
                         <th>Date</th>
@@ -75,7 +81,7 @@
                         @csrf
                         <input name="_method" type="hidden" value="post">
                     @if ( $orders->count() == 0 )
-                        <tr> <td colspan="7" ><label class="text-center">No records found</label></td> </tr>
+                        <tr> <td colspan="8" ><label class="text-center">No records found</label></td> </tr>
                     @endif
                     @forEach($orders as $order)
                         <tr>
@@ -84,9 +90,10 @@
                                     <input type="checkbox" class="childCheckbox" name="selected[]"  value="{{ $order->encryptedId() }}">
                                 </div>
                             </td>
-                            <td><a class="link-primary" href="{{ route('admin.orders.show',[$order->encryptedId()])}}">{{$order->order_number}}</a></td>
+                            <td><a class="link-primary" href="{{ route('admin.orders.show',[$order->encryptedId()])}}">{{$order->order_number}}</a>@if (($order->channel ?? 'website') !== 'website')<span class="channel-tag">{{ $order->channelLabel() }}</span>@endif</td>
+                            <td>{{ $order->customerName() }}@if ($order->isGuest())<span class="label-hint"> · guest</span>@endif</td>
                             <td>{{ $order->totalItems() . " items" }}</td>
-                            <td>@money($order->gross_total)@if (optional($order->payment)->provider === 'cod')<span class="cod-tag" title="Cash on delivery">COD</span>@endif</td>
+                            <td>@money($order->gross_total)@if (optional($order->payment)->provider === 'cod')<span class="cod-tag" title="Cash on delivery">COD</span>@elseif (optional($order->payment)->status === 'awaiting')<span class="cod-tag" title="Awaiting payment">UNPAID</span>@endif</td>
                             <td>{{  $order->createdAtDate() }}</td>
                             <td><span class="status capitalized {{ $order->statusColor() }}">{{ $order->status }}</span></td>
                             <td width="100px">

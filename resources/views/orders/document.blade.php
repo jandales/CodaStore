@@ -178,6 +178,9 @@
                 @if ((float) $order->coupon_amount > 0)
                     <div><span>Coupon</span><span>−@money($order->coupon_amount)</span></div>
                 @endif
+                @if ((float) $order->discount_amount > 0)
+                    <div><span>Discount</span><span>−@money($order->discount_amount)</span></div>
+                @endif
                 @if ((float) $order->payment_fee > 0)
                     <div><span>COD fee</span><span>@money($order->payment_fee)</span></div>
                 @endif
