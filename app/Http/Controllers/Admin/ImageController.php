@@ -24,8 +24,8 @@ class ImageController extends Controller
 
     public function unlink(Photo $photo)
     {  
-        $this->imageServices->delete($photo);
-        return response()->json(['deleted' => $deleted]);  
+        $deleted = $this->imageServices->delete($photo);
+        return response()->json(['deleted' => $deleted]);
   
     }
 }

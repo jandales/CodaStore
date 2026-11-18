@@ -30,9 +30,10 @@ class ImageServices
 
     public function delete(Photo $photo)
     {
-        $deleted = $photo->delete();
-        if(!$deleted) return back()->with('error','Image cant delete');
+        $deleted = (bool) $photo->delete();
         // Only remove the file when no other product, photo or variant uses it.
-        \App\Services\Products\ProductImageFiles::deleteIfUnused($photo->path);
+        if ($deleted) \App\Services\Products\ProductImageFiles::deleteIfUnused($photo->path);
+
+        return $deleted;
     }
 }
