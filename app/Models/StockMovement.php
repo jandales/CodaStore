@@ -22,13 +22,18 @@ class StockMovement extends Model
         'product_edit' => ['Changed on the product page', 'fa-pen'],
         'import' => ['CSV import', 'fa-file-csv'],
         'variant_removed' => ['Variant removed', 'fa-trash'],
+        'damaged' => ['Marked as damaged', 'fa-heart-crack'],
+        'repaired' => ['Repaired, back to stock', 'fa-screwdriver-wrench'],
+        'written_off' => ['Damaged, written off', 'fa-trash-can'],
     ];
 
-    protected $fillable = ['product_id', 'product_sku_id', 'variant_label', 'change', 'balance', 'reason', 'order_id', 'admin_id', 'note', 'created_at'];
+    protected $fillable = ['product_id', 'product_sku_id', 'variant_label', 'change', 'balance', 'damaged_change', 'damaged_balance', 'reason', 'order_id', 'admin_id', 'note', 'created_at'];
 
     protected $casts = [
         'change' => 'integer',
         'balance' => 'integer',
+        'damaged_change' => 'integer',
+        'damaged_balance' => 'integer',
         'created_at' => 'datetime',
     ];
 

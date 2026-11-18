@@ -71,7 +71,7 @@ class AdminExportController extends Controller
     {
         $products = Product::with('category', 'stock', 'skus')->orderBy('id');
 
-        $rows = [['Name', 'SKU', 'Category', 'Status', 'Regular price', 'Sale price', 'On sale', 'Price now', 'Stock', 'Variant stock', 'Variant prices']];
+        $rows = [['Name', 'SKU', 'Category', 'Status', 'Regular price', 'Sale price', 'On sale', 'Price now', 'Stock', 'Variant stock', 'Variant prices', 'Damaged']];
         foreach ($products->cursor() as $product) {
             $rows[] = [
                 $product->name,
@@ -86,6 +86,7 @@ class AdminExportController extends Controller
                 // "S:5|M:3|XL:0" and "XL:700" (variants with their own price only).
                 $product->skus->map(fn ($sku) => $sku->label() . ':' . (int) $sku->qty)->implode('|'),
                 $product->skus->filter(fn ($sku) => $sku->price !== null)->map(fn ($sku) => $sku->label() . ':' . self::amount($sku->price))->implode('|'),
+                $product->damagedQty(),
             ];
         }
 

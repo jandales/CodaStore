@@ -327,6 +327,16 @@ class Product extends Model
         return max(0, (int) optional($this->stock)->qty);
     }
 
+    /** Damaged units, kept apart from the sellable stock (sum of the variants when there are any). */
+    public function damagedQty(): int
+    {
+        if ($this->relationLoaded('skus') ? $this->skus->isNotEmpty() : $this->skus()->exists()) {
+            return (int) ($this->relationLoaded('skus') ? $this->skus->sum('damaged_qty') : $this->skus()->sum('damaged_qty'));
+        }
+
+        return max(0, (int) optional($this->stock)->damaged_qty);
+    }
+
     public function isSoldOut(): bool
     {
         return $this->stockQty() === 0;

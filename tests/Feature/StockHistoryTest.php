@@ -134,7 +134,7 @@ class StockHistoryTest extends TestCase
 
         $this->get(route('admin.inventory.history', [$tee->encryptedId(), 'variant' => $m->id]))->assertOk()
             ->assertSee('Sold')->assertDontSee('Stock added')
-            ->assertSeeInOrder(['In stock now', '1']);
+            ->assertSeeInOrder(['Available now', '1']);
     }
 
     public function test_stock_details_need_the_products_permission()

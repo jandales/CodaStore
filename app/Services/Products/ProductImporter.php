@@ -43,7 +43,7 @@ class ProductImporter
     ];
 
     /** Columns from the export that are fine to leave in the file. */
-    private const IGNORED = ['price_now'];
+    private const IGNORED = ['price_now', 'damaged'];
 
     private const DEFAULT_IMAGE = '/img/products/default.jpg';
 

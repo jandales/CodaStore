@@ -59,7 +59,7 @@ class VariantOperationsTest extends TestCase
         $this->signInAdmin();
 
         $this->get(route('admin.inventory'))->assertOk()
-            ->assertSee(route('admin.inventory.update.variant', [$m->id]), false);
+            ->assertSee('data-sku="' . $m->id . '"', false)->assertSee('Adjust stock');
 
         $this->putJson(route('admin.inventory.update.variant', [$m->id]), ['qty' => 3, 'action' => 1])
             ->assertOk()->assertJson(['stock' => ['qty' => 5]]);

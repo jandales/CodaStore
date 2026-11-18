@@ -70,6 +70,9 @@
                         <div class="form-block">
                             <label for="name">Quantity</label>
                             <input type="number" name="qty" value="{{$product->stock->qty}}">
+                            @if ($product->damagedQty() > 0)
+                                <p class="form-help">Available stock. {{ $product->damagedQty() }} damaged {{ $product->damagedQty() === 1 ? 'unit is' : 'units are' }} kept apart: <a href="{{ route('admin.inventory.history', [$product->encryptedId()]) }}">manage on Inventory</a>.</p>
+                            @endif
                         </div>
                     </div>
                 </div>

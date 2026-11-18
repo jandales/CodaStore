@@ -17,6 +17,7 @@ class Stock extends Model
     protected $fillable = [
         'product_id',
         'qty',
+        'damaged_qty',
         'remarks'     
     ];
 

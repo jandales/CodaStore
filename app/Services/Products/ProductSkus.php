@@ -72,6 +72,7 @@ class ProductSkus
 
         $stock = Stock::firstOrNew(['product_id' => $product->id]);
         $stock->qty = (int) $skus->sum('qty');
+        $stock->damaged_qty = (int) $skus->sum('damaged_qty');
         $stock->save();
     }
 
