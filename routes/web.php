@@ -403,6 +403,12 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
     });
 
     Route::prefix('setting')->middleware('permission:settings')->group(function () {
+        Route::controller(\App\Http\Controllers\Admin\FailedEmailController::class)->prefix('failed-emails')->group(function () {
+            Route::get('/', 'index')->name('admin.emails.failed');
+            Route::post('/retry-all', 'retryAll')->name('admin.emails.failed.retry-all');
+            Route::post('/{id}/retry', 'retry')->whereNumber('id')->name('admin.emails.failed.retry');
+            Route::delete('/{id}', 'destroy')->whereNumber('id')->name('admin.emails.failed.destroy');
+        });
         Route::controller(SettingController::class)->group(function (){
             Route::get('/general','general')->name('admin.setting.general');
             Route::get('/campany','campany')->name('admin.setting.campany');

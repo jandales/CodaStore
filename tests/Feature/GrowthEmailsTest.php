@@ -39,7 +39,7 @@ class GrowthEmailsTest extends TestCase
 
         $user = User::where('email', 'ana@example.test')->first();
         $this->assertNull($user->email_verified_at);
-        Notification::assertSentTo($user, VerifyEmail::class);
+        Notification::assertSentTo($user, \App\Notifications\VerifyEmailInBackground::class);
     }
 
     public function test_unverified_customers_are_sent_to_confirm_before_checkout()
@@ -71,7 +71,7 @@ class GrowthEmailsTest extends TestCase
         $this->signInCustomer($user);
 
         $this->post(route('verification.send'))->assertSessionHas('success');
-        Notification::assertSentTo($user, VerifyEmail::class);
+        Notification::assertSentTo($user, \App\Notifications\VerifyEmailInBackground::class);
     }
 
     public function test_existing_customers_count_as_verified_after_the_migration()
@@ -165,8 +165,8 @@ class GrowthEmailsTest extends TestCase
         $this->artisan('store:cart-reminders')->assertExitCode(0);
         $this->artisan('store:cart-reminders')->assertExitCode(0);
 
-        Mail::assertSent(CartReminderMail::class, 1);
-        Mail::assertSent(CartReminderMail::class, fn ($mail) => $mail->hasTo($cart->user->email));
+        Mail::assertQueued(CartReminderMail::class, 1);
+        Mail::assertQueued(CartReminderMail::class, fn ($mail) => $mail->hasTo($cart->user->email));
         $this->assertNotNull($cart->fresh()->reminded_at);
     }
 

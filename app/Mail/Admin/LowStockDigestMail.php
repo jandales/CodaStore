@@ -3,13 +3,15 @@
 namespace App\Mail\Admin;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Mail\Concerns\SendsInBackground;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 
-class LowStockDigestMail extends Mailable
+class LowStockDigestMail extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use Queueable, SerializesModels, SendsInBackground;
 
     public $products;
     public $threshold;

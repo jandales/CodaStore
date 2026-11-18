@@ -40,6 +40,19 @@
     </div>
 </div>
 
+@if ($emails_stuck)
+    <div class="alert alert-warning dash-alert" role="alert">
+        <i class="fas fa-envelope" aria-hidden="true"></i>
+        <span><strong>{{ $emails_stuck }} {{ \Illuminate\Support\Str::plural('email', $emails_stuck) }} waiting to send for over {{ \App\Services\Emails\EmailQueue::STUCK_MINUTES }} minutes.</strong> Is the email worker running? Start it with <code>php artisan queue:work --queue=emails,default</code>.</span>
+    </div>
+@endif
+@if ($emails_failed)
+    <div class="alert alert-danger dash-alert" role="alert">
+        <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+        <span><strong>{{ $emails_failed }} {{ \Illuminate\Support\Str::plural('email', $emails_failed) }} couldn't be sent.</strong> <a href="{{ route('admin.emails.failed') }}">Review failed emails</a></span>
+    </div>
+@endif
+
 <div class="stat-grid">
     <div class="stat-card">
         <span class="stat-icon stat-icon--violet"><i class="fas fa-receipt" aria-hidden="true"></i></span>

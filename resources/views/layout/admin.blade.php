@@ -87,6 +87,8 @@
                             <li><a class="{{ request()->is('admin/couriers*') ? 'active' : '' }}" href="{{ route('admin.couriers') }}"><i class="fas fa-truck-fast" aria-hidden="true"></i><span class="hide-menu">Couriers</span></a></li>
                             <li><a class="{{ request()->is('admin/setting/payments*') ? 'active' : '' }}" href="{{ route('admin.setting.payments') }}"><i class="fas fa-wallet" aria-hidden="true"></i><span class="hide-menu">Payment methods</span></a></li>
                             <li><a class="{{ request()->is('admin/pages*') ? 'active' : '' }}" href="{{ route('admin.pages') }}"><i class="fas fa-file-lines" aria-hidden="true"></i><span class="hide-menu">Pages</span></a></li>
+                            @php $failedEmails = \App\Services\Emails\EmailQueue::failedCount(); @endphp
+                            <li><a class="{{ request()->is('admin/setting/failed-emails*') ? 'active' : '' }}" href="{{ route('admin.emails.failed') }}"><i class="fas fa-envelope-circle-check" aria-hidden="true"></i><span class="hide-menu">Failed emails</span>@if ($failedEmails)<span class="sb-badge" aria-label="{{ $failedEmails }} failed">{{ $failedEmails }}</span>@endif</a></li>
                         </ul>
                     @endif
 

@@ -47,7 +47,7 @@ class VariantOperationsTest extends TestCase
 
         $this->artisan('store:low-stock-digest')->assertExitCode(0);
 
-        Mail::assertSent(LowStockDigestMail::class, fn ($mail) => $mail->products->pluck('name')->all() === ['tee (L)', 'tee (M)']);
+        Mail::assertQueued(LowStockDigestMail::class, fn ($mail) => $mail->products->pluck('name')->all() === ['tee (L)', 'tee (M)']);
     }
 
     // ---------------------------------------------------------------- inventory

@@ -42,7 +42,7 @@ class SendCartReminders extends Command
             }
 
             try {
-                Mail::to($cart->user->email)->send(new CartReminderMail($cart));
+                Mail::to($cart->user->email)->queue(new CartReminderMail($cart));
                 $sent++;
             } catch (\Throwable $e) {
                 report($e);
