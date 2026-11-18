@@ -6245,6 +6245,27 @@ td span.inactive {
   max-height: 420px;
 }
 
+.mo-card .dash-card__title {
+  margin-bottom: 16px;
+}
+
+.mo-card .mo-toggle {
+  margin-bottom: 16px;
+}
+
+.mo-card [data-mode] .mo-search + .mo-chosen,
+.mo-card [data-mode] .mo-search ~ .mo-chosen {
+  margin-top: 12px;
+}
+
+.mo-card .mo-toggle + .mo-grid {
+  margin-top: 0;
+}
+
+.mo-search input[type=search] {
+  padding: 10px 14px;
+}
+
 /*!
  * Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)

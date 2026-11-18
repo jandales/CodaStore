@@ -983,3 +983,9 @@ $admin-side: 272px;
 .channel-tag { display: inline-block; margin-left: 8px; padding: 1px 6px; border-radius: 4px; background: #E0E7FF; color: #3730A3; font-size: 11px; font-weight: 700; letter-spacing: .02em; vertical-align: middle; }
 .mo-card, .mo-card .panel-body { overflow: visible !important; }
 .mo-results--products { position: static; margin-top: 6px; box-shadow: none; max-height: 420px; }
+.mo-card .dash-card__title { margin-bottom: 16px; }
+.mo-card .mo-toggle { margin-bottom: 16px; }
+.mo-card [data-mode] .mo-search + .mo-chosen,
+.mo-card [data-mode] .mo-search ~ .mo-chosen { margin-top: 12px; }
+.mo-card .mo-toggle + .mo-grid { margin-top: 0; }
+.mo-search input[type="search"] { padding: 10px 14px; }
