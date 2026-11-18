@@ -1,71 +1,52 @@
-<?php 
+<?php
+
 namespace App\Services\Admin\Auth;
 
+use App\Mail\AdminResetPassword;
 use App\Models\Admin;
+use App\Services\Auth\ResetTokens;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use App\Jobs\ProcessAdminResetPasswordMail;
-use App\Models\AdminResetPassword;
+use Illuminate\Support\Facades\Mail;
 
-
+/** Staff "forgot password". */
 class PasswordServices
 {
+    public const TABLE = 'admin_reset_password';
+    public const SENT = 'If that email belongs to a staff account, we\'ve sent a link to reset the password. The link works for 60 minutes.';
+
     public function request(Request $request)
-    {  
-
+    {
         $admin = Admin::where('email', $request->email)->first();
+        if ($admin) {
+            $token = ResetTokens::issue(self::TABLE, $admin->email);
+            try {
+                Mail::to($admin->email)->queue(new AdminResetPassword(url("/admin/reset_password/{$token}")));
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        }
 
-        if ($admin == null) return ['error' => 'this user is not register'];
-       
-        $expiry = date('Y-m-d H:i:s', strtotime("+1 day"));
-
-        $created = AdminResetPassword::Create([
-            'email' => $request->email,
-            'token' => $request->_token,
-            'created_at' => $expiry
-        ]);
-
-        if(!$created) return ['error' => 'Request cannot proccess'];
-        
-        $url = url("/admin/reset_password/{$request->_token}");
-        
-        // Mail::to("to@example.com")->send(new SendEmail($url));
-        dispatch(new ProcessAdminResetPasswordMail($url));
-
-        return ['success' => 'Please check your Email to reset your password'];
-
+        return ['success' => self::SENT];
     }
 
     public function store(Request $request)
-    { 
-        $token = $request->_token;
-        $password = $request->password; 
-        $current_date = date('Y-m-d H:i:s');
+    {
+        $email = ResetTokens::email(self::TABLE, $request->token);
+        $admin = $email ? Admin::where('email', $email)->first() : null;
+        if (!$admin) {
+            return ['error' => 'This reset link has expired or was already used. Ask for a new one.'];
+        }
 
-        $request_user  = AdminResetPassword::where('token',$token)->first();
+        $admin->password = Hash::make($request->password);
+        $admin->save();
+        ResetTokens::forget(self::TABLE, $email);
 
-        if ($request_user ==  null) return ['error' => 'Request user not verified'];
-
-        $email = $request_user->email;
-     
-        $expiry_date = $request_user ->created_at; 
-
-       if ($current_date >= $expiry_date) return ['error' => 'Request already expires']; 
-    
-        Self::update($email,$password); 
-  
-        DB::delete('delete from admin_reset_password where email = ?', [$email]);
-       
-        return ['success' => 'Password changed successfully'];
-
+        return ['success' => 'Password changed. You can sign in now.'];
     }
 
-    private function update($email, $password)
-    {          
-        $admin= Admin::where('email', $email)->first();
-        $admin->password = Hash::make($password);
-        $admin->save();
-        return $admin;
+    public function validateToken($token): bool
+    {
+        return ResetTokens::email(self::TABLE, $token) !== null;
     }
 }

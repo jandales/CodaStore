@@ -7,33 +7,24 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class SendUsMail extends Mailable
+/** A contact-form message, sent to the store; replying goes to the visitor. */
+class SendUsMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
-      
-    public $content;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
-    public function __construct($content)
+    public string $senderEmail;
+    public string $content;
+
+    public function __construct(string $senderEmail, string $content)
     {
-  
+        $this->senderEmail = $senderEmail;
         $this->content = $content;
     }
 
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
     public function build()
     {
-        $from = config('mail.from.address');
-        return $this->from($from)
-                    ->markdown('emails.sendUsMail')
-                    ->with(['content' => $this->content]);
+        return $this->subject('New message from ' . $this->senderEmail)
+            ->replyTo($this->senderEmail)
+            ->markdown('emails.sendUsMail', ['senderEmail' => $this->senderEmail, 'content' => $this->content]);
     }
 }

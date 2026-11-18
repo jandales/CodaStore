@@ -22,6 +22,9 @@
                     <p class="admin-auth__sub">Use your staff account to manage products and orders.</p>
 
                     <form class="form" method="post" action="{{ route('admin.login.store') }}">
+                        @if (session('success'))
+                            <div class="alert alert-success" role="status">{{ session('success') }}</div>
+                        @endif
                         @if (session('error'))
                             <div class="alert alert-danger" role="alert">{{ session('error') }}</div>
                         @endif

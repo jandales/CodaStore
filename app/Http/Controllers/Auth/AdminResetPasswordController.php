@@ -30,13 +30,15 @@ class AdminResetPasswordController extends Controller
 
     public function reset($token)
     {
-        return view('admin.adminresetpassword')->with('token', $token);
+        return view('admin.adminresetpassword')->with(['token' => $token, 'valid' => $this->services->validateToken($token)]);
     }
 
     public function store(StoreResetPasswordRequest $request)
     { 
         $result = $this->services->store($request);
-       
+        if (isset($result['success'])) {
+            return redirect()->route('admin.login')->with($result);
+        }
         return back()->with($result);
 
     }

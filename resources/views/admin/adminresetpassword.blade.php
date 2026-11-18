@@ -16,11 +16,16 @@
                         <br>
                     @endif 
 
+                    @if (!$valid)
+                        <div class="alert alert-danger">This reset link has expired or was already used. <a href="{{ route('admin.forget.password') }}">Ask for a new one.</a></div>
+                    @endif
+
                     <p>Enter your new password</p>
 
-                    <form class="form"  method="post" action="{{ route('admin.reset.password') }}">
+                    <form class="form"  method="post" action="{{ route('admin.accountreset.password') }}">
                         
                         @csrf
+                        <input type="hidden" name="token" value="{{ $token }}">
 
                       
                         @error('password')

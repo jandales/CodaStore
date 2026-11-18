@@ -12,7 +12,7 @@ class AdminResetPassword extends Mailable
     use Queueable, SerializesModels;
 
 
-    protected $url;
+    public $url;
     /**
      * Create a new message instance.
      *
