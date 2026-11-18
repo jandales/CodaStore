@@ -8,6 +8,7 @@
 </div>
 <script src="{{asset('js/jquery.min.js')}}"></script>
 <script src="{{ asset('js/main.js') }}"></script>
+<script src="{{ asset('js/admin-forms.js') }}?v=1"></script>
 <script src="/library/ckeditor/ckeditor.js"></script>
 @stack('scripts')
 
