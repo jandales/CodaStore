@@ -24,7 +24,7 @@ class AdminOrderServices
 
     public function list($status = null)
     {
-        $orders = Order::with('user', 'items', 'payment')->when($status, function($query) use ($status) {
+        $orders = Order::with('user', 'items', 'payment', 'shipping')->when($status, function($query) use ($status) {
                             return $query->where('status', $status);
                         })->paginate($this->perpage);
 

@@ -8,6 +8,9 @@
 @if ($order->coupon_amount > 0)
 | **Discount** | | −₱{{ number_format($order->coupon_amount, 2) }} |
 @endif
+@if ((float) $order->discount_amount > 0)
+| **Order discount** | | −₱{{ number_format($order->discount_amount, 2) }} |
+@endif
 @if ((float) $order->payment_fee > 0)
 | **COD fee** | | ₱{{ number_format($order->payment_fee, 2) }} |
 @endif

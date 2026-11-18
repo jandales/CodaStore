@@ -261,10 +261,15 @@ class Order extends Model
 
     public function scopeSearch($query, $keyword)
     {
-        return $query->whereHas('user', function($q) use  ($keyword){
-            return $q->where('name', 'like','%' . $keyword . '%')
-                    ->orWhere('email','like','%' . $keyword . '%');
-        })->orWhere('order_number', $keyword);
+        // Customer account, or the delivery / billing details (guest orders have no account).
+        $like = '%' . $keyword . '%';
+
+        return $query->where(function ($q) use ($keyword, $like) {
+            $q->whereHas('user', fn ($u) => $u->where('name', 'like', $like)->orWhere('email', 'like', $like))
+                ->orWhereHas('shipping', fn ($s) => $s->where('firstname', 'like', $like)->orWhere('lastname', 'like', $like)->orWhere('phone', 'like', $like))
+                ->orWhereHas('billing', fn ($b) => $b->where('email', 'like', $like))
+                ->orWhere('order_number', $keyword);
+        });
 
     }
 

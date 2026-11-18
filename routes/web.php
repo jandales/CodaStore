@@ -338,7 +338,14 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
         Route::put('/update-status/{order:id}','updateStatus')->name('admin.orders.shipped1');
         Route::put('/deliver', 'deliver')->name('admin.orders.deliver');
         Route::get('/search', 'search')->name('admin.orders.search');
+        // Manual orders (sales outside the website); before /{status} so "create" isn't read as a status.
+        Route::get('/create', [\App\Http\Controllers\Admin\ManualOrderController::class, 'create'])->name('admin.orders.create');
+        Route::post('/manual', [\App\Http\Controllers\Admin\ManualOrderController::class, 'store'])->name('admin.orders.manual.store');
+        Route::get('/lookup/products', [\App\Http\Controllers\Admin\ManualOrderController::class, 'products'])->name('admin.orders.lookup.products');
+        Route::get('/lookup/customers', [\App\Http\Controllers\Admin\ManualOrderController::class, 'customers'])->name('admin.orders.lookup.customers');
+        Route::put('/{order:id}/mark-paid', [\App\Http\Controllers\Admin\ManualOrderController::class, 'markPaid'])->name('admin.orders.mark-paid');
         Route::get('/returns', 'returns')->name('admin.orders.returns');
+        Route::get('/awaiting-payment', 'awaitingPayment')->name('admin.orders.awaiting');
         Route::get('/{order:id}/invoice', 'invoice')->name('admin.orders.invoice');
         Route::get('/{order:id}/packing-slip', 'packingSlip')->name('admin.orders.packing-slip');
         Route::put('/{order:id}/return/approve', 'approveReturn')->name('admin.orders.return.approve');

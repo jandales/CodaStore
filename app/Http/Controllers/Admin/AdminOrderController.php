@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\AdminOrderServices;
 use App\Models\OrderReturn;
+use App\Models\OrderPayment;
 use App\Models\OrderNote;
 use App\Models\ActivityLog;
 use App\Services\Orders\ProcessReturn;
@@ -85,6 +86,17 @@ class AdminOrderController extends Controller
         return back()->with('success', $messages[$order->status] ?? 'Order status updated');
     }
 
+    /** Manual orders waiting for the customer to pay. */
+    public function awaitingPayment()
+    {
+        $orders = Order::with('user', 'items', 'payment', 'shipping')
+            ->whereHas('payment', fn ($q) => $q->where('status', OrderPayment::STATUS_AWAITING))
+            ->latest()
+            ->paginate(config('setting.app.perpage'));
+
+        return view('admin.orders.index')->with('orders', $orders);
+    }
+
     /** Orders with a return waiting for a decision. */
     public function returns()
     {
@@ -110,7 +122,7 @@ class AdminOrderController extends Controller
         $paymentModel = $order->payment()->first();
         $payment = optional($paymentModel)->status;
         if ($payment === 'refund_pending') {
-            return back()->with('success', 'Return approved. This was cash on delivery: send the refund of ₱' . number_format((float) $paymentModel->amount, 2) . ' to the customer by bank or GCash, then click "Refund sent".');
+            return back()->with('success', 'Return approved. Send the refund of ₱' . number_format((float) $paymentModel->amount, 2) . ' to the customer by hand (bank or GCash), then click "Refund sent".');
         }
         $message = $payment === 'refund_failed'
             ? 'Return approved, but the PayPal refund failed. Refund it by hand in PayPal.'

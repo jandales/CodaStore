@@ -14,11 +14,11 @@ class AdminExportController extends Controller
     public function orders(Request $request)
     {
         $status = $request->query('status');
-        $orders = Order::with('user', 'billing', 'payment', 'items')
+        $orders = Order::with('user', 'billing', 'payment', 'items', 'createdBy')
             ->when($status, fn ($q) => $q->where('status', $status))
             ->orderBy('id');
 
-        $rows = [['Order number', 'Date', 'Status', 'Customer', 'Email', 'Items', 'Subtotal', 'Shipping', 'Coupon', 'COD fee', 'Total', 'Payment method', 'Payment', 'Payment reference', 'Courier', 'Tracking number']];
+        $rows = [['Order number', 'Date', 'Status', 'Customer', 'Email', 'Items', 'Subtotal', 'Shipping', 'Coupon', 'COD fee', 'Total', 'Payment method', 'Payment', 'Payment reference', 'Courier', 'Tracking number', 'Channel', 'Discount', 'Created by']];
         foreach ($orders->cursor() as $order) {
             $rows[] = [
                 $order->order_number,
@@ -37,6 +37,9 @@ class AdminExportController extends Controller
                 optional($order->payment)->reference_number,
                 $order->courierName(),
                 $order->tracking_number,
+                $order->channelLabel(),
+                self::amount($order->discount_amount),
+                $order->createdBy ? (trim($order->createdBy->firstname . ' ' . $order->createdBy->lastname) ?: $order->createdBy->username) : '',
             ];
         }
 

@@ -53,10 +53,15 @@ class CancelOrder
         // Outside the transaction: the cancellation stands even if PayPal or email is unavailable.
         $this->refunder->handle($order, "Order {$order->order_number} cancelled");
 
-        // Cash on delivery: nothing was paid, so there is simply nothing left to collect.
+        // Cash on delivery / unpaid manual orders: nothing was paid, nothing left to collect.
+        // Paid manual orders: the money goes back by hand ("Refund sent" on the order page).
         $payment = $order->payment()->first();
-        if ($payment && $payment->isCashOnDelivery() && $payment->status === OrderPayment::STATUS_PENDING) {
-            $payment->update(['status' => OrderPayment::STATUS_CANCELLED]);
+        if ($payment && $payment->isOffline()) {
+            if (in_array($payment->status, [OrderPayment::STATUS_PENDING, OrderPayment::STATUS_AWAITING], true)) {
+                $payment->update(['status' => OrderPayment::STATUS_CANCELLED]);
+            } elseif ($payment->provider === 'manual' && $payment->status === OrderPayment::STATUS_PAID) {
+                $payment->update(['status' => OrderPayment::STATUS_REFUND_PENDING]);
+            }
         }
         $this->notifier->cancelled($order->fresh());
 

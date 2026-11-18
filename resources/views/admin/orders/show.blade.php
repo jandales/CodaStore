@@ -137,6 +137,21 @@
                     <span class="link-primary">{{ $order->order_number }}</span>
                 </div>
 
+                <div class="row items-center mt10">
+                    <h4>Came from</h4>
+                    <span>{{ $order->channelLabel() }}</span>
+                </div>
+                @if ($order->createdBy)
+                <div class="row items-center mt10">
+                    <h4>Created by</h4>
+                    <span>{{ trim($order->createdBy->firstname . ' ' . $order->createdBy->lastname) ?: $order->createdBy->username }}</span>
+                </div>
+                @endif
+                <div class="row items-center mt10">
+                    <h4>Customer</h4>
+                    <span>{{ $order->customerName() }}@if ($order->isGuest()) <span class="label-hint">(guest)</span>@endif</span>
+                </div>
+
                 <br>
                 <div class="separator"></div>
             </div>
@@ -154,6 +169,12 @@
                     <div>Payment</div>
                     <span class="status {{ $order->payment->statusColor() }}">{{ $order->payment->statusLabel() }}</span>
                 </div>
+                @if ($order->payment->provider === 'manual' && $order->payment->reference_number && !str_starts_with($order->payment->reference_number, 'MANUAL-'))
+                <div class="row mt10">
+                    <div>Reference</div>
+                    <span>{{ $order->payment->reference_number }}</span>
+                </div>
+                @endif
                 @endif
                 <div class="row mt10">
                     <div>Name</div>
@@ -189,6 +210,12 @@
                     <div>Tax</div>
                     <span>@money($order->tax_total)</span>
                 </div>
+                @if ((float) $order->discount_amount > 0)
+                <div class="row mt10">
+                    <div>Discount</div>
+                    <span>−@money($order->discount_amount)</span>
+                </div>
+                @endif
                 @if ((float) $order->payment_fee > 0)
                 <div class="row mt10">
                     <div>COD fee</div>
@@ -225,7 +252,45 @@
                                 @endif
                             </div>
                        @endif
-                       @if ($order->payment && !$order->isCashOnDelivery() && in_array($order->payment->status, ['refunded', 'refund_failed']))
+                       @if ($order->payment && $order->payment->provider === 'manual')
+                            @php $manualPayment = $order->payment; @endphp
+                            <section class="cod-panel" aria-labelledby="manual-pay-title">
+                                <h4 id="manual-pay-title"><i class="fas fa-wallet" aria-hidden="true"></i> Payment</h4>
+                                @if ($manualPayment->status === 'awaiting')
+                                    <p class="cod-panel__due">Waiting for payment: <strong>@money($manualPayment->amount)</strong></p>
+                                    <form method="post" action="{{ route('admin.orders.mark-paid', [$order->encryptedId()]) }}" class="return-form">
+                                        @csrf
+                                        @method('put')
+                                        <label for="mp-method">Paid with</label>
+                                        <select id="mp-method" name="payment_method" required>
+                                            @foreach (\App\Models\OrderPayment::MANUAL_METHODS as $key => $label)
+                                                <option value="{{ $key }}" {{ $manualPayment->method === $key ? 'selected' : '' }}>{{ $label }}</option>
+                                            @endforeach
+                                        </select>
+                                        <label for="mp-ref">Reference <span class="label-hint">(optional)</span></label>
+                                        <input type="text" id="mp-ref" name="payment_reference" maxlength="100" placeholder="e.g. GCash reference no.">
+                                        @error('payment_method')<div class="alert alert-danger">{{ $message }}</div>@enderror
+                                        <button class="btn btn-primary">Mark as paid</button>
+                                    </form>
+                                @elseif ($manualPayment->status === 'paid')
+                                    <p>Paid @money($manualPayment->amount) by {{ $manualPayment->methodLabel() }}{{ $manualPayment->collected_at ? ' on ' . $manualPayment->collected_at->format('M j, Y') : '' }}.</p>
+                                @elseif ($manualPayment->status === 'refund_pending')
+                                    <p class="cod-panel__due">Refund to send: <strong>@money($manualPayment->amount)</strong></p>
+                                    <p class="ship-note">Send it back the way the customer paid, then record it here.</p>
+                                    @if (auth('admin')->user()->hasPermission('refunds'))
+                                        <form method="post" action="{{ route('admin.orders.cod.refund-sent', [$order->encryptedId()]) }}">
+                                            @csrf
+                                            @method('put')
+                                            <button class="btn btn-primary">Refund sent</button>
+                                        </form>
+                                    @endif
+                                @else
+                                    <p>{{ $manualPayment->statusLabel() }}.</p>
+                                @endif
+                            </section>
+                       @endif
+
+                       @if ($order->payment && $order->payment->provider === 'paypal' && in_array($order->payment->status, ['refunded', 'refund_failed']))
                             <div class="alert {{ $order->payment->status === 'refunded' ? 'alert-success' : 'alert-danger' }} mt-1">
                                 {{ $order->payment->status === 'refunded' ? 'Payment refunded to the customer through PayPal.' : 'Automatic refund failed. Refund this payment manually in PayPal (capture ' . $order->payment->reference_number . ').' }}
                             </div>
