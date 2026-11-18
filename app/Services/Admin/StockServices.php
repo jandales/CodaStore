@@ -19,22 +19,23 @@ class StockServices
 
     public function update(Request $request, Stock $stock)
     {
-        $stock->qty += $request->qty;
-        $stock->remarks = $request->remarks;
-        $stock->save();
+        \App\Services\Products\StockMovements::track($stock->product_id, (int) $request->qty >= 0 ? 'stock_in' : 'stock_out', function () use ($request, $stock) {
+            $stock->qty += $request->qty;
+            $stock->remarks = $request->remarks;
+            $stock->save();
+        }, ['note' => $request->remarks]);
 
     }
 
     public function updateQuantity(Request $request, Stock $stock)
     {
         $qty = (int)$request->qty;
+        $in = $request->action == 1;
 
-        if ($request->action == 1)
-            $stock->qty += $qty;
-        else
-            $stock->qty = $stock->qty < $qty ? 0 : $stock->qty - $qty;
-
-        $stock->save();
+        \App\Services\Products\StockMovements::track($stock->product_id, $in ? 'stock_in' : 'stock_out', function () use ($stock, $qty, $in) {
+            $stock->qty = $in ? $stock->qty + $qty : max(0, $stock->qty - $qty);
+            $stock->save();
+        }, ['note' => $request->remarks]);
 
         return $stock;
     }

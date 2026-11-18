@@ -36,7 +36,7 @@ class CancelOrder
             }
 
             foreach ($order->items as $item) {
-                \App\Services\Products\StockLedger::restore($item);
+                \App\Services\Products\StockLedger::restore($item, 'cancel');
             }
 
             if ($order->coupon_id) {

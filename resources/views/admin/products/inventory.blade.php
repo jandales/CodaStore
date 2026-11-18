@@ -64,8 +64,8 @@
                     </td>
                     <td class="column-product">
                         <div class="inventory-item">
-                            <a class="item-name link-primary capitalize" href="{{ route('admin.products.edit', [$row->product->encryptedId()]) }}">{{ $row->product->name }}</a>
-                            @if ($row->variant)<span class="inventory-variant__label">{{ $row->variant }}</span>@endif
+                            <a class="item-name link-primary capitalize" href="{{ route('admin.inventory.history', [$row->product->encryptedId()]) }}" title="Stock details">{{ $row->product->name }}</a>
+                            @if ($row->variant)<a class="inventory-variant__label inventory-variant__link" href="{{ route('admin.inventory.history', [$row->product->encryptedId(), 'variant' => $row->sku->id]) }}" title="Stock details for {{ $row->variant }}">{{ $row->variant }}</a>@endif
                         </div>
                         @if ($row->firstOfProduct && !$row->product->variant_stock_reviewed)
                             <form method="post" action="{{ route('admin.inventory.reviewed', [$row->product->encryptedId()]) }}" class="inventory-review">

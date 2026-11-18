@@ -159,6 +159,8 @@ class ProductImporter
                         $created++;
                     }
 
+                    $stockBefore = StockMovements::snapshot($product->id);
+
                     if (array_key_exists('sizes', $values) && $sizeAttribute) {
                         $this->replaceSizes($product, $sizeAttribute, $values['sizes']);
                         $this->sizeVariants($product, $values);
@@ -173,6 +175,8 @@ class ProductImporter
                             Stock::create(['product_id' => $product->id, 'qty' => 0]);
                         }
                     }
+
+                    StockMovements::recordDiff($product->id, $stockBefore, 'import');
                 }
 
                 return ['created' => $created, 'updated' => $updated];

@@ -50,11 +50,42 @@ class StockController extends Controller
     public function updateVariantQuantity(\App\Http\Requests\StockRequest $request, \App\Models\ProductSku $sku)
     {
         $qty = (int) $request->qty;
-        $sku->qty = (int) $request->action === 1 ? $sku->qty + $qty : max(0, $sku->qty - $qty);
-        $sku->save();
-        \App\Services\Products\ProductSkus::refreshTotals($sku->product);
+        $in = (int) $request->action === 1;
+        \App\Services\Products\StockMovements::track($sku->product_id, $in ? 'stock_in' : 'stock_out', function () use ($sku, $qty, $in) {
+            $sku->qty = $in ? $sku->qty + $qty : max(0, $sku->qty - $qty);
+            $sku->save();
+            \App\Services\Products\ProductSkus::refreshTotals($sku->product);
+        }, ['note' => $request->remarks]);
 
         return response()->json(['status' => 200, 'stock' => ['qty' => $sku->qty]]);
+    }
+
+    /** Stock details: the history of every stock change, per variant (or for the product). */
+    public function history(Request $request, Product $product)
+    {
+        $product->load(['skus' => fn ($q) => $q->orderBy('position'), 'stock', 'category']);
+        $variant = $request->filled('variant') ? $product->skus->firstWhere('id', (int) $request->query('variant')) : null;
+
+        $scope = fn ($q) => $q->where('product_id', $product->id)
+            ->when($variant, fn ($q) => $q->where('product_sku_id', $variant->id));
+
+        $movements = \App\Models\StockMovement::with(['order', 'admin'])
+            ->where($scope)
+            ->orderByDesc('created_at')->orderByDesc('id')
+            ->paginate(25)
+            ->withQueryString();
+
+        $recent = \App\Models\StockMovement::where($scope)->where('created_at', '>=', now()->subDays(30))
+            ->where('reason', '!=', 'opening')->get(['change']);
+
+        return view('admin.stock.history', [
+            'product' => $product,
+            'variant' => $variant,
+            'movements' => $movements,
+            'inStock' => $variant ? max(0, (int) $variant->qty) : $product->stockQty(),
+            'added' => (int) $recent->where('change', '>', 0)->sum('change'),
+            'removed' => (int) -$recent->where('change', '<', 0)->sum('change'),
+        ]);
     }
 
     /** "Stock checked" for a product whose stock was split evenly across sizes. */

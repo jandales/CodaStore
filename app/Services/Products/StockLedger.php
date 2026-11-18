@@ -13,17 +13,21 @@ use App\Models\Stock;
  */
 class StockLedger
 {
-    public static function restore(OrderProduct $item): void
+    /** @param string $reason cancel | return | not_collected (shown in the stock history) */
+    public static function restore(OrderProduct $item, string $reason = 'cancel'): void
     {
         $qty = (int) $item->qty;
         if ($qty <= 0) {
             return;
         }
 
-        if ($item->sku_id && ProductSku::whereKey($item->sku_id)->exists()) {
-            ProductSku::whereKey($item->sku_id)->increment('qty', $qty);
+        $skuId = $item->sku_id && ProductSku::whereKey($item->sku_id)->exists() ? (int) $item->sku_id : null;
+        if ($skuId) {
+            ProductSku::whereKey($skuId)->increment('qty', $qty);
         }
 
         Stock::where('product_id', $item->product_id)->increment('qty', $qty);
+
+        StockMovements::record((int) $item->product_id, $skuId, $qty, $reason, ['order_id' => $item->order_id]);
     }
 }

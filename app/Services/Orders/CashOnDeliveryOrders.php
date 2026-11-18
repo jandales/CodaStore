@@ -28,7 +28,7 @@ class CashOnDeliveryOrders
             }
 
             foreach ($order->items as $item) {
-                \App\Services\Products\StockLedger::restore($item);
+                \App\Services\Products\StockLedger::restore($item, 'not_collected');
             }
             if ($order->coupon_id) {
                 Coupon::whereKey($order->coupon_id)->where('usage', '>', 0)->decrement('usage');
