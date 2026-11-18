@@ -21,26 +21,41 @@ class CartServices
     public function store(Request  $request, Product $product)
     {
 
-        $productQuantity = $product->stock->qty;
-        $newQuantity = (int)$request->qty;
-        $total = 0;
-
         $attributes = [];
-
         foreach ($request->input('properties', []) as $item)
         {
-            $attributes  += array($item['name'] => $item['value']);
+            $attributes[$item['name']] = $item['value'];
         }
 
+        // Products with variants: the chosen size / colour has its own stock and price.
+        $sku = null;
+        if ($product->hasSkus()) {
+            $sku = $product->skuFor($attributes);
+            if (!$sku) {
+                return response()->json(['status' => 422, 'message' => "That option isn't available. Please choose another."], 422);
+            }
+            if ($sku->isSoldOut()) {
+                return response()->json(['status' => 422, 'message' => $sku->label() . ' is sold out. Please choose another option.'], 422);
+            }
+            $productQuantity = (int) $sku->qty;
+        } else {
+            $productQuantity = (int) optional($product->stock)->qty;
+        }
 
-        if($productQuantity == 0)  return response()->json(['status' => 422, 'message' => 'This item is sold out.'], 422);
+        $newQuantity = (int)$request->qty;
+
+        if($productQuantity <= 0)  return response()->json(['status' => 422, 'message' => 'This item is sold out.'], 422);
 
         $cart = Cart::ByUser()->first();
 
+        // Never more in the bag than there is in stock.
+        $inBag = $cart ? (int) optional($cart->lineFor($product->id, optional($sku)->id))->qty : 0;
+        if ($inBag >= $productQuantity) {
+            return response()->json(['status' => 422, 'message' => "You already have all {$productQuantity} in your bag."], 422);
+        }
+        if($productQuantity - $inBag < $newQuantity) $newQuantity = $productQuantity - $inBag;
 
-        if($productQuantity <  $newQuantity) $newQuantity = $productQuantity;
-
-        $total = $newQuantity * $product->effectivePrice();
+        $total = $newQuantity * ($sku ? $sku->effectivePrice() : $product->effectivePrice());
 
         if($cart)
         {
@@ -49,13 +64,13 @@ class CartServices
                 $cart->forceFill(['user_id' => auth()->id(), 'reminded_at' => null])->save();
             }
 
-            //check if an item  already in the cart;
-            $item = $cart->hasThisProduct($product->id);
+            // Each variant is its own line (an M and an L are two lines).
+            $item = $cart->lineFor($product->id, optional($sku)->id);
 
             if($item)
                 self::updateCartItem($item, $newQuantity, $attributes);
             else
-                self::storeCartItem($cart->id, $product->id, $newQuantity, $attributes);
+                self::storeCartItem($cart->id, $product->id, $newQuantity, $attributes, optional($sku)->id);
 
             Cart::UpdateTotal();
 
@@ -72,7 +87,7 @@ class CartServices
              'user_id' => auth()->id(),
        ]);
 
-       self::storeCartItem($cart->id, $product->id, $newQuantity, $attributes);
+       self::storeCartItem($cart->id, $product->id, $newQuantity, $attributes, optional($sku)->id);
        return response()->json(['count' => Cart::TotalItems()]);
     }
 
@@ -85,11 +100,12 @@ class CartServices
         return $cartitem;
     }
 
-    private function storeCartItem($cart, $product, $quantity, $attributes)
+    private function storeCartItem($cart, $product, $quantity, $attributes, $skuId = null)
     {
         return CartItem::create([
             'cart_id' => $cart,
             'product_id' => $product,
+            'sku_id' => $skuId,
             'qty' => $quantity,
             'attributes' => $attributes,
         ]);

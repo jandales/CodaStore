@@ -88,6 +88,21 @@
                 <ul class="variants pdp-variants">
                     <x-variants :product="$product" />
                 </ul>
+                @if ($product->hasSkus())
+                    <p id="pdp-variant-stock" class="pdp-stock" role="status" hidden></p>
+                    <script type="application/json" id="variant-data">{!! json_encode([
+                        'threshold' => \App\Models\GeneralSetting::lowStockThreshold(),
+                        'baseImage' => $product->imagePath,
+                        'basePriceHtml' => view('components.price', ['product' => $product])->render(),
+                        'skus' => $product->skus->map(fn ($sku) => [
+                            'options' => $sku->options,
+                            'qty' => (int) $sku->qty,
+                            'image' => $sku->image,
+                            'priceHtml' => view('components.price', ['product' => $product, 'sku' => $sku])->render(),
+                        ])->values(),
+                    ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
+                    <script src="{{ asset('js/product-variants.js') }}?v=1" defer></script>
+                @endif
 
                 @if ($product->minQty())
                     <p class="pdp-stock {{ $product->isSoldOut() ? 'pdp-stock--out' : '' }}"><i class="fas fa-circle" aria-hidden="true"></i> {{ $product->minQty() }}</p>

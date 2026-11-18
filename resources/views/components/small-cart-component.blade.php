@@ -3,26 +3,26 @@
             <div class="cart-heading">
                 <button type="button" id="close-cart-summary" class="icon-btn" aria-label="Close order summary"><i class="fa fa-times" aria-hidden="true"></i></button>
                 <h2 class="cart-title sm-text-center">Order summary</h2>
-            </div>          
+            </div>
         </div>
     <div class="flex flex-column gap20">
         @foreach ($cart->items as $cart_item)
-            <div class="cart-sm gap10">                    
+            <div class="cart-sm gap10">
                 <div class="cart-image">
-                    <img class="img" src="{{ $cart_item->product->imagePath }}" alt="" srcset="">
+                    <img class="img" src="{{ optional($cart_item->sku)->image ?: $cart_item->product->imagePath }}" alt="" srcset="">
                     <div class="cart-image-overlay flex-vert-center">
                         <span class="cart-item-remove" data-id="{{$cart_item->id}}"><i class="fas fa-times"></i></span>
                     </div>
                 </div>
                 <div class="w-12">
                     <div class="flex space-between">
-                        <span class="cart-item-name">{{$cart_item->product->name}}</span> 
-                        <span class="cart-item-name">@include('components.price', ['product' => $cart_item->product, 'compact' => true])</span>   
-                    </div>                           
-                    <span class="cart-item-info">Qty: {{ $cart_item->qty  }}</span>  
-                    <ul class="cart-item-variant">    
-                    </ul> 
-                </div>  
+                        <span class="cart-item-name">{{$cart_item->product->name}}</span>
+                        <span class="cart-item-name">@include('components.price', ['product' => $cart_item->product, 'sku' => $cart_item->sku, 'compact' => true])</span>
+                    </div>
+                    <span class="cart-item-info">@if ($cart_item->sku){{ $cart_item->sku->label() }} · @endif Qty: {{ $cart_item->qty  }}</span>
+                    <ul class="cart-item-variant">
+                    </ul>
+                </div>
             </div>
         @endforeach
     </div>
@@ -30,29 +30,29 @@
     <div id="coupon-form" class="form-inline gap10 mt-2 {{ $cart->coupon_id != null ? 'hidden' : ''}}">
         <label for="coupon_code" class="sr-only">Discount code</label>
         <input type="text" id="coupon_code" validator-input="coupon_code" name="coupon_code" placeholder="Discount code">
-        <button id="btn-coupon-apply" class="btn btn-dark w-3">Apply</button>   
+        <button id="btn-coupon-apply" class="btn btn-dark w-3">Apply</button>
     </div>
 
     <small class="validator-text" validator-for="coupon_code">Enter a discount code</small>
     <div class=" mt-2">
         <div class="flex space-between py-1 bor12">
             <span>Items</span>
-            <span id="cart-items-count"class="text-align-right">{{ $cart->totalItems() }}</span>  
+            <span id="cart-items-count"class="text-align-right">{{ $cart->totalItems() }}</span>
         </div>
-        
+
         <div class="flex space-between mt-1  py-1 bor12">
             <span>Subtotal</span>
             <span  id="subtotal">@money($cart->total)</span>
         </div>
-      
+
 
         <div class="flex space-between py-1 bor12">
             <span>Shipping</span>
             <span class="span-shipping-fee">@if ($shipping_charge != 0) @money($shipping_charge) @else {{ 'Calculated at next step' }} @endif</span>
         </div>
 
-        
-        <div id="has-coupon" class="flex flex-column bor12 py-1 {{ $cart->coupon_id == null ? 'hidden' : ''}}">   
+
+        <div id="has-coupon" class="flex flex-column bor12 py-1 {{ $cart->coupon_id == null ? 'hidden' : ''}}">
 
             <div class="flex gap10">
                 <span>Discount</span>
@@ -61,15 +61,15 @@
                         <span id="coupon-code">{{ $cart->couponName('name') }}</span>
                         <span id="coupon-amount"  class="right">@money($cart->discount)</span>
                     </div>
-    
+
                     <div class="flex space-between mt10">
                         <span id="coupon-description">{{ $cart->couponName('description') }}</span>
                         <span id="btn-coupon-remove"  class="right text-danger pointer">Remove</span>
-                    </div> 
-                </div> 
-               
+                    </div>
+                </div>
+
             </div>
-                                             
+
 
         </div>
 

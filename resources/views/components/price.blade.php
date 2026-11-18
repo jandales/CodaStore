@@ -19,5 +19,8 @@
         @if (empty($compact))<span class="price__off">−{{ $product->discountPercent() }}%</span>@endif
     </span>
 @else
-    <span class="price">@if ($from)<span class="price__from">From</span> @endif@money($now * $qty)</span>
+    <span class="price">
+        @if ($from)<span class="price__from">From</span>@endif
+        @money($now * $qty)
+    </span>
 @endif

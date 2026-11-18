@@ -334,6 +334,9 @@ class Product extends Model
     {
         if ($this->isSoldOut()) return 'Sold out';
 
+        // With variants, stock depends on the size / colour chosen (shown on the page by JS).
+        if ($this->hasSkus()) return null;
+
         if ($this->stockQty() <= GeneralSetting::lowStockThreshold()) return 'Only ' . $this->stockQty() . ' left';
 
         return null;
