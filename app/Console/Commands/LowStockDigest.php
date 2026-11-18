@@ -32,8 +32,8 @@ class LowStockDigest extends Command
             return 0;
         }
 
-        Mail::to($recipients)->send(new LowStockDigestMail($products, $threshold));
-        $this->info("Sent the low-stock digest ({$products->count()} items) to " . implode(', ', $recipients) . '.');
+        Mail::to($recipients)->queue(new LowStockDigestMail($products, $threshold));
+        $this->info("Queued the low-stock digest ({$products->count()} items) to " . implode(', ', $recipients) . '.');
 
         return 0;
     }

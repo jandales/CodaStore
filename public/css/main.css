@@ -6595,6 +6595,74 @@ form[aria-busy=true] {
   cursor: progress;
 }
 
+.dash-alert {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 10px;
+  text-align: left;
+}
+
+.dash-alert i {
+  margin-top: 3px;
+}
+
+.dash-alert code, .fe-help code, .alert code {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.06);
+  font-size: 12.5px;
+}
+
+.fe-help, .fe-waiting {
+  margin-bottom: 12px;
+}
+
+.fe-table td {
+  vertical-align: top;
+}
+
+.fe-sub {
+  display: block;
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: var(--a-muted);
+}
+
+.fe-to {
+  word-break: break-all;
+}
+
+.fe-detail {
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--a-muted);
+}
+
+.fe-detail summary {
+  cursor: pointer;
+}
+
+.fe-detail code {
+  display: block;
+  margin-top: 4px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.fe-actions {
+  white-space: nowrap;
+}
+
+.fe-actions form {
+  display: inline-block;
+  margin-left: 6px;
+}
+
+.fe-delete {
+  color: var(--a-danger);
+}
+
 /*!
  * Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)

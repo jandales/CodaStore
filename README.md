@@ -26,7 +26,17 @@ php artisan serve
 
 - Storefront: http://127.0.0.1:8000
 - Admin: http://127.0.0.1:8000/admin/login (seeded account `admin@gmail.com` / `password`, local only)
-- Background jobs (emails): `php artisan queue:work`
+- Emails are sent in the background. While testing emails, keep a worker running in its own terminal:
+  `php artisan queue:work --queue=emails,default`
+  (If it isn't running, emails wait in the queue and go out once it starts.)
+
+### Background emails on a server
+
+- Keep the worker running with Supervisor: see `deploy/supervisor/codastore-worker.conf`.
+- No Supervisor (shared hosting)? Set `QUEUE_VIA_SCHEDULER=true` and run the scheduler every minute from cron:
+  `* * * * * cd /path/to/codastore && php artisan schedule:run >> /dev/null 2>&1`
+- After every deploy: `php artisan queue:restart`, so the worker picks up the new code.
+- Admin > Failed emails lists emails that couldn't be sent, with Retry; the dashboard warns when emails are stuck.
 
 ### Front-end assets
 

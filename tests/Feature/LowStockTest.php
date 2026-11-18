@@ -73,7 +73,7 @@ class LowStockTest extends TestCase
 
         $this->artisan('store:low-stock-digest')->assertExitCode(0);
 
-        Mail::assertSent(LowStockDigestMail::class, function ($mail) {
+        Mail::assertQueued(LowStockDigestMail::class, function ($mail) {
             return $mail->hasTo('store@coda.test') && $mail->products->pluck('name')->all() === ['two left'];
         });
     }
@@ -90,7 +90,7 @@ class LowStockTest extends TestCase
 
         $this->createProduct(1, false, ['name' => 'one left']);
         $this->artisan('store:low-stock-digest')->assertExitCode(0);
-        Mail::assertSent(LowStockDigestMail::class, fn ($mail) => $mail->hasTo('boss@coda.test'));
+        Mail::assertQueued(LowStockDigestMail::class, fn ($mail) => $mail->hasTo('boss@coda.test'));
     }
 
     public function test_digest_is_scheduled_daily()

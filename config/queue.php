@@ -16,6 +16,12 @@ return [
     'default' => env('QUEUE_CONNECTION', 'sync'),
 
     /*
+    | Send queued emails from the every-minute scheduler (for hosting without Supervisor).
+    | See deploy/supervisor/codastore-worker.conf for the usual setup.
+    */
+    'via_scheduler' => env('QUEUE_VIA_SCHEDULER', false),
+
+    /*
     |--------------------------------------------------------------------------
     | Queue Connections
     |--------------------------------------------------------------------------
@@ -38,8 +44,8 @@ return [
             'driver' => 'database',
             'table' => 'jobs',
             'queue' => 'default',
-            'retry_after' => 90,
-            'after_commit' => false,
+            'retry_after' => 90, // longer than the 30-second email timeout
+            'after_commit' => true, // emails wait until the order (or other save) is committed
         ],
 
         'beanstalkd' => [

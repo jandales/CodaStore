@@ -2,19 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\SendUsMail;
-use Illuminate\Http\Request;
-use App\Jobs\ProccessSendMessage;
-use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\SendUsMessageRequest;
+use App\Mail\SendUsMail;
+use App\Models\GeneralSetting;
+use Illuminate\Support\Facades\Mail;
 
 class SendUsEmailController extends Controller
 {
+    /** Contact page: the message goes to the store, never to the address typed in the form. */
     public function send(SendUsMessageRequest $request)
-    {   
-        $from_email = $request->email;  
-        dispatch(new ProccessSendMessage($from_email,$request->content));   
-        return back()->with('success', 'Successfully Sent');
+    {
+        $to = GeneralSetting::storeRecipients();
+        if ($to) {
+            try {
+                Mail::to($to)->queue(new SendUsMail($request->email, (string) $request->content));
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        }
+
+        return back()->with('success', 'Thanks! Your message was sent. We\'ll reply by email.');
     }
 }
-

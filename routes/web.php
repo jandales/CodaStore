@@ -89,7 +89,7 @@ Route::controller(AppController::class)->group(function () {
     Route::get('/contact',  'contact')->name('contact');
 });
 
-Route::post('/send-message', [SendUsEmailController::class, 'send'])->name('sendMessage');
+Route::post('/send-message', [SendUsEmailController::class, 'send'])->middleware('throttle:5,1')->name('sendMessage');
 
 // SEO
 Route::get('/sitemap.xml', [\App\Http\Controllers\SeoController::class, 'sitemap'])->name('sitemap');
@@ -240,9 +240,9 @@ Route::group(['middleware' => 'guest:admin', 'prefix' => 'admin',], function(){
 
     Route::controller(AdminResetPasswordController::class)->group(function (){
         Route::get('/forget-password','index')->name('admin.forget.password');
-        Route::post('/forget-password-request','request')->name('admin.request.password');
+        Route::post('/forget-password-request','request')->middleware('throttle:5,1')->name('admin.request.password');
         Route::get('/reset_password/{token}','reset');
-        Route::post('/reset_store','store')->name('admin.accountreset.password');
+        Route::post('/reset_store','store')->middleware('throttle:10,1')->name('admin.accountreset.password');
     });
 
 
@@ -403,6 +403,12 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
     });
 
     Route::prefix('setting')->middleware('permission:settings')->group(function () {
+        Route::controller(\App\Http\Controllers\Admin\FailedEmailController::class)->prefix('failed-emails')->group(function () {
+            Route::get('/', 'index')->name('admin.emails.failed');
+            Route::post('/retry-all', 'retryAll')->name('admin.emails.failed.retry-all');
+            Route::post('/{id}/retry', 'retry')->whereNumber('id')->name('admin.emails.failed.retry');
+            Route::delete('/{id}', 'destroy')->whereNumber('id')->name('admin.emails.failed.destroy');
+        });
         Route::controller(SettingController::class)->group(function (){
             Route::get('/general','general')->name('admin.setting.general');
             Route::get('/campany','campany')->name('admin.setting.campany');
@@ -508,9 +514,9 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
 Route::post('/users/update',[UserController::class, 'update'])->name('users.update');
 
 Route::get('/forgot-password', [ForgotPasswordController::class, 'index'])->name('password.forgot');
-Route::post('/forgot-password', [ForgotPasswordController::class, 'request'])->name('password.request');
+Route::post('/forgot-password', [ForgotPasswordController::class, 'request'])->middleware('throttle:5,1')->name('password.request');
 Route::get('/reset_password/{token}', [ResetPasswordController::class, 'index'])->name('password.reset');
-Route::post('/reset_password', [ResetPasswordController::class, 'reset'])->name('password.store');
+Route::post('/reset_password', [ResetPasswordController::class, 'reset'])->middleware('throttle:10,1')->name('password.store');
 Route::get('/send',[ForgotPasswordController::class, 'send'])->name('sent');
 Route::post('/upload/avatar',[UserController::class, 'avatar'])->name('upload.avatar');
 

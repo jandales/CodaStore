@@ -24,7 +24,7 @@ class UserResetPasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'email',
+            'token' => 'required|string',
             'password' => 'required_with:password_confirmation|string|confirmed|min:6',
             'password_confirmation' => 'required'
         ];

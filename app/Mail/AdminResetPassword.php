@@ -4,15 +4,16 @@ namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Mail\Concerns\SendsInBackground;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class AdminResetPassword extends Mailable
+class AdminResetPassword extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use Queueable, SerializesModels, SendsInBackground;
 
 
-    protected $url;
+    public $url;
     /**
      * Create a new message instance.
      *

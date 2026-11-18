@@ -53,6 +53,11 @@ class DashboardController extends Controller
 
         $threshold = \App\Models\GeneralSetting::lowStockThreshold();
 
+        // Background emails: warn staff who can fix the mail settings or the worker.
+        $canFixEmails = auth('admin')->user()->hasPermission('settings');
+        $emailsStuck = $canFixEmails ? \App\Services\Emails\EmailQueue::stuck() : 0;
+        $emailsFailed = $canFixEmails ? \App\Services\Emails\EmailQueue::failedCount() : 0;
+
         return view('admin.index')->with([
             'orders'          => $orders,
             'order_count'     => Order::count(),
@@ -68,6 +73,8 @@ class DashboardController extends Controller
             'year_income'     => array_sum($monthly),
             'income_change'   => $incomeChange,
             'store_now'       => $local,
+            'emails_stuck'    => $emailsStuck,
+            'emails_failed'   => $emailsFailed,
             'admin'           => auth()->guard('admin')->user(),
             'low_stock'       => \App\Services\Products\LowStock::items($threshold, 6),
             'low_stock_count' => \App\Services\Products\LowStock::items($threshold)->count(),

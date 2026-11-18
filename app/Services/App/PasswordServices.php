@@ -2,80 +2,52 @@
 
 namespace App\Services\App;
 
+use App\Mail\ForgotPasswordMail;
 use App\Models\User;
+use App\Services\Auth\ResetTokens;
 use Illuminate\Http\Request;
-use App\Models\ForgotPassword;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use App\Jobs\ProcessUserForgotPasswordMail;
+use Illuminate\Support\Facades\Mail;
 
+/** Customer "forgot password". */
 class PasswordServices
 {
+    public const TABLE = 'password_resets';
+    public const SENT = 'If an account exists for that email, we\'ve sent a link to reset your password. The link works for 60 minutes.';
+
     public function request($request)
-    {            
-     
-        $email = $request->email;
-        $token = $request->_token;
-        
-        // check email if  registered
-        $register = User::where('email', $email)->first();
+    {
+        // Same answer whether or not the email has an account, so nobody can check who shops here.
+        $user = User::where('email', $request->email)->first();
+        if ($user) {
+            $token = ResetTokens::issue(self::TABLE, $user->email);
+            try {
+                Mail::to($user->email)->queue(new ForgotPasswordMail(url("/reset_password/{$token}")));
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        }
 
-        if($register == null) return ["error" => "Email not yet Register"];
-
-        $expiry = date('Y-m-d H:i:s', strtotime("+1 day"));
-
-        //// create request
-        ForgotPassword::create([
-            'email' => $email,
-            'token' => $token,
-            'created_at' =>  $expiry,
-        ]); 
-
-        /// create url to reset password
-        $url = url("/reset_password/{$token}");  
-    
-
-        dispatch(new ProcessUserForgotPasswordMail($email,$url));
-      
-
-        return ['success' => 'Please check your Email to reset your password'];
+        return ['success' => self::SENT];
     }
-
 
     public function reset(Request $request)
-    {     
-        $token = $request->token;  
-        $password = $request->password; 
+    {
+        $email = ResetTokens::email(self::TABLE, $request->token);
+        $user = $email ? User::where('email', $email)->first() : null;
+        if (!$user) {
+            return ['status' => false, 'message' => 'This reset link has expired or was already used. Ask for a new one.'];
+        }
 
-        $isValid = $this->validateToken($token); 
-        if ( ! $isValid ) return ['status' => false, 'message' => 'request token is expired'];
-
-        $result = ForgotPassword::where('token',$token)->first(); 
-        $email = $result->email;
-        // change password
-        $user = User::where('email', $email)->first();
-        $user->password = Hash::make($password);
+        $user->password = Hash::make($request->password);
         $user->save();
-        // delete the token
-        $deleted = DB::delete('delete from password_resets where email = ?', [$email]);  
+        ResetTokens::forget(self::TABLE, $email);
 
-        return ['status' => true, 'message' => 'Successfully password updated'];
-
+        return ['status' => true, 'message' => 'Your password was changed. You can sign in now.'];
     }
 
-    public function validateToken($token) {     
-
-        $current_date = date('Y-m-d H:i:s');        
-        // find if a request exist
-        $reset = ForgotPassword::where('token',$token)->first(); 
-
-        if ( $reset == null ) return false;       
-      
-        $expiry_date = $reset->created_at; 
-
-        if ( $current_date >= $expiry_date ) return false;
-
-        return true;
+    public function validateToken($token): bool
+    {
+        return ResetTokens::email(self::TABLE, $token) !== null;
     }
-
 }

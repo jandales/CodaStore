@@ -26,6 +26,13 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('store:low-stock-digest')->dailyAt('08:00');
         $schedule->command('store:cart-reminders')->hourly();
+
+        // Hosting without Supervisor: send waiting emails from the every-minute scheduler instead.
+        if (config('queue.via_scheduler')) {
+            $schedule->command('queue:work --queue=emails,default --stop-when-empty --max-time=50 --tries=3')
+                ->everyMinute()
+                ->withoutOverlapping(5);
+        }
     }
 
     /**
