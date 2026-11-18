@@ -10,7 +10,11 @@ class OrderPayment extends Model
 {
     use HasFactory, DateTimeFormat;
 
+    public const STATUS_PENDING = 'pending';          // cash on delivery, not collected yet
     public const STATUS_PAID = 'paid';
+    public const STATUS_FAILED = 'failed';            // cash on delivery, parcel not collected
+    public const STATUS_CANCELLED = 'cancelled';      // cash on delivery, order cancelled before shipping
+    public const STATUS_REFUND_PENDING = 'refund_pending'; // returned COD order, refund to be sent by hand
     public const STATUS_REFUNDED = 'refunded';
     public const STATUS_REFUND_FAILED = 'refund_failed';
 
@@ -19,8 +23,48 @@ class OrderPayment extends Model
         'amount',
         'provider',
         'reference_number',
-        'status'       
+        'status',
+        'collected_at',
+        'refunded_at',
     ];
+
+    protected $casts = [
+        'collected_at' => 'datetime',
+        'refunded_at' => 'datetime',
+    ];
+
+    public function isCashOnDelivery(): bool
+    {
+        return $this->provider === 'cod';
+    }
+
+    /** "PayPal", "Cash on delivery". */
+    public function methodLabel(): string
+    {
+        return ['paypal' => 'PayPal', 'cod' => 'Cash on delivery'][$this->provider] ?? ucfirst((string) $this->provider);
+    }
+
+    public function statusLabel(): string
+    {
+        if ($this->isCashOnDelivery()) {
+            $labels = [
+                self::STATUS_PENDING => 'Cash due on delivery',
+                self::STATUS_PAID => 'Cash collected',
+                self::STATUS_FAILED => 'Not collected',
+                self::STATUS_CANCELLED => 'Cancelled, nothing to collect',
+                self::STATUS_REFUND_PENDING => 'Refund to send',
+                self::STATUS_REFUNDED => 'Refunded',
+            ];
+        } else {
+            $labels = [
+                self::STATUS_PAID => 'Paid',
+                self::STATUS_REFUNDED => 'Refunded',
+                self::STATUS_REFUND_FAILED => 'Refund failed',
+            ];
+        }
+
+        return $labels[$this->status] ?? ucfirst(str_replace('_', ' ', (string) $this->status));
+    }
 
     public function order()
     {
@@ -34,6 +78,8 @@ class OrderPayment extends Model
             case 'completed':
                 return 'bg-success';
             case 'pending':
+            case 'refund_pending':
+            case 'refund_failed':
                 return 'bg-warning';
             case 'failed':
             case 'cancelled':

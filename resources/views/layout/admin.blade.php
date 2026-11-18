@@ -81,6 +81,7 @@
                         <ul>
                             <li><a class="{{ request()->is('admin/setting/general*') || request()->is('admin/setting/campany*') ? 'active' : '' }}" href="{{ route('admin.setting.general') }}"><i class="fas fa-gear" aria-hidden="true"></i><span class="hide-menu">Settings</span></a></li>
                             <li><a class="{{ request()->is('admin/setting/shipping-method*') ? 'active' : '' }}" href="{{ route('admin.shipping.method') }}"><i class="fas fa-truck" aria-hidden="true"></i><span class="hide-menu">Shipping methods</span></a></li>
+                            <li><a class="{{ request()->is('admin/setting/payments*') ? 'active' : '' }}" href="{{ route('admin.setting.payments') }}"><i class="fas fa-wallet" aria-hidden="true"></i><span class="hide-menu">Payment methods</span></a></li>
                             <li><a class="{{ request()->is('admin/pages*') ? 'active' : '' }}" href="{{ route('admin.pages') }}"><i class="fas fa-file-lines" aria-hidden="true"></i><span class="hide-menu">Pages</span></a></li>
                         </ul>
                     @endif

@@ -77,6 +77,13 @@ class ProcessReturn
 
         // Outside the transaction: the return stands even if PayPal or email is unavailable.
         $this->refunder->handle($order, "Order {$order->order_number} returned");
+
+        // Cash on delivery can't be refunded through a provider: an admin sends it by hand,
+        // then records it with "Refund sent".
+        $payment = $order->payment()->first();
+        if ($payment && $payment->isCashOnDelivery() && $payment->status === \App\Models\OrderPayment::STATUS_PAID) {
+            $payment->update(['status' => \App\Models\OrderPayment::STATUS_REFUND_PENDING]);
+        }
         $this->notifier->returnApproved($order->fresh());
 
         return $return->fresh();

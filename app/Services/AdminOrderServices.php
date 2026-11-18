@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Services;
 
@@ -23,8 +23,8 @@ class AdminOrderServices
 
 
     public function list($status = null)
-    {  
-        $orders = Order::with('user', 'items')->when($status, function($query) use ($status) {
+    {
+        $orders = Order::with('user', 'items', 'payment')->when($status, function($query) use ($status) {
                             return $query->where('status', $status);
                         })->paginate($this->perpage);
 
@@ -49,6 +49,12 @@ class AdminOrderServices
 
         if ($status == Order::STATUS_COMPLETED) {
             $order->delivered_at = now();
+
+            // Cash on delivery: the courier collected the cash when it was delivered.
+            $payment = $order->payment()->first();
+            if ($payment && $payment->isCashOnDelivery() && $payment->status === \App\Models\OrderPayment::STATUS_PENDING) {
+                $payment->update(['status' => \App\Models\OrderPayment::STATUS_PAID, 'collected_at' => now()]);
+            }
         }
 
         $order->status = $status;
@@ -61,9 +67,9 @@ class AdminOrderServices
         return $order;
     }
 
-    
-    
-    
+
+
+
     public function deliver()
     {
         $orders = Order::where('status', $this->TORECIEVE)->get();
@@ -73,24 +79,24 @@ class AdminOrderServices
         {
            $shipped_at =  Carbon::parse($order->shipped_at ?? $order->created_at);
            if($currentDate->diffInDays($shipped_at) > 1)
-           {               
+           {
                 $order->delivered_at = now();
                 $order->status = $this->COMPLETED;
                 $order->save();
-           }      
+           }
         }
     }
 
     public function search(Request $request)
     {
-        $keyword = $request->keyword;    
+        $keyword = $request->keyword;
         $orders =  Order::Search($keyword)->paginate($this->perpage);
         return ['orders' => $orders, 'keyword' => $keyword];
     }
 
     public function destroy(Order $order)
-    {    
-       return $order->delete(); 
+    {
+       return $order->delete();
         // $order->billing->delete();
         // $order->shipping->delete();
         // $order->payment->delete();
@@ -103,5 +109,5 @@ class AdminOrderServices
         // $order->delete();
     }
 
-       
+
 }

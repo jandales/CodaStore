@@ -86,7 +86,7 @@
                             </td>
                             <td><a class="link-primary" href="{{ route('admin.orders.show',[$order->encryptedId()])}}">{{$order->order_number}}</a></td>
                             <td>{{ $order->totalItems() . " items" }}</td>
-                            <td>@money($order->gross_total)</td>
+                            <td>@money($order->gross_total)@if (optional($order->payment)->provider === 'cod')<span class="cod-tag" title="Cash on delivery">COD</span>@endif</td>
                             <td>{{  $order->createdAtDate() }}</td>
                             <td><span class="status capitalized {{ $order->statusColor() }}">{{ $order->status }}</span></td>
                             <td width="100px">

@@ -184,6 +184,8 @@ Route::group(['middleware' => 'auth'], function(){
     });
 
     // Payment happens on PayPal; the order is created only after PayPal confirms the capture.
+    Route::post('/checkout/place-order', [CheckoutPaymentController::class, 'place'])->middleware(['verified', 'throttle:10,1'])->name('checkout.place');
+
     Route::controller(CheckoutPaymentController::class)->prefix('checkout/paypal')->middleware('verified')->group(function () {
         Route::post('/', 'start')->name('checkout.paypal.start');
         Route::get('/return', 'return')->name('checkout.paypal.return');
@@ -337,6 +339,8 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
         Route::get('/{order:id}/packing-slip', 'packingSlip')->name('admin.orders.packing-slip');
         Route::put('/{order:id}/return/approve', 'approveReturn')->name('admin.orders.return.approve');
         Route::put('/{order:id}/return/reject', 'rejectReturn')->name('admin.orders.return.reject');
+        Route::put('/{order:id}/cod/not-collected', 'notCollected')->name('admin.orders.cod.not-collected');
+        Route::put('/{order:id}/cod/refund-sent', 'refundSent')->name('admin.orders.cod.refund-sent');
         Route::post('/{order:id}/notes', 'storeNote')->name('admin.orders.notes.store');
         Route::delete('/{order:id}/notes/{note}', 'destroyNote')->name('admin.orders.notes.destroy');
         Route::get('/{status}', 'listbyStatus')->name('admin.orders.list');
@@ -383,6 +387,8 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
             Route::get('/general','general')->name('admin.setting.general');
             Route::get('/campany','campany')->name('admin.setting.campany');
             Route::get('/email','emailer')->name('admin.setting.emailer');
+            Route::get('/payments', 'payments')->name('admin.setting.payments');
+            Route::put('/payments', 'updatePayments')->name('admin.setting.payments.update');
             Route::put('/general/update/{general_setting}','updateGeneral')->name('admin.setting.general.update');
             Route::put('/general/campany/update/{general_setting}','updateCampanyAddress')->name('admin.setting.campany.update');
         });

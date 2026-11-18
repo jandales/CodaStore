@@ -7,6 +7,8 @@ use App\Exceptions\OutOfStockException;
 use App\Http\Requests\BillingRequest;
 use App\Services\Payments\PaymentException;
 use App\Services\PlaceOrderServices;
+use App\Services\Payments\CashOnDelivery;
+use App\Models\OrderPayment;
 use Illuminate\Http\Request;
 
 /**
@@ -26,6 +28,51 @@ class CheckoutPaymentController extends Controller
     {
         $this->gateway = $gateway;
         $this->orders = $orders;
+    }
+
+    /**
+     * The payment step's form: PayPal goes to PayPal, cash on delivery places the order now.
+     */
+    public function place(BillingRequest $request, CashOnDelivery $cod)
+    {
+        $method = (string) $request->input('payment_method', 'paypal');
+
+        if ($method === 'paypal') {
+            return $this->start($request);
+        }
+        if ($method !== CashOnDelivery::PROVIDER) {
+            return redirect()->route('checkout.payment')->with('error', 'Choose how you want to pay.');
+        }
+
+        try {
+            $quote = $this->orders->quote();
+        } catch (OutOfStockException | \RuntimeException $e) {
+            return redirect()->route('cart')->with('error', $e->getMessage());
+        }
+
+        // The same rules the payment page shows, checked again here: never trust the form.
+        $reason = $cod->unavailableReason($quote['total'], $quote['shipping_method_id'], $request->user());
+        if ($reason) {
+            return redirect()->route('checkout.payment')->with('error', $reason)->withInput();
+        }
+
+        try {
+            $order = $this->orders->storeOrder($request, [
+                'provider' => CashOnDelivery::PROVIDER,
+                'reference' => null,
+                'status' => OrderPayment::STATUS_PENDING,
+                'fee' => $cod->fee(),
+            ]);
+        } catch (OutOfStockException | \RuntimeException $e) {
+            return redirect()->route('cart')->with('error', $e->getMessage());
+        }
+
+        app(\App\Services\OrderNotifier::class)->confirmed($order);
+
+        return redirect()->route('checkout.completed')->with([
+            'order_number' => $order->order_number,
+            'cod_due' => (float) $order->gross_total,
+        ]);
     }
 
     public function start(BillingRequest $request)

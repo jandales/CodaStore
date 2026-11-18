@@ -39,7 +39,22 @@ class CheckOutController extends Controller
 
        if(!$result) return redirect()->route('cart'); 
 
-       return view('checkout.payment')->with(['cart' => $result->cart]);
+       // Is cash on delivery offered for this bag? (Checked again when the order is placed.)
+       $cod = app(\App\Services\Payments\CashOnDelivery::class);
+       $codReason = null;
+       try {
+           $quote = app(\App\Services\PlaceOrderServices::class)->quote();
+           $codReason = $cod->unavailableReason($quote['total'], $quote['shipping_method_id'], $request->user());
+       } catch (\Throwable $e) {
+           $codReason = $cod->enabled() ? null : 'Cash on delivery is not available right now.';
+       }
+
+       return view('checkout.payment')->with([
+           'cart' => $result->cart,
+           'codEnabled' => $cod->enabled(),
+           'codFee' => $cod->fee(),
+           'codReason' => $codReason,
+       ]);
     }
 
 

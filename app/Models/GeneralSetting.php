@@ -18,6 +18,16 @@ class GeneralSetting extends Model
         'date_format',
         'time_format',
         'low_stock_threshold',
+        'cod_enabled',
+        'cod_fee',
+        'cod_max_total',
+        'cod_shipping_methods',
+        'cod_max_open_orders',
+    ];
+
+    protected $casts = [
+        'cod_enabled' => 'boolean',
+        'cod_shipping_methods' => 'array',
     ];
 
     public const DEFAULT_LOW_STOCK = 5;

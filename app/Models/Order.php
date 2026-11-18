@@ -32,6 +32,7 @@ class Order extends Model
         'coupon_amount',
         'courier',
         'tracking_number',
+        'payment_fee',
     ];
 
     protected $casts = [
@@ -72,6 +73,11 @@ class Order extends Model
         }
 
         return str_replace('{number}', rawurlencode($this->tracking_number), $template);
+    }
+
+    public function isCashOnDelivery(): bool
+    {
+        return optional($this->payment)->provider === 'cod';
     }
 
     public function canBeCancelled(): bool
