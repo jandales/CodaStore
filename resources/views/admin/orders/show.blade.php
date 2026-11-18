@@ -333,8 +333,8 @@
                                             <label for="courier">Courier</label>
                                             <select name="courier" id="courier">
                                                 <option value="">Choose a courier</option>
-                                                @foreach (config('couriers') as $key => $courier)
-                                                    <option value="{{ $key }}" {{ old('courier') == $key ? 'selected' : '' }}>{{ $courier['name'] }}</option>
+                                                @foreach (\App\Models\Courier::active()->ordered()->get() as $courierOption)
+                                                    <option value="{{ $courierOption->code }}" {{ old('courier') == $courierOption->code ? 'selected' : '' }}>{{ $courierOption->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

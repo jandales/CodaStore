@@ -156,7 +156,7 @@ class OrderEmailsTest extends TestCase
 
     public function test_shipped_email_links_to_tracking_page_when_configured()
     {
-        config(['couriers.lbc.url' => 'https://courier.test/track?no={number}']);
+        \App\Models\Courier::where('code', 'lbc')->update(['tracking_url' => 'https://courier.test/track?no={number}']);
         $order = $this->paidOrder(null, ['status' => Order::STATUS_SHIPPED, 'courier' => 'lbc', 'tracking_number' => 'LBC 9']);
 
         $this->assertSame('https://courier.test/track?no=LBC%209', $order->trackingUrl());

@@ -373,6 +373,15 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
 
 
 
+    Route::controller(\App\Http\Controllers\Admin\CourierController::class)->prefix('couriers')->middleware('permission:settings')->group(function () {
+        Route::get('/', 'index')->name('admin.couriers');
+        Route::get('/create', 'create')->name('admin.couriers.create');
+        Route::post('/', 'store')->name('admin.couriers.store');
+        Route::get('/{courier}/edit', 'edit')->name('admin.couriers.edit');
+        Route::put('/{courier}', 'update')->name('admin.couriers.update');
+        Route::delete('/{courier}', 'destroy')->name('admin.couriers.destroy');
+    });
+
     Route::controller(\App\Http\Controllers\Admin\PageController::class)->prefix('pages')->middleware('permission:settings')->group(function () {
         Route::get('/', 'index')->name('admin.pages');
         Route::get('/create', 'create')->name('admin.pages.create');

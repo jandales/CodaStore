@@ -19,7 +19,7 @@ class Order extends Model
     use HasFactory, SoftDeletes, Crypted, DateTimeFormat;
 
     protected $fillable = [
-        'user_id', 
+        'user_id',
         'order_number',
         'shipping_method_id',
         'status',
@@ -54,6 +54,12 @@ class Order extends Model
     private $TORECIEVE = self::STATUS_SHIPPED;
     private $CANCELLED = self::STATUS_CANCELLED;
 
+    /** The courier this order was shipped with (orders.courier holds the courier's code). */
+    public function courierRecord()
+    {
+        return $this->belongsTo(Courier::class, 'courier', 'code');
+    }
+
     /** Courier display name, e.g. "LBC Express". */
     public function courierName(): ?string
     {
@@ -61,18 +67,13 @@ class Order extends Model
             return null;
         }
 
-        return config("couriers.{$this->courier}.name", $this->courier);
+        return optional($this->courierRecord)->name ?? $this->courier;
     }
 
-    /** Public tracking link when the courier has a URL configured in config/couriers.php. */
+    /** Public tracking link when the courier has a tracking link set in Admin > Couriers. */
     public function trackingUrl(): ?string
     {
-        $template = config("couriers.{$this->courier}.url");
-        if (!$template || !$this->tracking_number) {
-            return null;
-        }
-
-        return str_replace('{number}', rawurlencode($this->tracking_number), $template);
+        return optional($this->courierRecord)->trackingUrlFor($this->tracking_number);
     }
 
     public function isCashOnDelivery(): bool
@@ -141,7 +142,7 @@ class Order extends Model
     public function billing()
     {
       return $this->hasOne(OrderBilling::class);
-    }   
+    }
 
     public function couponUsed()
     {
@@ -149,13 +150,13 @@ class Order extends Model
     }
 
     public function shipping()
-    { 
+    {
       return $this->hasOne(OrderShipping::class);
     }
 
     public function shippingMethod()
     {
-      return $this->hasOne(ShippingMethod::class,'id', 'shipping_method_id');   
+      return $this->hasOne(ShippingMethod::class,'id', 'shipping_method_id');
     }
 
     public function totalItems()
@@ -168,16 +169,16 @@ class Order extends Model
     {
       return $this->items->sum(fn ($item) => $item->qty * $item->price);
     }
-    
+
     public function amount()
     {
        return $this->payment->amount;
-    }   
+    }
 
     public function total()
-    { 
+    {
       $coupon = 0;
-      if($this->couponUsed) $coupon = $this->couponUsed->amount;    
+      if($this->couponUsed) $coupon = $this->couponUsed->amount;
       return 0 + $this->subtotal() - $coupon;
     }
 
@@ -187,23 +188,23 @@ class Order extends Model
     {
         switch($this->status)
         {
-          case 'returned': 
+          case 'returned':
             return 'bg-warning';
           case 'completed':
           case 'delivered':
             return 'bg-success';
           case  'cancelled':
             return 'bg-danger';
-          default : 
+          default :
             return 'bg-primary';
-            
-        }      
+
+        }
     }
 
     public function scopeCountByStatus($query, $status)
     {
         return $query->where('status', $status)->count();
-    } 
+    }
 
     public function isDelivered()
     {
@@ -221,7 +222,7 @@ class Order extends Model
             return $q->where('name', 'like','%' . $keyword . '%')
                     ->orWhere('email','like','%' . $keyword . '%');
         })->orWhere('order_number', $keyword);
-                   
+
     }
 
     public function scopeByAuthUser($query)
@@ -233,6 +234,6 @@ class Order extends Model
 
 
 
- 
+
 
 }
