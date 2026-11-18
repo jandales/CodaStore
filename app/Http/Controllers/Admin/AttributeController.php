@@ -19,43 +19,48 @@ class AttributeController extends Controller
     }
 
     public function index()
-    {      
-        return view('admin.attribute.index')->with('keyword', null);
+    {
+        return view('admin.attribute.index')->with(['attributes' => Attribute::orderBy('name')->get(), 'keyword' => null]);
     }
-     
-    public function store(StoreAttributeRequest $request)
-    {       
-        $this->services->store($request);  
 
-        return back()->with(['status' => 'success','message' => 'Attribute Successfully Created']);
+    public function create()
+    {
+        return view('admin.attribute.create')->with('attribute', new Attribute);
+    }
+
+    public function store(StoreAttributeRequest $request)
+    {
+        $this->services->store($request);
+
+        return redirect()->route('admin.attributes')->with(['status' => 'success', 'message' => 'Attribute "' . $request->name . '" added.']);
     }
     public function edit(Attribute $attribute)
-    {  
-        return view('admin.attribute.edit')->with('attribute', $attribute);        
+    {
+        return view('admin.attribute.edit')->with('attribute', $attribute);
     }
 
     public function update(UpdateAttributeRequest $request,Attribute $attribute)
-    {    
+    {
         $this->services->update($attribute, $request);
 
-        return redirect()->route('admin.attributes')->with(['status' => 'success','message' => 'Attribute Successfully update']);
+        return redirect()->route('admin.attributes')->with(['status' => 'success', 'message' => 'Attribute "' . $attribute->fresh()->name . '" saved.']);
     }
     public function destroy(Attribute $attribute)
-    {     
+    {
         $this->authorize('delete', $attribute);
 
-        $attribute->delete();    
+        $attribute->delete();
 
         return redirect()->route('admin.attributes')->with(['status' => 'success','message' => 'Attribute Successfully Deleted']);
     }
 
     public function destroySelected(Request $request)
-    {     
+    {
         $attribute = Attribute::find($request->_selected[0]);
 
         $this->authorize('delete', $attribute);
 
-        $this->services->destroySelected($request->_selected); 
+        $this->services->destroySelected($request->_selected);
 
         return route('admin.attributes');
     }
@@ -71,9 +76,9 @@ class AttributeController extends Controller
     {
         $attributes = Attribute::get();
 
-        return response()->json(['attributes' => $attributes]);    
+        return response()->json(['attributes' => $attributes]);
     }
 
 
- 
+
 }

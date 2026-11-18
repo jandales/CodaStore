@@ -312,6 +312,7 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
 
         Route::controller(AttributeController::class)->prefix('attributes')->group(function (){
             Route::get('/', 'index')->name('admin.attributes');
+            Route::get('/create', 'create')->name('admin.attributes.create');
             Route::post('/store', 'store')->name('admin.attributes.store');
             Route::get('/edit/{attribute:slug}', 'edit')->name('admin.attributes.edit');
             Route::put('/update/{attribute:slug}',  'update')->name('admin.attributes.update');

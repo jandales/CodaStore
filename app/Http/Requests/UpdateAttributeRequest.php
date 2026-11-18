@@ -24,7 +24,7 @@ class UpdateAttributeRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => "required|string|unique:categories,name,{$this->attribute->id}"
+            'name' => "required|string|unique:attributes,name,{$this->attribute->id}"
         ];
     }
 }
