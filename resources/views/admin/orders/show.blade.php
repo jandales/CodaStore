@@ -372,7 +372,7 @@
                             <h4 class="mt-2">Update order status</h4>
                             @if ($errors->hasAny(['status', 'courier', 'tracking_number']))
                                 <div class="alert alert-danger mt-1" role="alert">
-                                    @foreach ($errors->only(['status', 'courier', 'tracking_number']) as $error)<div>{{ $error }}</div>@endforeach
+                                    @foreach (['status', 'courier', 'tracking_number'] as $field)@foreach ($errors->get($field) as $error)<div>{{ $error }}</div>@endforeach @endforeach
                                 </div>
                             @endif
                             <form class="w-12 mt-1 order-status-form" action="{{ route('admin.orders.shipped1', [$order->encryptedId()]) }}" method="post">

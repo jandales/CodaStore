@@ -88,6 +88,19 @@ class CourierTest extends TestCase
         $this->assertSame(Order::STATUS_CONFIRMED, $order->fresh()->status);
     }
 
+    public function test_order_page_shows_status_errors_after_a_failed_update()
+    {
+        $order = $this->createPaidOrder();
+        $this->signInAdmin();
+        $show = route('admin.orders.show', [$order->encryptedId()]);
+
+        $this->from($show)->followingRedirects()
+            ->put(route('admin.orders.shipped1', [$order->encryptedId()]), ['status' => 'shipped'])
+            ->assertOk()
+            ->assertSee('Choose the courier for this shipment.')
+            ->assertSee('Enter the tracking number from the courier.');
+    }
+
     public function test_turned_off_courier_still_shows_on_old_orders()
     {
         $order = $this->createPaidOrder(null, ['status' => Order::STATUS_SHIPPED, 'courier' => 'ninjavan', 'tracking_number' => 'NV1']);
