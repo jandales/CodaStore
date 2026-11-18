@@ -44,7 +44,7 @@ class ProductServices
 
                     Stock::create([
                         'product_id' => $product->id,
-                        'qty' => $request->qty,
+                        'qty' => (int) ($request->qty ?? 0), // variants: set from the variant table below
                     ]);
 
                     Self::imageGalleryUpdate($request->input('images'), $product->id);
@@ -85,7 +85,7 @@ class ProductServices
 
             $stock = $product->stock;
 
-            $stock->qty = $request->qty;
+            $stock->qty = (int) ($request->qty ?? 0); // variants: replaced by the sum of the variants below
 
             $stock->save();
 

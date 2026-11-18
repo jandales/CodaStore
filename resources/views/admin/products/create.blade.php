@@ -72,32 +72,7 @@
                 </div>
                 <!-- /inventory --->
                 <!-- Variants --->
-                <div class="panel">
-                    <div class="panel-heading">
-                        <label for="" class="panel-title">Variants</label>
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-checkbox">
-                            <input type="checkbox" class="has-variant" name="hasVariant" id=""><label for="">This product has multiple options.</label>
-                        </div>
-                    </div>
-                    <div class="options-container">
-                        <div class="panel-line"></div>
-                        <div class="panel-body">
-                            <label class="panel-sub-title">Options</label>
-                            <br>
-                            <div class="variant-selector">
-                                <select id="selectInput" class="capitalized">
-                                </select>
-                                <span id="btn-add-variant" class="btn btn-default ml20">Add</span>
-                            </div>
-                            <div class="options-wrapper">
-
-                            </div>
-                        </div>
-                    </div>
-                    @include('admin.products._variant-table')
-                </div>
+                @include('admin.products._variants')
                 <!-- /variants --->
             </div>
 
@@ -237,6 +212,6 @@
 
 
 @push('scripts')
-<script src="{{ asset('js/admin-variant-table.js') }}?v=1"></script>
+<script src="{{ asset('js/admin-variants.js') }}?v=1"></script>
 @endpush
 @endsection

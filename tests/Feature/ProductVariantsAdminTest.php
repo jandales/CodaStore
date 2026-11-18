@@ -150,9 +150,11 @@ class ProductVariantsAdminTest extends TestCase
         app(\App\Services\Products\ProductSkus::class)->sync($product, [['options' => ['size' => 'M'], 'price' => 650, 'qty' => 4]]);
 
         $this->get(route('admin.products.edit', [$product->encryptedId()]))->assertOk()
-            ->assertSee('id="variant-table"', false)
+            ->assertSee('id="variants-card"', false)
             ->assertSee('&quot;key&quot;:&quot;size:m&quot;', false)
-            ->assertSee('admin-variant-table.js');
+            ->assertSee('&quot;name&quot;:&quot;size&quot;,&quot;values&quot;:[&quot;S&quot;,&quot;M&quot;,&quot;L&quot;,&quot;XL&quot;]', false)
+            ->assertSee('admin-variants.js');
+        $this->get(route('admin.products.create'))->assertOk()->assertSee('Add options like size or colour')->assertDontSee('has-variant');
     }
 
     public function test_migration_splits_existing_stock_evenly_and_flags_it_for_review()
@@ -170,5 +172,26 @@ class ProductVariantsAdminTest extends TestCase
         $qtys = ProductSku::where('product_id', $product->id)->orderBy('position')->pluck('qty', 'option_key')->all();
         $this->assertSame(['size:s' => 3, 'size:m' => 3, 'size:l' => 2, 'size:xl' => 2], $qtys);
         $this->assertFalse((bool) $product->fresh()->variant_stock_reviewed);
+    }
+
+    public function test_saving_with_variants_works_without_the_single_quantity_field()
+    {
+        // The browser doesn't send the hidden, disabled Quantity box when variants are on.
+        $form = $this->form($this->withVariants([
+            ['options' => json_encode(['size' => 'S']), 'qty' => 4],
+            ['options' => json_encode(['size' => 'M']), 'qty' => 7],
+        ], [['id' => $this->size->id, 'variants' => ['S', 'M']]]));
+        unset($form['qty']);
+
+        $this->postJson(route('admin.products.store'), $form)->assertOk();
+        $product = Product::where('name', 'Linen overshirt')->first();
+        $this->assertSame(11, $product->stockQty());
+
+        unset($form['hasVariant'], $form['attributes'], $form['skus']);
+        $form['name'] = 'Linen overshirt';
+        $this->putJson(route('admin.products.update', [$product->encryptedId()]), $form + $this->withVariants([
+            ['options' => json_encode(['size' => 'S']), 'qty' => 1],
+        ], [['id' => $this->size->id, 'variants' => ['S']]]))->assertOk();
+        $this->assertSame(1, $product->fresh()->stockQty());
     }
 }

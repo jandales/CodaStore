@@ -10,8 +10,6 @@
     </div>
     <form id="form" method="post"  action="{{route('admin.products.update',[ $product->encryptedId() ])}}" enctype="multipart/form-data">
         @csrf
-        <input type="hidden" name="attributes" value="{{$product->attributes}}">
-        <input type="hidden" name="variants" value="{{$product->variants}}">
         <input type="hidden" name="photos" value="{{$product->photos}}">
 
         <div class="page-container m-t-2">
@@ -77,56 +75,7 @@
                 </div>
                 <!-- /inventory --->
                 <!-- Variants --->
-                <div class="panel">
-                    <div class="panel-heading">
-                        <label for="" class="panel-title">Variants</label>
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-checkbox">
-                            <input type="checkbox" {{ count($product->attributes) > 0 ? 'checked' : ''}} class="has-variant" name="hasVariant" id=""><label for="">This product has multiple options.</label>
-                        </div>
-                    </div>
-                    <div class="options-container">
-                        <div class="panel-line"></div>
-                        <div class="panel-body">
-                            <label class="panel-sub-title">Options</label>
-                            <br>
-                            <div class="variant-selector">
-                                <select name="atttribute" id="selectInput" class="capitalized">
-                                </select>
-                                <button id="btn-add-variant" class="btn btn-default ml20">Add</button>
-                            </div>
-                            <div class="options-wrapper">
-                                @foreach ($product->attributes as $item)
-                                    <div class="options">
-                                        <div class="options-selector m-t-1" >
-                                            <div class="option-attribute">
-                                                {{$item->attributes->name}}
-                                            </div>
-
-                                            <div class="variants-wrapper">
-                                                <div class="variants-list-wrapper">
-                                                    @foreach ($product->variants as  $variant)
-                                                        @if( $item->attribute_id ==  $variant->attribute_id)
-                                                            <div class="variant">
-                                                                {{  $variant->name}}
-                                                                <span name="{{  $variant->name }}" data-id="{{ $item->attribute_id }}" class="remove-variant-item"><i class="fas fa-times"></i></span>
-
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </div>
-                                                <input data-id="{{ $item->attribute_id }}" class="inputVariant no-border"  placeholder="Enter varaint name and hit enter" name="variant_name[]" type="text" value="">
-                                            </div>
-                                        </div>
-                                        <span class="option-remove" data-id="{{ $item->attribute_id }}">remove</span>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                    @include('admin.products._variant-table')
-                </div>
+                @include('admin.products._variants')
                 <!-- /variants --->
             </div>
             <div class="right-column">
@@ -246,6 +195,6 @@
 
 
 @push('scripts')
-<script src="{{ asset('js/admin-variant-table.js') }}?v=1"></script>
+<script src="{{ asset('js/admin-variants.js') }}?v=1"></script>
 @endpush
 @endsection
