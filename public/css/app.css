@@ -4592,6 +4592,23 @@ ul li .thumbnail .thumbnail-overlay:hover {
     padding: 1rem 1.5rem;
   }
 }
+.home-block.related-products {
+  padding-bottom: var(--s8);
+}
+
+.home-block.related-products .home-block__head {
+  margin-bottom: var(--s4);
+}
+
+@media (max-width: 767px) {
+  .home-block.related-products {
+    padding-bottom: var(--s6);
+  }
+
+  .home-block.related-products .home-block__head {
+    margin-bottom: var(--s3);
+  }
+}
 .cart {
   display: flex;
   align-items: flex-start;

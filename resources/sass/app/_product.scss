@@ -257,3 +257,11 @@ ul li .thumbnail  .thumbnail-overlay:hover{
   }
 }
 
+
+// "You may also like" on the product page: room under the heading and before the footer.
+.home-block.related-products { padding-bottom: var(--s8); }
+.home-block.related-products .home-block__head { margin-bottom: var(--s4); }
+@media (max-width: 767px) {
+    .home-block.related-products { padding-bottom: var(--s6); }
+    .home-block.related-products .home-block__head { margin-bottom: var(--s3); }
+}
