@@ -103,7 +103,7 @@
                             'priceHtml' => view('components.price', ['product' => $product, 'sku' => $sku])->render(),
                         ])->values(),
                     ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
-                    <script src="{{ asset('js/product-variants.js') }}?v=1" defer></script>
+                    <script src="{{ asset('js/product-variants.js') }}?v=2" defer></script>
                 @endif
 
                 @if ($product->minQty())
