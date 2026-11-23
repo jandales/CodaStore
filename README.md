@@ -1,12 +1,12 @@
 # CodaStore
 
-A clothing e-commerce store built with Laravel 8: storefront, cart and checkout, customer accounts and an admin dashboard.
+A clothing e-commerce store built with Laravel 13: storefront, cart and checkout, customer accounts and an admin dashboard.
 
 ## Requirements
 
 | Tool | Version | Notes |
 |---|---|---|
-| PHP | 8.1 or 8.2 | Laravel 8 does not support newer PHP versions without workarounds |
+| PHP | **8.4 or newer** (8.5 works) | Laravel 13 needs 8.3+; the development tools (Ignition) need 8.4. A server installing with `--no-dev` can run 8.3 |
 | Composer | 2.x | |
 | MySQL / MariaDB | 5.7+ / 10.4+ | Database name `codastore` by default |
 | Node.js | **20** (18-22 work) | See `.nvmrc`. Laravel Mix 6 does **not** run on Node 23+ |

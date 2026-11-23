@@ -39,6 +39,7 @@ class GrowthTables extends Migration
     {
         Schema::dropIfExists('newsletter_subscribers');
         Schema::table('carts', function (Blueprint $table) {
+            $table->dropIndex(['user_id']);
             $table->dropColumn(['user_id', 'reminded_at']);
         });
         Schema::table('users', function (Blueprint $table) {

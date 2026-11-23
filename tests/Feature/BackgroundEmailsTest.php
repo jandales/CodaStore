@@ -26,7 +26,7 @@ class RefusedLoginMail extends Mailable implements ShouldQueue
 
     public function build()
     {
-        throw new \Swift_TransportException('Failed to authenticate on SMTP server with username "shop" using 2 possible authenticators. Authenticator LOGIN returned Expected response code 235 but got code "535".');
+        throw new \Symfony\Component\Mailer\Exception\TransportException('Failed to authenticate on SMTP server with username "shop" using 2 possible authenticators. Authenticator LOGIN returned Expected response code 235 but got code "535".');
     }
 }
 
@@ -49,9 +49,12 @@ class BackgroundEmailsTest extends TestCase
         parent::tearDown();
     }
 
+    /** Recipient addresses of each email the array mailer "sent". */
     private function sent(): array
     {
-        return app('mailer')->getSwiftMailer()->getTransport()->messages()->all();
+        return app('mailer')->getSymfonyTransport()->messages()
+            ->map(fn ($sent) => array_map(fn ($address) => $address->getAddress(), $sent->getOriginalMessage()->getTo()))
+            ->all();
     }
 
     private function work(): void
@@ -80,7 +83,7 @@ class BackgroundEmailsTest extends TestCase
 
         $this->assertSame(0, $this->waiting());
         $this->assertCount(1, $this->sent());
-        $this->assertArrayHasKey('ana@example.test', $this->sent()[0]->getTo());
+        $this->assertSame(['ana@example.test'], $this->sent()[0]);
     }
 
     public function test_emails_queued_in_a_save_that_is_rolled_back_are_never_sent()

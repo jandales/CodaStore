@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AdminPagesTest extends TestCase
@@ -19,7 +20,7 @@ class AdminPagesTest extends TestCase
         $this->get('/admin/dashboard')->assertRedirect();
     }
 
-    /** @dataProvider adminPages */
+    #[DataProvider('adminPages')]
     public function test_admin_pages_load_for_staff(string $url)
     {
         $this->createProduct();
@@ -28,7 +29,7 @@ class AdminPagesTest extends TestCase
         $this->get($url)->assertOk();
     }
 
-    public function adminPages(): array
+    public static function adminPages(): array
     {
         return [
             'dashboard' => ['/admin/dashboard'],

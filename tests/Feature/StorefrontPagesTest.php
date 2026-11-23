@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class StorefrontPagesTest extends TestCase
@@ -15,7 +16,7 @@ class StorefrontPagesTest extends TestCase
         $this->seedStoreBasics();
     }
 
-    /** @dataProvider publicPages */
+    #[DataProvider('publicPages')]
     public function test_public_pages_load(string $url)
     {
         $this->createProduct();
@@ -23,7 +24,7 @@ class StorefrontPagesTest extends TestCase
         $this->get($url)->assertOk();
     }
 
-    public function publicPages(): array
+    public static function publicPages(): array
     {
         return [
             'home' => ['/'],
