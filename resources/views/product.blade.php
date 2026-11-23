@@ -52,7 +52,7 @@
                         @foreach ($product->photos as $i => $photo)
                             <li>
                                 <div class="thumbnail" role="button" tabindex="0" aria-label="Show image {{ $i + 1 }}">
-                                    <img class="thumbnail-{{ $i }}" src="{{ $photo->path }}" alt="">
+                                    <img class="thumbnail-{{ $i }}" src="{{ $product->photoUrl($photo, $i) }}" alt="">
                                     <div class="thumbnail-overlay"></div>
                                 </div>
                             </li>
@@ -60,7 +60,7 @@
                     </ul>
                 </div>
                 <div class="full-image pdp-image">
-                    <img id="fullImage" src="{{ $product->imagePath }}" alt="{{ $product->name }}">
+                    <img id="fullImage" src="{{ $product->imageUrl() }}" alt="{{ $product->name }}">
                     @if ($product->photos->count() > 1)
                         <button type="button" class="arrow arrow-left align-items" aria-label="Previous image"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
                         <button type="button" class="arrow arrow-right align-items" aria-label="Next image"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
@@ -85,19 +85,21 @@
                     <p class="details pdp-summary">{{ $product->short_description }}</p>
                 @endif
 
+                @if ($product->selectableAttributes()->isNotEmpty())
                 <ul class="variants pdp-variants">
                     <x-variants :product="$product" />
                 </ul>
+                @endif
                 @if ($product->hasSkus())
                     <p id="pdp-variant-stock" class="pdp-stock" role="status" hidden></p>
                     <script type="application/json" id="variant-data">{!! json_encode([
                         'threshold' => \App\Models\GeneralSetting::lowStockThreshold(),
-                        'baseImage' => $product->imagePath,
+                        'baseImage' => $product->imageUrl(),
                         'basePriceHtml' => view('components.price', ['product' => $product])->render(),
                         'skus' => $product->skus->map(fn ($sku) => [
                             'options' => $sku->options,
                             'qty' => (int) $sku->qty,
-                            'image' => $sku->image,
+                            'image' => \App\Models\Product::isUsableImage($sku->image) ? $sku->image : null,
                             'priceHtml' => view('components.price', ['product' => $product, 'sku' => $sku])->render(),
                         ])->values(),
                     ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>

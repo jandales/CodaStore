@@ -22,7 +22,7 @@ class CartServices
     {
 
         $attributes = [];
-        foreach ($request->input('properties', []) as $item)
+        foreach ((array) $request->input('properties') as $item)
         {
             $attributes[$item['name']] = $item['value'];
         }

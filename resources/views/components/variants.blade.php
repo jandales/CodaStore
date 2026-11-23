@@ -1,7 +1,8 @@
 <input type="hidden" name="attributes" value="{{$product->attributes}}">
 <input type="hidden" name="variants" value="{{$product->variants}}">
 
-@foreach($product->attributes as $item)
+{{-- Only attributes that have options: no "Size :" label on a product without sizes. --}}
+@foreach($product->selectableAttributes() as $item)
     <li>
         <div class="variant mb-1">
                 <div class="attribute-name">

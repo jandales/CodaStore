@@ -17,6 +17,23 @@ class QuantityRequest extends FormRequest
     }
 
     /**
+     * Ignore options the product doesn't offer (e.g. an empty "size" for a product without
+     * sizes), so they can't block adding it to the bag.
+     */
+    protected function prepareForValidation()
+    {
+        $product = $this->route('product');
+        if (!$product || !is_array($this->input('properties'))) {
+            return;
+        }
+
+        $names = $product->selectableAttributes()->map(fn ($item) => optional($item->attributes)->name)->filter()->all();
+        $properties = array_values(array_filter($this->input('properties'), fn ($item) => is_array($item) && in_array($item['name'] ?? null, $names, true)));
+
+        $this->merge(['properties' => $properties ?: null]);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array

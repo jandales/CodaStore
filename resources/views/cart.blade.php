@@ -46,7 +46,7 @@
                                     <td>
                                         <div class="cart-line">
                                             <a href="{{ $itemUrl }}" class="cart-line__image" tabindex="-1" aria-hidden="true">
-                                                <img src="{{ optional($item->sku)->image ?: $item->product->imagePath }}" alt="">
+                                                <img src="{{ $item->product->imageUrlFor($item->sku) }}" alt="">
                                             </a>
                                             <div class="cart-line__info">
                                                 <a class="cart-line__name capitalize" href="{{ $itemUrl }}">{{ $item->product->name }}</a>

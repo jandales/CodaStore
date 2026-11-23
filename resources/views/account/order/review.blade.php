@@ -29,7 +29,7 @@
                                 </div>
                                 <div class="item-main">
                                     <div class="item-image">                                          
-                                        <img src="{{ $product->imagePath }}" alt="">                                   
+                                        <img src="{{ $product->imageUrl() }}" alt="">                                   
                                     </div>
                                     <div class="item-name ml-1">
                                         <p>{{ $product->name }}</p>

@@ -168,6 +168,18 @@ class Product extends Model
         return $this->variants->count();
     }
 
+    /**
+     * The attributes the shopper has to pick (e.g. size): only those with at least one option.
+     * An attribute attached to the product without options is ignored.
+     */
+    public function selectableAttributes()
+    {
+        $withOptions = $this->variants->pluck('attribute_id')->unique();
+
+        // getRelationValue: inside the model, $this->attributes is Eloquent's column array.
+        return $this->getRelationValue('attributes')->filter(fn ($item) => $withOptions->contains($item->attribute_id))->values();
+    }
+
     public function attributes()
     {
         return $this->hasMany(ProductAttribute::class);
@@ -216,6 +228,95 @@ class Product extends Model
     }
 
 
+
+    /** The grey "no image" picture saved when a product is created without photos. */
+    public const DEFAULT_IMAGE = '/img/products/default.jpg';
+
+    /**
+     * True when the product has a real photo: not the default picture, and (for files stored
+     * on this site) the file still exists.
+     */
+    public function hasImage(): bool
+    {
+        return self::isUsableImage($this->imagePath);
+    }
+
+    public static function isUsableImage(?string $path): bool
+    {
+        if (!$path || $path === self::DEFAULT_IMAGE) {
+            return false;
+        }
+        if (preg_match('#^(https?:)?//#i', $path) || str_starts_with($path, 'data:')) {
+            return true;
+        }
+
+        return is_file(public_path(ltrim($path, '/')));
+    }
+
+    /** The image to show in the store: the photo, or a soft blurred-colour placeholder. */
+    public function imageUrl(): string
+    {
+        return $this->hasImage() ? $this->imagePath : $this->placeholderImage();
+    }
+
+    /** A variant photo when it has one, otherwise the product's image (or placeholder). */
+    public function imageUrlFor(?ProductSku $sku): string
+    {
+        return $sku && self::isUsableImage($sku->image) ? $sku->image : $this->imageUrl();
+    }
+
+    /**
+     * A gallery photo, or a placeholder when its file is missing. $index shifts the colours a
+     * little so the thumbnails can be told apart; photo 0 matches the main image's placeholder.
+     */
+    public function photoUrl(?Photo $photo, int $index = 0): string
+    {
+        return $photo && self::isUsableImage($photo->path) ? $photo->path : $this->placeholderImage($index);
+    }
+
+    /**
+     * Placeholder colours from the design tokens (resources/sass/_tokens.scss): the warm
+     * neutral background with soft blobs of the line colour and light tints of the accent.
+     */
+    private const PLACEHOLDER_BASE = '#F1EDE6';          // --surface-alt
+    private const PLACEHOLDER_BLOBS = [
+        '#E6E1DA',                                       // --line
+        '#D4CCC4',                                       // --accent, 35% on --bg
+        '#FAF8F5',                                       // --bg
+        '#B8ACA0',                                       // --accent, 60% on --bg
+    ];
+
+    /**
+     * Blurred blobs in the store's warm neutrals as an inline SVG (3:4, like the product
+     * photos). The arrangement comes from the product id, so each product keeps the same look
+     * everywhere; $variation gives the gallery thumbnails their own arrangement.
+     */
+    public function placeholderImage(int $variation = 0): string
+    {
+        $seed = crc32('product-' . $this->id . '-' . $variation);
+        $pick = fn (int $shift, int $mod) => ($seed >> $shift) % $mod;
+
+        $blobs = self::PLACEHOLDER_BLOBS;
+        $offset = $pick(0, count($blobs));
+        $blobs = array_merge(array_slice($blobs, $offset), array_slice($blobs, 0, $offset));
+
+        $circles = [
+            [40 + $pick(2, 80), 50 + $pick(5, 90), 100 + $pick(8, 40)],
+            [180 + $pick(11, 90), 160 + $pick(14, 100), 110 + $pick(17, 40)],
+            [60 + $pick(20, 120), 300 + $pick(23, 80), 90 + $pick(26, 40)],
+        ];
+
+        $svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice">'
+            . '<defs><filter id="b" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="50"/></filter></defs>'
+            . '<rect width="300" height="400" fill="' . self::PLACEHOLDER_BASE . '"/>'
+            . '<g filter="url(#b)">';
+        foreach ($circles as $i => [$cx, $cy, $r]) {
+            $svg .= "<circle cx=\"{$cx}\" cy=\"{$cy}\" r=\"{$r}\" fill=\"{$blobs[$i]}\"/>";
+        }
+        $svg .= '</g></svg>';
+
+        return 'data:image/svg+xml;base64,' . base64_encode($svg);
+    }
 
     public function imageDetail()
     {

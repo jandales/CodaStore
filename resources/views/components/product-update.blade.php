@@ -9,7 +9,7 @@
                     <div class="thumbnails">
                         @foreach ($product->photos as $i => $photo ) 
                             <div class="thumbnail">
-                                <img class="thumbnail-{{ $i }}" src="/{{ $photo->image }}" alt="">
+                                <img class="thumbnail-{{ $i }}" src="{{ $product->photoUrl($photo, $i) }}" alt="">
                                 <div class="thumbnail-overlay"></div>
                             </div>  
                          @endforeach 
@@ -17,7 +17,7 @@
                 </div>        
                 <div class="main-image-wrapper">
                     <div class="main-image" >
-                        <img  src="/{{$product->imagePath }}" alt="">
+                        <img  src="{{ $product->imageUrl() }}" alt="">
                     </div>
                 </div>
 
