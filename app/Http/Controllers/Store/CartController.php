@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Store;
+
+use App\Http\Controllers\Controller;
 
 use Carbon\Carbon;
 use App\Models\Cart;

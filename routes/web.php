@@ -11,25 +11,25 @@ use Illuminate\Support\Facades\Crypt;
 
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AppController;
-use App\Http\Controllers\CartController;
+use App\Http\Controllers\Store\AppController;
+use App\Http\Controllers\Store\CartController;
 use App\Http\Controllers\RateController;
-use App\Http\Controllers\ShopController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\InboxController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\CheckoutPaymentController;
-use App\Http\Controllers\WishlistController;
-use App\Http\Controllers\CheckOutController;
+use App\Http\Controllers\Store\ShopController;
+use App\Http\Controllers\Store\UserController;
+use App\Http\Controllers\Store\InboxController;
+use App\Http\Controllers\Store\OrderController;
+use App\Http\Controllers\Store\ReviewController;
+use App\Http\Controllers\Store\CheckoutPaymentController;
+use App\Http\Controllers\Store\WishlistController;
+use App\Http\Controllers\Store\CheckOutController;
 use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\SocialSiteController;
+use App\Http\Controllers\Store\SocialSiteController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ImageController;
 use App\Http\Controllers\Admin\StockController;
 use App\Http\Controllers\Auth\LogoutController;
-use App\Http\Controllers\CouponFrontController;
-use App\Http\Controllers\SendUsEmailController;
+use App\Http\Controllers\Store\CouponFrontController;
+use App\Http\Controllers\Store\SendUsEmailController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SettingController;
@@ -43,7 +43,7 @@ use App\Http\Controllers\Admin\AdminPaymentController;
 use App\Http\Controllers\Auth\AdminRegisterController;
 use App\Http\Controllers\Auth\User\RegisterController;
 use App\Http\Controllers\Auth\User\UserLoginController;
-use App\Http\Controllers\UserShippingAddressController;
+use App\Http\Controllers\Store\UserShippingAddressController;
 use App\Http\Controllers\Admin\ShippingMethodController;
 use App\Http\Controllers\Auth\AdminResetPasswordController;
 use App\Http\Controllers\Auth\User\ResetPasswordController;
@@ -91,16 +91,16 @@ Route::controller(AppController::class)->group(function () {
 Route::post('/send-message', [SendUsEmailController::class, 'send'])->middleware('throttle:5,1')->name('sendMessage');
 
 // SEO
-Route::get('/sitemap.xml', [\App\Http\Controllers\SeoController::class, 'sitemap'])->name('sitemap');
-Route::get('/robots.txt', [\App\Http\Controllers\SeoController::class, 'robots'])->name('robots');
+Route::get('/sitemap.xml', [\App\Http\Controllers\Store\SeoController::class, 'sitemap'])->name('sitemap');
+Route::get('/robots.txt', [\App\Http\Controllers\Store\SeoController::class, 'robots'])->name('robots');
 // Newsletter and bag reminders
-Route::post('/newsletter', [\App\Http\Controllers\NewsletterController::class, 'subscribe'])->middleware('throttle:5,1')->name('newsletter.subscribe');
-Route::get('/newsletter/unsubscribe/{token}', [\App\Http\Controllers\NewsletterController::class, 'confirmUnsubscribe'])->name('newsletter.unsubscribe');
-Route::post('/newsletter/unsubscribe/{token}', [\App\Http\Controllers\NewsletterController::class, 'unsubscribe'])->name('newsletter.unsubscribe.confirm');
-Route::get('/cart/restore/{cart}', [\App\Http\Controllers\CartReminderController::class, 'restore'])->middleware(['signed', 'auth'])->name('cart.restore');
-Route::get('/cart-reminders/off/{user}', [\App\Http\Controllers\CartReminderController::class, 'off'])->middleware('signed')->name('cart.reminders.off');
+Route::post('/newsletter', [\App\Http\Controllers\Store\NewsletterController::class, 'subscribe'])->middleware('throttle:5,1')->name('newsletter.subscribe');
+Route::get('/newsletter/unsubscribe/{token}', [\App\Http\Controllers\Store\NewsletterController::class, 'confirmUnsubscribe'])->name('newsletter.unsubscribe');
+Route::post('/newsletter/unsubscribe/{token}', [\App\Http\Controllers\Store\NewsletterController::class, 'unsubscribe'])->name('newsletter.unsubscribe.confirm');
+Route::get('/cart/restore/{cart}', [\App\Http\Controllers\Store\CartReminderController::class, 'restore'])->middleware(['signed', 'auth'])->name('cart.restore');
+Route::get('/cart-reminders/off/{user}', [\App\Http\Controllers\Store\CartReminderController::class, 'off'])->middleware('signed')->name('cart.reminders.off');
 
-Route::get('/pages/{slug}', [\App\Http\Controllers\PageController::class, 'show'])->where('slug', '[a-z0-9-]+')->name('page');
+Route::get('/pages/{slug}', [\App\Http\Controllers\Store\PageController::class, 'show'])->where('slug', '[a-z0-9-]+')->name('page');
 
 
 /*

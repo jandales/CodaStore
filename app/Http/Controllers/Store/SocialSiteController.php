@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Store;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\SocialSite;
 use Illuminate\Http\Request;
