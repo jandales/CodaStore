@@ -129,9 +129,10 @@ class Product extends Model
         return $this->belongsTo(Stock::class, 'id', 'product_id');
     }
 
+    /** Media in the order set on the product form; the first one is the main image. */
     public function photos()
     {
-        return $this->hasMany(Photo::class);
+        return $this->hasMany(Photo::class)->orderBy('sort_order')->orderBy('id');
     }
 
     public function variants()

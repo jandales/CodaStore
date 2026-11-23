@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ProductSku extends Model
 {
-    protected $fillable = ['product_id', 'option_key', 'options', 'price', 'qty', 'damaged_qty', 'image', 'sku', 'position'];
+    protected $fillable = ['product_id', 'option_key', 'options', 'price', 'qty', 'damaged_qty', 'image', 'sku', 'barcode', 'position'];
 
     protected $casts = [
         'options' => 'array',

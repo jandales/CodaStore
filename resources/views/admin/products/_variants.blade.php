@@ -26,6 +26,7 @@
             'qty' => $s->qty,
             'image' => $s->image,
             'sku' => $s->sku,
+            'barcode' => $s->barcode,
         ])->values()
         : collect();
 @endphp
@@ -57,12 +58,13 @@
                         <th scope="col">Price (₱)</th>
                         <th scope="col">Available</th>
                         <th scope="col">SKU <span class="label-hint">(optional)</span></th>
+                        <th scope="col">Barcode <span class="label-hint">(optional)</span></th>
                     </tr>
                 </thead>
                 <tbody></tbody>
             </table>
         </div>
         <p class="variant-table__total">Total inventory: <strong data-total>0</strong> available</p>
-        <p class="form-help variant-table__help">Leave a price empty to use the regular price above. "On sale" takes the same percentage off every variant. Pick a photo for a variant from the gallery to show it when customers choose that option.</p>
+        <p class="form-help variant-table__help">Leave a price empty to use the regular price above. "On sale" takes the same percentage off every variant. Click a variant's photo to choose it from Media; customers see it when they pick that option.</p>
     </div>
 </div>
