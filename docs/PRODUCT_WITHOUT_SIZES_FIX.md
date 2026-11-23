@@ -1,6 +1,6 @@
 # Fix: Product without sizes asked for a size
 
-Status: **fixed, not yet committed.** All 315 tests pass.
+Status: **fixed** (branch `fix-product-without-sizes`). All 315 tests pass.
 
 ## The problem
 
