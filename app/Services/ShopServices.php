@@ -136,7 +136,8 @@ class ShopServices extends BaseServices
         $attributes = [];
         $hasvariants = false;
 
-        foreach ( $product->attributes as $item ) {
+        // Only attributes with options: the product page asks the shopper to pick each one.
+        foreach ( $product->selectableAttributes() as $item ) {
           array_push( $attributes, $item->attributes->name );
         }
 

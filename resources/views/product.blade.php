@@ -85,9 +85,11 @@
                     <p class="details pdp-summary">{{ $product->short_description }}</p>
                 @endif
 
+                @if ($product->selectableAttributes()->isNotEmpty())
                 <ul class="variants pdp-variants">
                     <x-variants :product="$product" />
                 </ul>
+                @endif
                 @if ($product->hasSkus())
                     <p id="pdp-variant-stock" class="pdp-stock" role="status" hidden></p>
                     <script type="application/json" id="variant-data">{!! json_encode([

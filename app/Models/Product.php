@@ -168,6 +168,18 @@ class Product extends Model
         return $this->variants->count();
     }
 
+    /**
+     * The attributes the shopper has to pick (e.g. size): only those with at least one option.
+     * An attribute attached to the product without options is ignored.
+     */
+    public function selectableAttributes()
+    {
+        $withOptions = $this->variants->pluck('attribute_id')->unique();
+
+        // getRelationValue: inside the model, $this->attributes is Eloquent's column array.
+        return $this->getRelationValue('attributes')->filter(fn ($item) => $withOptions->contains($item->attribute_id))->values();
+    }
+
     public function attributes()
     {
         return $this->hasMany(ProductAttribute::class);
