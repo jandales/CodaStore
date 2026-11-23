@@ -33,7 +33,6 @@ use App\Http\Controllers\SendUsEmailController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SettingController;
-use App\Http\Controllers\Admin\VariantController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Admin\AttributeController;
@@ -202,7 +201,6 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::get('/get-shipping-method/{ShippingMethod:id}', [ShippingMethodController::class, 'getShippingMethod']);
     Route::get('/logout',[LogoutController::class, 'store'])->name('logout');
-    Route::get('/variant/{id}', [VariantController::class, 'variant'])->name('variant');
 
 });
 
@@ -499,8 +497,6 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function() {
 
     Route::get('/attributes/all', [AttributeController::class, 'getAll'])->middleware('permission:products');
     Route::get('/api/products/categories', [CategoryController::class, 'lists'])->middleware('permission:products')->name('admin.categories.all');
-    Route::post('/variants/store', [VariantController::class, 'store'])->name('variants.store');
-    Route::delete('/variants/destroy/{variant:id}', [VariantController::class, 'destroy'])->name('variants.destroy');
 
     /*
 |--------------------------------------------------------------------------
