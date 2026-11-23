@@ -45,7 +45,7 @@
                                 <td class="column1">                                 
                                     <div class="cartitem">
                                         <div class="pr-image-wrapper"> 
-                                            <img src="/{{ $product->imagePath }}" alt="">
+                                            <img src="{{ $product->imageUrl() }}" alt="">
                                             <div class="pr-image-overlay flex-vert-center">
                                                     <a href="/shop" class="btn-link btn-cart-delete"><i class="fas fa-times"></i></a>
                                             </div>

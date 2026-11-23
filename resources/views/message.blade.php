@@ -38,7 +38,7 @@
                                           <div class="order-wrapper">
                                                <div class="order-item">
                                                    <div class="order-item-image">
-                                                       <img src="/{{ $orderitem->product->imagePath }}" alt="">
+                                                       <img src="{{ $orderitem->product->imageUrl() }}" alt="">
                                                    </div>                                                      
                                                    <div class="order-item-name ml-1">
                                                        <label for="name">{{ $orderitem->product->name }}</label>

@@ -4,7 +4,7 @@
 @endphp
 <article class="product-card">
     <a href="{{ $productUrl }}" class="product-card__media" tabindex="-1" aria-hidden="true">
-        <img src="{{ $product->imagePath }}" alt="" loading="lazy">
+        <img src="{{ $product->imageUrl() }}" alt="" loading="lazy">
         @if ($product->isSoldOut())
             <span class="product-card__badge product-card__badge--out">Sold out</span>
         @elseif ($product->isOnSale())
