@@ -5,6 +5,10 @@
  * "selected" class). When the shopper's choices match a variant it shows that variant's price,
  * "Only N left", caps the quantity and switches the photo. Choices with no stock left are
  * struck through and can't be picked. Data comes from <script id="variant-data">.
+ *
+ * The photo switches as soon as a choice has one (e.g. picking a colour before a size), and
+ * the main image is looked up each time: the gallery script (image-slider.js) replaces the
+ * #fullImage element whenever a thumbnail or arrow is clicked.
  */
 (function () {
     'use strict';
@@ -28,7 +32,6 @@
     var priceEl = document.querySelector('.pdp-price');
     var stockEl = document.getElementById('pdp-variant-stock');
     var qtyInput = document.getElementById('quantity-input');
-    var image = document.getElementById('fullImage');
     var names = [];
     buttons.forEach(function (b) {
         var n = norm(b.getAttribute('name'));
@@ -50,6 +53,44 @@
 
     function anyInStock(sel) {
         return skus.some(function (s) { return matches(s, sel) && s.qty > 0; });
+    }
+
+    /** The photo for the choices made so far: the chosen variant's own, or one that fits. */
+    function photoFor(sel, sku) {
+        if (sku && sku.image) return sku.image;
+        if (!Object.keys(sel).length) return '';
+        var exact = firstPhoto(sel);
+        if (exact) return exact;
+        // No photo for this exact choice (e.g. Black / M): use one that matches one of the
+        // choices, in the order the options are shown (so Black / S's photo for Black).
+        for (var i = 0; i < names.length; i++) {
+            if (!(names[i] in sel)) continue;
+            var single = {};
+            single[names[i]] = sel[names[i]];
+            var found = firstPhoto(single);
+            if (found) return found;
+        }
+        return '';
+    }
+
+    /** A photo of a variant matching these choices, preferring one in stock. */
+    function firstPhoto(sel) {
+        var fitting = skus.filter(function (s) { return s.image && matches(s, sel); });
+        var inStock = fitting.filter(function (s) { return s.qty > 0; });
+        return (inStock[0] || fitting[0] || {}).image || '';
+    }
+
+    function showPhoto(src) {
+        var image = document.getElementById('fullImage');
+        if (!image) return;
+        if (src) {
+            if (image.getAttribute('src') !== src) image.src = src;
+            imageChangedTo = src;
+        } else if (imageChangedTo && image.getAttribute('src') === imageChangedTo) {
+            // Back to the product photo, unless the shopper has since picked another one.
+            image.src = data.baseImage;
+            imageChangedTo = null;
+        }
     }
 
     function update() {
@@ -88,19 +129,13 @@
                 qtyInput.max = Math.max(1, sku.qty);
                 if (parseInt(qtyInput.value, 10) > sku.qty && sku.qty > 0) qtyInput.value = sku.qty;
             }
-            if (image && sku.image) {
-                image.src = sku.image;
-                imageChangedTo = sku.image;
-            }
         } else {
             if (priceEl && data.basePriceHtml) priceEl.innerHTML = data.basePriceHtml;
             if (stockEl) stockEl.hidden = true;
             if (qtyInput) qtyInput.removeAttribute('max');
-            if (image && imageChangedTo && image.getAttribute('src') === imageChangedTo) {
-                image.src = data.baseImage;
-                imageChangedTo = null;
-            }
         }
+
+        showPhoto(photoFor(sel, sku));
     }
 
     // Stop sold-out choices before app.js selects them.
