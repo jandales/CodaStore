@@ -10,7 +10,6 @@
     </div>
     <form id="form" method="post"  action="{{route('admin.products.update',[ $product->encryptedId() ])}}" enctype="multipart/form-data">
         @csrf
-        <input type="hidden" name="photos" value="{{$product->photos}}">
 
         <div class="page-container m-t-2">
             <div class="left-column">
@@ -30,6 +29,9 @@
                         </div>
                 </div>
                 </div>
+                <!-- Media: main image and gallery, drag and drop --->
+                @include('admin.products._media')
+                <!-- /media --->
                 <div class="panel">
                     <div class="panel-heading">
                         <label for="" class="panel-title">Pricing</label>
@@ -37,8 +39,8 @@
                     <div class="panel-body">
                         <div class="form-inline gap30">
                             <div class="form-block col-6">
-                                <label for="regular_price">Regular price</label>
-                                <input type="number" id="regular_price" name="regular_price" min="1" step="0.01" value="{{ $product->regular_price }}">
+                                <label for="regular_price">Regular price <span class="label-hint">(optional)</span></label>
+                                <input type="number" id="regular_price" name="regular_price" min="0" step="0.01" value="{{ $product->regular_price }}">
                             </div>
                             <div class="form-block col-6">
                                 <label for="sale_price">Sale price <span class="label-hint">(optional)</span></label>
@@ -59,11 +61,11 @@
                     <div class="panel-body">
                         <div class="form-inline gap30">
                             <div class="form-block col-6">
-                                <label for="name">SKU</label>
+                                <label for="name">SKU <span class="label-hint">(optional)</span></label>
                                 <input type="text"  name="sku" value="{{ $product->sku}}">
                             </div>
                             <div class="form-block col-6">
-                                <label for="name">Barcode</label>
+                                <label for="name">Barcode <span class="label-hint">(optional)</span></label>
                                 <input type="text" name="barcode" value="{{ $product->barcode}}">
                             </div>
                         </div>
@@ -135,57 +137,6 @@
                 </div>
                 <!-- /Tags --->
 
-                    <!-- product images --->
-                <div class="panel">
-                    <div class="panel-heading">
-                        <label for="" class="panel-title">Image Product</label>
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-block">
-                            <div class="image-product">
-                                <div class="image">
-                                        <img src="{{ $product->imagePath }}" class="product-image" alt="">
-                                        <span onclick="removeProductImage(this, 1 )" class="remove"><i class="fas fa-times"></i></span>
-                                </div>
-                                <div class="progress-bar-wrapper progress-image">
-                                    <div class="progress-bar" style="--width:0" data-value="Loading...."></div>
-                                </div>
-
-                            </div>
-                            <div class="file btn btn-primary m-t-1">
-                                <label>
-                                    Choose
-                                    <input  type="file" id="file-product-image"  style="display:none;">
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /product images --->
-
-                <!-- product-images gallery --->
-                <div class="panel">
-                    <div class="panel-heading">
-                        <label for="" class="panel-title">Image gallery</label>
-                    </div>
-                    <div class="panel-body">
-                        <div class="image-gallery-wrapper">
-                            <div class="image-gallery">
-
-                            </div>
-                            <div class="progress-bar-wrapper progress-images">
-                                <div class="progress-bar" style="--width:0" data-value="Loading...."></div>
-                            </div>
-                        </div>
-                            <div class="file btn btn-primary m-t-1 w-12">
-                                <label>
-                                    Choose
-                                    <input  type="file" id="file-image-gallery" name="images[]" style="display:none;" multiple >
-                                </label>
-                            </div>
-                    </div>
-                </div>
-                <!-- /product-images gallery  --->
 
             </div>
         </div>
@@ -198,6 +149,7 @@
 
 
 @push('scripts')
-<script src="{{ asset('js/admin-variants.js') }}?v=1"></script>
+<script src="{{ asset('js/admin-media.js') }}?v=2"></script>
+<script src="{{ asset('js/admin-variants.js') }}?v=3"></script>
 @endpush
 @endsection

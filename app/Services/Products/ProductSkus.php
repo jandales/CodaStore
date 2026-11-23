@@ -17,7 +17,7 @@ class ProductSkus
     public const MAX_VARIANTS = 100;
 
     /**
-     * @param  array  $rows  [['options' => {"size":"M"} (array or JSON), 'price' => ?, 'qty' => int, 'image' => ?, 'sku' => ?], ...]
+     * @param  array  $rows  [['options' => {"size":"M"} (array or JSON), 'price' => ?, 'qty' => int, 'image' => ?, 'sku' => ?, 'barcode' => ?], ...]
      */
     public function sync(Product $product, array $rows): void
     {
@@ -39,6 +39,7 @@ class ProductSkus
                     'qty' => max(0, (int) ($row['qty'] ?? 0)),
                     'image' => ($row['image'] ?? null) ?: null,
                     'sku' => ($row['sku'] ?? null) ?: null,
+                    'barcode' => ($row['barcode'] ?? null) ?: null,
                     'position' => $position,
                 ]
             );

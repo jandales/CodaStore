@@ -16,8 +16,13 @@ class Photo extends Model
 */
 protected $fillable = [
     'product_id',
-    'path',   
+    'path',
     'location',
+    'sort_order',
+];
+
+protected $casts = [
+    'sort_order' => 'integer',
 ];
 
 

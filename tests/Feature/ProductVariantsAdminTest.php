@@ -66,6 +66,29 @@ class ProductVariantsAdminTest extends TestCase
         $this->assertTrue($product->fresh()->hasVariablePrice());
     }
 
+    public function test_each_variant_keeps_its_own_barcode()
+    {
+        $this->postJson(route('admin.products.store'), $this->form($this->withVariants([
+            ['options' => json_encode(['size' => 'S']), 'qty' => 2, 'barcode' => '4800000000017'],
+            ['options' => json_encode(['size' => 'M']), 'qty' => 1, 'barcode' => ''],
+        ], [['id' => $this->size->id, 'variants' => ['S', 'M']]])))->assertOk();
+
+        $product = Product::where('name', 'Linen overshirt')->first();
+        $skus = $product->skus()->get()->keyBy('option_key');
+        $this->assertSame('4800000000017', $skus['size:s']->barcode);
+        $this->assertNull($skus['size:m']->barcode, 'empty = no barcode');
+
+        // The edit page hands the saved barcodes to the variants table.
+        $this->get(route('admin.products.edit', [$product->encryptedId()]))->assertOk()
+            ->assertSee('&quot;barcode&quot;:&quot;4800000000017&quot;', false)
+            ->assertSee('<th scope="col">Barcode', false);
+
+        // A barcode that is too long is rejected.
+        $this->postJson(route('admin.products.store'), $this->form($this->withVariants([
+            ['options' => json_encode(['size' => 'S']), 'qty' => 2, 'barcode' => str_repeat('9', 101)],
+        ], [['id' => $this->size->id, 'variants' => ['S']]])))->assertStatus(422)->assertJsonValidationErrors(['skus.0.barcode']);
+    }
+
     public function test_two_options_make_combinations()
     {
         $this->postJson(route('admin.products.store'), $this->form($this->withVariants([

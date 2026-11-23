@@ -28,9 +28,10 @@ class ProductRequest extends FormRequest
                 'name' => 'required',
                 'category_id' => ['required', new SelectValue],
                 'slug' => 'string',
-                'sku' => 'required|string',
-                'barcode' => 'required|string',
-                'regular_price' => 'required|numeric|min:1',
+                // Optional: a product can be saved without them (an empty price is saved as 0).
+                'sku' => 'nullable|string|max:255',
+                'barcode' => 'nullable|string|max:255',
+                'regular_price' => 'nullable|numeric|min:0',
                 'on_sale' => 'nullable|boolean',
                 // Optional; required and below the regular price only when the product is on sale.
                 'sale_price' => 'nullable|numeric|min:0|required_if:on_sale,1' . ($this->input('on_sale') ? '|lt:regular_price' : ''),
@@ -45,6 +46,7 @@ class ProductRequest extends FormRequest
                 'skus.*.price' => ['nullable', 'numeric', 'min:1'],
                 'skus.*.image' => ['nullable', 'string', 'max:500'],
                 'skus.*.sku' => ['nullable', 'string', 'max:100'],
+                'skus.*.barcode' => ['nullable', 'string', 'max:100'],
 
         ];
     }

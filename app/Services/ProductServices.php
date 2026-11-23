@@ -32,6 +32,7 @@ class ProductServices
        return  DB::transaction(function ()  use ($request, $image){
                     $validated = $request->validated();
                     $validated['slug'] = productSlug($request->name);
+                    $validated['regular_price'] = $request->regular_price ?? 0; // optional
                     $validated['imagePath'] = $image['path'] ?? $this->defaultImage;
                     $validated['featured'] = $request->featured ?? 0;
                     $validated['on_sale'] = $request->boolean('on_sale');
@@ -42,12 +43,13 @@ class ProductServices
                     $validated['tags'] = $request->tags;
                     $product = Product::create($validated);
 
+                    Self::saveMedia($request, $product);
+
                     Stock::create([
                         'product_id' => $product->id,
                         'qty' => (int) ($request->qty ?? 0), // variants: set from the variant table below
                     ]);
 
-                    Self::imageGalleryUpdate($request->input('images'), $product->id);
                     Self::createAttributes($request->input('attributes'), $request->hasVariant, $product->id);
                     Self::syncVariants($request, $product);
 
@@ -79,7 +81,7 @@ class ProductServices
             $product->barcode = $request->barcode;
             $product->sale_price = $request->sale_price ?? 0;
             $product->on_sale = $request->boolean('on_sale');
-            $product->regular_price = $request->regular_price;
+            $product->regular_price = $request->regular_price ?? 0; // optional
             $product->status = $request->status;
             $product->tags = $request->tags;
             $product->featured = $request->featured ?? 0;
@@ -92,9 +94,9 @@ class ProductServices
 
             $stock->save();
 
-            Self::updateProductImage($image, $product->imageDetail() );
-
-            Self::imageGalleryUpdate($request->input('images'), $product->id);
+            // Photos are only removed when the form marks them deleted, never because another
+            // photo became the main one.
+            Self::saveMedia($request, $product);
 
             Self::createAttributes($request->input('attributes'), $request->hasVariant, $product->id);
             Self::syncVariants($request, $product);
@@ -218,43 +220,77 @@ class ProductServices
         $product->save();
     }
 
-    private function updateProductImage($request, $photo)
+    /**
+     * Saves the photos sent by the form. With the Media card (media=1) their order is the
+     * display order and the first one is the main image (the default picture when none are
+     * left). Older forms send the main image separately as "image", which update() already set.
+     */
+    private function saveMedia(Request $request, Product $product): void
     {
-        if ($request == null) return;
+        $removed = [];
+        $kept = Self::imageGalleryUpdate($request->input('images'), $product->id, $removed);
 
-        if ($photo != null)  Self::unlink($photo);
+        if ($request->boolean('media')) {
+            $product->forceFill(['imagePath' => $kept[0] ?? Product::DEFAULT_IMAGE])->save();
+        }
 
+        // Files go last: a removed photo may have been the main image until just now. Only
+        // delete a file when no other product, photo or variant uses it.
+        foreach (array_unique($removed) as $path) {
+            \App\Services\Products\ProductImageFiles::deleteIfUnused($path);
+        }
     }
 
-    private function imageGalleryUpdate($images, $product_id)
+    /**
+     * @param  string[]  $removed  filled with the paths of photos removed (files not deleted yet)
+     * @return string[] paths of the photos kept, in the order they were sent
+     */
+    private function imageGalleryUpdate($images, $product_id, array &$removed = []): array
     {
+        $kept = [];
 
-        if ($images == null)  return;
+        if (!is_array($images)) return $kept;
 
         foreach ($images as $image) {
 
             $image = is_array($image) ? $image : json_decode((string) $image, true);
-            if (!is_array($image) || empty($image['id'])) continue;
+            if (!is_array($image)) continue;
 
-            // Already gone (removed earlier, or the page was saved twice): nothing to do.
-            $photo = Photo::find($image['id']);
-            if (!$photo) continue;
+            $deleted = (int) ($image['deleted'] ?? 0) === 1;
 
-            // Only this product's photos, or new uploads not attached to a product yet.
-            if ($photo->product_id && (int) $photo->product_id !== (int) $product_id) continue;
+            // No id: the product's main image from before the Media card, never a gallery
+            // photo. Keep it as a photo so it can be ordered like the others.
+            if (empty($image['id'])) {
+                $path = (string) ($image['path'] ?? '');
+                if ($deleted || !str_starts_with($path, '/') || !Product::isUsableImage($path)) continue;
 
-            if ((int) ($image['deleted'] ?? 0) === 1) {
-                Self::unlink($photo);
-                continue;
+                $photo = Photo::firstOrCreate(
+                    ['product_id' => $product_id, 'path' => $path],
+                    ['location' => dirname($path) . '/']
+                );
+            } else {
+                // Already gone (removed earlier, or the page was saved twice): nothing to do.
+                $photo = Photo::find($image['id']);
+                if (!$photo) continue;
+
+                // Only this product's photos, or new uploads not attached to a product yet.
+                if ($photo->product_id && (int) $photo->product_id !== (int) $product_id) continue;
+
+                if ($deleted) {
+                    $photo->delete();
+                    $removed[] = $photo->path;
+                    continue;
+                }
             }
 
-            if ((int) $photo->product_id !== (int) $product_id) {
+            $photo->product_id = $product_id;
+            $photo->sort_order = count($kept);
+            $photo->save();
 
-                Self::updatePhotoOwner($photo, $product_id);
-
-            }
+            $kept[] = $photo->path;
         }
 
+        return $kept;
     }
 
     private function createAttributes($attributes, $hasVariant, $product_id)
@@ -307,31 +343,6 @@ class ProductServices
             ProductAttribute::where('product_id', $product_id)->delete();
 
             ProductVariant::where('product_id', $product_id)->delete();
-
-        });
-
-    }
-
-    private function updatePhotoOwner(Photo $photo, $product_id)
-    {
-
-        $photo->product_id = $product_id;
-
-        $photo->save();
-
-    }
-    private function unlink(Photo $photo)
-    {
-        return DB::transaction(function () use($photo) {
-
-            $deleted = $photo->delete();
-
-            if(!$deleted) return back()->with('error','Image cant delete');
-
-            // Only remove the file when no other product, photo or variant uses it.
-            \App\Services\Products\ProductImageFiles::deleteIfUnused($photo->path);
-
-            return response()->json(['deleted' => $deleted]);
 
         });
 
